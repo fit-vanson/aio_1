@@ -10,6 +10,7 @@ use App\Http\Controllers\CocsimController;
 use App\Http\Controllers\CronProjectController;
 use App\Http\Controllers\DaController;
 use App\Http\Controllers\DataProfileController;
+use App\Http\Controllers\DesignController;
 use App\Http\Controllers\DevAmazonController;
 use App\Http\Controllers\DevController;
 
@@ -616,6 +617,17 @@ Route::group(['prefix'=>'bot',
     Route::get('/delete/{id}',[BotController::class,'delete'])->name('bot.delete');
     Route::get('/delete-all',[BotController::class,'deleteAll'])->name('bot.deleteAll');
     Route::get('/truncate',[BotController::class,'truncate'])->name('bot.truncate');
+});
+
+Route::group(['prefix'=>'design','middleware'=>['CheckLogout','2fa']], function (){
+    Route::get('/',[DesignController::class,'index'])->name('design.index')->middleware('can:project-index');
+    Route::get('/project_show',[DesignController::class,'project_show'])->name('design.project_show')->middleware('can:project-index');
+    Route::post('/getIndex', [DesignController::class, "getIndex"])->name('design.getIndex');
+    Route::post('/create',[DesignController::class,'create'])->name('design.create')->middleware('can:project-add');
+    Route::get('/edit/{id}',[DesignController::class,'edit'])->name('design.edit')->middleware('can:project-edit');
+    Route::get('/show/{id}',[DesignController::class,'show'])->name('design.show')->middleware('can:project-show');
+    Route::post('/update',[DesignController::class,'update'])->name('design.update')->middleware('can:project-update');
+    Route::get('/delete/{id}',[DesignController::class,'delete'])->name('design.delete')->middleware('can:project-delete');
 });
 
 

@@ -23,9 +23,14 @@
                                     @can('project-index')
                                     <li><a href="{{route('project.index')}}">Quản lý Project</a></li>
                                     @endcan
+                                    @if( in_array( "Design" ,array_column(auth()->user()->roles()->get()->toArray(),'name')))
+                                        <li><a href="{{route('design.index')}}">Design</a></li>
+                                    @endif
                                     @can('template-index')
                                     <li><a href="{{route('template.index')}}">Quản lý Template</a></li>
                                     @endcan
+
+
                                     @can('project-index')
                                         <li><a href="{{route('project.indexBuild')}}">Tiến trình xử lý</a></li>
                                         <li><a href="{{route('project.appChplay')}}">Quản lý APP (CHPlay)</a></li>
