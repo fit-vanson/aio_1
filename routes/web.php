@@ -58,8 +58,11 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/clear-cache',function (){
+Route::get('/clear',function (){
     echo  Artisan::call('optimize:clear');
+});
+Route::get('/link',function (){
+    echo  Artisan::call('storage:link');
 });
 Route::get('/job',function (){
     return  Artisan::call('queue:work  --tries=3 --timeout=60');
