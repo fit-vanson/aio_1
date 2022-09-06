@@ -110,8 +110,6 @@ class DesignController extends Controller
                             </a>';
                     break;
             }
-
-
             switch ($record->banner){
                 case 0:
                     $banner =' <span style="font-size: 100%" class="badge badge-danger"><i class="ti-close"></i></span> ' ;
