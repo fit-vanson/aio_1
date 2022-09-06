@@ -5,6 +5,8 @@
 <link href="plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
 <link href="plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css" />
 
+<link href="{{ URL::asset('assets/libs/magnific-popup/magnific-popup.min.css') }}" rel="stylesheet" type="text/css" />
+
 
 
 
@@ -52,8 +54,10 @@
 {{--                            <th>Logo</th>--}}
                             <th>Project Name</th>
                             <th>Ngôn ngữ </th>
-                            <th>Logo | Banner | Preview | Video </th>
-
+                            <th style="width: 5%">Logo</th>
+                            <th style="width: 10%">Banner</th>
+                            <th style="width: 30%">Preview</th>
+                            <th style="width: 5%"> Video</th>
                             <th>Status</th>
                             <th>User </th>
                             <th>Action</th>
@@ -92,6 +96,7 @@
 <script src="{{ URL::asset('/assets/libs/dropzone/dropzone.min.js') }}"></script>
 
 <script src="plugins/select2/js/select2.min.js"></script>
+<script src="{{ URL::asset('/assets/libs/magnific-popup/magnific-popup.min.js') }}"></script>
 
 
 {{--<script src="https://cdn.datatables.net/rowgroup/1.2.0/js/dataTables.rowGroup.min.js"></script>--}}
@@ -119,8 +124,10 @@
                 // {data: 'id', name: 'id'},
                 {data: 'project_id', name: 'project_id'},
                 {data: 'lang_id', name: 'lang_id'},
-                {data: 'design', name: 'design'},
-
+                {data: 'logo', name: 'logo'},
+                {data: 'banner', name: 'banner'},
+                {data: 'preview', name: 'preview'},
+                {data: 'video', name: 'video'},
                 {data: 'status', name: 'status'},
                 {data: 'user_design', name: 'user_design'},
                 {data: 'action',className: "text-center", name: 'action', orderable: false, searchable: false},
@@ -141,11 +148,51 @@
                         if (last !== group) {
                             $(rows)
                                 .eq(i)
-                                .before('<tr class="group"><td colspan="6">' + group + '</td></tr>');
-
+                                .before('<tr class="group"><td colspan="8">' + group + '</td></tr>');
                             last = group;
                         }
                     });
+
+                $('.image-popup-no-margins').magnificPopup({
+                    type: 'image',
+                    closeOnContentClick: true,
+                    closeBtnInside: false,
+                    fixedContentPos: true,
+                    mainClass: 'mfp-no-margins mfp-with-zoom',
+                    // class to remove default margin from left and right side
+                    image: {
+                        verticalFit: true
+                    },
+                    zoom: {
+                        enabled: true,
+                        duration: 300 // don't foget to change the duration also in CSS
+
+                    }
+                });
+
+                $('.popup-youtube, .popup-vimeo, .popup-gmaps').magnificPopup({
+                    disableOn: 700,
+                    type: 'iframe',
+                    mainClass: 'mfp-fade',
+                    removalDelay: 160,
+                    preloader: false,
+                    fixedContentPos: false
+                });
+                $('.popup-gallery').magnificPopup({
+                    delegate: 'a',
+                    type: 'image',
+                    tLoading: 'Loading image #%curr%...',
+                    mainClass: 'mfp-img-mobile',
+                    gallery: {
+                        enabled: true,
+                        navigateByImgClick: true,
+                        preload: [0, 1] // Will preload 0 - before current, and 1 after the current image
+
+                    },
+                    image: {
+                        tError: '<a href="%url%">The image #%curr%</a> could not be loaded.'
+                    }
+                });
             },
         });
 

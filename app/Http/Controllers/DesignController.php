@@ -38,24 +38,6 @@ class DesignController extends Controller
         $searchValue = $search_arr['value']; // Search value
 
 
-//        dd(auth()->id());
-
-
-        // Total records
-        $totalRecords = ProjectHasLang::select('count(*) as allcount')->count();
-        $totalRecordswithFilter = ProjectHasLang::select('count(*) as allcount')
-//            ->where('samsung_ga_name', 'like', '%' . $searchValue . '%')
-            ->count();
-        $records = ProjectHasLang::orderBy($columnName, $columnSortOrder)
-            ->with('lang','project')
-//            ->select('projectid','logo','projectname')
-//            ->orderBy($columnName, $columnSortOrder)
-//            ->where('projectname', 'like', '%' . $searchValue . '%')
-//            ->whereRelation('hasLang','user_design',auth()->id())
-            ->skip($start)
-            ->take($rowperpage)
-            ->get();
-
         if( in_array( "Admin" ,array_column(auth()->user()->roles()->get()->toArray(),'name'))){
             // Total records
             $totalRecords = ProjectHasLang::select('count(*) as allcount')->count();
@@ -93,6 +75,13 @@ class DesignController extends Controller
                 $btn = ' <a href="javascript:void(0)" onclick="editProjectLang('.$record->id.')" class="btn btn-warning"><i class="ti-pencil-alt"></i></a>';
                 $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$record->id.'" data-original-title="Delete" class="btn btn-danger deleteProjectLang"><i class="ti-trash"></i></a>';
             }
+
+            $project_name = $record->project->projectname;
+            $du_an = preg_split("/[-]+/",$project_name)[0];
+            $lang = $record->lang;
+
+//            dd($du_an);
+
             switch ($record->status){
                 case 0:
                     $status ='<span style="font-size: 100%" class="badge badge-secondary">Gửi chờ duyệt</span>' ;
@@ -116,16 +105,21 @@ class DesignController extends Controller
                     $logo =' <span style="font-size: 100%" class="badge badge-danger"><i class="ti-close"></i></span> ' ;
                     break;
                 case 1:
-                    $logo = ' <span style="font-size: 100%" class="badge badge-success"><i class="ti-check"></i></span> ';
+                    $logo = '<a class="image-popup-no-margins" href="'.url('/storage/projects').'/'.$du_an.'/'.$project_name.'/lg.png">
+                                <img class="img-fluid" alt="" src="'.url('/storage/projects').'/'.$du_an.'/'.$project_name.'/lg114.png" width="120">
+                            </a>';
                     break;
             }
+
 
             switch ($record->banner){
                 case 0:
                     $banner =' <span style="font-size: 100%" class="badge badge-danger"><i class="ti-close"></i></span> ' ;
                     break;
                 case 1:
-                    $banner = ' <span style="font-size: 100%" class="badge badge-success"><i class="ti-check"></i></span> ';
+                    $banner = '<a class="image-popup-no-margins" href="'.url('/storage/projects').'/'.$du_an.'/'.$project_name.'/'.$lang->lang_code.'/bn.jpg">
+                                <img class="img-fluid" alt="" src="'.url('/storage/projects').'/'.$du_an.'/'.$project_name.'/'.$lang->lang_code.'/bn.jpg" width="120">
+                            </a>';
                     break;
             }
             switch ($record->preview){
@@ -133,7 +127,15 @@ class DesignController extends Controller
                     $preview =' <span style="font-size: 100%" class="badge badge-danger"><i class="ti-close"></i></span> ' ;
                     break;
                 case 1:
-                    $preview = ' <span style="font-size: 100%" class="badge badge-success"><i class="ti-check"></i></span> ';
+                    $preview = '<div class="popup-gallery">';
+                    for ($i=1 ; $i<=8; $i++){
+                        $preview .=  '<a class="float-left" href="'.url('/storage/projects').'/'.$du_an.'/'.$project_name.'/'.$lang->lang_code.'/pr'.$i.'.jpg" title="preview '.$i.'">
+                                                <div class="img-responsive">
+                                                    <img src="'.url('/storage/projects').'/'.$du_an.'/'.$project_name.'/'.$lang->lang_code.'/pr'.$i.'.jpg" alt="" width="120">
+                                                </div>
+                                            </a>';
+                    }
+                    $preview .= '</div>';
                     break;
             }
             switch ($record->video){
@@ -141,16 +143,19 @@ class DesignController extends Controller
                     $video =' <span style="font-size: 100%" class="badge badge-danger"><i class="ti-close"></i></span> ' ;
                     break;
                 case 1:
-                    $video = ' <span style="font-size: 100%" class="badge badge-success"><i class="ti-check"></i></span> ';
+                    $video = '<a class="popup-youtube mo-mb-2" href="'.url('/storage/projects').'/'.$du_an.'/'.$project_name.'/'.$lang->lang_code.'/video.mp4">Video</a>';
                     break;
             }
             $data_arr[] = array(
                 'id' => $record->id,
-                'project_id' => $record->project->projectname,
-                'logo' => $record->project->logo,
-                'lang_id' => $record->lang->lang_name,
+                'project_id' => $project_name,
+
+                'lang_id' => $lang->lang_name,
                 'user_design' => $record->user->name,
-                'design' => $logo. $banner.$preview.$video,
+                'logo' => $logo,
+                'banner' => $banner,
+                'video' => $video,
+                'preview' => $preview,
                 'status' => $status,
                 "action"=> $btn,
             );
@@ -214,7 +219,8 @@ class DesignController extends Controller
                 foreach ($files as $file) {
                     $img = Image::make($file->path());
                     $img
-                        ->save($path.'bn.'.$file->extension(),80);
+//                        ->save($path.'bn.'.$file->extension(),80);
+                        ->save($path.'bn.jpg',80);
                 }
                 $result = ProjectHasLang::updateOrCreate(
                     [
@@ -233,7 +239,8 @@ class DesignController extends Controller
                 foreach ($files as $key=>$file) {
                     $img = Image::make($file->path());
                     $img
-                        ->save($path.'pr'.($key+1).'.'.$file->extension(),80);
+//                        ->save($path.'pr'.($key+1).'.'.$file->extension(),80);
+                        ->save($path.'pr'.($key+1).'.jpg',80);
                 }
                 $result = ProjectHasLang::updateOrCreate(
                     [
@@ -249,7 +256,7 @@ class DesignController extends Controller
             case 'video':
                 $files = $request->file('video');
                 foreach ($files as $file) {
-                    $file->move($path, 'video.'.$file->extension());
+                    $file->move($path, 'video.mp4');
                 }
                 $result = ProjectHasLang::updateOrCreate(
                     [
@@ -263,7 +270,7 @@ class DesignController extends Controller
                 );
                 break;
         }
-        if (isset($result) && $result->status == 2 ){
+        if (isset($result) && $result->status == 2  ){
             $result->update(['status'=>1]);
         }
 
