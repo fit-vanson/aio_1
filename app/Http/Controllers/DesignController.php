@@ -99,7 +99,6 @@ class DesignController extends Controller
                     $status = '<span style="font-size: 100%" class="badge badge-success">Done, Kết thúc Project</span>';
                     break;
             }
-
             switch ($record->logo){
                 case 0:
                     $logo =' <span style="font-size: 100%" class="badge badge-danger"><i class="ti-close"></i></span> ' ;
@@ -136,7 +135,6 @@ class DesignController extends Controller
                     }
                     $preview .= '</div>';
                     break;
-
             }
             switch ($record->video){
                 case 0:
