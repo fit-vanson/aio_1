@@ -242,7 +242,7 @@
                     this.on('success', function (file, response) {
                         // _this.removeFile(file);
                         if (response.success) {
-                            $.notify(file.name, "success");
+                            $.notify(_name,  "success");
                             table.draw();
                         }
                         if (response.errors) {
@@ -253,8 +253,6 @@
                 },
             });
         })
-
-
 
         $('#createNewDesign').click(function () {
             $('#saveBtn').val("create-design");
