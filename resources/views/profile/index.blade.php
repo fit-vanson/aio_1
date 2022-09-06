@@ -85,36 +85,7 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-            {{--var table = $('.data-table').DataTable({--}}
-            {{--    processing: true,--}}
-            {{--    serverSide: true,--}}
-            {{--    ajax: {--}}
-            {{--        url: "{{ route('profile.getIndex') }}",--}}
-            {{--        type: "post"--}}
-            {{--    },--}}
-            {{--    columns: [--}}
-            {{--        {data: 'profile_logo'},--}}
-            {{--        {data: 'profile_name'},--}}
-            {{--        {data: 'profile_sdt'},--}}
-            {{--        {data: 'profile_dia_chi'},--}}
-            {{--        {data: 'profile_cccd'},--}}
-            {{--        {data: 'profile_file'},--}}
-            {{--        {data: 'action', className: "text-center",name: 'action', orderable: false, searchable: false},--}}
-            {{--    ],--}}
-            {{--    columnDefs: [--}}
 
-            {{--        {--}}
-            {{--            targets: 0,--}}
-            {{--            orderable: false,--}}
-            {{--            responsivePriority: 0,--}}
-            {{--            render: function (data, type, full, meta) {--}}
-            {{--                var $output ='<img src="{{asset('uploads/profile/logo')}}/'+data+'" alt="logo" height="100px">';--}}
-            {{--                return $output;--}}
-            {{--            }--}}
-            {{--        },--}}
-            {{--    ],--}}
-            {{--    order:[1,'asc']--}}
-            {{--});--}}
             var groupColumn = 0;
 
             var table = $('.data-table').DataTable({
@@ -156,14 +127,7 @@
                 },
 
             });
-            // $('.data-table tbody').on('click', 'tr.group', function () {
-            //     var currentOrder = table.order()[0];
-            //     if (currentOrder[0] === groupColumn && currentOrder[1] === 'asc') {
-            //         table.order([groupColumn, 'desc']).draw();
-            //     } else {
-            //         table.order([groupColumn, 'asc']).draw();
-            //     }
-            // });
+
 
 
             $('#createNewProfile').click(function () {

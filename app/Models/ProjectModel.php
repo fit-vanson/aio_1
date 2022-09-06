@@ -49,4 +49,12 @@ class ProjectModel extends Model
         return $this->belongsToMany(Ga::class,'ngocphandang_dev_xiaomi','id','xiaomi_ga_name');
     }
 
+    public function lang(){
+        return $this->belongsToMany(Language::class,ProjectHasLang::class,'project_id','lang_id');
+    }
+
+    public function hasLang(){
+        return $this->hasMany(ProjectHasLang::class,'project_id');
+    }
+
 }

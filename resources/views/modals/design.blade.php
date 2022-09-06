@@ -20,20 +20,14 @@
                     </div>
                     <div class="form-group">
                         <label for="name" class="col-sm-5 control-label">Logo</label>
-                        <div class="col-sm-3">
-                        <div class="dropzone" id="logo" data-maxfile="1" data-ext="image/png"  data-name="logo" ></div>
+                        <div class="col-sm-12">
+                            <div class="dropzone" id="logo" data-maxfile="1" data-ext="image/png"  data-name="logo" ></div>
                         </div>
                     </div>
-
-
-{{--                    <h5 class="card-title">Logo</h5>--}}
-{{--                    <div class="dropzone" id="logo" data-maxfile="1" data-ext="image/png"  data-name="logo" ></div>--}}
-
 
                     <div class="form-group">
                         <!-- Nav tabs -->
                             <ul class="nav nav-tabs" role="tablist">
-
                                 @foreach($lags as $key=>$lag)
                                 <li class="nav-item">
                                     <a class="nav-link @if($key == 1) active @endif" data-toggle="tab" href="#{{$lag->lang_code}}" role="tab">
@@ -43,67 +37,39 @@
                                 </li>
                                 @endforeach
                             </ul>
-
                             <!-- Tab panes -->
                             <div class="tab-content">
                                 @foreach($lags as $key=>$lag)
                                 <div class="tab-pane @if($key == 1) active @endif p-3" id="{{$lag->lang_code}}" role="tabpanel">
                                     <div class="card">
                                         <div class="card-body">
-                                            <h5 class="card-title">Banner</h5>
-                                            <div class="dropzone" id="banner" data-maxfile="1" data-ext="image/jpeg,image/png" data-lang="{{$lag->id}}" data-lang_code="{{$lag->lang_code}}" data-name="banner"></div>
+
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <h5 class="card-title">Banner</h5>
+                                                    <div class="dropzone" id="banner" data-maxfile="1" data-ext="image/jpeg,image/png" data-lang="{{$lag->id}}" data-lang_code="{{$lag->lang_code}}" data-name="banner"></div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <h5 class="card-title">Video</h5>
+                                                    <div class="dropzone" id="video" data-maxfile="1" data-ext=".mp4" data-lang="{{$lag->id}}" data-lang_code="{{$lag->lang_code}}" data-name="video" ></div>
+
+                                                </div>
+                                            </div>
                                             <h5 class="card-title">Preview</h5>
                                             <div class="dropzone" id="preview" data-maxfile="8" data-ext="image/jpeg,image/png" data-lang="{{$lag->id}}" data-lang_code="{{$lag->lang_code}}" data-name="preview"></div>
-                                            <h5 class="card-title">Video</h5>
-                                            <div class="dropzone" id="video" data-maxfile="1" data-ext=".mp4" data-lang="{{$lag->id}}" data-lang_code="{{$lag->lang_code}}" data-name="video" ></div>
                                         </div>
-{{--                                        <div class="card-body">--}}
-{{--                                            <h5 class="card-title">Logo</h5>--}}
-{{--                                            <form method="post" action="{{route('design.create')}}?action=logo" enctype="multipart/form-data"--}}
-{{--                                                  class="dropzone" id="formDesignLogo">--}}
-{{--                                                @csrf--}}
-{{--                                                <div class="fallback">--}}
-{{--                                                    <input name="file" type="file" multiple="multiple">--}}
-{{--                                                </div>--}}
-{{--                                            </form>--}}
-{{--                                            <h5 class="card-title">Banner</h5>--}}
-{{--                                            <form method="post" action="{{route('design.create')}}?action=banner" enctype="multipart/form-data"--}}
-{{--                                                  class="dropzone" id="formDesignBanner">--}}
-{{--                                                @csrf--}}
-{{--                                                <div class="fallback">--}}
-{{--                                                    <input name="file" type="file" multiple="multiple">--}}
-{{--                                                </div>--}}
-{{--                                            </form>--}}
-{{--                                            <h5 class="card-title">Preview</h5>--}}
-{{--                                            <form method="post" action="{{route('design.create')}}?action=preview" enctype="multipart/form-data"--}}
-{{--                                                  class="dropzone" id="formDesignPreview">--}}
-{{--                                                @csrf--}}
-{{--                                                <div class="fallback">--}}
-{{--                                                    <input name="file" type="file" multiple="multiple">--}}
-{{--                                                </div>--}}
-{{--                                            </form>--}}
-{{--                                            <h5 class="card-title">Video</h5>--}}
-{{--                                            <form method="post" action="{{route('design.create')}}?action=video" enctype="multipart/form-data"--}}
-{{--                                                  class="dropzone" id="formDesignVideo">--}}
-{{--                                                @csrf--}}
-{{--                                                <div class="fallback">--}}
-{{--                                                    <input name="file" type="file" multiple="multiple">--}}
-{{--                                                </div>--}}
-{{--                                            </form>--}}
 
-{{--                                        </div>--}}
                                     </div>
 
                                 </div>
                                 @endforeach
                             </div>
-
                     </div>
-                    <div class="col-sm-offset-2 col-sm-10">
-                        <button type="submit" class="btn btn-primary" id="saveBtn_dropzone" value="create">Save changes
-                        </button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    </div>
+{{--                    <div class="col-sm-offset-2 col-sm-10">--}}
+{{--                        <button type="submit" class="btn btn-primary" id="saveBtn_dropzone" value="create">Save changes--}}
+{{--                        </button>--}}
+{{--                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>--}}
+{{--                    </div>--}}
                 </form>
             </div>
         </div>

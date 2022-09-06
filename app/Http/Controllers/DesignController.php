@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\ProjectResource;
 use App\Models\Language;
+use App\Models\ProjectHasLang;
 use App\Models\ProjectModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Intervention\Image\Facades\Image;
+use function PHPUnit\Framework\isEmpty;
+use function PHPUnit\Framework\isNull;
 
 class DesignController extends Controller
 {
@@ -35,74 +38,120 @@ class DesignController extends Controller
         $searchValue = $search_arr['value']; // Search value
 
 
-//        dd(auth()->user());
+//        dd(auth()->id());
 
 
         // Total records
-        $totalRecords = ProjectModel::select('count(*) as allcount')->count();
-        $totalRecordswithFilter = ProjectModel::select('count(*) as allcount')
-            ->where('samsung_ga_name', 'like', '%' . $searchValue . '%')
-
+        $totalRecords = ProjectHasLang::select('count(*) as allcount')->count();
+        $totalRecordswithFilter = ProjectHasLang::select('count(*) as allcount')
+//            ->where('samsung_ga_name', 'like', '%' . $searchValue . '%')
             ->count();
-
-        // Get records, also we have included search filter as well
-        $records = Dev_Samsung::orderBy($columnName, $columnSortOrder)
-            ->with('gadev','ga','project')
-            ->where('samsung_ga_name', 'like', '%' . $searchValue . '%')
-            ->orWhere('samsung_dev_name', 'like', '%' . $searchValue . '%')
-            ->orWhere('samsung_store_name', 'like', '%' . $searchValue . '%')
-            ->orWhere('samsung_email', 'like', '%' . $searchValue . '%')
-            ->orWhere('samsung_status', 'like', '%' . $searchValue . '%')
-            ->orWhere('samsung_note', 'like', '%' . $searchValue . '%')
-            ->select('ngocphandang_dev_samsung.*')
+        $records = ProjectHasLang::orderBy($columnName, $columnSortOrder)
+            ->with('lang','project')
+//            ->select('projectid','logo','projectname')
+//            ->orderBy($columnName, $columnSortOrder)
+//            ->where('projectname', 'like', '%' . $searchValue . '%')
+//            ->whereRelation('hasLang','user_design',auth()->id())
             ->skip($start)
             ->take($rowperpage)
             ->get();
+
+        if( in_array( "Admin" ,array_column(auth()->user()->roles()->get()->toArray(),'name'))){
+            // Total records
+            $totalRecords = ProjectHasLang::select('count(*) as allcount')->count();
+            $totalRecordswithFilter = ProjectHasLang::select('count(*) as allcount')
+                ->whereRelation('project','projectname','like', '%' . $searchValue . '%')
+                ->count();
+            $records = ProjectHasLang::orderBy($columnName, $columnSortOrder)
+                ->with('lang','project')
+                ->whereRelation('project','projectname','like', '%' . $searchValue . '%')
+                ->skip($start)
+                ->take($rowperpage)
+                ->get();
+        }else{
+            $totalRecords = ProjectHasLang::select('count(*) as allcount')
+                ->where('user_design',auth()->id())
+                ->count();
+            $totalRecordswithFilter = ProjectHasLang::select('count(*) as allcount')
+                ->where('user_design',auth()->id())
+                ->whereRelation('project','projectname','like', '%' . $searchValue . '%')
+                ->count();
+            $records = ProjectHasLang::orderBy($columnName, $columnSortOrder)
+                ->with('lang','project')
+                ->whereRelation('project','projectname','like', '%' . $searchValue . '%')
+                ->where('user_design',auth()->id())
+                ->skip($start)
+                ->take($rowperpage)
+                ->get();
+        }
+
         $data_arr = array();
         foreach ($records as $record) {
-            $btn = ' <a href="javascript:void(0)" onclick="editDevSamsung('.$record->id.')" class="btn btn-warning"><i class="ti-pencil-alt"></i></a>';
-            $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$record->id.'" data-original-title="Delete" class="btn btn-danger deleteDevSamsung"><i class="ti-trash"></i></a>';
 
+            $btn = '';
+            if( in_array( "Admin" ,array_column(auth()->user()->roles()->get()->toArray(),'name'))){
+                $btn = ' <a href="javascript:void(0)" onclick="editProjectLang('.$record->id.')" class="btn btn-warning"><i class="ti-pencil-alt"></i></a>';
+                $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$record->id.'" data-original-title="Delete" class="btn btn-danger deleteProjectLang"><i class="ti-trash"></i></a>';
+            }
+            switch ($record->status){
+                case 0:
+                    $status ='<span style="font-size: 100%" class="badge badge-secondary">Gửi chờ duyệt</span>' ;
+                    break;
+                case 1:
+                    $status = '<span style="font-size: 100%" class="badge badge-info">Đã chỉnh sửa, cần duyệt lại</span>';
+                    break;
+                case 2:
+                    $status = '<span style="font-size: 100%" class="badge badge-warning">Fail, cần chỉnh sửa</span>';
+                    break;
+                case 3:
+                    $status = '<span style="font-size: 100%" class="badge badge-danger">Fail, Project loại khỏi dự án</span>';
+                    break;
+                case 4:
+                    $status = '<span style="font-size: 100%" class="badge badge-success">Done, Kết thúc Project</span>';
+                    break;
+            }
 
-
-            if($record->samsung_status == 0){
-                $status =  '<span class="badge badge-dark">Chưa xử dụng</span>';
-            }
-            if($record->samsung_status == 1){
-                $status = '<span class="badge badge-primary">Đang phát triển</span>';
-            }
-            if($record->samsung_status == 2){
-                $status = '<span class="badge badge-warning">Đóng</span>';
-            }
-            if($record->samsung_status == 3){
-                $status = '<span class="badge badge-danger">Suspend</span>';
+            switch ($record->logo){
+                case 0:
+                    $logo =' <span style="font-size: 100%" class="badge badge-danger"><i class="ti-close"></i></span> ' ;
+                    break;
+                case 1:
+                    $logo = ' <span style="font-size: 100%" class="badge badge-success"><i class="ti-check"></i></span> ';
+                    break;
             }
 
-
-            if($record->samsung_ga_name == 0 ){
-                $ga_name =  '<span class="badge badge-dark">Chưa có</span>';
-            }else{
-                $ga_name = $record->ga->ga_name;
+            switch ($record->banner){
+                case 0:
+                    $banner =' <span style="font-size: 100%" class="badge badge-danger"><i class="ti-close"></i></span> ' ;
+                    break;
+                case 1:
+                    $banner = ' <span style="font-size: 100%" class="badge badge-success"><i class="ti-check"></i></span> ';
+                    break;
             }
-
-            if($record->samsung_attribute !=0){
-                $thuoc_tinh = '<img height="70px" src="img/icon/profile.png">';
-            }else{
-                $thuoc_tinh = '<img height="70px" src="img/icon/office-building.png">';
+            switch ($record->preview){
+                case 0:
+                    $preview =' <span style="font-size: 100%" class="badge badge-danger"><i class="ti-close"></i></span> ' ;
+                    break;
+                case 1:
+                    $preview = ' <span style="font-size: 100%" class="badge badge-success"><i class="ti-check"></i></span> ';
+                    break;
             }
-            $release = $check = 0;
-            foreach ($record->project as $ch){
-                $ch->Samsung_status == 1 ? $release ++ : $check++;
+            switch ($record->video){
+                case 0:
+                    $video =' <span style="font-size: 100%" class="badge badge-danger"><i class="ti-close"></i></span> ' ;
+                    break;
+                case 1:
+                    $video = ' <span style="font-size: 100%" class="badge badge-success"><i class="ti-check"></i></span> ';
+                    break;
             }
             $data_arr[] = array(
-                'samsung_attribute' => $thuoc_tinh,
-                "samsung_ga_name" => $ga_name,
-                "samsung_dev_name" => '<a href="/project?q=dev_samsung&id='.$record->id.'"> <span>'.$record->samsung_dev_name.'</span></a>',
-                "samsung_store_name" => $record->samsung_store_name,
-                "samsung_email"=>$record->gadev->gmail.'<p style="margin: auto" class="text-muted ">'.$record->samsung_pass .'</p>',
-                "project" => ' <span class="badge badge-secondary">'.count($record->project).'</span> ' .' <span class="badge badge-success"> '.$release.' </span>'. ' <span class="badge badge-danger"> '.$check.' </span>' ,
-                "samsung_status"=>$status,
-                "samsung_note"=>$record->samsung_note,
+                'id' => $record->id,
+                'project_id' => $record->project->projectname,
+                'logo' => $record->project->logo,
+                'lang_id' => $record->lang->lang_name,
+                'user_design' => $record->user->name,
+                'design' => $logo. $banner.$preview.$video,
+                'status' => $status,
                 "action"=> $btn,
             );
         }
@@ -119,9 +168,7 @@ class DesignController extends Controller
     }
 
     public function project_show(){
-
         $searchValue = \request()->q;
-
         $project = ProjectModel::latest()
             ->where('projectname', 'like', '%' . $searchValue . '%')
             ->get();
@@ -130,6 +177,9 @@ class DesignController extends Controller
     }
 
     public function create(Request $request){
+        if($request->projectid == 'null' || $request->projectname  == 'null'){
+            return response()->json(['errors'=> 'Chọn Project']);
+        }
 
         $du_an = preg_split("/[-]+/",$request->projectname)[0];
 
@@ -139,7 +189,6 @@ class DesignController extends Controller
                 mkdir($path, 777, true);
             }
         }
-
         $action = $request->action;
         switch ($action){
             case 'logo':
@@ -155,6 +204,10 @@ class DesignController extends Controller
                     $img->resize(114, 114)
                         ->save($path_logo.'lg114.png',80);
                 }
+                $project = ProjectModel::find($request->projectid);
+                $project->logo = 'lg.png';
+                $project->save();
+                $project->lang()->syncWithPivotValues($project->lang()->get()->pluck('id')->toArray(),['logo' => 1]);
                 break;
             case 'banner':
                 $files = $request->file('banner');
@@ -163,6 +216,17 @@ class DesignController extends Controller
                     $img
                         ->save($path.'bn.'.$file->extension(),80);
                 }
+                $result = ProjectHasLang::updateOrCreate(
+                    [
+                        'project_id' => $request->projectid,
+                        'lang_id' => $request->lang,
+                    ],
+                    [
+                        'banner' => 1,
+                        'user_design' => auth()->id(),
+                    ]
+                );
+
                 break;
             case 'preview':
                 $files = $request->file('preview');
@@ -171,15 +235,38 @@ class DesignController extends Controller
                     $img
                         ->save($path.'pr'.($key+1).'.'.$file->extension(),80);
                 }
+                $result = ProjectHasLang::updateOrCreate(
+                    [
+                        'project_id' => $request->projectid,
+                        'lang_id' => $request->lang,
+                    ],
+                    [
+                        'preview' => 1,
+                        'user_design' => auth()->id(),
+                    ]
+                );
                 break;
             case 'video':
-
                 $files = $request->file('video');
                 foreach ($files as $file) {
                     $file->move($path, 'video.'.$file->extension());
                 }
+                $result = ProjectHasLang::updateOrCreate(
+                    [
+                        'project_id' => $request->projectid,
+                        'lang_id' => $request->lang,
+                    ],
+                    [
+                        'video' => 1,
+                        'user_design' => auth()->id(),
+                    ]
+                );
                 break;
         }
+        if (isset($result) && $result->status == 2 ){
+            $result->update(['status'=>1]);
+        }
+
         return response()->json(['success'=>'Thành công']);
     }
 }

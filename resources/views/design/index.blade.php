@@ -4,6 +4,11 @@
 
 <link href="plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
 <link href="plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+
+
+
+
+
 <!-- Responsive datatable examples -->
 <link href="plugins/datatables/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" />
 
@@ -13,7 +18,7 @@
 
 <!-- Select2 Js  -->
 <link href="plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
-/*<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet" />*/
+
 <!-- Dropzone css -->
 <link href="{{ URL::asset('/assets/libs/dropzone/dropzone.min.css') }}" rel="stylesheet" type="text/css" />
 
@@ -44,9 +49,13 @@
                     <table class="table table-bordered dt-responsive nowrap data-table" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                         <thead>
                         <tr>
-                            <th>STT</th>
-                            <th>Tên quyền</th>
-                            <th>Mô tả </th>
+{{--                            <th>Logo</th>--}}
+                            <th>Project Name</th>
+                            <th>Ngôn ngữ </th>
+                            <th>Logo | Banner | Preview | Video </th>
+
+                            <th>Status</th>
+                            <th>User </th>
                             <th>Action</th>
                         </tr>
                         </thead>
@@ -83,8 +92,12 @@
 <script src="{{ URL::asset('/assets/libs/dropzone/dropzone.min.js') }}"></script>
 
 <script src="plugins/select2/js/select2.min.js"></script>
-{{--<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>--}}
-</script>
+
+
+{{--<script src="https://cdn.datatables.net/rowgroup/1.2.0/js/dataTables.rowGroup.min.js"></script>--}}
+
+
+
 
 <script type="text/javascript">
     $(function () {
@@ -93,6 +106,7 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
+        var groupColumn = 0;
         var table = $('.data-table').DataTable({
 
             processing: true,
@@ -102,12 +116,39 @@
                 type: 'post',
             },
             columns: [
-                {data: 'id', name: 'id'},
-                {data: 'name', name: 'name'},
-                {data: 'display_name', name: 'display_name'},
+                // {data: 'id', name: 'id'},
+                {data: 'project_id', name: 'project_id'},
+                {data: 'lang_id', name: 'lang_id'},
+                {data: 'design', name: 'design'},
+
+                {data: 'status', name: 'status'},
+                {data: 'user_design', name: 'user_design'},
                 {data: 'action',className: "text-center", name: 'action', orderable: false, searchable: false},
-            ]
+            ],
+            // order: [[1, 'asc']],
+            rowGroup: {
+                dataSrc: 0
+            },
+            columnDefs: [{ visible: false, targets: groupColumn }],
+            drawCallback: function (settings) {
+                var api = this.api();
+                var rows = api.rows({ page: 'current' }).nodes();
+                var last = null;
+                api
+                    .column(groupColumn, { page: 'current' })
+                    .data()
+                    .each(function (group, i) {
+                        if (last !== group) {
+                            $(rows)
+                                .eq(i)
+                                .before('<tr class="group"><td colspan="6">' + group + '</td></tr>');
+
+                            last = group;
+                        }
+                    });
+            },
         });
+
 
 
         $('#createNewDesign').click(function () {
@@ -245,18 +286,9 @@
         $('#pro_text').val(projectName);
         _id = $('#pro_id').val();
         _name = $('#pro_text').val();
+        $('div.dz-success').remove();
     });
 
-
-    {{--const getMeSomeUrl = () => {--}}
-    {{--    // var options = $(this).attr('id');--}}
-    {{--    // var lang = $(this).data("lang");--}}
-    {{--    // var lang_code = $(this).data("lang_code");--}}
-    {{--    // var maxfile = $(this).data("maxfile");--}}
-    {{--    // var extfile = $(this).data("ext");--}}
-    {{--    // var dropParamName = $(this).data("name");--}}
-    {{--    return '{{route('design.create')}}?projectid=' + _id + '&projectname=' + _name--}}
-    {{--}--}}
 
     $('.dropzone').each(function() {
         var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
@@ -275,32 +307,27 @@
                 'x-csrf-token': CSRF_TOKEN,
             },
             paramName: dropParamName,
-            maxFiles: maxfile,
+            // maxFiles: maxfile,
             maxFilesize: 20,
             parallelUploads: 10,
             uploadMultiple: true,
             acceptedFiles: extfile,
-            addRemoveLinks: true,
+            // addRemoveLinks: true,
             timeout: 0,
-            dictRemoveFile: 'Xoá',
+            // dictRemoveFile: 'Xoá',
             // autoProcessQueue: false,
 
             init: function () {
                 var _this = this; // For the closure
 
                 this.on('success', function (file, response) {
-                    _this.removeFile(file);
+                    // _this.removeFile(file);
                     if (response.success) {
                         $.notify(file.name, "success");
                     }
                     if (response.errors) {
-                        for (var count = 0; count < response.errors.length; count++) {
-                            toastr['error'](file.name, response.errors[count], {
-                                showMethod: 'slideDown',
-                                hideMethod: 'slideUp',
-                                timeOut: 5000,
-                            });
-                        }
+                        _this.removeFile(file);
+                        $.notify(response.errors, "error");
                     }
                 });
             },
