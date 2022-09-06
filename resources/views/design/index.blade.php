@@ -103,6 +103,7 @@
 
 
 <script type="text/javascript">
+    Dropzone.autoDiscover = false;
     $(function () {
         $.ajaxSetup({
             headers: {
@@ -196,6 +197,65 @@
 
 
 
+
+        var _id = null;
+        var _name = null;
+        $(document).on('change', '#project_id', function () {
+            var projectID = $(this).select2('data')[0].id;
+            var projectName = $(this).select2('data')[0].text;
+            $('#pro_id').val(projectID);
+            $('#pro_text').val(projectName);
+            _id = $('#pro_id').val();
+            _name = $('#pro_text').val();
+            $('div.dz-success').remove();
+        });
+        $('.dropzone').each(function() {
+            var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+            var options = $(this).attr('id');
+            var lang = $(this).data("lang");
+            var lang_code = $(this).data("lang_code");
+            var maxfile = $(this).data("maxfile");
+            var extfile = $(this).data("ext");
+            var dropParamName = $(this).data("name");
+            const getMeSomeUrl = () => {
+                return '{{route('design.create')}}?projectid=' + _id + '&projectname=' + _name+'&action=' + options + '&lang_code=' + lang_code + '&lang=' + lang
+            }
+            $(this).dropzone({
+                url: getMeSomeUrl,
+                headers: {
+                    'x-csrf-token': CSRF_TOKEN,
+                },
+                paramName: dropParamName,
+                // maxFiles: maxfile,
+                maxFilesize: 20,
+                parallelUploads: 10,
+                uploadMultiple: true,
+                acceptedFiles: extfile,
+                // addRemoveLinks: true,
+                timeout: 0,
+                // dictRemoveFile: 'Xoá',
+                // autoProcessQueue: false,
+
+                init: function () {
+                    var _this = this; // For the closure
+
+                    this.on('success', function (file, response) {
+                        // _this.removeFile(file);
+                        if (response.success) {
+                            $.notify(file.name, "success");
+                            table.draw();
+                        }
+                        if (response.errors) {
+                            _this.removeFile(file);
+                            $.notify(response.errors, "error");
+                        }
+                    });
+                },
+            });
+        })
+
+
+
         $('#createNewDesign').click(function () {
             $('#saveBtn').val("create-design");
             $('#design_id').val('');
@@ -204,7 +264,7 @@
             $('#ajaxModel').modal('show');
 
             $("#project_id").select2({
-                minimumInputLength: 3,
+                minimumInputLength: 2,
                 ajax: {
                     url: '{{route('design.project_show')}}',
                     dataType: 'json',
@@ -314,94 +374,18 @@
                     swal("Đã xóa!", "Your imaginary file has been deleted.", "success");
                 });
         });
+
+
+
+
+
+
+
     });
 
 </script>
 
 <script>
-
-    Dropzone.autoDiscover = false;
-
-    var _id = null;
-    var _name = null;
-    $(document).on('change', '#project_id', function () {
-        var projectID = $(this).select2('data')[0].id;
-        var projectName = $(this).select2('data')[0].text;
-        $('#pro_id').val(projectID);
-        $('#pro_text').val(projectName);
-        _id = $('#pro_id').val();
-        _name = $('#pro_text').val();
-        $('div.dz-success').remove();
-    });
-
-
-    $('.dropzone').each(function() {
-        var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
-        var options = $(this).attr('id');
-        var lang = $(this).data("lang");
-        var lang_code = $(this).data("lang_code");
-        var maxfile = $(this).data("maxfile");
-        var extfile = $(this).data("ext");
-        var dropParamName = $(this).data("name");
-        const getMeSomeUrl = () => {
-            return '{{route('design.create')}}?projectid=' + _id + '&projectname=' + _name+'&action=' + options + '&lang_code=' + lang_code + '&lang=' + lang
-        }
-        $(this).dropzone({
-            url: getMeSomeUrl,
-            headers: {
-                'x-csrf-token': CSRF_TOKEN,
-            },
-            paramName: dropParamName,
-            // maxFiles: maxfile,
-            maxFilesize: 20,
-            parallelUploads: 10,
-            uploadMultiple: true,
-            acceptedFiles: extfile,
-            // addRemoveLinks: true,
-            timeout: 0,
-            // dictRemoveFile: 'Xoá',
-            // autoProcessQueue: false,
-
-            init: function () {
-                var _this = this; // For the closure
-
-                this.on('success', function (file, response) {
-                    // _this.removeFile(file);
-                    if (response.success) {
-                        $.notify(file.name, "success");
-                    }
-                    if (response.errors) {
-                        _this.removeFile(file);
-                        $.notify(response.errors, "error");
-                    }
-                });
-            },
-        });
-    })
-
-
-
-
-
-
-
-
-
-
-
-    {{--    // var _ID = $('#pro_text').val();--}}
-
-
-
-    {{--});--}}
-
-
-
-
-
-
-
-
 
 
 

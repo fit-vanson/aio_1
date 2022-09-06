@@ -126,9 +126,10 @@ class DesignController extends Controller
                 case 0:
                     $preview =' <span style="font-size: 100%" class="badge badge-danger"><i class="ti-close"></i></span> ' ;
                     break;
-                case 1:
+                default:
                     $preview = '<div class="popup-gallery">';
-                    for ($i=1 ; $i<=8; $i++){
+
+                    for ($i=1 ; $i<=$record->preview; $i++){
                         $preview .=  '<a class="float-left" href="'.url('/storage/projects').'/'.$du_an.'/'.$project_name.'/'.$lang->lang_code.'/pr'.$i.'.jpg" title="preview '.$i.'">
                                                 <div class="img-responsive">
                                                     <img src="'.url('/storage/projects').'/'.$du_an.'/'.$project_name.'/'.$lang->lang_code.'/pr'.$i.'.jpg" alt="" width="120">
@@ -137,6 +138,7 @@ class DesignController extends Controller
                     }
                     $preview .= '</div>';
                     break;
+
             }
             switch ($record->video){
                 case 0:
@@ -189,7 +191,7 @@ class DesignController extends Controller
         $du_an = preg_split("/[-]+/",$request->projectname)[0];
 
         if($request->lang_code != 'undefined'){
-            $path = storage_path('app/public/projects/'.$du_an.'/'.$request->projectname.'/'.$request->lang_code.'/');
+            $path = storage_path('app/public/projects/'.trim($du_an).'/'.trim($request->projectname).'/'.trim($request->lang_code).'/');
             if (!file_exists($path)) {
                 mkdir($path, 777, true);
             }
@@ -242,13 +244,14 @@ class DesignController extends Controller
 //                        ->save($path.'pr'.($key+1).'.'.$file->extension(),80);
                         ->save($path.'pr'.($key+1).'.jpg',80);
                 }
+
                 $result = ProjectHasLang::updateOrCreate(
                     [
                         'project_id' => $request->projectid,
                         'lang_id' => $request->lang,
                     ],
                     [
-                        'preview' => 1,
+                        'preview' => $key+1,
                         'user_design' => auth()->id(),
                     ]
                 );
