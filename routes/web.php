@@ -60,6 +60,9 @@ use Illuminate\Support\Facades\Route;
 */
 Route::get('/clear',function (){
     echo  Artisan::call('optimize:clear');
+    echo  Artisan::call('cache:clear');
+    echo  Artisan::call('config:cache');
+    echo  Artisan::call('route:cache');
 });
 Route::get('/link',function (){
     echo  Artisan::call('storage:link');
