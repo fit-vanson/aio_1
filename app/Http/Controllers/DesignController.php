@@ -127,7 +127,7 @@ class DesignController extends Controller
                     $preview = '<div class="popup-gallery">';
 
                     for ($i=1 ; $i<=$record->preview; $i++){
-                        $preview .=  '<a class="float-left" href="'.url('/storage/projects').'/'.$du_an.'/'.$project_name.'/'.$lang->lang_code.'/pr'.$i.'.jpg" title="preview '.$i.'">
+                        $preview .=  '<a class="float-left" href="'.url('/storage/projects').'/'.$du_an.'/'.$project_name.'/'.$lang->lang_code.'/pr'.$i.'.jpg" title="'.$project_name.' - preview '.$i.'">
                                                 <div class="img-responsive">
                                                     <img src="'.url('/storage/projects').'/'.$du_an.'/'.$project_name.'/'.$lang->lang_code.'/pr'.$i.'.jpg" alt="" width="120">
                                                 </div>
