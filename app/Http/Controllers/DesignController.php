@@ -68,7 +68,7 @@ class DesignController extends Controller
         }
 
         $data_arr = array();
-        foreach ($records as $record) {
+        foreach ($records as $key=>$record) {
 
             $btn = '';
             if( in_array( "Admin" ,array_column(auth()->user()->roles()->get()->toArray(),'name'))){
@@ -79,8 +79,6 @@ class DesignController extends Controller
             $project_name = $record->project->projectname;
             $du_an = preg_split("/[-]+/",$project_name)[0];
             $lang = $record->lang;
-
-//            dd($du_an);
 
             switch ($record->status){
                 case 0:
@@ -104,9 +102,10 @@ class DesignController extends Controller
                     $logo =' <span style="font-size: 100%" class="badge badge-danger"><i class="ti-close"></i></span> ' ;
                     break;
                 case 1:
-                    $logo = '<a class="image-popup-no-margins" href="'.url('/storage/projects').'/'.$du_an.'/'.$project_name.'/lg.png">
-                                <img class="img-fluid" alt="" src="'.url('/storage/projects').'/'.$du_an.'/'.$project_name.'/lg114.png" width="120">
-                            </a>';
+                    $logo =
+                        '<a href="'.url('/storage/projects').'/'.$du_an.'/'.$project_name.'/lg.png" data-sub-html="<h4>'.$project_name.'</h4>lg.png ">
+                            <img src="'.url('/storage/projects').'/'.$du_an.'/'.$project_name.'/lg114.png" height="120">
+                        </a>';
                     break;
             }
             switch ($record->banner){
@@ -114,8 +113,9 @@ class DesignController extends Controller
                     $banner =' <span style="font-size: 100%" class="badge badge-danger"><i class="ti-close"></i></span> ' ;
                     break;
                 case 1:
-                    $banner = '<a class="image-popup-no-margins" href="'.url('/storage/projects').'/'.$du_an.'/'.$project_name.'/'.$lang->lang_code.'/bn.jpg">
-                                <img class="img-fluid" alt="" src="'.url('/storage/projects').'/'.$du_an.'/'.$project_name.'/'.$lang->lang_code.'/bn.jpg" width="120">
+                    $banner =
+                            '<a href="'.url('/storage/projects').'/'.$du_an.'/'.$project_name.'/'.$lang->lang_code.'/bn.jpg" data-sub-html="<h4>'.$project_name.' ('.$lang->lang_name.')</h4>bn.jpg">
+                                <img src="'.url('/storage/projects').'/'.$du_an.'/'.$project_name.'/'.$lang->lang_code.'/bn.jpg" height="120">
                             </a>';
                     break;
             }
@@ -124,16 +124,13 @@ class DesignController extends Controller
                     $preview =' <span style="font-size: 100%" class="badge badge-danger"><i class="ti-close"></i></span> ' ;
                     break;
                 default:
-                    $preview = '<div class="popup-gallery">';
-
+                    $preview = '';
                     for ($i=1 ; $i<=$record->preview; $i++){
-                        $preview .=  '<a class="float-left" href="'.url('/storage/projects').'/'.$du_an.'/'.$project_name.'/'.$lang->lang_code.'/pr'.$i.'.jpg" title="'.$project_name.' - preview '.$i.'">
-                                                <div class="img-responsive">
-                                                    <img src="'.url('/storage/projects').'/'.$du_an.'/'.$project_name.'/'.$lang->lang_code.'/pr'.$i.'.jpg" alt="" width="120">
-                                                </div>
-                                            </a>';
+                        $preview .=
+                            '<a href="'.url('/storage/projects').'/'.$du_an.'/'.$project_name.'/'.$lang->lang_code.'/pr'.$i.'.jpg" data-sub-html="<h4>'.$project_name.' ('.$lang->lang_name.')</h4> pr'.$i.'.jpg">
+                                <img  src="'.url('/storage/projects').'/'.$du_an.'/'.$project_name.'/'.$lang->lang_code.'/pr'.$i.'.jpg" height="120">
+                            </a>';
                     }
-                    $preview .= '</div>';
                     break;
             }
             switch ($record->video){
@@ -147,19 +144,16 @@ class DesignController extends Controller
             $data_arr[] = array(
                 'id' => $record->id,
                 'project_id' => $project_name,
-
                 'lang_id' => $lang->lang_name,
                 'user_design' => $record->user->name,
-                'logo' => $logo,
-                'banner' => $banner,
+//                'logo' => $logo,
+//                'banner' => $banner,
                 'video' => $video,
-                'preview' => $preview,
+                'preview' => '<div class="light_gallery">'.$logo.$banner.$preview.'</div>',
                 'status' => $status,
                 "action"=> $btn,
             );
         }
-
-
         $response = array(
             "draw" => intval($draw),
             "iTotalRecords" => $totalRecords,

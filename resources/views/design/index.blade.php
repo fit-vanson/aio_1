@@ -8,6 +8,11 @@
 <link href="{{ URL::asset('assets/libs/magnific-popup/magnific-popup.min.css') }}" rel="stylesheet" type="text/css" />
 
 
+<link href="{{ URL::asset('assets/libs/lightgallery/css/lightgallery.css') }}" rel="stylesheet" type="text/css" />
+
+
+
+
 
 
 
@@ -49,12 +54,9 @@
                     <table class="table table-bordered dt-responsive nowrap data-table" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                         <thead>
                         <tr>
-{{--                            <th>Logo</th>--}}
                             <th>Project Name</th>
                             <th>Ngôn ngữ </th>
-                            <th style="width: 5%">Logo</th>
-                            <th style="width: 10%">Banner</th>
-                            <th style="width: 30%">Preview</th>
+                            <th style="width: 30%">Logo | Banner | Preview</th>
                             <th style="width: 5%"> Video</th>
                             <th>Status</th>
                             <th>User </th>
@@ -94,12 +96,9 @@
 <script src="{{ URL::asset('/assets/libs/dropzone/dropzone.min.js') }}"></script>
 
 <script src="plugins/select2/js/select2.min.js"></script>
+
 <script src="{{ URL::asset('/assets/libs/magnific-popup/magnific-popup.min.js') }}"></script>
-
-
-{{--<script src="https://cdn.datatables.net/rowgroup/1.2.0/js/dataTables.rowGroup.min.js"></script>--}}
-
-
+<script src="{{ URL::asset('/assets/libs/lightgallery/js/lightgallery-all.js') }}"></script>
 
 
 <script type="text/javascript">
@@ -110,6 +109,7 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
+
         var groupColumn = 0;
         var table = $('.data-table').DataTable({
 
@@ -120,11 +120,8 @@
                 type: 'post',
             },
             columns: [
-                // {data: 'id', name: 'id'},
                 {data: 'project_id', name: 'project_id'},
                 {data: 'lang_id', name: 'lang_id'},
-                {data: 'logo', name: 'logo'},
-                {data: 'banner', name: 'banner'},
                 {data: 'preview', name: 'preview'},
                 {data: 'video', name: 'video'},
                 {data: 'status', name: 'status'},
@@ -137,6 +134,9 @@
             },
             columnDefs: [{ visible: false, targets: groupColumn }],
             drawCallback: function (settings) {
+
+
+
                 var api = this.api();
                 var rows = api.rows({ page: 'current' }).nodes();
                 var last = null;
@@ -151,24 +151,6 @@
                             last = group;
                         }
                     });
-
-                $('.image-popup-no-margins').magnificPopup({
-                    type: 'image',
-                    closeOnContentClick: true,
-                    closeBtnInside: false,
-                    fixedContentPos: true,
-                    mainClass: 'mfp-no-margins mfp-with-zoom',
-                    // class to remove default margin from left and right side
-                    image: {
-                        verticalFit: true
-                    },
-                    zoom: {
-                        enabled: true,
-                        duration: 300 // don't foget to change the duration also in CSS
-
-                    }
-                });
-
                 $('.popup-youtube, .popup-vimeo, .popup-gmaps').magnificPopup({
                     disableOn: 700,
                     type: 'iframe',
@@ -177,23 +159,10 @@
                     preloader: false,
                     fixedContentPos: false
                 });
-                $('.popup-gallery').magnificPopup({
-                    delegate: 'a',
-                    type: 'image',
-                    tLoading: 'Loading image #%curr%...',
-                    mainClass: 'mfp-img-mobile',
-                    gallery: {
-                        enabled: true,
-                        navigateByImgClick: true,
-                        preload: [0, 1] // Will preload 0 - before current, and 1 after the current image
-
-                    },
-                    image: {
-                        tError: '<a href="%url%">The image #%curr%</a> could not be loaded.'
-                    }
-                });
+                $('.light_gallery').lightGallery({});
             },
         });
+
 
 
 
@@ -372,12 +341,6 @@
                     swal("Đã xóa!", "Your imaginary file has been deleted.", "success");
                 });
         });
-
-
-
-
-
-
 
     });
 
