@@ -18,6 +18,7 @@ class ProjectHasLang extends Model
       'video',
       'user_design',
       'status',
+      'notes',
     ];
 
 

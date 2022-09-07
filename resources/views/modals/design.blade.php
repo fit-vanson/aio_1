@@ -76,3 +76,61 @@
     </div>
 </div>
 
+<div class="modal fade" id="ajaxModelEdit" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Edit</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+
+                <form id="designFormEdit" name="designFormEdit" class="form-horizontal">
+                    <div class="row">
+                        <input type="hidden" name="design_id_edit" id="design_id_edit">
+
+
+                        <div class="form-group col-12">
+                            <label for="name">Ghi chú</label>
+                            <textarea id="notes" name="notes" class="form-control" rows="6" ></textarea>
+                        </div>
+
+
+                        @if( in_array( "Admin" ,array_column(auth()->user()->roles()->get()->toArray(),'name')))
+                            <div class="form-group col-12">
+                                <label for="name">Trạng thái</label>
+                                <div>
+                                    <select class="form-control" id="status" name="status">
+                                        <option value="0">Gửi chờ duyệt</option>
+                                        <option value="1">Đã chỉnh sửa, cần duyệt lại</option>
+                                        <option value="2">Fail, cần chỉnh sửa</option>
+                                        <option value="3">Fail, Project loại khỏi dự án</option>
+                                        <option value="4">Done, Kết thúc Project</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-12">
+                                <button type="submit" class="btn btn-primary" id="saveBtnEditDesign">Save changes
+                                </button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>
+                        @endif
+
+
+
+
+
+                    </div>
+
+
+
+
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+

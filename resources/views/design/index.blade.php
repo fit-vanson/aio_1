@@ -40,7 +40,7 @@
 </div>
 <div class="col-sm-6">
     <div class="float-right">
-        <a class="btn btn-success" href="javascript:void(0)" id="createNewDesign">Thêm mới</a>
+        <a class="btn btn-success" href="javascript:void(0)" id="createNewDesign">Create Or Update</a>
     </div>
 </div>
 @include('modals.design')
@@ -134,9 +134,6 @@
             },
             columnDefs: [{ visible: false, targets: groupColumn }],
             drawCallback: function (settings) {
-
-
-
                 var api = this.api();
                 var rows = api.rows({ page: 'current' }).nodes();
                 var last = null;
@@ -162,11 +159,6 @@
                 $('.light_gallery').lightGallery({});
             },
         });
-
-
-
-
-
         var _id = null;
         var _name = null;
         $(document).on('change', '#project_id', function () {
@@ -259,65 +251,60 @@
             });
         });
 
-        $('#designForm').on('submit',function (event){
+        $('#designFormEdit').on('submit',function (event){
             event.preventDefault();
-            var formData = new FormData($("#designForm")[0]);
-            if($('#saveBtn').val() == 'create-design'){
-                $.ajax({
-                    data: formData,
-                    url: "{{ route('design.create') }}",
-                    type: "POST",
-                    dataType: 'json',
-                    processData: false,
-                    contentType: false,
-                    success: function (data) {
-                        // if(data.errors){
-                        //     for( var count=0 ; count <data.errors.length; count++){
-                        //         $("#permissionForm").notify(
-                        //             data.errors[count],"error",
-                        //             { position:"right" }
-                        //         );
-                        //     }
+            var formData = new FormData($("#designFormEdit")[0]);
+            // var row_id = $('#saveBtnEditDesign').val();
+            $.ajax({
+                data: formData,
+                url: "{{ route('design.update') }}",
+                type: "POST",
+                dataType: 'json',
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    if(data.success){
+                        // var status = data.data.status
+                        // let html
+                        //
+                        // switch(status) {
+                        //     case '0':
+                        //         html ='<span style="font-size: 100%" class="badge badge-secondary">Gửi chờ duyệt</span>' ;
+                        //         break;
+                        //     case '1':
+                        //         html = '<span style="font-size: 100%" class="badge badge-info">Đã chỉnh sửa, cần duyệt lại</span>';
+                        //         break;
+                        //     case '2':
+                        //         html = '<span style="font-size: 100%" class="badge badge-warning">Fail, cần chỉnh sửa</span>';
+                        //         break;
+                        //     case '3':
+                        //         html = '<span style="font-size: 100%" class="badge badge-danger">Fail, Project loại khỏi dự án</span>';
+                        //         break;
+                        //     case '4':
+                        //         html = '<span style="font-size: 100%" class="badge badge-success">Done, Kết thúc Project</span>';
+                        //         break;
                         // }
-                        // if(data.success){
-                        //     $.notify(data.success, "success");
-                        //     $('#permissionForm').trigger("reset");
-                        //     $('#ajaxModel').modal('hide');
-                        //     table.draw();
-                        // }
-                    },
-                });
-            }
-            if($('#saveBtn').val() == 'edit-permission'){
-                $.ajax({
-                    data: $('#permissionForm').serialize(),
-                    url: "{{ route('permission.update') }}",
-                    type: "post",
-                    dataType: 'json',
-                    success: function (data) {
-                        if(data.errors){
-                            for( var count=0 ; count <data.errors.length; count++){
-                                $("#permissionForm").notify(
-                                    data.errors[count],"error",
-                                    { position:"right" }
-                                );
-                            }
-                        }
-                        if(data.success){
-                            $.notify(data.success, "success");
-                            $('#permissionForm').trigger("reset");
-                            $('#ajaxModel').modal('hide');
-                            table.draw();
-                        }
-                    },
-                });
+                        // var row = table.row().data()
+                        // // var row_data = row.data();
+                        // //
+                        // // // row_data[1] = html;
+                        // row.data().draw(false);
 
-            }
+                        $.notify(data.success, "success");
+                        $('#designFormEdit').trigger("reset");
+                        $('#ajaxModelEdit').modal('hide');
+
+                    }
+                },
+            });
+
+
 
         });
 
-        $(document).on('click','.deletePer', function (data){
-            var permission_id = $(this).data("id");
+        $(document).on('click','.deleteProjectLang', function (data){
+            var _id = $(this).data("id");
+            var remove = $(this).parent().parent();
             swal({
                     title: "Bạn có chắc muốn xóa?",
                     text: "Your will not be able to recover this imaginary file!",
@@ -330,9 +317,13 @@
                 function(){
                     $.ajax({
                         type: "get",
-                        url: "{{ asset("permission/delete") }}/" + permission_id,
+                        url: "{{ asset("design/delete") }}/" + _id,
                         success: function (data) {
-                            table.draw();
+                            if(data.success){
+                                remove.slideUp(300,function() {
+                                    remove.remove();
+                                })
+                            }
                         },
                         error: function (data) {
                             console.log('Error:', data);
@@ -342,30 +333,41 @@
                 });
         });
 
-    });
 
-</script>
-
-<script>
-
-
-
-
-
-        function editPer(id) {
-            $.get('{{asset('permission/edit')}}/'+id,function (data) {
-                $('#modelHeading').html("Chỉnh sửa Phân quyền");
-                $('#saveBtn').val("edit-permission");
-                $('#ajaxModel').modal('show');
+        $(document).on('click','.editProjectLang', function (data){
+            var _id = $(this).data("id");
+            // var row_id = $(this).data("id_row");
+            $.get('{{asset('design/edit')}}/'+_id,function (data) {
+                // $('#saveBtnEditDesign').val(row_id);
+                $('#ajaxModelEdit').modal('show');
                 $('.modal').on('hidden.bs.modal', function (e) {
                     $('body').addClass('modal-open');
                 });
-
-                $('#permission_id').val(data[0].id);
-                $('#name').val(data[0].name);
-                $('#display_name').val(data[0].display_name)
+                $('#design_id_edit').val(data.id);
+                $('#status').val(data.status);
+                $('#notes').val(data.notes);
             })
-        }
+        });
+    });
+
+    {{--function editProjectLang(id) {--}}
+    {{--    var _id = $(this).data("id_row");--}}
+    {{--    console.log(_id)--}}
+    {{--    $.get('{{asset('design/edit')}}/'+id,function (data) {--}}
+
+    {{--        $('#saveBtn').val("edit-permission");--}}
+    {{--        $('#ajaxModelEdit').modal('show');--}}
+    {{--        $('.modal').on('hidden.bs.modal', function (e) {--}}
+    {{--            $('body').addClass('modal-open');--}}
+    {{--        });--}}
+
+    {{--        $('#design_id_edit').val(data.id);--}}
+    {{--        $('#id_row').val($(this).data("id"));--}}
+    {{--        $('#status').val(data.status);--}}
+    {{--        $('#notes').val(data.notes);--}}
+
+    {{--    })--}}
+    {{--}--}}
     </script>
 @endsection
 

@@ -21,8 +21,6 @@ class DesignController extends Controller
     }
     public function getIndex(Request $request)
     {
-
-
         $draw = $request->get('draw');
         $start = $request->get("start");
         $rowperpage = $request->get("length"); // total number of rows per page
@@ -70,10 +68,11 @@ class DesignController extends Controller
         $data_arr = array();
         foreach ($records as $key=>$record) {
 
-            $btn = '';
+//            $btn = ' <a href="javascript:void(0)" data-id_row="'.$key.'"  onclick="editProjectLang('.$record->id.')" class="btn btn-warning"><i class="ti-pencil-alt"></i></a>';
+            $btn = ' <a href="javascript:void(0)"  data-id="'.$record->id.'" class="btn btn-warning editProjectLang"><i class="ti-pencil-alt"></i></a>';
+
             if( in_array( "Admin" ,array_column(auth()->user()->roles()->get()->toArray(),'name'))){
-                $btn = ' <a href="javascript:void(0)" onclick="editProjectLang('.$record->id.')" class="btn btn-warning"><i class="ti-pencil-alt"></i></a>';
-                $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$record->id.'" data-original-title="Delete" class="btn btn-danger deleteProjectLang"><i class="ti-trash"></i></a>';
+                $btn = $btn.' <a href="javascript:void(0)"  data-id="'.$record->id.'" class="btn btn-danger deleteProjectLang"><i class="ti-trash"></i></a>';
             }
 
             $project_name = $record->project->projectname;
@@ -114,9 +113,9 @@ class DesignController extends Controller
                     break;
                 case 1:
                     $banner =
-                            '<a href="'.url('/storage/projects').'/'.$du_an.'/'.$project_name.'/'.$lang->lang_code.'/bn.jpg" data-sub-html="<h4>'.$project_name.' ('.$lang->lang_name.')</h4>bn.jpg">
-                                <img src="'.url('/storage/projects').'/'.$du_an.'/'.$project_name.'/'.$lang->lang_code.'/bn.jpg" height="120">
-                            </a>';
+                        '<a href="'.url('/storage/projects').'/'.$du_an.'/'.$project_name.'/'.$lang->lang_code.'/bn.jpg" data-sub-html="<h4>'.$project_name.' ('.$lang->lang_name.')</h4>bn.jpg">
+                            <img src="'.url('/storage/projects').'/'.$du_an.'/'.$project_name.'/'.$lang->lang_code.'/bn.jpg" height="120">
+                        </a>';
                     break;
             }
             switch ($record->preview){
@@ -146,8 +145,6 @@ class DesignController extends Controller
                 'project_id' => $project_name,
                 'lang_id' => $lang->lang_name,
                 'user_design' => $record->user->name,
-//                'logo' => $logo,
-//                'banner' => $banner,
                 'video' => $video,
                 'preview' => '<div class="light_gallery">'.$logo.$banner.$preview.'</div>',
                 'status' => $status,
@@ -268,5 +265,26 @@ class DesignController extends Controller
         }
 
         return response()->json(['success'=>'Thành công']);
+    }
+
+    public function edit($id)
+    {
+        $data= ProjectHasLang::find($id);
+        return response()->json($data);
+    }
+
+    public function update(Request $request){
+
+        $data = ProjectHasLang::find($request->design_id_edit);
+        $data->notes = $request->notes;
+        $data->status = $request->status;
+        $data->save();
+        return response()->json(['success'=>'Cập nhật thành công','data'=>$data]);
+    }
+
+    public function delete($id)
+    {
+        ProjectHasLang::find($id)->delete();
+        return response()->json(['success'=>'Xóa thành công.']);
     }
 }
