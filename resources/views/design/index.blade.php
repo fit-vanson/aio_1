@@ -293,6 +293,7 @@
                         $.notify(data.success, "success");
                         $('#designFormEdit').trigger("reset");
                         $('#ajaxModelEdit').modal('hide');
+                        table.draw();
 
                     }
                 },
