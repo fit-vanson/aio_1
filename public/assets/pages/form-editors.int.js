@@ -13,9 +13,9 @@ $(document).ready(function () {
         height:300,
     });
 
-    if($("#content_description_1").length > 0){
+    if($("#des_vn").length > 0){
         tinymce.init({
-            selector: "textarea#content_description_1",
+            selector: "textarea#des_vn",
             theme: "modern",
             height:300,
             plugins: [
@@ -37,7 +37,7 @@ $(document).ready(function () {
 
         });
     }
-    if($("#content_description_1").length > 0){
+    if($("#des_en").length > 0){
         tinymce.init({
             selector: "textarea#des_en",
             theme: "modern",
