@@ -7,6 +7,7 @@ use App\Http\Controllers\CategoryTemplateController;
 use App\Http\Controllers\CategoryTemplateFrameController;
 use App\Http\Controllers\CheckApiController;
 use App\Http\Controllers\CocsimController;
+use App\Http\Controllers\ContentController;
 use App\Http\Controllers\CronProjectController;
 use App\Http\Controllers\DaController;
 use App\Http\Controllers\DataProfileController;
@@ -631,9 +632,18 @@ Route::group(['prefix'=>'design','middleware'=>['CheckLogout','2fa']], function 
     Route::post('/getIndex', [DesignController::class, "getIndex"])->name('design.getIndex');
     Route::post('/create',[DesignController::class,'create'])->name('design.create')->middleware('can:project-add');
     Route::get('/edit/{id}',[DesignController::class,'edit'])->name('design.edit')->middleware('can:project-edit');
-    Route::get('/show/{id}',[DesignController::class,'show'])->name('design.show')->middleware('can:project-show');
     Route::post('/update',[DesignController::class,'update'])->name('design.update')->middleware('can:project-update');
-    Route::get('/delete/{id}',[DesignController::class,'delete'])->name('design.delete')->middleware('can:project-delete');
+});
+
+Route::group(['prefix'=>'content','middleware'=>['CheckLogout','2fa']], function (){
+    Route::get('/',[ContentController::class,'index'])->name('content.index')->middleware('can:project-index');
+    Route::get('/project_show',[ContentController::class,'project_show'])->name('content.project_show')->middleware('can:project-index');
+    Route::post('/getIndex', [ContentController::class, "getIndex"])->name('content.getIndex');
+    Route::post('/create',[ContentController::class,'create'])->name('content.create')->middleware('can:project-add');
+    Route::get('/edit/{id}',[ContentController::class,'edit'])->name('content.edit')->middleware('can:project-edit');
+
+    Route::post('/update',[ContentController::class,'update'])->name('content.update')->middleware('can:project-update');
+
 });
 
 

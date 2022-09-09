@@ -23,9 +23,6 @@
                                     @can('project-index')
                                     <li><a href="{{route('project.index')}}">Quản lý Project</a></li>
                                     @endcan
-                                    @if( in_array( "Design" ,array_column(auth()->user()->roles()->get()->toArray(),'name')))
-                                        <li><a href="{{route('design.index')}}">Design</a></li>
-                                    @endif
                                     @can('template-index')
                                     <li><a href="{{route('template.index')}}">Quản lý Template</a></li>
                                     @endcan
@@ -46,6 +43,26 @@
                                     @endcan
                                 </ul>
                             </li>
+
+
+                            <li>
+                                <a href="javascript:void(0);" class="waves-effect"><i class="ti-check-box"></i> <span> Content And Design <span class="float-right menu-arrow"><i class="mdi mdi-chevron-right"></i></span> </span> </a>
+                                <ul class="submenu">
+
+                                    @if( in_array( "Design" ,array_column(auth()->user()->roles()->get()->toArray(),'name')))
+                                        <li><a href="{{route('design.index')}}">Design</a></li>
+                                    @endif
+
+                                    @if( in_array( "Content" ,array_column(auth()->user()->roles()->get()->toArray(),'name')))
+                                        <li><a href="{{route('content.index')}}">Content</a></li>
+                                    @endif
+
+                                </ul>
+
+
+                            </li>
+
+
 
                             <li {{ Route::currentRouteName() == 'apk_process.index'  ? 'class=mm-active' :'' }}>
                                 <a {{ Route::currentRouteName() == 'apk_process.index'  ? 'class=mm-active' :'' }} href="javascript:void(0);" class="waves-effect"><i class="ti-image"></i> <span> APK Analysis<span class="float-right menu-arrow"><i class="mdi mdi-chevron-right"></i></span> </span> </a>

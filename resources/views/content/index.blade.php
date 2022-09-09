@@ -4,6 +4,18 @@
 
 <link href="plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
 <link href="plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+
+<link href="{{ URL::asset('assets/libs/magnific-popup/magnific-popup.min.css') }}" rel="stylesheet" type="text/css" />
+
+
+<link href="{{ URL::asset('assets/libs/lightgallery/css/lightgallery.css') }}" rel="stylesheet" type="text/css" />
+
+
+<link rel="stylesheet" href="plugins/summernote/summernote-bs4.css">
+
+
+
+
 <!-- Responsive datatable examples -->
 <link href="plugins/datatables/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" />
 
@@ -14,24 +26,26 @@
 <!-- Select2 Js  -->
 <link href="plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
 
+<!-- Dropzone css -->
+<link href="{{ URL::asset('/assets/libs/dropzone/dropzone.min.css') }}" rel="stylesheet" type="text/css" />
+
+
+
 @endsection
+
 
 @section('breadcrumb')
 <div class="col-sm-6">
-    <h4 class="page-title">Check Api</h4>
+    <h4 class="page-title">Content</h4>
 </div>
 <div class="col-sm-6">
     <div class="float-right">
-
-        <a class="btn btn-success" href="javascript:void(0)" id="createNewCheckAPI"> Thêm mới</a>
-
+        <a class="btn btn-success" href="javascript:void(0)" id="createNewDesign">Create Or Update</a>
     </div>
 </div>
-@include('modals.checkapi')
+@include('modals.content')
 @endsection
 @section('content')
-
-
 
     <div class="row">
         <div class="col-12">
@@ -40,9 +54,10 @@
                     <table class="table table-bordered dt-responsive nowrap data-table" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                         <thead>
                         <tr>
-                            <th>Tên</th>
-                            <th>URL</th>
-                            <th>Type</th>
+                            <th>Project Name</th>
+                            <th>Title </th>
+                            <th>Summary</th>
+                            <th style="width: 40%">Description </th>
                             <th>Action</th>
                         </tr>
                         </thead>
@@ -55,18 +70,6 @@
     </div> <!-- end row -->
 @endsection
 @section('script')
-    <script src="plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js"></script>
-    <script src="plugins/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
-    <script src="plugins/select2/js/select2.min.js"></script>
-    <script src="plugins/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
-    <script src="plugins/bootstrap-filestyle/js/bootstrap-filestyle.min.js"></script>
-    <script src="plugins/bootstrap-touchspin/js/jquery.bootstrap-touchspin.min.js"></script>
-    <!-- Plugins Init js -->
-    <script src="assets/pages/form-advanced.js"></script>
-
-
-
-
 
 <!-- Required datatable js -->
 <script src="plugins/datatables/jquery.dataTables.min.js"></script>
@@ -87,101 +90,196 @@
 <!-- Datatable init js -->
 <script src="assets/pages/datatables.init.js"></script>
 
+<!-- Plugins js -->
+<script src="{{ URL::asset('/assets/libs/dropzone/dropzone.min.js') }}"></script>
+
 <script src="plugins/select2/js/select2.min.js"></script>
 
+<script src="{{ URL::asset('/assets/libs/magnific-popup/magnific-popup.min.js') }}"></script>
+<script src="{{ URL::asset('/assets/libs/lightgallery/js/lightgallery-all.js') }}"></script>
 
+<!--Summernote js-->
+<script src="plugins/tinymce/tinymce.min.js"></script>
+<script src="plugins/summernote/summernote-bs4.min.js"></script>
+<script src="assets/pages/form-editors.int.js"></script>
 <script type="text/javascript">
+    Dropzone.autoDiscover = false;
     $(function () {
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
+
+        // var groupColumn = 0;
         var table = $('.data-table').DataTable({
-            lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
 
             processing: true,
             serverSide: true,
-            ajax:{
-                url: "{{ route('checkapi.getIndex') }}",
-                type: "POST",
+            ajax: {
+                url: "{{ route('content.getIndex') }}",
+                type: 'post',
             },
             columns: [
-                // { "data": null,"sortable": true,
-                //     render: function (data, type, row, meta) {
-                //         return meta.row + meta.settings._iDisplayStart + 1;
-                //     }
-                // },
-
-                {data: 'checkapi_name', name: 'checkapi_name'},
-                {data: 'checkapi_url', name: 'checkapi_url'},
-                {data: 'checkapi_type', name: 'checkapi_type'},
-
-                {data: 'action', name: 'action', orderable: false, searchable: false},
-            ]
+                {data: 'projectid', name: 'projectid'},
+                {data: 'title', name: 'title'},
+                {data: 'summary', name: 'summary'},
+                {data: 'description', name: 'description'},
+                {data: 'action',className: "text-center", name: 'action', orderable: false, searchable: false},
+            ],
+            // order: [[1, 'asc']],
+            // rowGroup: {
+            //     dataSrc: 0
+            // },
+            // columnDefs: [{ visible: false, targets: groupColumn }],
+            // drawCallback: function (settings) {
+            //     var api = this.api();
+            //     var rows = api.rows({ page: 'current' }).nodes();
+            //     var last = null;
+            //     api
+            //         .column(groupColumn, { page: 'current' })
+            //         .data()
+            //         .each(function (group, i) {
+            //             if (last !== group) {
+            //                 $(rows)
+            //                     .eq(i)
+            //                     .before('<tr class="group"><td colspan="8">' + group + '</td></tr>');
+            //                 last = group;
+            //             }
+            //         });
+            //     $('.popup-youtube, .popup-vimeo, .popup-gmaps').magnificPopup({
+            //         disableOn: 700,
+            //         type: 'iframe',
+            //         mainClass: 'mfp-fade',
+            //         removalDelay: 160,
+            //         preloader: false,
+            //         fixedContentPos: false
+            //     });
+            //     $('.light_gallery').lightGallery({});
+            // },
         });
-        $('#createNewCheckAPI').click(function () {
-            $('#saveBtn').val("create-checkapi");
-            $('#id').val('');
-            $('#checkapiForm').trigger("reset");
-            $('#checkapiHeading').html("Thêm mới");
-            $('#checkapiModel').modal('show');
+        var _id = null;
+        var _name = null;
+        $(document).on('change', '#project_id', function () {
+            var projectID = $(this).select2('data')[0].id;
+            var projectName = $(this).select2('data')[0].text;
+            $('#pro_id').val(projectID);
+            $('#pro_text').val(projectName);
+            _id = $('#pro_id').val();
+            _name = $('#pro_text').val();
+            $('div.dz-success').remove();
         });
-        $('#checkapiForm').on('submit',function (event){
+        $('.dropzone').each(function() {
+            var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+            var options = $(this).attr('id');
+            var lang = $(this).data("lang");
+            var lang_code = $(this).data("lang_code");
+            var maxfile = $(this).data("maxfile");
+            var extfile = $(this).data("ext");
+            var dropParamName = $(this).data("name");
+            const getMeSomeUrl = () => {
+                return '{{route('design.create')}}?projectid=' + _id + '&projectname=' + _name+'&action=' + options + '&lang_code=' + lang_code + '&lang=' + lang
+            }
+            $(this).dropzone({
+                url: getMeSomeUrl,
+                headers: {
+                    'x-csrf-token': CSRF_TOKEN,
+                },
+                paramName: dropParamName,
+                // maxFiles: maxfile,
+                maxFilesize: 20,
+                parallelUploads: 10,
+                uploadMultiple: true,
+                acceptedFiles: extfile,
+                // addRemoveLinks: true,
+                timeout: 0,
+                // dictRemoveFile: 'Xoá',
+                // autoProcessQueue: false,
+
+                init: function () {
+                    var _this = this; // For the closure
+
+                    this.on('success', function (file, response) {
+                        // _this.removeFile(file);
+                        if (response.success) {
+                            $.notify(_name,  "success");
+                            table.draw();
+                        }
+                        if (response.errors) {
+                            _this.removeFile(file);
+                            $.notify(response.errors, "error");
+                        }
+                    });
+                },
+            });
+        })
+
+        $('#createNewDesign').click(function () {
+            $('#saveBtn').val("create-design");
+            $('#project_id_content').val('');
+            $('#contentForm').trigger("reset");
+            $('#modelHeadingContent').html("Thêm mới ");
+            $('#ajaxModelContent').modal('show');
+
+            $("#project_id").select2({
+                minimumInputLength: 2,
+                ajax: {
+                    url: '{{route('design.project_show')}}',
+                    dataType: 'json',
+                    type: "GET",
+                    // quietMillis: 50,
+                    data: function(params) {
+                        return {
+                            q: params.term, // search term
+                            page: params.page
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: $.map(data, function (item) {
+                                return {
+                                    text: item.name,
+                                    // slug: item.slug,
+                                    id: item.id
+                                }
+                            })
+                        };
+                    },
+                    // cache: true
+                },
+            });
+        });
+
+        $('#contentForm').on('submit',function (event){
             event.preventDefault();
-            if($('#saveBtn').val() == 'create-checkapi'){
-                $.ajax({
-                    data: $('#checkapiForm').serialize(),
-                    url: "{{ route('checkapi.create') }}",
-                    type: "POST",
-                    dataType: 'json',
-                    success: function (data) {
-                        if(data.errors){
-                            for( var count=0 ; count <data.errors.length; count++){
-                                $("#checkapiForm").notify(
-                                    data.errors[count],"error",
-                                    { position:"right" }
-                                );
-                            }
-                        }
-                        if(data.success){
-                            $.notify(data.success, "success");
-                            $('#checkapiForm').trigger("reset");
-                            $('#checkapiModel').modal('hide');
-                            table.draw();
-                        }
-                    },
-                });
-            }
-            if($('#saveBtn').val() == 'edit-checkapi'){
-                $.ajax({
-                    data: $('#checkapiForm').serialize(),
-                    url: "{{ route('checkapi.update') }}",
-                    type: "post",
-                    dataType: 'json',
-                    success: function (data) {
-                        if(data.errors){
-                            for( var count=0 ; count <data.errors.length; count++){
-                                $("#checkapiForm").notify(
-                                    data.errors[count],"error",
-                                    { position:"right" }
-                                );
-                            }
-                        }
-                        if(data.success){
-                            $.notify(data.success, "success");
-                            $('#checkapiForm').trigger("reset");
-                            $('#checkapiModel').modal('hide');
-                            table.draw();
-                        }
-                    },
-                });
+            var formData = new FormData($("#contentForm")[0]);
+            // var row_id = $('#saveBtnEditDesign').val();
+            $.ajax({
+                data: formData,
+                url: "{{ route('content.create') }}",
+                type: "POST",
+                dataType: 'json',
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    if(data.success){
+                        $.notify(data.success, "success");
+                        table.draw();
+                    }
+                    if(data.errors){
+                        $.notify(data.errors, "error");
+                    }
+                },
+            });
 
-            }
+
 
         });
-        $(document).on('click','.deleteCheckAPI', function (data){
-            var id = $(this).data("id");
+
+
+        $(document).on('click','.deleteProjectLang', function (data){
+            var _id = $(this).data("id");
+            var remove = $(this).parent().parent();
             swal({
                     title: "Bạn có chắc muốn xóa?",
                     text: "Your will not be able to recover this imaginary file!",
@@ -194,9 +292,13 @@
                 function(){
                     $.ajax({
                         type: "get",
-                        url: "{{ asset("checkapi/delete") }}/" + id,
+                        url: "{{ asset("design/delete") }}/" + _id,
                         success: function (data) {
-                            table.draw();
+                            if(data.success){
+                                remove.slideUp(300,function() {
+                                    remove.remove();
+                                })
+                            }
                         },
                         error: function (data) {
                             console.log('Error:', data);
@@ -205,38 +307,26 @@
                     swal("Đã xóa!", "Your imaginary file has been deleted.", "success");
                 });
         });
+
+
+        $(document).on('click','.editProjectLang', function (data){
+            var _id = $(this).data("id");
+            // var row_id = $(this).data("id_row");
+            $.get('{{asset('design/edit')}}/'+_id,function (data) {
+                // $('#saveBtnEditDesign').val(row_id);
+                $('#ajaxModelEdit').modal('show');
+                $('.modal').on('hidden.bs.modal', function (e) {
+                    $('body').addClass('modal-open');
+                });
+                $('#design_id_edit').val(data.id);
+                $('#status').val(data.status);
+                $('#notes').val(data.notes);
+            })
+        });
     });
 
-</script>
 
-<script>
-    function editCheckAPI(id) {
-
-        $.get('{{asset('checkapi/edit')}}/'+id,function (data) {
-            $('#checkapiHeading').html("Edit");
-            $('#saveBtn').val("edit-checkapi");
-            $('#checkapiModel').modal('show');
-            $('.modal').on('hidden.bs.modal', function (e) {
-                $('body').addClass('modal-open');
-            });
-
-            console.log(data)
-
-
-
-
-            $('#id').val(data.id);
-            $('#checkapi_code').val(data.checkapi_code);
-            $('#checkapi_name').val(data.checkapi_name);
-            $('#checkapi_url').val(data.checkapi_url);
-
-
-
-
-
-        })
-    }
-</script>
+    </script>
 @endsection
 
 

@@ -50,11 +50,16 @@ class ProjectModel extends Model
     }
 
     public function lang(){
-        return $this->belongsToMany(Language::class,ProjectHasLang::class,'project_id','lang_id');
+        return $this->belongsToMany(Language::class,ProjectHasLang::class,'project_id','lang_id')->withPivot('title','description','summary','logo','banner','preview','video')->withTimestamps();
     }
 
     public function hasLang(){
         return $this->hasMany(ProjectHasLang::class,'project_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_design', 'id');
     }
 
 }
