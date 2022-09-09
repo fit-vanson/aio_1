@@ -318,7 +318,6 @@ class DesignController extends Controller
 
     public function edit($id)
     {
-//        $data= ProjectHasLang::find($id);
         $data= ProjectModel::find($id);
         return response()->json($data);
     }

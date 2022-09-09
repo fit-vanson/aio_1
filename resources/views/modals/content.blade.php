@@ -10,7 +10,9 @@
                 <form id="contentForm" name="contentForm" class="form-horizontal">
                     @csrf
 {{--                    <input type="hidden" name="project_id_content" id="project_id_content">--}}
-                    <div class="form-group">
+
+                    <input type="hidden" name="pro_id" id="pro_id">
+                    <div class="form-group project_select hidden " >
                         <label for="name" class="col-sm-5 control-label">Tên Project</label>
                         <div class="col-sm-12">
                             <select class="select2 col-sm-12" name="project_id" id="project_id"></select>
@@ -41,7 +43,7 @@
                                                         <span class="font-13 text-muted" id="count_title_app_en"></span>
                                                         <button type="button" onclick="copyTitleEN()" class="btn btn-link waves-effect copyboard"><i class="mdi mdi-content-copy"></i></button>
                                                     </label>
-                                                    <input type="text" id="title_app_en" name="content[{{$lag->id}}][title]" class="form-control">
+                                                    <input type="text" id="content_title_{{$lag->id}}" name="content[{{$lag->id}}][title]" class="form-control">
 
                                                 </div>
                                                 <div class="form-group col-lg-12">
@@ -49,11 +51,11 @@
                                                         <span class="font-13 text-muted" id="count_summary_en"></span>
                                                         <button type="button" onclick="copySumEN()" class="btn btn-link waves-effect copyboard"><i class="mdi mdi-content-copy"></i></button>
                                                     </label>
-                                                    <input type="text" id="summary_en" name="content[{{$lag->id}}][summary]" class="form-control">
+                                                    <input type="text" id="content_summary_{{$lag->id}}" name="content[{{$lag->id}}][summary]" class="form-control">
                                                 </div>
                                                 <div class="form-group col-lg-12">
                                                     <label for="name">Description</label><button type="button" onclick="copyDesEN()" class="btn btn-link waves-effect copyboard"><i class="mdi mdi-content-copy"></i></button> </label>
-                                                    <textarea id="des_en" name="content[{{$lag->id}}][description]"></textarea>
+                                                    <textarea class="tinymce" id="content_description_{{$lag->id}}" name="content[{{$lag->id}}][description]"></textarea>
                                                 </div>
                                             </div>
                                         </div>

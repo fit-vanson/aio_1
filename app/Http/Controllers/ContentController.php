@@ -48,7 +48,7 @@ class ContentController extends Controller
 
         $data_arr = array();
         foreach ($records as $key=>$record) {
-            $btn = ' <a href="javascript:void(0)"  data-id="'.$record->projectid.'" class="btn btn-warning editProjectLang"><i class="ti-pencil-alt"></i></a>';
+            $btn = ' <a href="javascript:void(0)"  data-id="'.$record->projectid.'" class="btn btn-warning editContent"><i class="ti-pencil-alt"></i></a>';
             $project_name = $record->projectname;
             $langs = $record->lang;
             $title = $description = $summary = '';
@@ -57,10 +57,11 @@ class ContentController extends Controller
                     $title .= $lang->lang_code.' : '.$lang->pivot->title.'<br><br>';
                 }
                 if ($lang->pivot->description != null) {
-                    $description .= $lang->lang_code.' : '.substr(strip_tags($lang->pivot->description),0,50).'<br><br>';
+                    $description .= $lang->lang_code.' : '.mb_substr(strip_tags($lang->pivot->description),0,10).'<br><br>';
                 }
                 if ($lang->pivot->summary != null) {
-                    $summary = $lang->lang_code.' : '.substr($lang->pivot->summary,0,10).'<br><br>';
+
+                    $summary .= $lang->lang_code.' : '.  $lang->pivot->summary.'<br><br>';
                 }
             }
             $data_arr[] = array(
@@ -72,6 +73,8 @@ class ContentController extends Controller
                 "action"=> $btn,
             );
         }
+
+//        dd($data_arr);
         $response = array(
             "draw" => intval($draw),
             "iTotalRecords" => $totalRecords,
@@ -83,13 +86,23 @@ class ContentController extends Controller
     }
 
     public function create(Request $request){
-        if($request->project_id == null ){
+
+//        dd($request->all());
+
+        if($request->pro_id == null ){
             return response()->json(['errors'=> 'Chọn Project']);
         }
-        $project = ProjectModel::find($request->project_id);
+        $project = ProjectModel::find($request->pro_id);
         $content = $request->content;
+//        dd($content);
         $project->lang()->sync($content,false);
         $project->save();
         return response()->json(['success'=>'Thành công']);
+    }
+
+    public function edit($id)
+    {
+        $data= ProjectModel::find($id);
+        return response()->json($data->load('lang'));
     }
 }

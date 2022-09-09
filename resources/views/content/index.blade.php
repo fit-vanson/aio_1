@@ -103,7 +103,7 @@
 <script src="plugins/summernote/summernote-bs4.min.js"></script>
 <script src="assets/pages/form-editors.int.js"></script>
 <script type="text/javascript">
-    Dropzone.autoDiscover = false;
+
     $(function () {
         $.ajaxSetup({
             headers: {
@@ -111,7 +111,6 @@
             }
         });
 
-        // var groupColumn = 0;
         var table = $('.data-table').DataTable({
 
             processing: true,
@@ -127,94 +126,34 @@
                 {data: 'description', name: 'description'},
                 {data: 'action',className: "text-center", name: 'action', orderable: false, searchable: false},
             ],
-            // order: [[1, 'asc']],
-            // rowGroup: {
-            //     dataSrc: 0
-            // },
-            // columnDefs: [{ visible: false, targets: groupColumn }],
-            // drawCallback: function (settings) {
-            //     var api = this.api();
-            //     var rows = api.rows({ page: 'current' }).nodes();
-            //     var last = null;
-            //     api
-            //         .column(groupColumn, { page: 'current' })
-            //         .data()
-            //         .each(function (group, i) {
-            //             if (last !== group) {
-            //                 $(rows)
-            //                     .eq(i)
-            //                     .before('<tr class="group"><td colspan="8">' + group + '</td></tr>');
-            //                 last = group;
-            //             }
-            //         });
-            //     $('.popup-youtube, .popup-vimeo, .popup-gmaps').magnificPopup({
-            //         disableOn: 700,
-            //         type: 'iframe',
-            //         mainClass: 'mfp-fade',
-            //         removalDelay: 160,
-            //         preloader: false,
-            //         fixedContentPos: false
-            //     });
-            //     $('.light_gallery').lightGallery({});
-            // },
+
         });
         var _id = null;
-        var _name = null;
         $(document).on('change', '#project_id', function () {
             var projectID = $(this).select2('data')[0].id;
-            var projectName = $(this).select2('data')[0].text;
             $('#pro_id').val(projectID);
-            $('#pro_text').val(projectName);
+
             _id = $('#pro_id').val();
-            _name = $('#pro_text').val();
-            $('div.dz-success').remove();
+
+            $.get('{{asset('content/edit')}}/'+_id,function (data) {
+                var langs = data.lang;
+
+                $.each( langs, function( key, value ) {
+                    $('#content_summary_'+value.id).val(value.pivot.summary);
+                    $('#content_title_'+value.id).val(value.pivot.title);
+                    // $('#content_description_'+value.id).val(value.pivot.description);
+                    if(value.pivot.description){
+                        tinymce.get('content_description_'+value.id).setContent(value.pivot.description);
+                    }else {
+                        tinymce.get('content_description_'+value.id).setContent('');
+                    }
+                })
+            })
         });
-        $('.dropzone').each(function() {
-            var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
-            var options = $(this).attr('id');
-            var lang = $(this).data("lang");
-            var lang_code = $(this).data("lang_code");
-            var maxfile = $(this).data("maxfile");
-            var extfile = $(this).data("ext");
-            var dropParamName = $(this).data("name");
-            const getMeSomeUrl = () => {
-                return '{{route('design.create')}}?projectid=' + _id + '&projectname=' + _name+'&action=' + options + '&lang_code=' + lang_code + '&lang=' + lang
-            }
-            $(this).dropzone({
-                url: getMeSomeUrl,
-                headers: {
-                    'x-csrf-token': CSRF_TOKEN,
-                },
-                paramName: dropParamName,
-                // maxFiles: maxfile,
-                maxFilesize: 20,
-                parallelUploads: 10,
-                uploadMultiple: true,
-                acceptedFiles: extfile,
-                // addRemoveLinks: true,
-                timeout: 0,
-                // dictRemoveFile: 'Xoá',
-                // autoProcessQueue: false,
 
-                init: function () {
-                    var _this = this; // For the closure
-
-                    this.on('success', function (file, response) {
-                        // _this.removeFile(file);
-                        if (response.success) {
-                            $.notify(_name,  "success");
-                            table.draw();
-                        }
-                        if (response.errors) {
-                            _this.removeFile(file);
-                            $.notify(response.errors, "error");
-                        }
-                    });
-                },
-            });
-        })
 
         $('#createNewDesign').click(function () {
+            $('.project_select').show();
             $('#saveBtn').val("create-design");
             $('#project_id_content').val('');
             $('#contentForm').trigger("reset");
@@ -271,9 +210,6 @@
                     }
                 },
             });
-
-
-
         });
 
 
@@ -309,18 +245,32 @@
         });
 
 
-        $(document).on('click','.editProjectLang', function (data){
+        $(document).on('click','.editContent', function (data){
             var _id = $(this).data("id");
-            // var row_id = $(this).data("id_row");
-            $.get('{{asset('design/edit')}}/'+_id,function (data) {
-                // $('#saveBtnEditDesign').val(row_id);
-                $('#ajaxModelEdit').modal('show');
+            $('#contentForm').trigger("reset");
+            $('.project_select').hide();
+            $.get('{{asset('content/edit')}}/'+_id,function (data) {
+                $('#ajaxModelContent').modal('show');
+
+                $('#modelHeadingContent').html("Chỉnh sửa "+data.projectname);
                 $('.modal').on('hidden.bs.modal', function (e) {
                     $('body').addClass('modal-open');
                 });
-                $('#design_id_edit').val(data.id);
-                $('#status').val(data.status);
-                $('#notes').val(data.notes);
+
+                $('#pro_id').val(data.projectid);
+
+
+                var langs = data.lang;
+
+                $.each( langs, function( key, value ) {
+                    $('#content_summary_'+value.id).val(value.pivot.summary);
+                    $('#content_title_'+value.id).val(value.pivot.title);
+                    if(value.pivot.description){
+                        tinymce.get('content_description_'+value.id).setContent(value.pivot.description);
+                    }else {
+                        tinymce.get('content_description_'+value.id).setContent('');
+                    }
+                })
             })
         });
     });
