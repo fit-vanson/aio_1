@@ -38,9 +38,9 @@ class DesignController extends Controller
 
         if( in_array( "Admin" ,array_column(auth()->user()->roles()->get()->toArray(),'name'))){
             // Total records
-            $totalRecords = ProjectHasLang::select('count(*) as allcount')->count();
-            $totalRecordswithFilter = ProjectHasLang::select('count(*) as allcount')
-                ->whereRelation('project','projectname','like', '%' . $searchValue . '%')
+            $totalRecords = ProjectModel::has('lang')->select('count(*) as allcount')->count();
+            $totalRecordswithFilter = ProjectModel::has('lang')->select('count(*) as allcount')
+                ->where('projectname','like', '%' . $searchValue . '%')
                 ->count();
 //            $records = ProjectHasLang::orderBy($columnName, $columnSortOrder)
 //                ->with('lang','project')
@@ -210,11 +210,12 @@ class DesignController extends Controller
 //                    break;
 //            }
 
+
             $data_arr[] = array(
                 'id' => $record->id,
                 'projectid' => $project_name,
                 'lang_id' => $design,
-                'user_design' => $record->user->name,
+                'user_design' => $record->user ? $record->user->name : null,
                 'status_design' => $status,
                 "action"=> $btn,
             );
