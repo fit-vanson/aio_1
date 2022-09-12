@@ -192,9 +192,9 @@
                 parallelUploads: 10,
                 uploadMultiple: true,
                 acceptedFiles: extfile,
-                // addRemoveLinks: true,
+                addRemoveLinks: true,
                 timeout: 0,
-                // dictRemoveFile: 'Xoá',
+                dictRemoveFile: 'Xoá',
                 // autoProcessQueue: false,
 
                 init: function () {

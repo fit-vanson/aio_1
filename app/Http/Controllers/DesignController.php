@@ -100,20 +100,24 @@ class DesignController extends Controller
 
             foreach ($langs as $lang){
 
+                $preview = $this->array_slice_assoc($lang->pivot->toArray(), ['pr1', 'pr2','pr3','pr4','pr5','pr6','pr7','pr8',]);
+
+
+
                 $needle = 0;
                 $ret =
                     array_keys(
                         array_filter(
-                            $this->array_slice_assoc($lang->pivot->toArray(), ['banner','preview', 'video']), function($var) use ($needle){
+                            $this->array_slice_assoc($lang->pivot->toArray(), ['banner', 'video']), function($var) use ($needle){
                         return strpos($var, $needle) !== false;
                     }));
 
-                if(count($ret) == 3 ){
-                    $result = ' <span style="font-size: 100%" class="badge badge-danger">'.$lang->lang_name.'</span> ' ;
-                }elseif ((count($ret) < 3) && (count($ret) > 0 )){
-                    $result = ' <span style="font-size: 100%" class="badge badge-warning">'.$lang->lang_name.'</span> ' ;
+                if(count($ret) == 2 ){
+                    $result = ' <span style="font-size: 100%" class="badge badge-danger">'.$lang->lang_name. ' ('.array_sum($preview).') </span> ' ;
+                }elseif ((count($ret) < 2) && (count($ret) > 0 )){
+                    $result = ' <span style="font-size: 100%" class="badge badge-warning">'.$lang->lang_name.' ('.array_sum($preview).') </span> ' ;
                 }else{
-                    $result = ' <span style="font-size: 100%" class="badge badge-success">'.$lang->lang_name.'</span> ' ;
+                    $result = ' <span style="font-size: 100%" class="badge badge-success">'.$lang->lang_name.' ('.array_sum($preview).') </span> ' ;
                 }
 //                switch ($lang->pivot->banner){
 //                    case 0:
@@ -188,6 +192,7 @@ class DesignController extends Controller
         $project = ProjectModel::find($request->projectid);
 
 
+
         switch ($action){
             case 'logo':
                 $path_logo = storage_path('app/public/projects/'.$du_an.'/'.$request->projectname.'/');
@@ -217,30 +222,33 @@ class DesignController extends Controller
 //                $project->lang()->updateExistingPivot((int)$request->lang, ['banner'=>1]);
                 break;
             case 'preview':
-                $files = $request->file('preview');
+                $files = $request->file();
+
+
+
                 foreach ($files as $key=>$file) {
 
-                    $img = Image::make($file->path());
 
+                    $img = Image::make($file[0]->path());
 
 
                     if($img->height() > $img->width()){
                         $img
                             ->resize(1080, 1920)
-                            ->save($path.'pr'.($key+1).'.jpg',85);
+                            ->save($path.$key.'.jpg',85);
                     }elseif ($img->height() < $img->width()){
                         $img
                             ->resize(1920, 1080)
-                            ->save($path.'pr'.($key+1).'.jpg',85);
+                            ->save($path.$key.'.jpg',85);
                     }else{
                         $img
                             ->resize(1920, 1920)
-                            ->save($path.'pr'.($key+1).'.jpg',85);
+                            ->save($path.$key.'.jpg',85);
                     }
                 }
 
                 $project->user_design = auth()->id();
-                $project->lang()->syncWithPivotValues($request->lang, ['preview'=> $key+1],false);
+                $project->lang()->syncWithPivotValues($request->lang, [$key=> 1],false);
 //                $project->lang()->updateExistingPivot((int)$request->lang, ['preview'=> $key+1]);
                 break;
             case 'video':

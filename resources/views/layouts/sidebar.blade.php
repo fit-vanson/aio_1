@@ -58,9 +58,9 @@
                                     @endif
 
                                     @if( in_array( "Admin" ,array_column(auth()->user()->roles()->get()->toArray(),'name')))
-                                        <li><a href="{{route('design_content.index')}}?action=checkdesign">Duyệt Design</a></li>
-                                        <li><a href="{{route('design_content.index')}}?action=faildesign">Fail Design</a></li>
-                                        <li><a href="{{route('design_content.index')}}?action=passdesign">Pass Design</a></li>
+                                        <li><a href="{{route('design_content.index')}}">Duyệt Design</a></li>
+{{--                                        <li><a href="{{route('design_content.index')}}?action=faildesign">Fail Design</a></li>--}}
+{{--                                        <li><a href="{{route('design_content.index')}}?action=passdesign">Pass Design</a></li>--}}
                                     @endif
 
                                 </ul>

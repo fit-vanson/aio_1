@@ -56,8 +56,21 @@
 
                                                 </div>
                                             </div>
-                                            <h5 class="card-title">Preview</h5>
-                                            <div class="dropzone" id="preview" data-maxfile="8" data-ext="image/jpeg,image/png" data-lang="{{$lag->id}}" data-lang_code="{{$lag->lang_code}}" data-name="preview"></div>
+
+                                            <div class="row">
+                                                @for($i=1; $i<=8; $i++)
+                                                <div class="col-sm-3">
+                                                    <h5 class="card-title">Preview {{$i}}</h5>
+                                                    <div class="dropzone" id="preview" data-maxfile="1" data-ext="image/jpeg,image/png" data-lang="{{$lag->id}}" data-lang_code="{{$lag->lang_code}}" data-name="pr{{$i}}"></div>
+                                                </div>
+                                                @endfor
+                                            </div>
+
+
+
+
+{{--                                            <h5 class="card-title">Preview</h5>--}}
+{{--                                            <div class="dropzone" id="preview" data-maxfile="8" data-ext="image/jpeg,image/png" data-lang="{{$lag->id}}" data-lang_code="{{$lag->lang_code}}" data-name="preview"></div>--}}
                                         </div>
 
                                     </div>

@@ -66,11 +66,14 @@
 {{--                        Duyệt app--}}
 {{--                    </p>--}}
                     <ul class="list-group" style="height: 1000px; overflow: auto">
-                        @for($i=1;$i<50;$i++)
-                        <a href="javascript:void(0)" id="project_{{$i}}" class="showProject" data-id="{{$i}}">
-                            <li class="list-group-item">{{$i}} project</li>
-                        </a>
-                        @endfor
+                        @if(isset($projects))
+
+                            @foreach($projects as $project)
+                            <a href="javascript:void(0)" id="project_{{$project->projectid}}" class="showProject" data-id="{{$project->projectid}}">
+                                <li class="list-group-item">{{$project->projectname}}</li>
+                            </a>
+                            @endforeach
+                        @endif
 
                     </ul>
                 </div>
@@ -86,29 +89,34 @@
 
                     <form id="browseappForm" name="browseappForm" class="form-horizontal">
 
+
+
                         <div class="row">
                             <div class="form-group col-lg-2">
                                 <label for="name">Logo</label>
-                                <p class="card-title-desc"><img class="d-block img-fluid" src="{{ URL::asset('assets/images/logo.png') }}" height="200" width="200px" alt="First slide"></p>
+                                <p class="card-title-desc">
+                                    <img id="logo_project" class="d-block img-fluid" src="" height="200" width="200px" alt="First slide">
+                                </p>
                             </div>
 
                             <div class="form-group col-lg-8">
                                 <label for="name">Ghi chú</label>
-                                <textarea id="note" name="note" class="form-control" rows="9" ></textarea>
+                                <textarea id="notes_design" name="notes_design" class="form-control" rows="9" ></textarea>
                             </div>
 
 
 
                             <div class="col-lg-2 align-self-center">
 
-                                <a href="javascript:void(0)" class="btn btn-success btn-block" style="height: 100px; display:flex;align-items:center; justify-content:center; font-size: 20px" id="btnDuyet"  data-value="1">
+                                <a href="javascript:void(0)" class="btn btn-success btn-block" style="height: 100px; display:flex;align-items:center; justify-content:center; font-size: 20px" id="btnDuyet" value="1"  data-value="1">
                                     Duyệt
                                 </a>
                                 <a href="javascript:void(0)" class="btn btn-warning btn-block" style="height: 100px; display:flex;align-items:center; justify-content:center; font-size: 20px" id="btnChinh_sua"  data-value="1">
                                     Chỉnh sửa
                                 </a>
-{{--                                <button type="submit" class="btn btn-success btn-block" style="height: 100px; font-size: 20px " id="" >Duyệt</button>--}}
-{{--                                <button type="submit" class="btn btn-warning btn-block" style="height: 100px; font-size: 20px " id="btnChinh_sua" >Chỉnh sửa</button>--}}
+
+{{--                                <button type="submit" class="btn btn-success btn-block" style="height: 100px; font-size: 20px " id="btnDuyet" value="1" >Duyệt</button>--}}
+{{--                                <button type="submit" class="btn btn-warning btn-block" style="height: 100px; font-size: 20px " id="btnChinh_sua" value="0" >Chỉnh sửa</button>--}}
 
 {{--                                <input type="button" class="btn btn-success btn-block" style="height: 100px; font-size: 20px " value="Duyệt">--}}
 {{--                                <input type="button" class="btn btn-warning btn-block" style="height: 100px; font-size: 20px " value="Chỉnh sửa">--}}
@@ -130,7 +138,6 @@
                                 </a>
                             </li>
                         </ul>
-
                         <!-- Tab panes -->
                         <div class="tab-content">
                             <div class="tab-pane active p-3 gallery" id="home" role="tabpanel">
@@ -365,33 +372,32 @@
 
         {{--$('#browseappForm').on('submit',function (event){--}}
 
-        {{--    alert($('#btnButton').val())--}}
-        {{--    // event.preventDefault();--}}
-        {{--    // var formData = new FormData($("#contentForm")[0]);--}}
-        {{--    // var row_id = $('#saveBtnEditDesign').val();--}}
-        {{--    if($('#saveBtn').val() == 'create'){--}}
 
-        {{--    }--}}
-        {{--    if($('#saveBtn').val() == 'edit'){--}}
+        {{--    // alert($('#btnButton').val())--}}
+        {{--    // // event.preventDefault();--}}
+        {{--    var formData = new FormData($("#browseappForm")[0]);--}}
 
+        {{--    if($('#btnDuyet').val() == 1){--}}
+        {{--        $.ajax({--}}
+        {{--            data: formData,--}}
+        {{--            url: "{{ route('design_content.update') }}",--}}
+        {{--            type: "POST",--}}
+        {{--            dataType: 'json',--}}
+        //             processData: false,
+        //             contentType: false,
+        {{--            success: function (data) {--}}
+        {{--                if(data.success){--}}
+        {{--                    // $.notify('OK', "success");--}}
+        {{--                    // table.draw();--}}
+        {{--                }--}}
+        {{--                if(data.errors){--}}
+        {{--                    $.notify(data.errors, "error");--}}
+        {{--                }--}}
+        {{--            },--}}
+        {{--        });--}}
         {{--    }--}}
-        {{--    --}}{{--$.ajax({--}}
-        {{--    --}}{{--    data: formData,--}}
-        {{--    --}}{{--    url: "{{ route('content.create') }}",--}}
-        {{--    --}}{{--    type: "POST",--}}
-        {{--    --}}{{--    dataType: 'json',--}}
-        {{--    --}}{{--    processData: false,--}}
-        {{--    --}}{{--    contentType: false,--}}
-        {{--    --}}{{--    success: function (data) {--}}
-        {{--    --}}{{--        if(data.success){--}}
-        {{--                $.notify('OK', "success");--}}
-        {{--    --}}{{--            table.draw();--}}
-        {{--    --}}{{--        }--}}
-        {{--    --}}{{--        if(data.errors){--}}
-        {{--    --}}{{--            $.notify(data.errors, "error");--}}
-        {{--    --}}{{--        }--}}
-        {{--    --}}{{--    },--}}
-        {{--    --}}{{--});--}}
+        {{--    // if()--}}
+
         {{--});--}}
 
 
@@ -426,10 +432,69 @@
         {{--        });--}}
         {{--});--}}
 
+        {{--$(document).on('click','#btnDuyet', function (data){--}}
+        {{--    var _id = $(this).data("id");--}}
+        {{--    $.post('{{asset('design-content/update')}}',function (data) {--}}
+        {{--        var formData = new FormData($("#contentForm")[0]);--}}
+        {{--        // $('#ajaxModelContent').modal('show');--}}
+        {{--        //--}}
+        {{--        // $('#modelHeadingContent').html("Chỉnh sửa "+data.projectname);--}}
+        {{--        // $('.modal').on('hidden.bs.modal', function (e) {--}}
+        {{--        //     $('body').addClass('modal-open');--}}
+        {{--        // });--}}
+        {{--        //--}}
+        {{--        // $('#pro_id').val(data.projectid);--}}
+        {{--        //--}}
+        {{--        //--}}
+        {{--        // var langs = data.lang;--}}
+        {{--        //--}}
+        {{--        // $.each( langs, function( key, value ) {--}}
+        {{--        //     $('#content_summary_'+value.id).val(value.pivot.summary);--}}
+        {{--        //     $('#content_title_'+value.id).val(value.pivot.title);--}}
+        {{--        //     if(value.pivot.description){--}}
+        {{--        //         tinymce.get('content_description_'+value.id).setContent(value.pivot.description);--}}
+        {{--        //     }else {--}}
+        {{--        //         tinymce.get('content_description_'+value.id).setContent('');--}}
+        {{--        //     }--}}
+        {{--        // })--}}
+        {{--    })--}}
+
+        {{--    // $.notify('OK', "success");--}}
+        {{--    // $('#project_detail').hide()--}}
+        {{--})--}}
         $(document).on('click','#btnDuyet', function (data){
-            $.notify('OK', "success");
-            $('#project_detail').hide()
-        })
+            var formData = new FormData($("#browseappForm")[0])
+
+
+
+            // $('#modelHeading').html("Edit");
+            // $('#saveBtn').val("edit-da");
+            // $('#ajaxModel').modal('show');
+
+            $.ajax({
+                // data: $('#browseappForm').serialize(),
+                data: formData,
+                url: "{{route('design_content.update')}}",
+                type: "post",
+                dataType: 'json',
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    // $('#da_id').val(data.id);
+                    // $('#ma_da').val(data.ma_da);
+                    // $('#chude').val(data.chude);
+                    // $('#keywords').val(data.keywords);
+                    // $('#link_store_vietmmo').val(data.link_store_vietmmo);
+                    // $('#note').val(data.note);
+                }
+            });
+
+        });
+
+
+
+
+
         $(document).on('click','#btnChinh_sua', function (data){
             $.notify('OK', "warning");
             var a = $('.showProject').val();
@@ -439,31 +504,39 @@
 
         $(document).on('click','.showProject', function (data){
             var _id = $(this).data("id");
+
+            // console.log(_id);
             $('#project_detail').show()
 
-            {{--$.get('{{asset('content/edit')}}/'+_id,function (data) {--}}
-            {{--    $('#ajaxModelContent').modal('show');--}}
+            $.get('{{asset('design-content/edit')}}/'+_id,function (data) {
 
-            {{--    $('#modelHeadingContent').html("Chỉnh sửa "+data.projectname);--}}
-            {{--    $('.modal').on('hidden.bs.modal', function (e) {--}}
-            {{--        $('body').addClass('modal-open');--}}
-            {{--    });--}}
+                console.log(data)
+                // $("#logo_project").attr("src","img/logo.png");
+                $("#logo_project").attr("src","../storage/projects/"+data.da.ma_da+'/'+data.projectname+"/"+data.logo);
+                $('#notes_design').val(data.notes_design);
+                // $('#notes_design').val('2222222222222222222');
 
-            {{--    $('#pro_id').val(data.projectid);--}}
-
-
-            {{--    var langs = data.lang;--}}
-
-            {{--    $.each( langs, function( key, value ) {--}}
-            {{--        $('#content_summary_'+value.id).val(value.pivot.summary);--}}
-            {{--        $('#content_title_'+value.id).val(value.pivot.title);--}}
-            {{--        if(value.pivot.description){--}}
-            {{--            tinymce.get('content_description_'+value.id).setContent(value.pivot.description);--}}
-            {{--        }else {--}}
-            {{--            tinymce.get('content_description_'+value.id).setContent('');--}}
-            {{--        }--}}
-            {{--    })--}}
-            {{--})--}}
+                //
+                // $('#modelHeadingContent').html("Chỉnh sửa "+data.projectname);
+                // $('.modal').on('hidden.bs.modal', function (e) {
+                //     $('body').addClass('modal-open');
+                // });
+                //
+                // $('#pro_id').val(data.projectid);
+                //
+                //
+                // var langs = data.lang;
+                //
+                // $.each( langs, function( key, value ) {
+                //     $('#content_summary_'+value.id).val(value.pivot.summary);
+                //     $('#content_title_'+value.id).val(value.pivot.title);
+                //     if(value.pivot.description){
+                //         tinymce.get('content_description_'+value.id).setContent(value.pivot.description);
+                //     }else {
+                //         tinymce.get('content_description_'+value.id).setContent('');
+                //     }
+                // })
+            })
         });
     });
 
