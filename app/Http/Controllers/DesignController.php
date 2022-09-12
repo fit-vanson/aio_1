@@ -60,10 +60,12 @@ class DesignController extends Controller
             $totalRecords = ProjectModel::has('lang')->where('user_design',auth()->id())->select('count(*) as allcount')->count();
             $totalRecordswithFilter = ProjectModel::has('lang')->select('count(*) as allcount')
                 ->where('projectname','like', '%' . $searchValue . '%')
+                ->Where('status_design', 'like', '%' .$columnName_arr[2]['search']['value'] . '%')
                 ->where('user_design',auth()->id())
                 ->count();
             $records = ProjectModel::has('lang')
                 ->where('projectname','like', '%' . $searchValue . '%')
+                ->Where('status_design', 'like', '%' .$columnName_arr[2]['search']['value'] . '%')
                 ->where('user_design',auth()->id())
                 ->select('*')
                 ->orderBy($columnName, $columnSortOrder)
