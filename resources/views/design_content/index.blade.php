@@ -89,7 +89,10 @@
 
                     <form id="browseappForm" name="browseappForm" class="form-horizontal">
                         <input type="hidden" name="project_id" id="project_id">
+                        <h3 id="pro_name"></h3>
+
                         <div class="row">
+
                             <div class="form-group col-lg-2">
                                 <label for="name">Logo</label>
                                 <p class="card-title-desc">
@@ -382,6 +385,7 @@
                 $("#logo_project").attr("src","../storage/projects/"+data.da.ma_da+'/'+data.projectname+"/"+data.logo);
                 $('#notes_design').val(data.notes_design);
                 $('#project_id').val(data.projectid);
+                $('#pro_name').html(data.projectname);
                 var tablist = '';
                 var tab_content = ''
                 var active = '';
