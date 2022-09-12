@@ -88,9 +88,7 @@
                 <div class="card-body " id="project_detail" style="display: none" >
 
                     <form id="browseappForm" name="browseappForm" class="form-horizontal">
-
-
-
+                        <input type="hidden" name="project_id" id="project_id">
                         <div class="row">
                             <div class="form-group col-lg-2">
                                 <label for="name">Logo</label>
@@ -98,153 +96,26 @@
                                     <img id="logo_project" class="d-block img-fluid" src="" height="200" width="200px" alt="First slide">
                                 </p>
                             </div>
-
                             <div class="form-group col-lg-8">
                                 <label for="name">Ghi chú</label>
                                 <textarea id="notes_design" name="notes_design" class="form-control" rows="9" ></textarea>
                             </div>
-
-
-
                             <div class="col-lg-2 align-self-center">
 
-                                <a href="javascript:void(0)" class="btn btn-success btn-block" style="height: 100px; display:flex;align-items:center; justify-content:center; font-size: 20px" id="btnDuyet" value="1"  data-value="1">
+                                <a href="javascript:void(0)" class="btn btn-success btn-block" style="height: 100px; display:flex;align-items:center; justify-content:center; font-size: 20px" id="btnDuyet"   >
                                     Duyệt
                                 </a>
-                                <a href="javascript:void(0)" class="btn btn-warning btn-block" style="height: 100px; display:flex;align-items:center; justify-content:center; font-size: 20px" id="btnChinh_sua"  data-value="1">
+                                <a href="javascript:void(0)" class="btn btn-warning btn-block" style="height: 100px; display:flex;align-items:center; justify-content:center; font-size: 20px" id="btnChinh_sua">
                                     Chỉnh sửa
                                 </a>
-
-{{--                                <button type="submit" class="btn btn-success btn-block" style="height: 100px; font-size: 20px " id="btnDuyet" value="1" >Duyệt</button>--}}
-{{--                                <button type="submit" class="btn btn-warning btn-block" style="height: 100px; font-size: 20px " id="btnChinh_sua" value="0" >Chỉnh sửa</button>--}}
-
-{{--                                <input type="button" class="btn btn-success btn-block" style="height: 100px; font-size: 20px " value="Duyệt">--}}
-{{--                                <input type="button" class="btn btn-warning btn-block" style="height: 100px; font-size: 20px " value="Chỉnh sửa">--}}
                             </div>
                         </div>
 
                         <!-- Nav tabs -->
-                        <ul class="nav nav-tabs" role="tablist">
-                            <li class="nav-item">
-                                <a class="nav-link active" data-toggle="tab" href="#home" role="tab">
-                                    <span class="d-block d-sm-none"><i class="fas fa-home"></i></span>
-                                    <span class="d-none d-sm-block">Viet Nam</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" data-toggle="tab" href="#profile" role="tab">
-                                    <span class="d-block d-sm-none"><i class="far fa-user"></i></span>
-                                    <span class="d-none d-sm-block">English</span>
-                                </a>
-                            </li>
+                        <ul class="nav nav-tabs" role="tablist" id="tablist">
                         </ul>
                         <!-- Tab panes -->
-                        <div class="tab-content">
-                            <div class="tab-pane active p-3 gallery" id="home" role="tabpanel">
-                                <p> Viet Nam ở đây</p>
-                                <div class="light_gallery thumbnails" id="light_gallery">
-                                    <a class="float-left" style="margin:5px" href="{{ URL::asset('/assets/images/small/1.jpg') }}" title="Project 1">
-                                        <div class="img-responsive">
-                                            <img src="{{ URL::asset('/assets/images/small/1.jpg') }}" alt="" height="500">
-                                        </div>
-                                    </a>
-                                    <a class="float-left" style="margin:5px" href="{{ URL::asset('/assets/images/small/2.jpg') }}" title="Project 2">
-                                        <div class="img-responsive ">
-                                            <img src="{{ URL::asset('/assets/images/small/2.jpg') }}" alt="" height="500">
-                                        </div>
-                                    </a>
-                                    <a class="float-left" style="margin:5px" href="{{ URL::asset('/assets/images/small/3.jpg') }}" title="Project 3">
-                                        <div class="img-responsive">
-                                            <img src="{{ URL::asset('/assets/images/small/3.jpg') }}" alt="" height="500">
-                                        </div>
-                                    </a>
-                                    <a class="float-left" style="margin:5px" href="{{ URL::asset('/assets/images/small/4.jpg') }}" title="Project 4">
-                                        <div class="img-responsive">
-                                            <img src="{{ URL::asset('/assets/images/small/4.jpg') }}" alt="" height="500">
-                                        </div>
-                                    </a>
-                                    <a class="float-left" style="margin:5px" href="{{ URL::asset('/assets/images/small/5.jpg') }}" title="Project 5">
-                                        <div class="img-responsive">
-                                            <img src="{{ URL::asset('/assets/images/small/5.jpg') }}" alt="" height="500">
-                                        </div>
-                                    </a>
-                                    <a class="float-left" style="margin:5px" href="{{ URL::asset('/assets/images/small/6.jpg') }}" title="Project 6">
-                                        <div class="img-responsive">
-                                            <img src="{{ URL::asset('/assets/images/small/6.jpg') }}" alt="" height="500">
-                                        </div>
-                                    </a>
-                                    <a class="float-left" style="margin:5px" href="{{ URL::asset('/assets/images/small/7.jpg') }}" title="Project 6">
-                                        <div class="img-responsive">
-                                            <img src="{{ URL::asset('/assets/images/small/7.jpg') }}" alt="" height="500">
-                                        </div>
-                                    </a>
-                                    <a class="float-left" style="margin:5px" href="{{ URL::asset('/assets/images/small/8.jpg') }}" title="Project 6">
-                                        <div class="img-responsive">
-                                            <img src="{{ URL::asset('/assets/images/small/8.jpg') }}" alt="" height="500">
-                                        </div>
-                                    </a>
-                                    <a class="float-left" style="margin:5px" href="{{ URL::asset('/assets/images/small/bn.png') }}" title="Project 1">
-                                        <div class="img-responsive">
-                                            <img src="{{ URL::asset('/assets/images/small/bn.png') }}" alt="" height="500">
-                                        </div>
-                                    </a>
-                                </div>
-
-                            </div>
-                            <div class="tab-pane p-3" id="profile" role="tabpanel">
-                                <p> English ở đây</p>
-
-                                <div class="light_gallery" id="light_gallery" style="width: 100%">
-
-                                    <a class="float-left" style="margin:5px" href="{{ URL::asset('/assets/images/small/1.jpg') }}" title="Project 1">
-                                        <div class="img-responsive">
-                                            <img src="{{ URL::asset('/assets/images/small/1.jpg') }}" alt="" height="500">
-                                        </div>
-                                    </a>
-                                    <a class="float-left" style="margin:5px" href="{{ URL::asset('/assets/images/small/2.jpg') }}" title="Project 2">
-                                        <div class="img-responsive">
-                                            <img src="{{ URL::asset('/assets/images/small/2.jpg') }}" alt="" height="500">
-                                        </div>
-                                    </a>
-                                    <a class="float-left" style="margin:5px" href="{{ URL::asset('/assets/images/small/3.jpg') }}" title="Project 3">
-                                        <div class="img-responsive">
-                                            <img src="{{ URL::asset('/assets/images/small/3.jpg') }}" alt="" height="500">
-                                        </div>
-                                    </a>
-                                    <a class="float-left" style="margin:5px" href="{{ URL::asset('/assets/images/small/4.jpg') }}" title="Project 4">
-                                        <div class="img-responsive">
-                                            <img src="{{ URL::asset('/assets/images/small/4.jpg') }}" alt="" height="500">
-                                        </div>
-                                    </a>
-                                    <a class="float-left" style="margin:5px" href="{{ URL::asset('/assets/images/small/5.jpg') }}" title="Project 5">
-                                        <div class="img-responsive">
-                                            <img src="{{ URL::asset('/assets/images/small/5.jpg') }}" alt="" height="250">
-                                        </div>
-                                    </a>
-                                    <a class="float-left" style="margin:5px" href="{{ URL::asset('/assets/images/small/6.jpg') }}" title="Project 6">
-                                        <div class="img-responsive">
-                                            <img src="{{ URL::asset('/assets/images/small/6.jpg') }}" alt="" height="250">
-                                        </div>
-                                    </a>
-                                    <a class="float-left" style="margin:5px" href="{{ URL::asset('/assets/images/small/7.jpg') }}" title="Project 6">
-                                        <div class="img-responsive">
-                                            <img src="{{ URL::asset('/assets/images/small/7.jpg') }}" alt="" height="250">
-                                        </div>
-                                    </a>
-                                    <a class="float-left" style="margin:5px" href="{{ URL::asset('/assets/images/small/8.jpg') }}" title="Project 6">
-                                        <div class="img-responsive">
-                                            <img src="{{ URL::asset('/assets/images/small/8.jpg') }}" alt="" height="250">
-                                        </div>
-                                    </a>
-                                    <a class="float-left" style="margin:5px" href="{{ URL::asset('/assets/images/small/bn.png') }}" title="Project 1">
-                                        <div class="img-responsive">
-                                            <img src="{{ URL::asset('/assets/images/small/bn.png') }}" alt="" height="250">
-                                        </div>
-                                    </a>
-                                </div>
-
-                            </div>
-
+                        <div class="tab-content" id="tab_content">
                         </div>
                     </form>
 
@@ -464,28 +335,17 @@
         {{--})--}}
         $(document).on('click','#btnDuyet', function (data){
             var formData = new FormData($("#browseappForm")[0])
-
-
-
-            // $('#modelHeading').html("Edit");
-            // $('#saveBtn').val("edit-da");
-            // $('#ajaxModel').modal('show');
-
             $.ajax({
-                // data: $('#browseappForm').serialize(),
                 data: formData,
-                url: "{{route('design_content.update')}}",
+                url: "{{route('design_content.update')}}?action=1",
                 type: "post",
                 dataType: 'json',
                 processData: false,
                 contentType: false,
                 success: function (data) {
-                    // $('#da_id').val(data.id);
-                    // $('#ma_da').val(data.ma_da);
-                    // $('#chude').val(data.chude);
-                    // $('#keywords').val(data.keywords);
-                    // $('#link_store_vietmmo').val(data.link_store_vietmmo);
-                    // $('#note').val(data.note);
+                    $.notify(data.success, "success")
+                    $('#project_detail').hide()
+                    $('#project_'+data.id).remove()
                 }
             });
 
@@ -496,10 +356,20 @@
 
 
         $(document).on('click','#btnChinh_sua', function (data){
-            $.notify('OK', "warning");
-            var a = $('.showProject').val();
-            $('#project_detail').hide()
-            $('#project_1').remove()
+            var formData = new FormData($("#browseappForm")[0])
+            $.ajax({
+                data: formData,
+                url: "{{route('design_content.update')}}?action=0",
+                type: "post",
+                dataType: 'json',
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    $.notify(data.success, "success")
+                    $('#project_detail').hide()
+                    $('#project_'+data.id).remove()
+                }
+            });
         })
 
         $(document).on('click','.showProject', function (data){
@@ -509,33 +379,44 @@
             $('#project_detail').show()
 
             $.get('{{asset('design-content/edit')}}/'+_id,function (data) {
-
-                console.log(data)
-                // $("#logo_project").attr("src","img/logo.png");
                 $("#logo_project").attr("src","../storage/projects/"+data.da.ma_da+'/'+data.projectname+"/"+data.logo);
                 $('#notes_design').val(data.notes_design);
-                // $('#notes_design').val('2222222222222222222');
+                $('#project_id').val(data.projectid);
+                var tablist = '';
+                var tab_content = ''
+                var active = '';
+                    $.each( data.lang, function( key, value ) {
+                        if(value.lang_code == 'en'){
+                         active = 'active'
+                        }
+                        tablist += '<li class="nav-item">'+
+                            '<a class="nav-link '+active+'" data-toggle="tab" href="#'+value.lang_code+'" role="tab">'+
+                            '<span class="d-block d-sm-none"><i class="fas fa-home"></i></span>'+
+                            '<span class="d-none d-sm-block">'+value.lang_name+'</span>'+
+                            '</a></li>';
+                        var preview = '';
+                        for(var i = 1; i <= 8; i++) {
+                            preview +=
+                                '<a class="float-left" style="margin:5px" href="{{ URL::asset('/storage/projects') }}/'+data.da.ma_da+'/'+data.projectname+'/'+value.lang_code+'/pr'+i+'.jpg" title="preview '+i+'">' +
+                                '<div class="img-responsive">' +
+                                '<img src="{{ URL::asset('/storage/projects') }}/'+data.da.ma_da+'/'+data.projectname+'/'+value.lang_code+'/pr'+i+'.jpg" alt="" height="500">' +
+                                '</div>' +
+                                '</a>'
+                        }
+                         tab_content += '<div class="tab-pane '+active+' p-3 gallery" id="'+value.lang_code+'" role="tabpanel">'+
+                             '<div class="light_gallery thumbnails" id="light_gallery">'
+                                +preview+
 
-                //
-                // $('#modelHeadingContent').html("Chỉnh sửa "+data.projectname);
-                // $('.modal').on('hidden.bs.modal', function (e) {
-                //     $('body').addClass('modal-open');
-                // });
-                //
-                // $('#pro_id').val(data.projectid);
-                //
-                //
-                // var langs = data.lang;
-                //
-                // $.each( langs, function( key, value ) {
-                //     $('#content_summary_'+value.id).val(value.pivot.summary);
-                //     $('#content_title_'+value.id).val(value.pivot.title);
-                //     if(value.pivot.description){
-                //         tinymce.get('content_description_'+value.id).setContent(value.pivot.description);
-                //     }else {
-                //         tinymce.get('content_description_'+value.id).setContent('');
-                //     }
-                // })
+                             '<a class="float-left" style="margin:5px" href="{{ URL::asset('/storage/projects') }}/'+data.da.ma_da+'/'+data.projectname+'/'+value.lang_code+'/bn.jpg" title="preview '+i+'">' +
+                             '<div class="img-responsive">' +
+                             '<img src="{{ URL::asset('/storage/projects') }}/'+data.da.ma_da+'/'+data.projectname+'/'+value.lang_code+'/bn.jpg" alt="" height="500">' +
+                             '</div>' +
+                             '</a>'+
+                             '</div></div>'
+                })
+
+                $('#tablist').html(tablist)
+                $('#tab_content').html(tab_content)
             })
         });
     });
