@@ -18,6 +18,7 @@
                             <select class="select2 col-sm-12" name="project_id" id="project_id"></select>
                         </div>
                     </div>
+
                     <div class="form-group">
                         <label for="name" class="col-sm-5 control-label">Logo</label>
                         <div class="col-sm-12">
@@ -47,7 +48,7 @@
                                             <div class="row">
                                                 <div class="col-sm-6">
                                                     <h5 class="card-title">Banner</h5>
-                                                    <div class="dropzone" id="banner" data-maxfile="1" data-ext="image/jpeg" data-lang="{{$lag->id}}" data-lang_code="{{$lag->lang_code}}" data-name="banner"></div>
+                                                    <div class="dropzone" id="banner" data-maxfile="1" data-ext="image/jpeg,image/png" data-lang="{{$lag->id}}" data-lang_code="{{$lag->lang_code}}" data-name="banner"></div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <h5 class="card-title">Video</h5>
@@ -56,7 +57,7 @@
                                                 </div>
                                             </div>
                                             <h5 class="card-title">Preview</h5>
-                                            <div class="dropzone" id="preview" data-maxfile="8" data-ext="image/jpeg" data-lang="{{$lag->id}}" data-lang_code="{{$lag->lang_code}}" data-name="preview"></div>
+                                            <div class="dropzone" id="preview" data-maxfile="8" data-ext="image/jpeg,image/png" data-lang="{{$lag->id}}" data-lang_code="{{$lag->lang_code}}" data-name="preview"></div>
                                         </div>
 
                                     </div>

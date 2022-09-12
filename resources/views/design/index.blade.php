@@ -121,7 +121,7 @@
             },
             columns: [
                 {data: 'projectid', name: 'projectid'},
-                {data: 'lang_id', name: 'lang_id'},
+                {data: 'lang_id', name: 'lang_id',orderable: false},
                 // {data: 'preview', name: 'preview'},
                 // {data: 'video', name: 'video'},
                 {data: 'status_design', name: 'status_design'},

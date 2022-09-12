@@ -42,35 +42,24 @@ class DesignController extends Controller
             $totalRecordswithFilter = ProjectModel::has('lang')->select('count(*) as allcount')
                 ->where('projectname','like', '%' . $searchValue . '%')
                 ->count();
-//            $records = ProjectHasLang::orderBy($columnName, $columnSortOrder)
-//                ->with('lang','project')
-//                ->whereRelation('project','projectname','like', '%' . $searchValue . '%')
-//                ->skip($start)
-//                ->take($rowperpage)
-//                ->get();
-
-
-
-
             $records = ProjectModel::has('lang')
-//                ->where('wallpaper_name', 'like', '%' . $searchValue . '%')
+                ->where('projectname','like', '%' . $searchValue . '%')
                 ->select('*')
                 ->orderBy($columnName, $columnSortOrder)
                 ->skip($start)
                 ->take($rowperpage)
                 ->get();
         }else{
-            $totalRecords = ProjectHasLang::select('count(*) as allcount')
+            $totalRecords = ProjectModel::has('lang')->where('user_design',auth()->id())->select('count(*) as allcount')->count();
+            $totalRecordswithFilter = ProjectModel::has('lang')->select('count(*) as allcount')
+                ->where('projectname','like', '%' . $searchValue . '%')
                 ->where('user_design',auth()->id())
                 ->count();
-            $totalRecordswithFilter = ProjectHasLang::select('count(*) as allcount')
+            $records = ProjectModel::has('lang')
+                ->where('projectname','like', '%' . $searchValue . '%')
                 ->where('user_design',auth()->id())
-                ->whereRelation('project','projectname','like', '%' . $searchValue . '%')
-                ->count();
-            $records = ProjectHasLang::orderBy($columnName, $columnSortOrder)
-                ->with('lang','project')
-                ->whereRelation('project','projectname','like', '%' . $searchValue . '%')
-                ->where('user_design',auth()->id())
+                ->select('*')
+                ->orderBy($columnName, $columnSortOrder)
                 ->skip($start)
                 ->take($rowperpage)
                 ->get();
@@ -111,105 +100,48 @@ class DesignController extends Controller
 
             foreach ($langs as $lang){
 
-                //            switch ($record->logo){
-//                case 0:
-//                    $logo =' <span style="font-size: 100%" class="badge badge-danger"><i class="ti-close"></i></span> ' ;
-//                    break;
-//                case 1:
-//                    $logo =
-//                        '<a href="'.url('/storage/projects').'/'.$du_an.'/'.$project_name.'/lg.png" data-sub-html="<h4>'.$project_name.'</h4>lg.png ">
-//                            <img src="'.url('/storage/projects').'/'.$du_an.'/'.$project_name.'/lg114.png" height="120">
-//                        </a>';
-//                    break;
-//            }
+                $needle = 0;
+                $ret =
+                    array_keys(
+                        array_filter(
+                            $this->array_slice_assoc($lang->pivot->toArray(), ['banner','preview', 'video']), function($var) use ($needle){
+                        return strpos($var, $needle) !== false;
+                    }));
 
-
-                switch ($lang->pivot->banner){
-                    case 0:
-                        $banner =' <span style="font-size: 100%" class="badge badge-danger"><i class="ti-close"></i></span> ' ;
-                        break;
-                    case 1:
-                        $banner =' <span style="font-size: 100%" class="badge badge-success"><i class="ti-check"></i></span> ' ;
-//                        $banner =
-//                            '<a href="'.url('/storage/projects').'/'.$du_an.'/'.$project_name.'/'.$lang->lang_code.'/bn.jpg" data-sub-html="<h4>'.$project_name.' ('.$lang->lang_name.')</h4>bn.jpg">
-//                                <img src="'.url('/storage/projects').'/'.$du_an.'/'.$project_name.'/'.$lang->lang_code.'/bn.jpg" height="120">
-//                            </a>';
-                        break;
+                if(count($ret) == 3 ){
+                    $result = ' <span style="font-size: 100%" class="badge badge-danger">'.$lang->lang_name.'</span> ' ;
+                }elseif ((count($ret) < 3) && (count($ret) > 0 )){
+                    $result = ' <span style="font-size: 100%" class="badge badge-warning">'.$lang->lang_name.'</span> ' ;
+                }else{
+                    $result = ' <span style="font-size: 100%" class="badge badge-success">'.$lang->lang_name.'</span> ' ;
                 }
-
-
-                switch ($lang->pivot->preview){
-                    case 0:
-                        $preview =' <span style="font-size: 100%" class="badge badge-danger"><i class="ti-close"></i></span> ' ;
-                        break;
-                    default:
-                        $preview = ' <span style="font-size: 100%" class="badge badge-success"><i class="ti-check"></i></span> ' ;
-    //                    for ($i=1 ; $i<=$record->preview; $i++){
-    //                        $preview .=
-    //                            '<a href="'.url('/storage/projects').'/'.$du_an.'/'.$project_name.'/'.$lang->lang_code.'/pr'.$i.'.jpg" data-sub-html="<h4>'.$project_name.' ('.$lang->lang_name.')</h4> pr'.$i.'.jpg">
-    //                                <img  src="'.url('/storage/projects').'/'.$du_an.'/'.$project_name.'/'.$lang->lang_code.'/pr'.$i.'.jpg" height="120">
-    //                            </a>';
-    //                    }
-                        break;
-                }
-                switch ($lang->pivot->video){
-                    case 0:
-                        $video =' <span style="font-size: 100%" class="badge badge-danger"><i class="ti-close"></i></span> ' ;
-                        break;
-                    case 1:
-                        $video = ' <span style="font-size: 100%" class="badge badge-success"><i class="ti-check"></i></span> ' ;
-    //                    $video = '<a class="popup-youtube mo-mb-2" href="'.url('/storage/projects').'/'.$du_an.'/'.$project_name.'/'.$lang->lang_code.'/video.mp4">Video</a>';
-                        break;
-                }
-                $design .= $lang->lang_code.':'. $banner.$preview.$video.'<br><br>';
+//                switch ($lang->pivot->banner){
+//                    case 0:
+//                        $banner =' <span style="font-size: 100%" class="badge badge-danger"><i class="ti-close"></i></span> ' ;
+//                        break;
+//                    case 1:
+//                        $banner =' <span style="font-size: 100%" class="badge badge-success"><i class="ti-check"></i></span> ' ;
+//                        break;
+//                }
+//                switch ($lang->pivot->preview){
+//                    case 0:
+//                        $preview =' <span style="font-size: 100%" class="badge badge-danger"><i class="ti-close"></i></span> ' ;
+//                        break;
+//                    default:
+//                        $preview = ' <span style="font-size: 100%" class="badge badge-success"><i class="ti-check"></i></span> ' ;
+//                        break;
+//                }
+//                switch ($lang->pivot->video){
+//                    case 0:
+//                        $video =' <span style="font-size: 100%" class="badge badge-danger"><i class="ti-close"></i></span> ' ;
+//                        break;
+//                    case 1:
+//                        $video = ' <span style="font-size: 100%" class="badge badge-success"><i class="ti-check"></i></span> ' ;
+//    //                    $video = '<a class="popup-youtube mo-mb-2" href="'.url('/storage/projects').'/'.$du_an.'/'.$project_name.'/'.$lang->lang_code.'/video.mp4">Video</a>';
+//                        break;
+//                }
+                $design .=  $result;
             }
-
-
-//            switch ($record->logo){
-//                case 0:
-//                    $logo =' <span style="font-size: 100%" class="badge badge-danger"><i class="ti-close"></i></span> ' ;
-//                    break;
-//                case 1:
-//                    $logo =
-//                        '<a href="'.url('/storage/projects').'/'.$du_an.'/'.$project_name.'/lg.png" data-sub-html="<h4>'.$project_name.'</h4>lg.png ">
-//                            <img src="'.url('/storage/projects').'/'.$du_an.'/'.$project_name.'/lg114.png" height="120">
-//                        </a>';
-//                    break;
-//            }
-//            switch ($record->banner){
-//                case 0:
-//                    $banner =' <span style="font-size: 100%" class="badge badge-danger"><i class="ti-close"></i></span> ' ;
-//                    break;
-//                case 1:
-//                    $banner =
-//                        '<a href="'.url('/storage/projects').'/'.$du_an.'/'.$project_name.'/'.$lang->lang_code.'/bn.jpg" data-sub-html="<h4>'.$project_name.' ('.$lang->lang_name.')</h4>bn.jpg">
-//                            <img src="'.url('/storage/projects').'/'.$du_an.'/'.$project_name.'/'.$lang->lang_code.'/bn.jpg" height="120">
-//                        </a>';
-//                    break;
-//            }
-//            switch ($record->preview){
-//                case 0:
-//                    $preview =' <span style="font-size: 100%" class="badge badge-danger"><i class="ti-close"></i></span> ' ;
-//                    break;
-//                default:
-//                    $preview = '';
-//                    for ($i=1 ; $i<=$record->preview; $i++){
-//                        $preview .=
-//                            '<a href="'.url('/storage/projects').'/'.$du_an.'/'.$project_name.'/'.$lang->lang_code.'/pr'.$i.'.jpg" data-sub-html="<h4>'.$project_name.' ('.$lang->lang_name.')</h4> pr'.$i.'.jpg">
-//                                <img  src="'.url('/storage/projects').'/'.$du_an.'/'.$project_name.'/'.$lang->lang_code.'/pr'.$i.'.jpg" height="120">
-//                            </a>';
-//                    }
-//                    break;
-//            }
-//            switch ($record->video){
-//                case 0:
-//                    $video =' <span style="font-size: 100%" class="badge badge-danger"><i class="ti-close"></i></span> ' ;
-//                    break;
-//                case 1:
-//                    $video = '<a class="popup-youtube mo-mb-2" href="'.url('/storage/projects').'/'.$du_an.'/'.$project_name.'/'.$lang->lang_code.'/video.mp4">Video</a>';
-//                    break;
-//            }
-
 
             $data_arr[] = array(
                 'id' => $record->id,
@@ -254,7 +186,7 @@ class DesignController extends Controller
         }
         $action = $request->action;
         $project = ProjectModel::find($request->projectid);
-        $project->status_design = 0;
+
 
         switch ($action){
             case 'logo':
@@ -266,9 +198,9 @@ class DesignController extends Controller
                 foreach ($files as $file) {
                     $img = Image::make($file->path());
                     $img->resize(512, 512)
-                        ->save($path_logo.'lg.png',80);
+                        ->save($path_logo.'lg.png',85);
                     $img->resize(114, 114)
-                        ->save($path_logo.'lg114.png',80);
+                        ->save($path_logo.'lg114.png',85);
                 }
                 $project->logo = 'lg.png';
                 break;
@@ -277,8 +209,8 @@ class DesignController extends Controller
                 foreach ($files as $file) {
                     $img = Image::make($file->path());
                     $img
-//                        ->save($path.'bn.'.$file->extension(),80);
-                        ->save($path.'bn.jpg',80);
+                        ->resize(1024, 500)
+                        ->save($path.'bn.jpg',85);
                 }
                 $project->user_design = auth()->id();
                 $project->lang()->syncWithPivotValues($request->lang, ['banner'=> 1],false);
@@ -287,10 +219,24 @@ class DesignController extends Controller
             case 'preview':
                 $files = $request->file('preview');
                 foreach ($files as $key=>$file) {
+
                     $img = Image::make($file->path());
-                    $img
-//                        ->save($path.'pr'.($key+1).'.'.$file->extension(),80);
-                        ->save($path.'pr'.($key+1).'.jpg',80);
+
+
+
+                    if($img->height() > $img->width()){
+                        $img
+                            ->resize(1080, 1920)
+                            ->save($path.'pr'.($key+1).'.jpg',85);
+                    }elseif ($img->height() < $img->width()){
+                        $img
+                            ->resize(1920, 1080)
+                            ->save($path.'pr'.($key+1).'.jpg',85);
+                    }else{
+                        $img
+                            ->resize(1920, 1920)
+                            ->save($path.'pr'.($key+1).'.jpg',85);
+                    }
                 }
 
                 $project->user_design = auth()->id();
@@ -308,10 +254,9 @@ class DesignController extends Controller
                 break;
         }
         $project->save();
-
-//        if (isset($result) && $result->status == 2  ){
-//            $result->update(['status'=>1]);
-//        }
+        if ($project->status_design == 2  ){
+            $project->update(['status_design'=>1]);
+        }
 
         return response()->json(['success'=>'Thành công']);
     }
@@ -334,5 +279,9 @@ class DesignController extends Controller
     {
         ProjectHasLang::find($id)->delete();
         return response()->json(['success'=>'Xóa thành công.']);
+    }
+
+    function array_slice_assoc($array,$keys) {
+        return array_intersect_key($array,array_flip($keys));
     }
 }

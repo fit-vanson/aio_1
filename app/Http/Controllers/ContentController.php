@@ -33,13 +33,12 @@ class ContentController extends Controller
 
 
         // Total records
-        $totalRecords = ProjectHasLang::select('count(*) as allcount')->count();
-        $totalRecordswithFilter = ProjectHasLang::select('count(*) as allcount')
-            ->whereRelation('project','projectname','like', '%' . $searchValue . '%')
+        $totalRecords = ProjectModel::has('lang')->select('count(*) as allcount')->count();
+        $totalRecordswithFilter = ProjectModel::has('lang')->select('count(*) as allcount')
+            ->where('projectname', 'like', '%' . $searchValue . '%')
             ->count();
         $records = ProjectModel::has('lang')
-//                ->where('wallpaper_name', 'like', '%' . $searchValue . '%')
-            ->select('*')
+            ->where('projectname', 'like', '%' . $searchValue . '%')
             ->orderBy($columnName, $columnSortOrder)
             ->skip($start)
             ->take($rowperpage)

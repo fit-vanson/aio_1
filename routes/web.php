@@ -11,6 +11,7 @@ use App\Http\Controllers\ContentController;
 use App\Http\Controllers\CronProjectController;
 use App\Http\Controllers\DaController;
 use App\Http\Controllers\DataProfileController;
+use App\Http\Controllers\DesignContentController;
 use App\Http\Controllers\DesignController;
 use App\Http\Controllers\DevAmazonController;
 use App\Http\Controllers\DevController;
@@ -643,6 +644,17 @@ Route::group(['prefix'=>'content','middleware'=>['CheckLogout','2fa']], function
     Route::get('/edit/{id}',[ContentController::class,'edit'])->name('content.edit')->middleware('can:project-edit');
 
     Route::post('/update',[ContentController::class,'update'])->name('content.update')->middleware('can:project-update');
+
+});
+
+Route::group(['prefix'=>'design-content','middleware'=>['CheckLogout','2fa']], function (){
+    Route::get('/',[DesignContentController::class,'index'])->name('design_content.index')->middleware('can:project-index');
+    Route::get('/project_show',[DesignContentController::class,'project_show'])->name('design_content.project_show')->middleware('can:project-index');
+    Route::post('/getIndex', [DesignContentController::class, "getIndex"])->name('design_content.getIndex');
+    Route::post('/create',[DesignContentController::class,'create'])->name('design_content.create')->middleware('can:project-add');
+    Route::get('/edit/{id}',[DesignContentController::class,'edit'])->name('design_content.edit')->middleware('can:project-edit');
+
+    Route::post('/update',[DesignContentController::class,'update'])->name('design_content.update')->middleware('can:project-update');
 
 });
 
