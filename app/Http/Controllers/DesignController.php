@@ -21,6 +21,8 @@ class DesignController extends Controller
     }
     public function getIndex(Request $request)
     {
+
+//        dd($request->all());
         $draw = $request->get('draw');
         $start = $request->get("start");
         $rowperpage = $request->get("length"); // total number of rows per page
@@ -30,20 +32,25 @@ class DesignController extends Controller
         $order_arr = $request->get('order');
         $search_arr = $request->get('search');
 
+
+
         $columnIndex = $columnIndex_arr[0]['column']; // Column index
         $columnName = $columnName_arr[$columnIndex]['data']; // Column name
         $columnSortOrder = $order_arr[0]['dir']; // asc or desc
-        $searchValue = $search_arr['value']; // Search value
+        $searchValue =  $search_arr['value']; // Search value
 
+//        dd($searchValue);
 
         if( in_array( "Admin" ,array_column(auth()->user()->roles()->get()->toArray(),'name'))){
             // Total records
             $totalRecords = ProjectModel::has('lang')->select('count(*) as allcount')->count();
             $totalRecordswithFilter = ProjectModel::has('lang')->select('count(*) as allcount')
                 ->where('projectname','like', '%' . $searchValue . '%')
+                ->Where('status_design', 'like', '%' .$columnName_arr[2]['search']['value'] . '%')
                 ->count();
             $records = ProjectModel::has('lang')
                 ->where('projectname','like', '%' . $searchValue . '%')
+                ->Where('status_design', 'like', '%' . $columnName_arr[2]['search']['value'] . '%')
                 ->select('*')
                 ->orderBy($columnName, $columnSortOrder)
                 ->skip($start)
@@ -78,23 +85,23 @@ class DesignController extends Controller
 //            $du_an = preg_split("/[-]+/",$project_name)[0];
             $langs = $record->lang;
 
-            switch ($record->status_design){
-                case 0:
-                    $status ='<span style="font-size: 100%" class="badge badge-secondary">Gửi chờ duyệt</span>' ;
-                    break;
-                case 1:
-                    $status = '<span style="font-size: 100%" class="badge badge-info">Đã chỉnh sửa, cần duyệt lại</span>';
-                    break;
-                case 2:
-                    $status = '<span style="font-size: 100%" class="badge badge-warning">Fail, cần chỉnh sửa</span>';
-                    break;
-                case 3:
-                    $status = '<span style="font-size: 100%" class="badge badge-danger">Fail, Project loại khỏi dự án</span>';
-                    break;
-                case 4:
-                    $status = '<span style="font-size: 100%" class="badge badge-success">Done, Kết thúc Project</span>';
-                    break;
-            }
+//            switch ($record->status_design){
+//                case 0:
+//                    $status ='<span style="font-size: 100%" class="badge badge-secondary">Gửi chờ duyệt</span>' ;
+//                    break;
+//                case 1:
+//                    $status = '<span style="font-size: 100%" class="badge badge-info">Đã chỉnh sửa, cần duyệt lại</span>';
+//                    break;
+//                case 2:
+//                    $status = '<span style="font-size: 100%" class="badge badge-warning">Fail, cần chỉnh sửa</span>';
+//                    break;
+//                case 3:
+//                    $status = '<span style="font-size: 100%" class="badge badge-danger">Fail, Project loại khỏi dự án</span>';
+//                    break;
+//                case 4:
+//                    $status = '<span style="font-size: 100%" class="badge badge-success">Done, Kết thúc Project</span>';
+//                    break;
+//            }
 
             $design = '';
 
@@ -119,40 +126,15 @@ class DesignController extends Controller
                 }else{
                     $result = ' <span style="font-size: 100%" class="badge badge-success">'.$lang->lang_name.' ('.array_sum($preview).') </span> ' ;
                 }
-//                switch ($lang->pivot->banner){
-//                    case 0:
-//                        $banner =' <span style="font-size: 100%" class="badge badge-danger"><i class="ti-close"></i></span> ' ;
-//                        break;
-//                    case 1:
-//                        $banner =' <span style="font-size: 100%" class="badge badge-success"><i class="ti-check"></i></span> ' ;
-//                        break;
-//                }
-//                switch ($lang->pivot->preview){
-//                    case 0:
-//                        $preview =' <span style="font-size: 100%" class="badge badge-danger"><i class="ti-close"></i></span> ' ;
-//                        break;
-//                    default:
-//                        $preview = ' <span style="font-size: 100%" class="badge badge-success"><i class="ti-check"></i></span> ' ;
-//                        break;
-//                }
-//                switch ($lang->pivot->video){
-//                    case 0:
-//                        $video =' <span style="font-size: 100%" class="badge badge-danger"><i class="ti-close"></i></span> ' ;
-//                        break;
-//                    case 1:
-//                        $video = ' <span style="font-size: 100%" class="badge badge-success"><i class="ti-check"></i></span> ' ;
-//    //                    $video = '<a class="popup-youtube mo-mb-2" href="'.url('/storage/projects').'/'.$du_an.'/'.$project_name.'/'.$lang->lang_code.'/video.mp4">Video</a>';
-//                        break;
-//                }
                 $design .=  $result;
             }
 
             $data_arr[] = array(
-                'id' => $record->id,
+//                'id' => $record->id,
                 'projectid' => $project_name,
                 'lang_id' => $design,
                 'user_design' => $record->user ? $record->user->name : null,
-                'status_design' => $status,
+                'status_design' => $record->status_design,
                 "action"=> $btn,
             );
         }

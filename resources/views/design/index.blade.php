@@ -3,7 +3,10 @@
 @section('css')
 
 <link href="plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+
 <link href="plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+
+
 
 <link href="{{ URL::asset('assets/libs/magnific-popup/magnific-popup.min.css') }}" rel="stylesheet" type="text/css" />
 
@@ -75,6 +78,8 @@
 
 <!-- Required datatable js -->
 <script src="plugins/datatables/jquery.dataTables.min.js"></script>
+
+
 <script src="plugins/datatables/dataTables.bootstrap4.min.js"></script>
 <!-- Buttons examples -->
 <script src="plugins/datatables/dataTables.buttons.min.js"></script>
@@ -97,6 +102,8 @@
 
 <script src="plugins/select2/js/select2.min.js"></script>
 
+
+
 <script src="{{ URL::asset('/assets/libs/magnific-popup/magnific-popup.min.js') }}"></script>
 <script src="{{ URL::asset('/assets/libs/lightgallery/js/lightgallery-all.js') }}"></script>
 
@@ -108,6 +115,12 @@
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
+        });
+
+
+        $('.data-table tfoot th').each(function () {
+            var title = $(this).text();
+            $(this).html('<input type="text" placeholder="Search ' + title + '" />');
         });
 
         // var groupColumn = 0;
@@ -124,10 +137,79 @@
                 {data: 'lang_id', name: 'lang_id',orderable: false},
                 // {data: 'preview', name: 'preview'},
                 // {data: 'video', name: 'video'},
-                {data: 'status_design', name: 'status_design'},
+                {data: 'status_design', name: 'status_design',orderable: false},
                 {data: 'user_design', name: 'user_design'},
                 {data: 'action',className: "text-center", name: 'action', orderable: false, searchable: false},
             ],
+
+            columnDefs: [
+                {
+                    render: function (data, type, full, meta) {
+                        var status ='';
+
+                        switch (data){
+                            case 0:
+                                status ='<span style="font-size: 100%" class="badge badge-secondary">Gửi chờ duyệt</span>' ;
+                                break;
+                            case 1:
+                                status = '<span style="font-size: 100%" class="badge badge-info">Đã chỉnh sửa, cần duyệt lại</span>';
+                                break;
+                            case 2:
+                                status = '<span style="font-size: 100%" class="badge badge-warning">Fail, cần chỉnh sửa</span>';
+                                break;
+                            case 3:
+                                status = '<span style="font-size: 100%" class="badge badge-danger">Fail, Project loại khỏi dự án</span>';
+                                break;
+                            case 4:
+                                status = '<span style="font-size: 100%" class="badge badge-success">Done, Kết thúc Project</span>';
+                                break;
+                        }
+                        return status
+
+                    },
+                    targets: [2]
+                }
+            ],
+
+
+            initComplete: function () {
+                this.api().columns([2]).every( function () {
+                    var column = this;
+                    var select = $('<select class="form-control"><option value="">Trạng thái</option></select>')
+                        .appendTo( $(column.header()).empty() )
+                        .on( 'change', function () {
+                            var val = $.fn.dataTable.util.escapeRegex(
+                                $(this).val()
+                            );
+
+                            column
+                                .search( val ? val : '', true, false )
+                                .draw();
+                        } );
+
+                    column.data().unique().sort().each( function ( d, j ) {
+                        var status ='';
+                        switch (d){
+                            case 0:
+                                status ='<span style="font-size: 100%" class="badge badge-secondary">Gửi chờ duyệt</span>' ;
+                                break;
+                            case 1:
+                                status = '<span style="font-size: 100%" class="badge badge-info">Đã chỉnh sửa, cần duyệt lại</span>';
+                                break;
+                            case 2:
+                                status = '<span style="font-size: 100%" class="badge badge-warning">Fail, cần chỉnh sửa</span>';
+                                break;
+                            case 3:
+                                status = '<span style="font-size: 100%" class="badge badge-danger">Fail, Project loại khỏi dự án</span>';
+                                break;
+                            case 4:
+                                status = '<span style="font-size: 100%" class="badge badge-success">Done, Kết thúc Project</span>';
+                                break;
+                        }
+                        select.append( '<option value="'+d+'">'+status+'</option>' )
+                    } );
+                } );
+            },
             // order: [[1, 'asc']],
             // rowGroup: {
             //     dataSrc: 0
