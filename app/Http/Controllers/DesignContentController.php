@@ -9,7 +9,7 @@ class DesignContentController extends Controller
 {
     public function index(Request $request)
     {
-        $projects = ProjectModel::has('lang')->where('status_design',0)->orwhere('status_design',1)->get();
+        $projects = ProjectModel::has('lang')->whereIN('status_design',[0,1])->get();
         return view('design_content.index')->with(compact('projects'));
 
     }

@@ -86,33 +86,9 @@ class DesignController extends Controller
             $project_name = $record->projectname;
 //            $du_an = preg_split("/[-]+/",$project_name)[0];
             $langs = $record->lang;
-
-//            switch ($record->status_design){
-//                case 0:
-//                    $status ='<span style="font-size: 100%" class="badge badge-secondary">Gửi chờ duyệt</span>' ;
-//                    break;
-//                case 1:
-//                    $status = '<span style="font-size: 100%" class="badge badge-info">Đã chỉnh sửa, cần duyệt lại</span>';
-//                    break;
-//                case 2:
-//                    $status = '<span style="font-size: 100%" class="badge badge-warning">Fail, cần chỉnh sửa</span>';
-//                    break;
-//                case 3:
-//                    $status = '<span style="font-size: 100%" class="badge badge-danger">Fail, Project loại khỏi dự án</span>';
-//                    break;
-//                case 4:
-//                    $status = '<span style="font-size: 100%" class="badge badge-success">Done, Kết thúc Project</span>';
-//                    break;
-//            }
-
             $design = '';
-
             foreach ($langs as $lang){
-
                 $preview = $this->array_slice_assoc($lang->pivot->toArray(), ['pr1', 'pr2','pr3','pr4','pr5','pr6','pr7','pr8',]);
-
-
-
                 $needle = 0;
                 $ret =
                     array_keys(
@@ -256,7 +232,7 @@ class DesignController extends Controller
     public function edit($id)
     {
         $data= ProjectModel::find($id);
-        return response()->json($data);
+        return response()->json($data->load('lang','da'));
     }
 
     public function update(Request $request){

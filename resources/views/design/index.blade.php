@@ -298,6 +298,7 @@
         })
 
         $('#createNewDesign').click(function () {
+            $('.project_select').show();
             $('#saveBtn').val("create-design");
             $('#design_id').val('');
             $('#designForm').trigger("reset");
@@ -420,15 +421,24 @@
         $(document).on('click','.editProjectLang', function (data){
             var _id = $(this).data("id");
             // var row_id = $(this).data("id_row");
+
+
+
             $.get('{{asset('design/edit')}}/'+_id,function (data) {
                 // $('#saveBtnEditDesign').val(row_id);
-                $('#ajaxModelEdit').modal('show');
-                $('.modal').on('hidden.bs.modal', function (e) {
-                    $('body').addClass('modal-open');
-                });
-                $('#design_id_edit').val(data.projectid);
-                $('#status').val(data.status_design);
-                $('#notes').val(data.notes_design);
+                // $('#ajaxModelEdit').modal('show');
+                $('#ajaxModel').modal('show');
+                $('#pro_id').val(data.projectid);
+                $('#pro_text').val(data.projectname);
+                $('.project_select').hide();
+
+
+                // $('.modal').on('hidden.bs.modal', function (e) {
+                //     $('body').addClass('modal-open');
+                // });
+                // $('#design_id_edit').val(data.projectid);
+                // $('#status').val(data.status_design);
+                // $('#notes').val(data.notes_design);
             })
         });
     });
