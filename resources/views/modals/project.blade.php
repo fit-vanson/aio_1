@@ -137,7 +137,7 @@
                                                 </div>
 
                                                 <div class="form-group ol-lg-4">
-                                                    <label class="d-block ">Gender :</label>
+                                                    <label class="d-block ">Data on/off :</label>
                                                     <div class="custom-control custom-radio custom-control-inline">
                                                         <input type="radio" id="data_online" name="data_status" class="custom-control-input" value="1">
                                                         <label class="custom-control-label" for="data_online">Online</label>
