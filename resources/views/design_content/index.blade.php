@@ -89,7 +89,9 @@
 
                     <form id="browseappForm" name="browseappForm" class="form-horizontal">
                         <input type="hidden" name="project_id" id="project_id">
-                        <h3 id="pro_name"></h3>
+                        <span style="font-size: 30px" id="pro_name"></span>
+                        <span id="template"></span>
+                        <span id="title"></span>
 
                         <div class="row">
 
@@ -97,7 +99,10 @@
                                 <label for="name">Logo</label>
                                 <p class="card-title-desc">
                                     <img id="logo_project" class="d-block img-fluid" src="" height="200" width="200px" alt="First slide">
+
                                 </p>
+
+
                             </div>
                             <div class="form-group col-lg-8">
                                 <label for="name">Ghi chú</label>
@@ -382,10 +387,16 @@
             $('#project_detail').show()
 
             $.get('{{asset('design-content/edit')}}/'+_id,function (data) {
+
+                console.log(data)
+
+
                 $("#logo_project").attr("src","../storage/projects/"+data.da.ma_da+'/'+data.projectname+"/"+data.logo);
                 $('#notes_design').val(data.notes_design);
                 $('#project_id').val(data.projectid);
                 $('#pro_name').html(data.projectname);
+                $('#template').html(' - ('+data.matemplate.template+') - ');
+                $('#title_app').html(data.title_app);
                 var tablist = '';
                 var tab_content = ''
                 var active = '';

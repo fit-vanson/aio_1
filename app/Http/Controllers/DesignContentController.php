@@ -16,7 +16,7 @@ class DesignContentController extends Controller
 
     public function edit($id){
         $project = ProjectModel::find($id);
-        return response()->json($project->load('lang','da'));
+        return response()->json($project->load('lang','da','matemplate'));
 
     }
 
