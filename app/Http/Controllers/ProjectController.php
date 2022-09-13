@@ -3474,6 +3474,9 @@ class ProjectController extends Controller
     }
     public function create(Request  $request)
     {
+
+
+
         $rules = [
             'projectname' =>'required|unique:ngocphandang_project,projectname',
             'ma_da' => 'required|not_in:0',
@@ -3481,7 +3484,7 @@ class ProjectController extends Controller
             'title_app' =>'required',
             'buildinfo_vernum' =>'required',
             'buildinfo_verstr' =>'required',
-            'logo' => 'mimes:jpeg,png,jpg,gif,svg|max:2048',
+//            'logo' => 'mimes:jpeg,png,jpg,gif,svg|max:2048',
             'project_file' => 'mimes:zip',
         ];
         $message = [
@@ -3495,8 +3498,8 @@ class ProjectController extends Controller
             'buildinfo_vernum.required'=>'Version Number không để trống',
             'buildinfo_verstr.required'=>'Version String không để trống',
             'project_file.mimes'=>'*.zip',
-            'logo.mimes'=>'Logo không đúng định dạng: jpeg, png, jpg, gif, svg.',
-            'logo.max'=>'Logo max: 2M.',
+//            'logo.mimes'=>'Logo không đúng định dạng: jpeg, png, jpg, gif, svg.',
+//            'logo.max'=>'Logo max: 2M.',
         ];
         $error = Validator::make($request->all(),$rules, $message );
 
@@ -3722,20 +3725,26 @@ class ProjectController extends Controller
         $data['Huawei_status'] = 100;
         $data['Huawei_bot'] = json_encode(['time_bot'=>Carbon::now()->setTimezone('Asia/Ho_Chi_Minh')->toDateTimeString()]);
 
-        if(isset($request->logo)){
-            $image = $request->file('logo');
-            $data['logo'] = 'logo_'.time().'.'.$image->extension();
-            $destinationPath = public_path('uploads/project/'.$request->projectname.'/thumbnail/');
-            $img = Image::make($image->path());
-            if (!file_exists($destinationPath)) {
-                mkdir($destinationPath, 777, true);
-            }
-            $img->resize(100, 100, function ($constraint) {
-                $constraint->aspectRatio();
-            })->save($destinationPath.$data['logo']);
-            $destinationPath = public_path('uploads/project/'.$request->projectname);
-            $image->move($destinationPath, $data['logo']);
-        }
+        $data['data_onoff'] = $request->data_status ? (int)  $request->data_status :0;
+
+//        if(isset($request->Online) || isset($request->Online) ){
+//            dd(1)
+//        }
+
+//        if(isset($request->logo)){
+//            $image = $request->file('logo');
+//            $data['logo'] = 'logo_'.time().'.'.$image->extension();
+//            $destinationPath = public_path('uploads/project/'.$request->projectname.'/thumbnail/');
+//            $img = Image::make($image->path());
+//            if (!file_exists($destinationPath)) {
+//                mkdir($destinationPath, 777, true);
+//            }
+//            $img->resize(100, 100, function ($constraint) {
+//                $constraint->aspectRatio();
+//            })->save($destinationPath.$data['logo']);
+//            $destinationPath = public_path('uploads/project/'.$request->projectname);
+//            $image->move($destinationPath, $data['logo']);
+//        }
 
         if($request->project_file){
             $destinationPath = public_path('file-manager/ProjectData/');
@@ -3880,7 +3889,7 @@ class ProjectController extends Controller
             'title_app' =>'required',
             'buildinfo_vernum' =>'required',
             'buildinfo_verstr' =>'required',
-            'logo' => 'mimes:jpeg,png,jpg,gif,svg|max:2048',
+//            'logo' => 'mimes:jpeg,png,jpg,gif,svg|max:2048',
             'project_file' => 'mimes:zip',
         ];
         $message = [
@@ -3892,8 +3901,8 @@ class ProjectController extends Controller
             'buildinfo_vernum.required'=>'Version Number không để trống',
             'buildinfo_verstr.required'=>'Version String không để trống',
             'project_file.mimes'=>'*.zip',
-            'logo.mimes'=>'Logo không đúng định dạng: jpeg, png, jpg, gif, svg.',
-            'logo.max'=>'Logo max: 2M.',
+//            'logo.mimes'=>'Logo không đúng định dạng: jpeg, png, jpg, gif, svg.',
+//            'logo.max'=>'Logo max: 2M.',
         ];
 
         $error = Validator::make($request->all(),$rules, $message );
@@ -4117,13 +4126,17 @@ class ProjectController extends Controller
         $data->Huawei_sdk = $request->Huawei_sdk;
         $data->Huawei_keystore_profile = $request->Huawei_keystore_profile;
         $data->Huawei_bot = $data->Huawei_bot ? : json_encode(['time_bot'=>Carbon::now()->setTimezone('Asia/Ho_Chi_Minh')->toDateTimeString()]);
-        if($data->logo){
-            if($data->projectname <> $request->projectname){
-//                dd($data->project_file);
-                $dir = (public_path('uploads/project/'));
-                rename($dir.$data->projectname, $dir.$request->projectname);
-            }
-        }
+
+        $data->data_onoff = $request->data_status ? (int) $request->data_status :0;
+
+
+//        if($data->logo){
+//            if($data->projectname <> $request->projectname){
+////                dd($data->project_file);
+//                $dir = (public_path('uploads/project/'));
+//                rename($dir.$data->projectname, $dir.$request->projectname);
+//            }
+//        }
 
         if($data->project_file){
             $dir_file = public_path('file-manager/ProjectData/');
@@ -4131,24 +4144,24 @@ class ProjectController extends Controller
             $data['project_file'] = $request->projectname.'.zip';
         }
 
-        if($request->logo){
-            if($data->logo){
-                $path_Remove =  public_path('uploads/project/').$data->projectname;
-                $this->deleteDirectory($path_Remove);
-            }
-            $image = $request->file('logo');
-            $data['logo'] = 'logo_'.time().'.'.$image->extension();
-            $destinationPath = public_path('uploads/project/'.$request->projectname.'/thumbnail/');
-            $img = Image::make($image->path());
-            if (!file_exists($destinationPath)) {
-                mkdir($destinationPath, 777, true);
-            }
-            $img->resize(100, 100, function ($constraint) {
-                $constraint->aspectRatio();
-            })->save($destinationPath.$data['logo']);
-            $destinationPath = public_path('uploads/project/'.$request->projectname);
-            $image->move($destinationPath, $data['logo']);
-        }
+//        if($request->logo){
+//            if($data->logo){
+//                $path_Remove =  public_path('uploads/project/').$data->projectname;
+//                $this->deleteDirectory($path_Remove);
+//            }
+//            $image = $request->file('logo');
+//            $data['logo'] = 'logo_'.time().'.'.$image->extension();
+//            $destinationPath = public_path('uploads/project/'.$request->projectname.'/thumbnail/');
+//            $img = Image::make($image->path());
+//            if (!file_exists($destinationPath)) {
+//                mkdir($destinationPath, 777, true);
+//            }
+//            $img->resize(100, 100, function ($constraint) {
+//                $constraint->aspectRatio();
+//            })->save($destinationPath.$data['logo']);
+//            $destinationPath = public_path('uploads/project/'.$request->projectname);
+//            $image->move($destinationPath, $data['logo']);
+//        }
 
 
         if($request->project_file){

@@ -13,15 +13,15 @@
 
 
                     <div data-repeater-item="" class="row">
-                        <div class="form-group col-lg-4">
-                            <label>Logo</label><p></p>
-                            <input  id="logo" type="file" name="logo" class="form-control" hidden onchange="changeImg(this)" accept="image/*">
-                            <img id="avatar" class="thumbnail" width="100px" src="img/logo.png">
-                        </div>
-                        <div class="form-group col-lg-4">
-                            <label for="name">File</label><p></p>
-                            <input type="file" name="project_file" id="project_file" class="filestyle" data-buttonname="btn-secondary" accept=".zip">
-                        </div>
+{{--                        <div class="form-group col-lg-4">--}}
+{{--                            <label>Logo</label><p></p>--}}
+{{--                            <input  id="logo" type="file" name="logo" class="form-control" hidden onchange="changeImg(this)" accept="image/*">--}}
+{{--                            <img id="avatar" class="thumbnail" width="100px" src="img/logo.png">--}}
+{{--                        </div>--}}
+{{--                        <div class="form-group col-lg-4">--}}
+{{--                            <label for="name">File</label><p></p>--}}
+{{--                            <input type="file" name="project_file" id="project_file" class="filestyle" data-buttonname="btn-secondary" accept=".zip">--}}
+{{--                        </div>--}}
                     </div>
 
                     <div class="row">
@@ -135,6 +135,35 @@
                                                     <label for="name">App Name (APP_NAME_X)</label>
                                                     <input type="text" id="buildinfo_app_name_x" name="buildinfo_app_name_x" class="form-control" >
                                                 </div>
+
+                                                <div class="form-group ol-lg-4">
+                                                    <label class="d-block ">Gender :</label>
+                                                    <div class="custom-control custom-radio custom-control-inline">
+                                                        <input type="radio" id="data_online" name="data_status" class="custom-control-input" value="1">
+                                                        <label class="custom-control-label" for="data_online">Online</label>
+                                                    </div>
+                                                    <div class="custom-control custom-radio custom-control-inline">
+                                                        <input type="radio" id="data_offline" name="data_status" class="custom-control-input" value="2">
+                                                        <label class="custom-control-label" for="data_offline">Offline</label>
+                                                    </div>
+
+                                                    <div class="custom-control custom-radio custom-control-inline">
+                                                        <input type="radio" id="data_all" name="data_status" class="custom-control-input" value="3">
+                                                        <label class="custom-control-label" for="data_all">All</label>
+                                                    </div>
+                                                </div>
+
+{{--                                                <div class="form-group col-lg-2">--}}
+{{--                                                    <label for="name">Online</label>--}}
+{{--                                                    <input type="checkbox" class="control-input" name="Online" id="Online" value="1">--}}
+{{--                                                </div>--}}
+
+{{--                                                <div class="form-group col-lg-2">--}}
+{{--                                                    <label for="name">Offline</label>--}}
+{{--                                                    <input type="checkbox" class="control-input" name="Offline" id="Offline" value="1">--}}
+{{--                                                </div>--}}
+
+
 {{--                                                <div class="form-group col-lg-4 ">--}}
 {{--                                                    <label for="name">Keystore Profile </label>--}}
 {{--                                                    <div class="inner row">--}}
@@ -183,11 +212,16 @@
                                                     <label for="name">Link Website</label>
                                                     <input type="text" id="buildinfo_link_website" name="buildinfo_link_website" class="form-control" >
                                                 </div>
-                                                <div class="form-group col-lg-4 ">
-                                                    <label for="name">Link Store VietMMO</label>
-                                                    <input type="text" id="link_store_vietmmo" name="link_store_vietmmo" class="form-control" >
 
+                                                <div class="form-group col-lg-4">
+                                                    <label for="name">File</label><p></p>
+                                                    <input type="file" name="project_file" id="project_file" class="filestyle" data-buttonname="btn-secondary" accept=".zip">
                                                 </div>
+{{--                                                <div class="form-group col-lg-4 ">--}}
+{{--                                                    <label for="name">Link Store VietMMO</label>--}}
+{{--                                                    <input type="text" id="link_store_vietmmo" name="link_store_vietmmo" class="form-control" >--}}
+
+{{--                                                </div>--}}
                                             </div>
                                             <span class="card-title-desc" id="p_buildinfo_keystore"></span>
                                             <button type="button" class="btn btn-link waves-effect" id="button_buildinfo_keystore"><i class="mdi mdi-content-copy"></i></button>
