@@ -136,7 +136,7 @@
                                                     <input type="text" id="buildinfo_app_name_x" name="buildinfo_app_name_x" class="form-control" >
                                                 </div>
 
-                                                <div class="form-group ol-lg-4">
+                                                <div class="form-group col-lg-4">
                                                     <label class="d-block ">Data on/off :</label>
                                                     <div class="custom-control custom-radio custom-control-inline">
                                                         <input type="radio" id="data_online" name="data_status" class="custom-control-input" value="1">
@@ -151,6 +151,11 @@
                                                         <input type="radio" id="data_all" name="data_status" class="custom-control-input" value="3">
                                                         <label class="custom-control-label" for="data_all">All</label>
                                                     </div>
+                                                </div>
+
+                                                <div class="form-group col-lg-4">
+                                                    <label for="name">File</label><p></p>
+                                                    <input type="file" name="project_file" id="project_file" class="filestyle" data-buttonname="btn-secondary" accept=".zip">
                                                 </div>
 
 {{--                                                <div class="form-group col-lg-2">--}}
@@ -213,10 +218,7 @@
                                                     <input type="text" id="buildinfo_link_website" name="buildinfo_link_website" class="form-control" >
                                                 </div>
 
-                                                <div class="form-group col-lg-4">
-                                                    <label for="name">File</label><p></p>
-                                                    <input type="file" name="project_file" id="project_file" class="filestyle" data-buttonname="btn-secondary" accept=".zip">
-                                                </div>
+
 {{--                                                <div class="form-group col-lg-4 ">--}}
 {{--                                                    <label for="name">Link Store VietMMO</label>--}}
 {{--                                                    <input type="text" id="link_store_vietmmo" name="link_store_vietmmo" class="form-control" >--}}
