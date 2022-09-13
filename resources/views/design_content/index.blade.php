@@ -60,7 +60,7 @@
 
     <div class="row">
 
-        <div style="width: 8%">
+        <div style="width: 9%;min-width: 150px">
             <div class="card">
                 <div class="card-body">
 {{--                    <p class="card-text">--}}
@@ -69,7 +69,7 @@
                     <ul class="list-group" style="height: 1000px; overflow: auto">
                         @if(isset($projects))
 
-                            @foreach($projects as $project)
+                            @foreach($projects as $key=>$project)
                             <a href="javascript:void(0)" id="project_{{$project->projectid}}" class="showProject" data-id="{{$project->projectid}}">
                                 <li class="list-group-item">{{$project->projectname}}</li>
                             </a>
@@ -86,7 +86,7 @@
         <!-- end col -->
 
 
-        <div style="width: 92%">
+        <div style="width: 88%">
             <div class="card">
                 <div class="card-body " id="project_detail" style="display: none" >
 
