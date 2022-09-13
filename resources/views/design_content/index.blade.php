@@ -60,7 +60,7 @@
 
     <div class="row">
 
-        <div style="width: 180px">
+        <div style="width: 8%">
             <div class="card">
                 <div class="card-body">
 {{--                    <p class="card-text">--}}
@@ -81,10 +81,12 @@
             </div>
         </div>
 
+
+
         <!-- end col -->
 
 
-        <div class="col-lg-10">
+        <div style="width: 95%">
             <div class="card">
                 <div class="card-body " id="project_detail" style="display: none" >
 
