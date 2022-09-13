@@ -52,6 +52,7 @@
 @section('breadcrumb')
 <div class="col-sm-6">
     <h4 class="page-title">Duyệt app</h4>
+
 </div>
 
 @endsection
@@ -89,9 +90,10 @@
 
                     <form id="browseappForm" name="browseappForm" class="form-horizontal">
                         <input type="hidden" name="project_id" id="project_id">
-                        <span style="font-size: 35px;font-weight: bold;" id="pro_name"></span>
-                        <span style="font-size: 25px;" id="template"></span>
-                        <span style="font-size: 25px;"id="title_app"></span>
+                        <h4><span id="pro_name"></span>
+                            <span style="font-weight: 500;" id="template"></span>
+                            <span style="font-weight: 500;" id="title_app"></span></h4>
+
 
                         <div class="row">
 
