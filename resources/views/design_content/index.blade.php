@@ -89,9 +89,9 @@
 
                     <form id="browseappForm" name="browseappForm" class="form-horizontal">
                         <input type="hidden" name="project_id" id="project_id">
-                        <span style="font-size: 30px" id="pro_name"></span>
-                        <span id="template"></span>
-                        <span id="title_app"></span>
+                        <span style="font-size: 35px;font-weight: bold;" id="pro_name"></span>
+                        <span style="font-size: 25px;" id="template"></span>
+                        <span style="font-size: 25px;"id="title_app"></span>
 
                         <div class="row">
 
