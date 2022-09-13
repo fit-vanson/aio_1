@@ -91,7 +91,7 @@
                         <input type="hidden" name="project_id" id="project_id">
                         <span style="font-size: 30px" id="pro_name"></span>
                         <span id="template"></span>
-                        <span id="title"></span>
+                        <span id="title_app"></span>
 
                         <div class="row">
 
