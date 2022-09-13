@@ -86,7 +86,7 @@
         <!-- end col -->
 
 
-        <div style="width: 95%">
+        <div style="width: 92%">
             <div class="card">
                 <div class="card-body " id="project_detail" style="display: none" >
 
