@@ -101,10 +101,11 @@
 
                     <form id="browseappForm" name="browseappForm" class="form-horizontal">
                         <input type="hidden" name="project_id" id="project_id">
-                        <h4><span id="pro_name"></span>
-                            <span style="font-weight: 500;" id="template"></span>
-                            <span style="font-weight: 500;" id="title_app"></span></h4>
-
+                        <h4><span id="pro_name">{{$project->projectname}}</span>
+                            <span style="font-weight: 500;" id="template"> - {{$project->matemplate->template}}</span>
+                            <span style="font-weight: 500;" id="title_app"> - {{$project->title_app}}</span>
+                            <span style="font-weight: 300;" class="badge badge-success">  Download</span>
+                        </h4>
 
                         <div class="row">
 
@@ -113,8 +114,6 @@
                                 <p class="card-title-desc">
                                     <img id="logo_project" class="d-block img-fluid" src="../storage/projects/{{$project->da->ma_da}}/{{$project->logo}}" height="200" width="200px" alt="{{$project->projectname}}">
                                 </p>
-
-
                             </div>
                             <div class="form-group col-lg-8">
                                 <label for="name">Ghi chú</label>
