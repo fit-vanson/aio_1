@@ -134,7 +134,7 @@
                         <ul class="nav nav-tabs" role="tablist" id="tablist">
                             @foreach($project->lang as $key=>$lag)
                                 <li class="nav-item">
-                                    <a class="nav-link @if($key == 1) active @endif" data-toggle="tab" href="#{{$lag->lang_code}}" role="tab">
+                                    <a class="nav-link @if($lag->lang_code == 'en') active @endif" data-toggle="tab" href="#{{$lag->lang_code}}" role="tab">
                                         <span class="d-block d-sm-none"><i class="fas fa-home"></i></span>
                                         <span class="d-none d-sm-block">{{$lag->lang_name}}</span>
                                     </a>
@@ -144,7 +144,7 @@
                         <!-- Tab panes -->
                         <div class="tab-content" id="tab_content">
                             @foreach($project->lang as $key=>$lag)
-                                <div class="tab-pane @if($key == 1) active @endif p-3" id="{{$lag->lang_code}}" role="tabpanel">
+                                <div class="tab-pane @if($lag->lang_code == 'en') active @endif p-3" id="{{$lag->lang_code}}" role="tabpanel">
                                     <div class="card">
                                         <div class="card-body">
                                             <div data-repeater-item="" class="row">
