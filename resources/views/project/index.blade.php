@@ -854,7 +854,7 @@
                     Huawei_ads = JSON.parse(Huawei_ads);
                 }
                 if(data[0].logo) {
-                    $("#avatar").attr("src","../uploads/project/"+data[0].projectname+"/thumbnail/"+data[0].logo);
+                    $("#avatar").attr("src","../storage/projects/"+data[3].ma_da+"/"+data[0].projectname+"/lg114.png");
                 }else {
                     $("#avatar").attr("src","img/logo.png");
                 }

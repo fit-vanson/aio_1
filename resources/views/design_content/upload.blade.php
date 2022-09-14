@@ -104,7 +104,7 @@
                         <h4><span id="pro_name">{{$project->projectname}}</span>
                             <span style="font-weight: 500;" id="template"> - {{$project->matemplate->template}}</span>
                             <span style="font-weight: 500;" id="title_app"> - {{$project->title_app}}</span>
-                            <span style="font-weight: 300;" class="badge badge-success">  Download</span>
+                            <span style="font-weight: 600;" class="badge badge-success">  Download</span>
                         </h4>
 
                         <div class="row">
@@ -115,7 +115,7 @@
                                     <img id="logo_project" class="d-block img-fluid" src="../storage/projects/{{$project->da->ma_da}}/{{$project->projectname}}/lg114.png" height="200" width="200px" alt="{{$project->projectname}}">
                                 </p>
                             </div>
-                            <div class="form-group col-lg-6">
+                            <div class="form-group col-lg-4">
                                 <label for="name">Ghi chú</label>
                                 <textarea id="notes_design" name="notes_design" class="form-control" rows="9" >{{$project->notes_design}}</textarea>
                             </div>
@@ -134,17 +134,7 @@
 
                                         <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion" style="">
                                             <div class="card-body">
-                                                Anim pariatur cliche reprehenderit, enim eiusmod high life
-                                                accusamus terry richardson ad squid. 3 wolf moon officia
-                                                aute, non cupidatat skateboard dolor brunch. Food truck
-                                                quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor,
-                                                sunt aliqua put a bird on it squid single-origin coffee
-                                                nulla assumenda shoreditch et. Nihil anim keffiyeh
-                                                helvetica, craft beer labore wes anderson cred nesciunt
-                                                sapiente ea proident. Ad vegan excepteur butcher vice lomo.
-                                                Leggings occaecat craft beer farm-to-table, raw denim
-                                                aesthetic synth nesciunt you probably haven't heard of them
-                                                accusamus labore sustainable VHS.
+
                                             </div>
                                         </div>
                                     </div>

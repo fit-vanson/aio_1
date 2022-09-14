@@ -3744,9 +3744,7 @@ class ProjectController extends Controller
                 ->save($path_logo.'lg.png',85);
             $img->resize(114, 114)
                 ->save($path_logo.'lg114.png',85);
-
             $data['logo'] = 'lg.png';
-
         }
 
 
