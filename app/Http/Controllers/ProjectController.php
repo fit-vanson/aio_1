@@ -3731,20 +3731,30 @@ class ProjectController extends Controller
 //            dd(1)
 //        }
 
-//        if(isset($request->logo)){
-//            $image = $request->file('logo');
-//            $data['logo'] = 'logo_'.time().'.'.$image->extension();
-//            $destinationPath = public_path('uploads/project/'.$request->projectname.'/thumbnail/');
-//            $img = Image::make($image->path());
-//            if (!file_exists($destinationPath)) {
-//                mkdir($destinationPath, 777, true);
+        if(isset($request->logo)){
+            $du_an = preg_split("/[-]+/",$request->projectname) ? preg_split("/[-]+/",$request->projectname)[0] : 'DA';
+
+
+
+            $path_logo = storage_path('app/public/projects/'.$du_an.'/'.$request->projectname.'/');
+            if (!file_exists($path_logo)) {
+                mkdir($path_logo, 777, true);
+            }
+            $file = $request->file('logo');
+//            dd($files);
+
+//            foreach ($files as $file) {
+                $img = Image::make($file->path());
+                $img->resize(512, 512)
+                    ->save($path_logo.'lg.png',85);
+                $img->resize(114, 114)
+                    ->save($path_logo.'lg114.png',85);
 //            }
-//            $img->resize(100, 100, function ($constraint) {
-//                $constraint->aspectRatio();
-//            })->save($destinationPath.$data['logo']);
-//            $destinationPath = public_path('uploads/project/'.$request->projectname);
-//            $image->move($destinationPath, $data['logo']);
-//        }
+            $data['logo'] = 'lg.png';
+
+        }
+
+
 
         if($request->project_file){
             $destinationPath = public_path('file-manager/ProjectData/');

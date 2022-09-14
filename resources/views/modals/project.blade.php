@@ -13,11 +13,11 @@
 
 
                     <div data-repeater-item="" class="row">
-{{--                        <div class="form-group col-lg-4">--}}
-{{--                            <label>Logo</label><p></p>--}}
-{{--                            <input  id="logo" type="file" name="logo" class="form-control" hidden onchange="changeImg(this)" accept="image/*">--}}
-{{--                            <img id="avatar" class="thumbnail" width="100px" src="img/logo.png">--}}
-{{--                        </div>--}}
+                        <div class="form-group col-lg-4">
+                            <label>Logo</label><p></p>
+                            <input  id="logo" type="file" name="logo" class="form-control" hidden onchange="changeImg(this)" accept="image/*">
+                            <img id="avatar" class="thumbnail" width="100px" src="img/logo.png">
+                        </div>
 {{--                        <div class="form-group col-lg-4">--}}
 {{--                            <label for="name">File</label><p></p>--}}
 {{--                            <input type="file" name="project_file" id="project_file" class="filestyle" data-buttonname="btn-secondary" accept=".zip">--}}
