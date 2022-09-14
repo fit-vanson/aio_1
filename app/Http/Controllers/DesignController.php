@@ -78,6 +78,7 @@ class DesignController extends Controller
         foreach ($records as $key=>$record) {
 //            $btn = ' <a href="javascript:void(0)" data-id_row="'.$key.'"  onclick="editProjectLang('.$record->id.')" class="btn btn-warning"><i class="ti-pencil-alt"></i></a>';
             $btn = ' <a href="javascript:void(0)"  data-id="'.$record->projectid.'" class="btn btn-warning editProjectLang"><i class="ti-pencil-alt"></i></a>';
+            $btn .= ' <a href="'.route('project.show',['id'=>$record->projectid]).'" target="_blank"  class="btn btn-secondary"><i class="ti-eye"></i></a>';
 
 //            if( in_array( "Admin" ,array_column(auth()->user()->roles()->get()->toArray(),'name'))){
 //                $btn = $btn.' <a href="javascript:void(0)"  data-id="'.$record->projectid.'" class="btn btn-danger deleteProjectLang"><i class="ti-trash"></i></a>';
