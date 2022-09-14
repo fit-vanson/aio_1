@@ -992,12 +992,13 @@ class ProjectController extends Controller
                 <span class="badge badge-primary"style="font-size: 12px">H: '.$record->Huawei_sdk.'</span>
             </div>';
 
+
+
                 if(isset($record->logo)){
-                    if (isset($record->link_store_vietmmo)){
-                        $logo = "<a href='".$record->link_store_vietmmo."' target='_blank'>  <img class='rounded mx-auto d-block'  width='100px'  height='100px'  src='../uploads/project/$record->projectname/thumbnail/$record->logo'></a>";
-                    }else{
-                        $logo = "<img class='rounded mx-auto d-block'  width='100px'  height='100px'  src='../uploads/project/$record->projectname/thumbnail/$record->logo'>";
-                    }
+
+//                        $logo = "<img class='rounded mx-auto d-block'  width='100px'  height='100px'  src='../uploads/project/$record->projectname/thumbnail/$record->logo'>";
+                        $logo = "<img class='rounded mx-auto d-block'  width='100px'  height='100px'  src='../storage/projects/$record->ma_da/$record->projectname/lg114.png'>";
+
                 }else{
                     $logo = '<img class="rounded mx-auto d-block" width="100px" height="100px" src="assets\images\logo-sm.png">';
                 }
