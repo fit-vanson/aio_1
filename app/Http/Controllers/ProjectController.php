@@ -3733,23 +3733,17 @@ class ProjectController extends Controller
 
         if(isset($request->logo)){
             $du_an = preg_split("/[-]+/",$request->projectname) ? preg_split("/[-]+/",$request->projectname)[0] : 'DA';
-
-
-
             $path_logo = storage_path('app/public/projects/'.$du_an.'/'.$request->projectname.'/');
             if (!file_exists($path_logo)) {
                 mkdir($path_logo, 777, true);
             }
             $file = $request->file('logo');
-//            dd($files);
+            $img = Image::make($file->path());
+            $img->resize(512, 512)
+                ->save($path_logo.'lg.png',85);
+            $img->resize(114, 114)
+                ->save($path_logo.'lg114.png',85);
 
-//            foreach ($files as $file) {
-                $img = Image::make($file->path());
-                $img->resize(512, 512)
-                    ->save($path_logo.'lg.png',85);
-                $img->resize(114, 114)
-                    ->save($path_logo.'lg114.png',85);
-//            }
             $data['logo'] = 'lg.png';
 
         }
@@ -3757,13 +3751,14 @@ class ProjectController extends Controller
 
 
         if($request->project_file){
-            $destinationPath = public_path('file-manager/ProjectData/');
+            $du_an = preg_split("/[-]+/",$request->projectname) ? preg_split("/[-]+/",$request->projectname)[0] : 'DA';
+            $destinationPath = storage_path('app/public/projects/'.$du_an.'/'.$request->projectname.'/');
             if (!file_exists($destinationPath)) {
                 mkdir($destinationPath, 0777, true);
             }
             $file = $request->project_file;
             $extension = $file->getClientOriginalExtension();
-            $file_name = $request->projectname.'.'.$extension;
+            $file_name = 'DATA'.'.'.$extension;
             $data['project_file'] = $file_name;
             $file->move($destinationPath, $file_name);
         }
@@ -4137,7 +4132,7 @@ class ProjectController extends Controller
         $data->Huawei_keystore_profile = $request->Huawei_keystore_profile;
         $data->Huawei_bot = $data->Huawei_bot ? : json_encode(['time_bot'=>Carbon::now()->setTimezone('Asia/Ho_Chi_Minh')->toDateTimeString()]);
 
-        $data->data_onoff = $request->data_status ? (int) $request->data_status :0;
+//        $data->data_onoff = $request->data_status ? (int) $request->data_status :0;
 
 
 //        if($data->logo){
@@ -4148,11 +4143,11 @@ class ProjectController extends Controller
 //            }
 //        }
 
-        if($data->project_file){
-            $dir_file = public_path('file-manager/ProjectData/');
-            rename($dir_file.$data->project_file, $dir_file.$request->projectname.'.zip');
-            $data['project_file'] = $request->projectname.'.zip';
-        }
+//        if($data->project_file){
+//            $dir_file = public_path('file-manager/ProjectData/');
+//            rename($dir_file.$data->project_file, $dir_file.$request->projectname.'.zip');
+//            $data['project_file'] = $request->projectname.'.zip';
+//        }
 
 //        if($request->logo){
 //            if($data->logo){
@@ -4173,21 +4168,39 @@ class ProjectController extends Controller
 //            $image->move($destinationPath, $data['logo']);
 //        }
 
+        if(isset($request->logo)){
+            $du_an = preg_split("/[-]+/",$request->projectname) ? preg_split("/[-]+/",$request->projectname)[0] : 'DA';
+            $path_logo = storage_path('app/public/projects/'.$du_an.'/'.$request->projectname.'/');
+            if (!file_exists($path_logo)) {
+                mkdir($path_logo, 777, true);
+            }
+            $file = $request->file('logo');
+            $img = Image::make($file->path());
+            $img->resize(512, 512)
+                ->save($path_logo.'lg.png',85);
+            $img->resize(114, 114)
+                ->save($path_logo.'lg114.png',85);
+
+            $data->logo = 'lg.png';
+
+        }
+
 
         if($request->project_file){
-            if($data->project_file){
-                $path_Remove =  public_path('file-manager/ProjectData/').$data->project_file;
-                if(file_exists($path_Remove)){
-                    unlink($path_Remove);
-                }
-            }
-            $destinationPath = public_path('file-manager/ProjectData/');
+//            if($data->project_file){
+//                $path_Remove =  public_path('file-manager/ProjectData/').$data->project_file;
+//                if(file_exists($path_Remove)){
+//                    unlink($path_Remove);
+//                }
+//            }
+            $du_an = preg_split("/[-]+/",$request->projectname) ? preg_split("/[-]+/",$request->projectname)[0] : 'DA';
+            $destinationPath = storage_path('app/public/projects/'.$du_an.'/'.$request->projectname.'/');
             if (!file_exists($destinationPath)) {
                 mkdir($destinationPath, 0777, true);
             }
             $file = $request->project_file;
             $extension = $file->getClientOriginalExtension();
-            $file_name = $request->projectname.'.'.$extension;
+            $file_name = 'DATA'.'.'.$extension;
             $data->project_file = $file_name;
             $file->move($destinationPath, $file_name);
         }
