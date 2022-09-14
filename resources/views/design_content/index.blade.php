@@ -33,16 +33,31 @@
 {{--<link href="{{ URL::asset('/assets/libs/dropzone/dropzone.min.css') }}" rel="stylesheet" type="text/css" />--}}
 
 <style>
-    .gallery
-    {
-        overflow: hidden;
-        overflow-x: scroll;
+    /*.gallery*/
+    /*{*/
+    /*    overflow: hidden;*/
+    /*    overflow-x: scroll;*/
+    /*}*/
+
+    /*.thumbnails*/
+    /*{*/
+    /*    !* Arbitrarily large number *!*/
+    /*    width: 3800px;*/
+    /*}*/
+    /*.img-container {*/
+    .img-list {
+         /*height: 500px; */
+        width: 100%;
+
+        white-space: nowrap;
+        overflow-x: auto;
+        overflow-y: hidden;
     }
 
-    .thumbnails
-    {
-        /* Arbitrarily large number */
-        width: 3800px;
+    .img_class {
+        white-space: nowrap;
+        width: auto;
+        height: 800px;
     }
 </style>
 
@@ -162,189 +177,6 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-
-        $('.light_gallery').lightGallery({});
-
-
-
-
-
-
-
-
-
-
-
-        {{--var table = $('.data-table').DataTable({--}}
-
-        {{--    processing: true,--}}
-        {{--    serverSide: true,--}}
-        {{--    ajax: {--}}
-        {{--        url: "{{ route('content.getIndex') }}",--}}
-        {{--        type: 'post',--}}
-        {{--    },--}}
-        {{--    columns: [--}}
-        {{--        {data: 'projectid', name: 'projectid'},--}}
-        {{--        // {data: 'title', name: 'title'},--}}
-        {{--        // {data: 'summary', name: 'summary'},--}}
-        {{--        // {data: 'description', name: 'description'},--}}
-        {{--        // {data: 'action',className: "text-center", name: 'action', orderable: false, searchable: false},--}}
-        {{--    ],--}}
-
-        {{--});--}}
-        // var _id = null;
-        {{--$(document).on('change', '#project_id', function () {--}}
-        {{--    var projectID = $(this).select2('data')[0].id;--}}
-        {{--    $('#pro_id').val(projectID);--}}
-
-        {{--    _id = $('#pro_id').val();--}}
-
-        {{--    $.get('{{asset('content/edit')}}/'+_id,function (data) {--}}
-        {{--        var langs = data.lang;--}}
-
-        {{--        $.each( langs, function( key, value ) {--}}
-        {{--            $('#content_summary_'+value.id).val(value.pivot.summary);--}}
-        {{--            $('#content_title_'+value.id).val(value.pivot.title);--}}
-        {{--            // $('#content_description_'+value.id).val(value.pivot.description);--}}
-        {{--            if(value.pivot.description){--}}
-        {{--                tinymce.get('content_description_'+value.id).setContent(value.pivot.description);--}}
-        {{--            }else {--}}
-        {{--                tinymce.get('content_description_'+value.id).setContent('');--}}
-        {{--            }--}}
-        {{--        })--}}
-        {{--    })--}}
-        {{--});--}}
-
-
-        {{--$('#createNewDesign').click(function () {--}}
-        {{--    $('.project_select').show();--}}
-        {{--    $('#saveBtn').val("create-design");--}}
-        {{--    $('#project_id_content').val('');--}}
-        {{--    $('#contentForm').trigger("reset");--}}
-        {{--    $('#modelHeadingContent').html("Thêm mới ");--}}
-        {{--    $('#ajaxModelContent').modal('show');--}}
-
-        {{--    $("#project_id").select2({--}}
-        {{--        minimumInputLength: 2,--}}
-        {{--        ajax: {--}}
-        {{--            url: '{{route('design.project_show')}}',--}}
-        {{--            dataType: 'json',--}}
-        {{--            type: "GET",--}}
-        {{--            // quietMillis: 50,--}}
-        {{--            data: function(params) {--}}
-        {{--                return {--}}
-        {{--                    q: params.term, // search term--}}
-        {{--                    page: params.page--}}
-        {{--                };--}}
-        {{--            },--}}
-        {{--            processResults: function(data) {--}}
-        {{--                return {--}}
-        {{--                    results: $.map(data, function (item) {--}}
-        {{--                        return {--}}
-        {{--                            text: item.name,--}}
-        {{--                            // slug: item.slug,--}}
-        {{--                            id: item.id--}}
-        {{--                        }--}}
-        {{--                    })--}}
-        {{--                };--}}
-        {{--            },--}}
-        {{--            // cache: true--}}
-        {{--        },--}}
-        {{--    });--}}
-        {{--});--}}
-
-        {{--$('#browseappForm').on('submit',function (event){--}}
-
-
-        {{--    // alert($('#btnButton').val())--}}
-        {{--    // // event.preventDefault();--}}
-        {{--    var formData = new FormData($("#browseappForm")[0]);--}}
-
-        {{--    if($('#btnDuyet').val() == 1){--}}
-        {{--        $.ajax({--}}
-        {{--            data: formData,--}}
-        {{--            url: "{{ route('design_content.update') }}",--}}
-        {{--            type: "POST",--}}
-        {{--            dataType: 'json',--}}
-        //             processData: false,
-        //             contentType: false,
-        {{--            success: function (data) {--}}
-        {{--                if(data.success){--}}
-        {{--                    // $.notify('OK', "success");--}}
-        {{--                    // table.draw();--}}
-        {{--                }--}}
-        {{--                if(data.errors){--}}
-        {{--                    $.notify(data.errors, "error");--}}
-        {{--                }--}}
-        {{--            },--}}
-        {{--        });--}}
-        {{--    }--}}
-        {{--    // if()--}}
-
-        {{--});--}}
-
-
-        {{--$(document).on('click','.deleteProjectLang', function (data){--}}
-        {{--    var _id = $(this).data("id");--}}
-        {{--    var remove = $(this).parent().parent();--}}
-        {{--    swal({--}}
-        {{--            title: "Bạn có chắc muốn xóa?",--}}
-        {{--            text: "Your will not be able to recover this imaginary file!",--}}
-        {{--            type: "warning",--}}
-        {{--            showCancelButton: true,--}}
-        {{--            confirmButtonClass: "btn-danger",--}}
-        {{--            confirmButtonText: "Xác nhận xóa!",--}}
-        {{--            closeOnConfirm: false--}}
-        {{--        },--}}
-        {{--        function(){--}}
-        {{--            $.ajax({--}}
-        {{--                type: "get",--}}
-        {{--                url: "{{ asset("design/delete") }}/" + _id,--}}
-        {{--                success: function (data) {--}}
-        {{--                    if(data.success){--}}
-        {{--                        remove.slideUp(300,function() {--}}
-        {{--                            remove.remove();--}}
-        {{--                        })--}}
-        {{--                    }--}}
-        {{--                },--}}
-        {{--                error: function (data) {--}}
-        {{--                    console.log('Error:', data);--}}
-        {{--                }--}}
-        {{--            });--}}
-        {{--            swal("Đã xóa!", "Your imaginary file has been deleted.", "success");--}}
-        {{--        });--}}
-        {{--});--}}
-
-        {{--$(document).on('click','#btnDuyet', function (data){--}}
-        {{--    var _id = $(this).data("id");--}}
-        {{--    $.post('{{asset('design-content/update')}}',function (data) {--}}
-        {{--        var formData = new FormData($("#contentForm")[0]);--}}
-        {{--        // $('#ajaxModelContent').modal('show');--}}
-        {{--        //--}}
-        {{--        // $('#modelHeadingContent').html("Chỉnh sửa "+data.projectname);--}}
-        {{--        // $('.modal').on('hidden.bs.modal', function (e) {--}}
-        {{--        //     $('body').addClass('modal-open');--}}
-        {{--        // });--}}
-        {{--        //--}}
-        {{--        // $('#pro_id').val(data.projectid);--}}
-        {{--        //--}}
-        {{--        //--}}
-        {{--        // var langs = data.lang;--}}
-        {{--        //--}}
-        {{--        // $.each( langs, function( key, value ) {--}}
-        {{--        //     $('#content_summary_'+value.id).val(value.pivot.summary);--}}
-        {{--        //     $('#content_title_'+value.id).val(value.pivot.title);--}}
-        {{--        //     if(value.pivot.description){--}}
-        {{--        //         tinymce.get('content_description_'+value.id).setContent(value.pivot.description);--}}
-        {{--        //     }else {--}}
-        {{--        //         tinymce.get('content_description_'+value.id).setContent('');--}}
-        {{--        //     }--}}
-        {{--        // })--}}
-        {{--    })--}}
-
-        {{--    // $.notify('OK', "success");--}}
-        {{--    // $('#project_detail').hide()--}}
-        {{--})--}}
         $(document).on('click','#btnDuyet', function (data){
             var formData = new FormData($("#browseappForm")[0])
             $.ajax({
@@ -360,12 +192,7 @@
                     $('#project_'+data.id).remove()
                 }
             });
-
         });
-
-
-
-
 
         $(document).on('click','#btnChinh_sua', function (data){
             var formData = new FormData($("#browseappForm")[0])
@@ -416,20 +243,20 @@
                         var preview = '';
                         for(var i = 1; i <= 8; i++) {
                             preview +=
-                                '<a class="float-left" style="margin:5px" href="{{ URL::asset('/storage/projects') }}/'+data.da.ma_da+'/'+data.projectname+'/'+value.lang_code+'/pr'+i+'.jpg" title="preview '+i+'">' +
-                                '<div class="img-responsive">' +
-                                '<img src="{{ URL::asset('/storage/projects') }}/'+data.da.ma_da+'/'+data.projectname+'/'+value.lang_code+'/pr'+i+'.jpg" alt="" height="500">' +
-                                '</div>' +
+                                '<a class="img_class" style="margin:5px" href="{{ URL::asset('/storage/projects') }}/'+data.da.ma_da+'/'+data.projectname+'/'+value.lang_code+'/pr'+i+'.jpg" title="preview '+i+'">' +
+                                // '<div class="img-responsive img-container">' +
+                                '<img  src="{{ URL::asset('/storage/projects') }}/'+data.da.ma_da+'/'+data.projectname+'/'+value.lang_code+'/pr'+i+'.jpg" alt="" height="500">' +
+                                // '</div>' +
                                 '</a>'
                         }
                          tab_content += '<div class="tab-pane '+active+' p-3 gallery" id="'+value.lang_code+'" role="tabpanel">'+
-                             '<div class="light_gallery thumbnails" id="light_gallery">'
+                             '<div class="light_gallery img-list" id="light_gallery">'
                                 +preview+
 
-                             '<a class="float-left" style="margin:5px" href="{{ URL::asset('/storage/projects') }}/'+data.da.ma_da+'/'+data.projectname+'/'+value.lang_code+'/bn.jpg" title="preview '+i+'">' +
-                             '<div class="img-responsive">' +
+                             '<a class="img_class" style="margin:5px" href="{{ URL::asset('/storage/projects') }}/'+data.da.ma_da+'/'+data.projectname+'/'+value.lang_code+'/bn.jpg" title="preview '+i+'">' +
+                             // '<div class="img-responsive img-container">' +
                              '<img src="{{ URL::asset('/storage/projects') }}/'+data.da.ma_da+'/'+data.projectname+'/'+value.lang_code+'/bn.jpg" alt="" height="500">' +
-                             '</div>' +
+                             // '</div>' +
                              '</a>'+
                              '</div></div>'
                 })

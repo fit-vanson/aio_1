@@ -4665,6 +4665,11 @@ class ProjectController extends Controller
 
     }
 
+    public function show($id){
+        $project = ProjectModel::find($id)->load('lang','da','matemplate');
+        return view('design_content.upload')->with(compact('project'));
+    }
+
 
 //    public function select_chplay_buildinfo_keystore(Request $request){
 //            $keystore = $request->buildinfo_keystore;
