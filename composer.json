@@ -10,7 +10,6 @@
     "require": {
         "php": "^7.1|^8.0",
         "ext-fileinfo": "*",
-
         "ext-zip": "*",
         "adrianorosa/laravel-geolocation": "^1.0",
         "alexusmai/laravel-file-manager": "^2.5",
@@ -24,6 +23,7 @@
         "laravel/framework": "^8.6.0",
         "laravel/scout": "^9.4",
         "laravel/tinker": "^2.0",
+        "mavinoo/laravel-batch": "^2.3",
         "nelexa/google-play-scraper": "0.4.0.3",
         "pbmedia/laravel-ffmpeg": "*",
         "phpgangsta/googleauthenticator": "dev-master",

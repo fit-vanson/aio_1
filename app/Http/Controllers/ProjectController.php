@@ -13,6 +13,7 @@ use App\Models\Dev_Vivo;
 use App\Models\Dev_Xiaomi;
 use App\Models\Keystore;
 use App\Models\log;
+use App\Models\MakertProject;
 use App\Models\ProjectModel;
 use App\Models\Template;
 
@@ -24,6 +25,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 use Intervention\Image\Facades\Image;
+use Mavinoo\Batch\Batch;
 use function Psy\debug;
 
 
@@ -4737,6 +4739,158 @@ class ProjectController extends Controller
         } else {
             return false;
         }
+    }
+
+
+    public function convert(Request $request){
+        $projects = ProjectModel::all();
+
+        $market = new MakertProject();
+        $columns = [
+            'market_id',
+            'project_id',
+            'dev_id',
+            'app_name_x' ,
+            'package',
+            'ads',
+            'app_link',
+            'policy_link',
+            'sdk',
+            'keystore',
+            'appID',
+        ];
+
+        $values = [];
+
+        $action = $request->action;
+
+        switch ($action){
+            case 1:
+                foreach ($projects as $project){
+                    $values [] = [
+                        1,
+                        $project->projectid,
+                        $project->Chplay_buildinfo_store_name_x ?  $project->Chplay_buildinfo_store_name_x :0,
+                        $project->buildinfo_app_name_x,
+                        $project->Chplay_package,
+                        $project->Chplay_ads,
+                        $project->Chplay_buildinfo_link_app,
+                        $project->Chplay_policy,
+                        $project->Chplay_sdk,
+                        $project->Chplay_keystore_profile,
+                        null
+                    ];
+                }
+                break;
+            case 2:
+                foreach ($projects as $project){
+                    $values [] = [
+                        2,
+                        $project->projectid,
+                        $project->Amazon_buildinfo_store_name_x ?  $project->Amazon_buildinfo_store_name_x :0,
+                        $project->buildinfo_app_name_x,
+                        $project->Amazon_package,
+                        $project->Amazon_ads,
+                        $project->Amazon_buildinfo_link_app,
+                        $project->Amazon_policy,
+                        $project->Amazon_sdk,
+                        $project->Amazon_keystore_profile,
+                        null
+                    ];
+                }
+                break;
+            case 3:
+                foreach ($projects as $project){
+                    $values [] = [
+                        3,
+                        $project->projectid,
+                        $project->Samsung_buildinfo_store_name_x ?  $project->Samsung_buildinfo_store_name_x :0,
+                        $project->buildinfo_app_name_x,
+                        $project->Samsung_package,
+                        $project->Samsung_ads,
+                        $project->Samsung_buildinfo_link_app,
+                        $project->Samsung_policy,
+                        $project->Samsung_sdk,
+                        $project->Samsung_keystore_profile,
+                        null
+                    ];
+                }
+                break;
+            case 4:
+                foreach ($projects as $project){
+                    $values [] = [
+                        4,
+                        $project->projectid,
+                        $project->Xiaomi_buildinfo_store_name_x ?  $project->Xiaomi_buildinfo_store_name_x :0,
+                        $project->buildinfo_app_name_x,
+                        $project->Xiaomi_package,
+                        $project->Xiaomi_ads,
+                        $project->Xiaomi_buildinfo_link_app,
+                        $project->Xiaomi_policy,
+                        $project->Xiaomi_sdk,
+                        $project->Xiaomi_keystore_profile,
+                        null
+                    ];
+                }
+                break;
+            case 5:
+                foreach ($projects as $project){
+                    $values [] = [
+                        5,
+                        $project->projectid,
+                        $project->Oppo_buildinfo_store_name_x ?  $project->Oppo_buildinfo_store_name_x :0,
+                        $project->buildinfo_app_name_x,
+                        $project->Oppo_package,
+                        $project->Oppo_ads,
+                        $project->Oppo_buildinfo_link_app,
+                        $project->Oppo_policy,
+                        $project->Oppo_sdk,
+                        $project->Oppo_keystore_profile,
+                        null
+                    ];
+                }
+                break;
+            case 6:
+                foreach ($projects as $project){
+                    $values [] = [
+                        6,
+                        $project->projectid,
+                        $project->Vivo_buildinfo_store_name_x ?  $project->Vivo_buildinfo_store_name_x :0,
+                        $project->buildinfo_app_name_x,
+                        $project->Vivo_package,
+                        $project->Vivo_ads,
+                        $project->Vivo_buildinfo_link_app,
+                        $project->Vivo_policy,
+                        $project->Vivo_sdk,
+                        $project->Vivo_keystore_profile,
+                        null
+                    ];
+                }
+                break;
+            case 7:
+                foreach ($projects as $project){
+                    $values [] = [
+                        7,
+                        $project->projectid,
+                        $project->Huawei_buildinfo_store_name_x ?  $project->Huawei_buildinfo_store_name_x :0,
+                        $project->buildinfo_app_name_x,
+                        $project->Huawei_package,
+                        $project->Huawei_ads,
+                        $project->Huawei_buildinfo_link_app,
+                        $project->Huawei_policy,
+                        $project->Huawei_sdk,
+                        $project->Huawei_keystore_profile,
+                        $project->Huawei_appId,
+                    ];
+                }
+                break;
+        }
+        $batchSize = 500;
+        $result = batch()->insert($market,$columns, $values,$batchSize);
+        dd($result );
+//        Batch::update($market, $insert, $index);
+
+
     }
 
 

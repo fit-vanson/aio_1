@@ -123,6 +123,7 @@
                             <div class="form-group col-lg-4">
                                 <label for="name">Market</label>
                                 <div id="accordion">
+
                                     <div class="card mb-1">
                                         <div class="card-header p-3" id="headingOne">
                                             <h6 class="m-0 font-14">
@@ -186,6 +187,7 @@
                                             </div>
                                         </div>
                                     </div>
+
                                 </div>
 {{--                                <textarea id="notes_design" name="notes_design" class="form-control" rows="9" >{{$project->notes_design}}</textarea>--}}
                             </div>

@@ -240,6 +240,8 @@ Route::group(['prefix'=>'project','middleware'=>['CheckLogout','2fa']], function
 
 
 
+    Route::get('/convert',[ProjectController::class,'convert'])->name('project.convert');
+
 
 });
 
