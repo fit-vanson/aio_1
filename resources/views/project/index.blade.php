@@ -14,7 +14,7 @@
     <link href="plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
 
 
-    <link rel="stylesheet" href="plugins/summernote/summernote-bs4.css">
+    /*<link rel="stylesheet" href="plugins/summernote/summernote-bs4.css">*/
 
 
     <style>
@@ -124,7 +124,7 @@
 
     <script src="plugins/tinymce/tinymce.min.js"></script>
     <!--Summernote js-->
-    <script src="plugins/summernote/summernote-bs4.min.js"></script>
+{{--    <script src="plugins/summernote/summernote-bs4.min.js"></script>--}}
     <script src="assets/pages/form-editors.int.js"></script>
 
 

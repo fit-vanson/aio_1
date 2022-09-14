@@ -996,7 +996,6 @@ class ProjectController extends Controller
 
 
                 if(isset($record->logo)){
-
 //                        $logo = "<img class='rounded mx-auto d-block'  width='100px'  height='100px'  src='../uploads/project/$record->projectname/thumbnail/$record->logo'>";
                         $logo = "<img class='rounded mx-auto d-block'  width='100px'  height='100px'  src='../storage/projects/$record->ma_da/$record->projectname/lg114.png'>";
 
@@ -4731,6 +4730,16 @@ class ProjectController extends Controller
 //        $buildinfo_keystore = Keystore::where('name_keystore',$keystore)->first();
 //        return response()->json($buildinfo_keystore);
 //    }
+
+
+    function checkLink($url){
+        if (filter_var($url, FILTER_VALIDATE_URL)) {
+            $headers = get_headers($url,1);
+            return stripos($headers[0],"200 OK") ? $url : false;
+        } else {
+            return false;
+        }
+    }
 
 
 }
