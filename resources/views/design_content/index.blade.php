@@ -75,7 +75,7 @@
 
     <div class="row">
 
-        <div style="width: 9%;min-width: 150px">
+        <div style="width: 9%;min-width: 200px">
             <div class="card">
                 <div class="card-body">
 {{--                    <p class="card-text">--}}
@@ -218,9 +218,6 @@
             $('#project_detail').show()
 
             $.get('{{asset('design-content/edit')}}/'+_id,function (data) {
-
-                console.log(data)
-
 
                 $("#logo_project").attr("src","../storage/projects/"+data.da.ma_da+'/'+data.projectname+"/"+data.logo);
                 $('#notes_design').val(data.notes_design);
