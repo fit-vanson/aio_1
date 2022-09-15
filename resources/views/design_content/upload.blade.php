@@ -112,7 +112,7 @@
                             <div class="form-group col-lg-2">
                                 <label for="name">Logo</label>
                                 <p class="card-title-desc">
-                                    <img id="logo_project" class="d-block img-fluid" src="../storage/projects/{{$project->da->ma_da}}/{{$project->projectname}}/lg114.png" height="200" width="200px" alt="{{$project->projectname}}">
+                                    <img id="logo_project" class="d-block img-fluid" src="../storage/projects/{{$project->da->ma_da}}/{{$project->projectname}}/lg.png" height="200" width="200px" alt="{{$project->projectname}}">
                                 </p>
                             </div>
                             <div class="form-group col-lg-4">

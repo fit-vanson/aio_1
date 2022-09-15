@@ -52,13 +52,6 @@ class Project_Controller extends Controller
 
         $data_arr = array();
         foreach ($records as $record) {
-//            dd($record->toArray());
-//            dd($record->ma_template);
-
-//            dd($record->da->ma_da);
-
-
-
 
             $btn = ' <a href="javascript:void(0)" onclick="editProject('.$record->projectid.')" class="btn btn-warning"><i class="ti-pencil-alt"></i></a>';
             $btn .= ' <a href="'.route('project.show',['id'=>$record->projectid]).'" target="_blank"  class="btn btn-secondary"><i class="ti-eye"></i></a>';
