@@ -13,7 +13,7 @@ use App\Models\Dev_Vivo;
 use App\Models\Dev_Xiaomi;
 use App\Models\Keystore;
 use App\Models\log;
-use App\Models\MakertProject;
+use App\Models\MarkertProject;
 use App\Models\ProjectModel;
 use App\Models\Template;
 
@@ -4748,7 +4748,7 @@ class ProjectController extends Controller
 
 
 
-        $market = new MakertProject();
+        $market = new MarkertProject();
         $columns = [
             'market_id',
             'project_id',
@@ -4799,7 +4799,7 @@ class ProjectController extends Controller
 //                    ];
 
 
-                    MakertProject::updateOrCreate(
+                    MarkertProject::updateOrCreate(
                         [
                             'market_id' => 1,
                             'project_id' => $project->projectid,
