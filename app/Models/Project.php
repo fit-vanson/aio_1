@@ -13,7 +13,7 @@ class Project extends Model
 
 
     public function markets(){
-        return $this->belongsToMany(Markerts::class,MarkertProject::class,'project_id','market_id')
+        return $this->belongsToMany(Markets::class,MarketProject::class,'project_id','market_id')
             ->withPivot('dev_id','appID','app_name_x','package','ads','app_link','policy_link','sdk','keystore','status_app','status_upload','time_upload')
             ->withTimestamps();
     }
