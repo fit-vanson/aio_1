@@ -43,7 +43,7 @@ class ProjectController extends Controller
         $store_name_oppo    =  Dev_Oppo::latest('id')->get();
         $store_name_vivo    =  Dev_Vivo::latest('id')->get();
         $store_name_huawei   =  Dev_Huawei::latest('id')->get();
-        return view('project.index',compact([
+        return view('project2.index',compact([
             'template','da','store_name','keystore',
             'store_name_amazon','store_name_samsung',
             'store_name_xiaomi','store_name_oppo','store_name_vivo','store_name_huawei'
@@ -4743,7 +4743,10 @@ class ProjectController extends Controller
 
 
     public function convert(Request $request){
-        $projects = ProjectModel::all();
+
+
+
+
 
         $market = new MakertProject();
         $columns = [
@@ -4766,20 +4769,69 @@ class ProjectController extends Controller
 
         switch ($action){
             case 1:
+                $projects = ProjectModel:: select('projectid',
+                    'Chplay_buildinfo_store_name_x',
+                    'buildinfo_app_name_x',
+                    'Chplay_package',
+                    'Chplay_ads',
+                    'Chplay_buildinfo_link_app',
+                    'Chplay_policy',
+                    'Chplay_sdk',
+                    'Chplay_keystore_profile')->get();
+
+
+
                 foreach ($projects as $project){
-                    $values [] = [
-                        1,
-                        $project->projectid,
-                        $project->Chplay_buildinfo_store_name_x ?  $project->Chplay_buildinfo_store_name_x :0,
-                        $project->buildinfo_app_name_x,
-                        $project->Chplay_package,
-                        $project->Chplay_ads,
-                        $project->Chplay_buildinfo_link_app,
-                        $project->Chplay_policy,
-                        $project->Chplay_sdk,
-                        $project->Chplay_keystore_profile,
-                        null
-                    ];
+
+
+//                    $values[] = [
+//                        'market_id' => 1,
+//                        'project_id' => $project->projectid,
+//                        'dev_id'=>$project->Chplay_buildinfo_store_name_x ?  $project->Chplay_buildinfo_store_name_x :0,
+//                        'app_name_x' => $project->buildinfo_app_name_x,
+//                        'package' => $project->buildinfo_app_name_x,
+//                        'ads' => $project->Chplay_ads,
+//                        'app_link' =>$project->Chplay_buildinfo_link_app,
+//                        'policy_link' => $project->Chplay_policy,
+//                        'sdk' =>$project->Chplay_sdk,
+//                        'keystore'=> $project->Chplay_keystore_profile,
+//                        'appID' => null,
+//                    ];
+
+
+                    MakertProject::updateOrCreate(
+                        [
+                            'market_id' => 1,
+                            'project_id' => $project->projectid,
+
+                        ],
+                        [
+                            'dev_id'=>$project->Chplay_buildinfo_store_name_x ?  $project->Chplay_buildinfo_store_name_x :0,
+                            'app_name_x' => $project->buildinfo_app_name_x,
+                            'package' => $project->Chplay_package,
+                            'ads' => $project->Chplay_ads,
+                            'app_link' =>$project->Chplay_buildinfo_link_app,
+                            'policy_link' => $project->Chplay_policy,
+                            'sdk' =>$project->Chplay_sdk,
+                            'keystore'=> $project->Chplay_keystore_profile,
+                            'appID' => null,
+                        ]
+                    );
+//
+//                    dd($project);
+//                    $values [] = [
+//                        1,
+//                        $project->projectid,
+//                        $project->Chplay_buildinfo_store_name_x ?  $project->Chplay_buildinfo_store_name_x :0,
+//                        $project->buildinfo_app_name_x,
+//                        $project->Chplay_package,
+//                        $project->Chplay_ads,
+//                        $project->Chplay_buildinfo_link_app,
+//                        $project->Chplay_policy,
+//                        $project->Chplay_sdk,
+//                        $project->Chplay_keystore_profile,
+//                        null
+//                    ];
                 }
                 break;
             case 2:
@@ -4885,9 +4937,15 @@ class ProjectController extends Controller
                 }
                 break;
         }
-        $batchSize = 500;
-        $result = batch()->insert($market,$columns, $values,$batchSize);
-        dd($result );
+//        $index = 'project_id';
+//
+//        $result = batch()->update($market, $values, $index);
+////        MakertProject::insert($values);
+//
+//        dd($result);
+//        $batchSize = 500;
+//        $result = batch()->insert($market,$columns, $values,$batchSize);
+//        dd($result );
 //        Batch::update($market, $insert, $index);
 
 

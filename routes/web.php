@@ -35,6 +35,7 @@ use App\Http\Controllers\MailParentController;
 use App\Http\Controllers\MailRegController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Project_Controller;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ScriptController;
@@ -159,90 +160,97 @@ Route::group(['prefix'=>'permission','middleware'=>['CheckLogout','2fa']], funct
 
 Route::get('/fakeimage',[ProjectController::class,'getInfofake'])->name('project.getInfofake')->middleware('can:project-index');
 
+//Route::group(['prefix'=>'project2','middleware'=>['CheckLogout','2fa']], function (){
+//
+////    Route::get('/get',[ProjectController2::class,'getProject']);
+//    Route::get('/',[ProjectController::class,'index'])->name('project.index')->middleware('can:project-index');
+//    Route::get('/indexBuild',[ProjectController::class,'indexBuild'])->name('project.indexBuild')->middleware('can:project-index');
+//    Route::post('/getIndex',[ProjectController::class,'getIndex'])->name('project.getIndex')->middleware('can:project-index');
+//    Route::post('/getIndexBuild',[ProjectController::class,'getIndexBuild'])->name('project.getIndexBuild')->middleware('can:project-index');
+//    Route::post('/create',[ProjectController::class,'create'])->name('project.create')->middleware('can:project-add');
+//    Route::get('/edit/{id}',[ProjectController::class,'edit'])->name('project.edit')->middleware('can:project-edit');
+//    Route::get('/fake/{id}',[ProjectController::class,'fake'])->name('project.fake')->middleware('can:project-index');
+//
+//
+//
+//    Route::get('/editDes_EN/{id}',[ProjectController::class,'editDesEN'])->name('project.editDesEN')->middleware('can:project-edit');
+//    Route::get('/editDes_VN/{id}',[ProjectController::class,'editDesVN'])->name('project.editDesVN')->middleware('can:project-edit');
+//
+//
+//    Route::get('/show/{id}',[ProjectController::class,'show'])->name('project.show');
+//    Route::post('/update',[ProjectController::class,'update'])->name('project.update')->middleware('can:project-update');
+//    Route::post('/updateQuick',[ProjectController::class,'updateQuick'])->name('project.updateQuick')->middleware('can:project-update');
+//    Route::post('/updatePart',[ProjectController::class,'updatePart'])->name('project.updatePart')->middleware('can:project-update');
+//    Route::post('/updateDesEN',[ProjectController::class,'updateDesEN'])->name('project.updateDesEN')->middleware('can:project-update');
+//    Route::post('/updateDesVN',[ProjectController::class,'updateDesVN'])->name('project.updateDesVN')->middleware('can:project-update');
+//
+//    Route::post('/updateStatus',[ProjectController::class,'updateStatus'])->name('project.updateStatus')->middleware('can:project-update');
+//    Route::get('/delete/{id}',[ProjectController::class,'delete'])->name('project.delete')->middleware('can:project-delete');
+//    Route::get('/removeProject/{id}',[ProjectController::class,'removeProject'])->name('project.removeProject')->middleware('can:project-edit');
+//
+//    Route::get('/checkData/{id}',[ProjectController::class,'checkData'])->name('project.checkData')->middleware('can:project-edit');
+//
+//    Route::get('/appChplay',[ProjectController::class,'appChplay'])->name('project.appChplay')->middleware('can:project-index');
+//    Route::post('/getChplay',[ProjectController::class,'getChplay'])->name('project.getChplay')->middleware('can:project-index');
+//    Route::get('/checkbox/{id}',[ProjectController::class,'checkbox'])->name('project.checkbox')->middleware('can:project-edit');
+//
+//    Route::get('/appAmazon',[ProjectController::class,'appAmazon'])->name('project.appAmazon')->middleware('can:project-index');
+//    Route::post('/getAmazon',[ProjectController::class,'getAmazon'])->name('project.getAmazon')->middleware('can:project-index');
+//
+//    Route::get('/appSamsung',[ProjectController::class,'appSamsung'])->name('project.appSamsung')->middleware('can:project-index');
+//    Route::post('/getSamsung',[ProjectController::class,'getSamsung'])->name('project.getSamsung')->middleware('can:project-index');
+//
+//    Route::get('/appXiaomi',[ProjectController::class,'appXiaomi'])->name('project.appXiaomi')->middleware('can:project-index');
+//    Route::post('/getXiaomi',[ProjectController::class,'getXiaomi'])->name('project.getXiaomi')->middleware('can:project-index');
+//
+//    Route::get('/appOppo',[ProjectController::class,'appOppo'])->name('project.appOppo')->middleware('can:project-index');
+//    Route::post('/getOppo',[ProjectController::class,'getOppo'])->name('project.getOppo')->middleware('can:project-index');
+//
+//    Route::get('/appVivo',[ProjectController::class,'appVivo'])->name('project.appVivo')->middleware('can:project-index');
+//    Route::post('/getVivo',[ProjectController::class,'getVivo'])->name('project.getVivo')->middleware('can:project-index');
+//
+//    Route::get('/appHuawei',[ProjectController::class,'appHuawei'])->name('project.appHuawei')->middleware('can:project-index');
+//    Route::post('/getHuawei',[ProjectController::class,'getHuawei'])->name('project.getHuawei')->middleware('can:project-index');
+//
+//    Route::post('/select-template',[ProjectController::class,'select_template']);
+//    Route::post('/select-store-name-chplay',[ProjectController::class,'select_store_name_chplay'])->name('select_store_name_chplay');
+//    Route::post('/select-store-name-amazon',[ProjectController::class,'select_store_name_amazon'])->name('select_store_name_amazon');
+//    Route::post('/select-store-name-samsung',[ProjectController::class,'select_store_name_samsung'])->name('select_store_name_samsung');
+//    Route::post('/select-store-name-xiaomi',[ProjectController::class,'select_store_name_xiaomi'])->name('select_store_name_xiaomi');
+//    Route::post('/select-store-name-oppo',[ProjectController::class,'select_store_name_oppo'])->name('select_store_name_oppo');
+//    Route::post('/select-store-name-vivo',[ProjectController::class,'select_store_name_vivo'])->name('select_store_name_vivo');
+//    Route::post('/select-store-name-huawei',[ProjectController::class,'select_store_name_huawei'])->name('select_store_name_huawei');
+//
+//    Route::post('/select-buildinfo_keystore',[ProjectController::class,'select_buildinfo_keystore']);
+////    Route::post('/select-chplay_buildinfo_keystore',[ProjectController::class,'select_chplay_buildinfo_keystore']);
+////    Route::post('/select-amazon_buildinfo_keystore',[ProjectController::class,'select_amazon_buildinfo_keystore']);
+////    Route::post('/select-samsung_buildinfo_keystore',[ProjectController::class,'select_samsung_buildinfo_keystore']);
+////    Route::post('/select-xiaomi_buildinfo_keystore',[ProjectController::class,'select_xiaomi_buildinfo_keystore']);
+////    Route::post('/select-oppo_buildinfo_keystore',[ProjectController::class,'select_oppo_buildinfo_keystore']);
+////    Route::post('/select-vivo_buildinfo_keystore',[ProjectController::class,'select_vivo_buildinfo_keystore']);
+////    Route::post('/select-huawei_buildinfo_keystore',[ProjectController::class,'select_huawei_buildinfo_keystore']);
+//
+//
+//
+//    Route::get('/showlog/{id}',[ProjectController::class,'showlog'])->name('project.showlog')->middleware('can:project-index');
+//    Route::get('/check_build',[ProjectController::class,'check_build'])->name('project.check_build')->middleware('can:project-index');
+//    Route::post('/updateBuildCheck',[ProjectController::class,'updateBuildCheck'])->name('project.updateBuildCheck')->middleware('can:project-update');
+//    Route::post('/updateDev_status',[ProjectController::class,'updateDevStatus'])->name('project.updateDev_status')->middleware('can:project-update');
+//    Route::post('/changeKeystoreMultiple',[ProjectController::class,'changeKeystoreMultiple'])->name('project.changeKeystoreMultiple')->middleware('can:project-update');
+//    Route::post('/changeSdkMultiple',[ProjectController::class,'changeSdkMultiple'])->name('project.changeSdkMultiple')->middleware('can:project-update');
+//
+//
+//
+//    Route::get('/convert',[ProjectController::class,'convert'])->name('project.convert');
+//
+//
+//});
+
 Route::group(['prefix'=>'project','middleware'=>['CheckLogout','2fa']], function (){
-
-//    Route::get('/get',[ProjectController2::class,'getProject']);
-    Route::get('/',[ProjectController::class,'index'])->name('project.index')->middleware('can:project-index');
-    Route::get('/indexBuild',[ProjectController::class,'indexBuild'])->name('project.indexBuild')->middleware('can:project-index');
-    Route::post('/getIndex',[ProjectController::class,'getIndex'])->name('project.getIndex')->middleware('can:project-index');
-    Route::post('/getIndexBuild',[ProjectController::class,'getIndexBuild'])->name('project.getIndexBuild')->middleware('can:project-index');
-    Route::post('/create',[ProjectController::class,'create'])->name('project.create')->middleware('can:project-add');
-    Route::get('/edit/{id}',[ProjectController::class,'edit'])->name('project.edit')->middleware('can:project-edit');
-    Route::get('/fake/{id}',[ProjectController::class,'fake'])->name('project.fake')->middleware('can:project-index');
-
-
-
-    Route::get('/editDes_EN/{id}',[ProjectController::class,'editDesEN'])->name('project.editDesEN')->middleware('can:project-edit');
-    Route::get('/editDes_VN/{id}',[ProjectController::class,'editDesVN'])->name('project.editDesVN')->middleware('can:project-edit');
-
-
+    Route::get('/',[Project_Controller::class,'index'])->name('project.index')->middleware('can:project-index');
+    Route::post('/getIndex',[Project_Controller::class,'getIndex'])->name('project.getIndex')->middleware('can:project-index');
     Route::get('/show/{id}',[ProjectController::class,'show'])->name('project.show');
-    Route::post('/update',[ProjectController::class,'update'])->name('project.update')->middleware('can:project-update');
-    Route::post('/updateQuick',[ProjectController::class,'updateQuick'])->name('project.updateQuick')->middleware('can:project-update');
-    Route::post('/updatePart',[ProjectController::class,'updatePart'])->name('project.updatePart')->middleware('can:project-update');
-    Route::post('/updateDesEN',[ProjectController::class,'updateDesEN'])->name('project.updateDesEN')->middleware('can:project-update');
-    Route::post('/updateDesVN',[ProjectController::class,'updateDesVN'])->name('project.updateDesVN')->middleware('can:project-update');
-
-    Route::post('/updateStatus',[ProjectController::class,'updateStatus'])->name('project.updateStatus')->middleware('can:project-update');
-    Route::get('/delete/{id}',[ProjectController::class,'delete'])->name('project.delete')->middleware('can:project-delete');
-    Route::get('/removeProject/{id}',[ProjectController::class,'removeProject'])->name('project.removeProject')->middleware('can:project-edit');
-
-    Route::get('/checkData/{id}',[ProjectController::class,'checkData'])->name('project.checkData')->middleware('can:project-edit');
-
-    Route::get('/appChplay',[ProjectController::class,'appChplay'])->name('project.appChplay')->middleware('can:project-index');
-    Route::post('/getChplay',[ProjectController::class,'getChplay'])->name('project.getChplay')->middleware('can:project-index');
-    Route::get('/checkbox/{id}',[ProjectController::class,'checkbox'])->name('project.checkbox')->middleware('can:project-edit');
-
-    Route::get('/appAmazon',[ProjectController::class,'appAmazon'])->name('project.appAmazon')->middleware('can:project-index');
-    Route::post('/getAmazon',[ProjectController::class,'getAmazon'])->name('project.getAmazon')->middleware('can:project-index');
-
-    Route::get('/appSamsung',[ProjectController::class,'appSamsung'])->name('project.appSamsung')->middleware('can:project-index');
-    Route::post('/getSamsung',[ProjectController::class,'getSamsung'])->name('project.getSamsung')->middleware('can:project-index');
-
-    Route::get('/appXiaomi',[ProjectController::class,'appXiaomi'])->name('project.appXiaomi')->middleware('can:project-index');
-    Route::post('/getXiaomi',[ProjectController::class,'getXiaomi'])->name('project.getXiaomi')->middleware('can:project-index');
-
-    Route::get('/appOppo',[ProjectController::class,'appOppo'])->name('project.appOppo')->middleware('can:project-index');
-    Route::post('/getOppo',[ProjectController::class,'getOppo'])->name('project.getOppo')->middleware('can:project-index');
-
-    Route::get('/appVivo',[ProjectController::class,'appVivo'])->name('project.appVivo')->middleware('can:project-index');
-    Route::post('/getVivo',[ProjectController::class,'getVivo'])->name('project.getVivo')->middleware('can:project-index');
-
-    Route::get('/appHuawei',[ProjectController::class,'appHuawei'])->name('project.appHuawei')->middleware('can:project-index');
-    Route::post('/getHuawei',[ProjectController::class,'getHuawei'])->name('project.getHuawei')->middleware('can:project-index');
-
-    Route::post('/select-template',[ProjectController::class,'select_template']);
-    Route::post('/select-store-name-chplay',[ProjectController::class,'select_store_name_chplay'])->name('select_store_name_chplay');
-    Route::post('/select-store-name-amazon',[ProjectController::class,'select_store_name_amazon'])->name('select_store_name_amazon');
-    Route::post('/select-store-name-samsung',[ProjectController::class,'select_store_name_samsung'])->name('select_store_name_samsung');
-    Route::post('/select-store-name-xiaomi',[ProjectController::class,'select_store_name_xiaomi'])->name('select_store_name_xiaomi');
-    Route::post('/select-store-name-oppo',[ProjectController::class,'select_store_name_oppo'])->name('select_store_name_oppo');
-    Route::post('/select-store-name-vivo',[ProjectController::class,'select_store_name_vivo'])->name('select_store_name_vivo');
-    Route::post('/select-store-name-huawei',[ProjectController::class,'select_store_name_huawei'])->name('select_store_name_huawei');
-
-    Route::post('/select-buildinfo_keystore',[ProjectController::class,'select_buildinfo_keystore']);
-//    Route::post('/select-chplay_buildinfo_keystore',[ProjectController::class,'select_chplay_buildinfo_keystore']);
-//    Route::post('/select-amazon_buildinfo_keystore',[ProjectController::class,'select_amazon_buildinfo_keystore']);
-//    Route::post('/select-samsung_buildinfo_keystore',[ProjectController::class,'select_samsung_buildinfo_keystore']);
-//    Route::post('/select-xiaomi_buildinfo_keystore',[ProjectController::class,'select_xiaomi_buildinfo_keystore']);
-//    Route::post('/select-oppo_buildinfo_keystore',[ProjectController::class,'select_oppo_buildinfo_keystore']);
-//    Route::post('/select-vivo_buildinfo_keystore',[ProjectController::class,'select_vivo_buildinfo_keystore']);
-//    Route::post('/select-huawei_buildinfo_keystore',[ProjectController::class,'select_huawei_buildinfo_keystore']);
-
-
-
-    Route::get('/showlog/{id}',[ProjectController::class,'showlog'])->name('project.showlog')->middleware('can:project-index');
-    Route::get('/check_build',[ProjectController::class,'check_build'])->name('project.check_build')->middleware('can:project-index');
-    Route::post('/updateBuildCheck',[ProjectController::class,'updateBuildCheck'])->name('project.updateBuildCheck')->middleware('can:project-update');
-    Route::post('/updateDev_status',[ProjectController::class,'updateDevStatus'])->name('project.updateDev_status')->middleware('can:project-update');
-    Route::post('/changeKeystoreMultiple',[ProjectController::class,'changeKeystoreMultiple'])->name('project.changeKeystoreMultiple')->middleware('can:project-update');
-    Route::post('/changeSdkMultiple',[ProjectController::class,'changeSdkMultiple'])->name('project.changeSdkMultiple')->middleware('can:project-update');
-
-
-
     Route::get('/convert',[ProjectController::class,'convert'])->name('project.convert');
-
-
 });
 
 

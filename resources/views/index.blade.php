@@ -53,191 +53,191 @@
         </div>
     </div>
     <?php }else{ ?>
-    <div class="row">
-        <div class="col-xl-3 col-md-6">
-            <div class="card mini-stat bg-primary text-white">
-                <div class="card-body">
-                    <div class="mb-4">
-                        <div class="float-left mini-stat-img mr-4">
-                            <img src="{{ URL::asset('/assets/images/services-icon/01.png') }}" alt="">
-                        </div>
-                        <h5 class="font-size-16 text-uppercase mt-0 text-white-50">Project</h5>
-                        <h4 class="font-weight-medium font-size-24">{{$project}}</h4>
-                        <?php
-                        if($projectLastMonth != 0){
-                            $diff = number_format(($projectInMonth - $projectLastMonth)/ $projectLastMonth *100,2);
-                            if($diff > 0 ){
-                        ?>
-                        <div class="mini-stat-label bg-success">
-                            <p class="mb-0">+ {{$diff}}%</p>
-                        </div>
-                        <?php }else{ ?>
-                        <div class="mini-stat-label bg-danger">
-                            <p class="mb-0">{{$diff}}%</p>
-                        </div>
-                        <?php }
-                            }
-                            ?>
-                    </div>
-                    <div class="pt-2">
-                        <div class="float-right">
-                            <p class="text-white-50">{{$projectInMonth}}</i></p>
-                            <p class="text-white-50">{{$projectLastMonth}}</i></p>
-                        </div>
-                        <p class="text-white-50 mb-0 mt-1">In month</p>
-                        <p class="text-white-50 mb-0 mt-1">Last month</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-3 col-md-6">
-            <div class="card mini-stat text-white" style="background: #7baba3 !important;">
-                <div class="card-body">
-                    <div class="mb-4">
-                        <div class="float-left mini-stat-img mr-4">
-                            <img src="{{ URL::asset('img/icon/google.png') }}" alt="">
-                        </div>
-                        <h5 class="font-size-16 text-uppercase mt-0 text-white-50">CHplay</h5>
-                        <h4 class="font-weight-medium font-size-24">{{array_sum($Chplay_status)}} </h4>
-                    </div>
-                    <div class="pt-2">
-                        <div class="float-right">
-                            <p class="text-white-50 mb-0 mt-1">{{$Chplay_status[1]}}</p>
-                            <p class="text-white-50 mb-0 mt-1">{{$Chplay_status[6]}}</p>
-                        </div>
-                        <p class="text-white-50 mb-0 mt-1">Public</p>
-                        <p class="text-white-50 mb-0 mt-1">Check</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-3 col-md-6">
-            <div class="card mini-stat text-white" style="background: #0b7cd6 !important;">
-                <div class="card-body">
-                    <div class="mb-4">
-                        <div class="float-left mini-stat-img mr-4">
-                            <img src="{{ URL::asset('img/icon/amazon.png') }}" alt="">
-                        </div>
-                        <h5 class="font-size-16 text-uppercase mt-0 text-white-50">Amazon</h5>
-                        <h4 class="font-weight-medium font-size-24">{{array_sum($Amazon_status)}} </h4>
-                    </div>
-                    <div class="pt-2">
-                        <div class="float-right">
-                            <p class="text-white-50 mb-0 mt-1">{{@$Amazon_status[1]}}</p>
-                            <p class="text-white-50 mb-0 mt-1">{{@$Amazon_status[6]}}</p>
-                        </div>
-                        <p class="text-white-50 mb-0 mt-1">Public</p>
-                        <p class="text-white-50 mb-0 mt-1">Check</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-3 col-md-6">
-            <div class="card mini-stat text-white" style="background: #c903ea !important;">
-                <div class="card-body">
-                    <div class="mb-4">
-                        <div class="float-left mini-stat-img mr-4">
-                            <img src="{{ URL::asset('img/icon/samsung.png') }}" alt="">
-                        </div>
-                        <h5 class="font-size-16 text-uppercase mt-0 text-white-50">Samsung</h5>
-                        <h4 class="font-weight-medium font-size-24">{{array_sum($Samsung_status)}} </h4>
-                    </div>
-                    <div class="pt-2">
-                        <div class="float-right">
-                            <p class="text-white-50 mb-0 mt-1">{{@$Samsung_status[1]}}</p>
-                            <p class="text-white-50 mb-0 mt-1">{{@$Samsung_status[6]}}</p>
-                        </div>
-                        <p class="text-white-50 mb-0 mt-1">Public</p>
-                        <p class="text-white-50 mb-0 mt-1">Check</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-3 col-md-6">
-            <div class="card mini-stat text-white" style="background: #ff6445 !important;">
-                <div class="card-body">
-                    <div class="mb-4">
-                        <div class="float-left mini-stat-img mr-4">
-                            <img src="{{ URL::asset('img/icon/xiaomi.png') }}" alt="">
-                        </div>
-                        <h5 class="font-size-16 text-uppercase mt-0 text-white-50">Xiaomi</h5>
-                        <h4 class="font-weight-medium font-size-24">{{array_sum($Xiaomi_status)}} </h4>
-                    </div>
-                    <div class="pt-2">
-                        <div class="float-right">
-                            <p class="text-white-50 mb-0 mt-1">{{@$Xiaomi_status[1]}}</p>
-                            <p class="text-white-50 mb-0 mt-1">{{@$Xiaomi_status[6]}}</p>
-                        </div>
-                        <p class="text-white-50 mb-0 mt-1">Public</p>
-                        <p class="text-white-50 mb-0 mt-1">Check</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-3 col-md-6">
-            <div class="card mini-stat text-white" style="background: #1acf7d !important;">
-                <div class="card-body">
-                    <div class="mb-4">
-                        <div class="float-left mini-stat-img mr-4">
-                            <img src="{{ URL::asset('img/icon/oppo.png') }}" alt="">
-                        </div>
-                        <h5 class="font-size-16 text-uppercase mt-0 text-white-50">Oppo</h5>
-                        <h4 class="font-weight-medium font-size-24">{{array_sum($Oppo_status)}} </h4>
-                    </div>
-                    <div class="pt-2">
-                        <div class="float-right">
-                            <p class="text-white-50 mb-0 mt-1">{{@$Oppo_status[1]}}</p>
-                            <p class="text-white-50 mb-0 mt-1">{{@$Oppo_status[6]}}</p>
-                        </div>
-                        <p class="text-white-50 mb-0 mt-1">Public</p>
-                        <p class="text-white-50 mb-0 mt-1">Check</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-3 col-md-6">
-            <div class="card mini-stat text-white" style="background: #20b7fe !important;">
-                <div class="card-body">
-                    <div class="mb-4">
-                        <div class="float-left mini-stat-img mr-4">
-                            <img src="{{ URL::asset('img/icon/vivo.png') }}" alt="">
-                        </div>
-                        <h5 class="font-size-16 text-uppercase mt-0 text-white-50">Vivo</h5>
-                        <h4 class="font-weight-medium font-size-24">{{array_sum($Vivo_status)}} </h4>
-                    </div>
-                    <div class="pt-2">
-                        <div class="float-right">
-                            <p class="text-white-50 mb-0 mt-1">{{@$Vivo_status[1]}}</p>
-                            <p class="text-white-50 mb-0 mt-1">{{@$Vivo_status[6]}}</p>
-                        </div>
-                        <p class="text-white-50 mb-0 mt-1">Public</p>
-                        <p class="text-white-50 mb-0 mt-1">Check</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-3 col-md-6">
-            <div class="card mini-stat text-white" style="background: #f65657 !important;">
-                <div class="card-body">
-                    <div class="mb-4">
-                        <div class="float-left mini-stat-img mr-4">
-                            <img src="{{ URL::asset('img/icon/huawei.png') }}" alt="">
-                        </div>
-                        <h5 class="font-size-16 text-uppercase mt-0 text-white-50">Huawei</h5>
-                        <h4 class="font-weight-medium font-size-24">{{array_sum($Huawei_status)}} </h4>
-                    </div>
-                    <div class="pt-2">
-                        <div class="float-right">
-                            <p class="text-white-50 mb-0 mt-1">{{@$Huawei_status[1]}}</p>
-                            <p class="text-white-50 mb-0 mt-1">{{@$Huawei_status[6]}}</p>
-                        </div>
-                        <p class="text-white-50 mb-0 mt-1">Public</p>
-                        <p class="text-white-50 mb-0 mt-1">Check</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+{{--    <div class="row">--}}
+{{--        <div class="col-xl-3 col-md-6">--}}
+{{--            <div class="card mini-stat bg-primary text-white">--}}
+{{--                <div class="card-body">--}}
+{{--                    <div class="mb-4">--}}
+{{--                        <div class="float-left mini-stat-img mr-4">--}}
+{{--                            <img src="{{ URL::asset('/assets/images/services-icon/01.png') }}" alt="">--}}
+{{--                        </div>--}}
+{{--                        <h5 class="font-size-16 text-uppercase mt-0 text-white-50">Project</h5>--}}
+{{--                        <h4 class="font-weight-medium font-size-24">{{$project}}</h4>--}}
+{{--                        <?php--}}
+{{--                        if($projectLastMonth != 0){--}}
+{{--                            $diff = number_format(($projectInMonth - $projectLastMonth)/ $projectLastMonth *100,2);--}}
+{{--                            if($diff > 0 ){--}}
+{{--                        ?>--}}
+{{--                        <div class="mini-stat-label bg-success">--}}
+{{--                            <p class="mb-0">+ {{$diff}}%</p>--}}
+{{--                        </div>--}}
+{{--                        <?php }else{ ?>--}}
+{{--                        <div class="mini-stat-label bg-danger">--}}
+{{--                            <p class="mb-0">{{$diff}}%</p>--}}
+{{--                        </div>--}}
+{{--                        <?php }--}}
+{{--                            }--}}
+{{--                            ?>--}}
+{{--                    </div>--}}
+{{--                    <div class="pt-2">--}}
+{{--                        <div class="float-right">--}}
+{{--                            <p class="text-white-50">{{$projectInMonth}}</i></p>--}}
+{{--                            <p class="text-white-50">{{$projectLastMonth}}</i></p>--}}
+{{--                        </div>--}}
+{{--                        <p class="text-white-50 mb-0 mt-1">In month</p>--}}
+{{--                        <p class="text-white-50 mb-0 mt-1">Last month</p>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--        <div class="col-xl-3 col-md-6">--}}
+{{--            <div class="card mini-stat text-white" style="background: #7baba3 !important;">--}}
+{{--                <div class="card-body">--}}
+{{--                    <div class="mb-4">--}}
+{{--                        <div class="float-left mini-stat-img mr-4">--}}
+{{--                            <img src="{{ URL::asset('img/icon/google.png') }}" alt="">--}}
+{{--                        </div>--}}
+{{--                        <h5 class="font-size-16 text-uppercase mt-0 text-white-50">CHplay</h5>--}}
+{{--                        <h4 class="font-weight-medium font-size-24">{{array_sum($Chplay_status)}} </h4>--}}
+{{--                    </div>--}}
+{{--                    <div class="pt-2">--}}
+{{--                        <div class="float-right">--}}
+{{--                            <p class="text-white-50 mb-0 mt-1">{{$Chplay_status[1]}}</p>--}}
+{{--                            <p class="text-white-50 mb-0 mt-1">{{$Chplay_status[6]}}</p>--}}
+{{--                        </div>--}}
+{{--                        <p class="text-white-50 mb-0 mt-1">Public</p>--}}
+{{--                        <p class="text-white-50 mb-0 mt-1">Check</p>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--        <div class="col-xl-3 col-md-6">--}}
+{{--            <div class="card mini-stat text-white" style="background: #0b7cd6 !important;">--}}
+{{--                <div class="card-body">--}}
+{{--                    <div class="mb-4">--}}
+{{--                        <div class="float-left mini-stat-img mr-4">--}}
+{{--                            <img src="{{ URL::asset('img/icon/amazon.png') }}" alt="">--}}
+{{--                        </div>--}}
+{{--                        <h5 class="font-size-16 text-uppercase mt-0 text-white-50">Amazon</h5>--}}
+{{--                        <h4 class="font-weight-medium font-size-24">{{array_sum($Amazon_status)}} </h4>--}}
+{{--                    </div>--}}
+{{--                    <div class="pt-2">--}}
+{{--                        <div class="float-right">--}}
+{{--                            <p class="text-white-50 mb-0 mt-1">{{@$Amazon_status[1]}}</p>--}}
+{{--                            <p class="text-white-50 mb-0 mt-1">{{@$Amazon_status[6]}}</p>--}}
+{{--                        </div>--}}
+{{--                        <p class="text-white-50 mb-0 mt-1">Public</p>--}}
+{{--                        <p class="text-white-50 mb-0 mt-1">Check</p>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--        <div class="col-xl-3 col-md-6">--}}
+{{--            <div class="card mini-stat text-white" style="background: #c903ea !important;">--}}
+{{--                <div class="card-body">--}}
+{{--                    <div class="mb-4">--}}
+{{--                        <div class="float-left mini-stat-img mr-4">--}}
+{{--                            <img src="{{ URL::asset('img/icon/samsung.png') }}" alt="">--}}
+{{--                        </div>--}}
+{{--                        <h5 class="font-size-16 text-uppercase mt-0 text-white-50">Samsung</h5>--}}
+{{--                        <h4 class="font-weight-medium font-size-24">{{array_sum($Samsung_status)}} </h4>--}}
+{{--                    </div>--}}
+{{--                    <div class="pt-2">--}}
+{{--                        <div class="float-right">--}}
+{{--                            <p class="text-white-50 mb-0 mt-1">{{@$Samsung_status[1]}}</p>--}}
+{{--                            <p class="text-white-50 mb-0 mt-1">{{@$Samsung_status[6]}}</p>--}}
+{{--                        </div>--}}
+{{--                        <p class="text-white-50 mb-0 mt-1">Public</p>--}}
+{{--                        <p class="text-white-50 mb-0 mt-1">Check</p>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--        <div class="col-xl-3 col-md-6">--}}
+{{--            <div class="card mini-stat text-white" style="background: #ff6445 !important;">--}}
+{{--                <div class="card-body">--}}
+{{--                    <div class="mb-4">--}}
+{{--                        <div class="float-left mini-stat-img mr-4">--}}
+{{--                            <img src="{{ URL::asset('img/icon/xiaomi.png') }}" alt="">--}}
+{{--                        </div>--}}
+{{--                        <h5 class="font-size-16 text-uppercase mt-0 text-white-50">Xiaomi</h5>--}}
+{{--                        <h4 class="font-weight-medium font-size-24">{{array_sum($Xiaomi_status)}} </h4>--}}
+{{--                    </div>--}}
+{{--                    <div class="pt-2">--}}
+{{--                        <div class="float-right">--}}
+{{--                            <p class="text-white-50 mb-0 mt-1">{{@$Xiaomi_status[1]}}</p>--}}
+{{--                            <p class="text-white-50 mb-0 mt-1">{{@$Xiaomi_status[6]}}</p>--}}
+{{--                        </div>--}}
+{{--                        <p class="text-white-50 mb-0 mt-1">Public</p>--}}
+{{--                        <p class="text-white-50 mb-0 mt-1">Check</p>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--        <div class="col-xl-3 col-md-6">--}}
+{{--            <div class="card mini-stat text-white" style="background: #1acf7d !important;">--}}
+{{--                <div class="card-body">--}}
+{{--                    <div class="mb-4">--}}
+{{--                        <div class="float-left mini-stat-img mr-4">--}}
+{{--                            <img src="{{ URL::asset('img/icon/oppo.png') }}" alt="">--}}
+{{--                        </div>--}}
+{{--                        <h5 class="font-size-16 text-uppercase mt-0 text-white-50">Oppo</h5>--}}
+{{--                        <h4 class="font-weight-medium font-size-24">{{array_sum($Oppo_status)}} </h4>--}}
+{{--                    </div>--}}
+{{--                    <div class="pt-2">--}}
+{{--                        <div class="float-right">--}}
+{{--                            <p class="text-white-50 mb-0 mt-1">{{@$Oppo_status[1]}}</p>--}}
+{{--                            <p class="text-white-50 mb-0 mt-1">{{@$Oppo_status[6]}}</p>--}}
+{{--                        </div>--}}
+{{--                        <p class="text-white-50 mb-0 mt-1">Public</p>--}}
+{{--                        <p class="text-white-50 mb-0 mt-1">Check</p>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--        <div class="col-xl-3 col-md-6">--}}
+{{--            <div class="card mini-stat text-white" style="background: #20b7fe !important;">--}}
+{{--                <div class="card-body">--}}
+{{--                    <div class="mb-4">--}}
+{{--                        <div class="float-left mini-stat-img mr-4">--}}
+{{--                            <img src="{{ URL::asset('img/icon/vivo.png') }}" alt="">--}}
+{{--                        </div>--}}
+{{--                        <h5 class="font-size-16 text-uppercase mt-0 text-white-50">Vivo</h5>--}}
+{{--                        <h4 class="font-weight-medium font-size-24">{{array_sum($Vivo_status)}} </h4>--}}
+{{--                    </div>--}}
+{{--                    <div class="pt-2">--}}
+{{--                        <div class="float-right">--}}
+{{--                            <p class="text-white-50 mb-0 mt-1">{{@$Vivo_status[1]}}</p>--}}
+{{--                            <p class="text-white-50 mb-0 mt-1">{{@$Vivo_status[6]}}</p>--}}
+{{--                        </div>--}}
+{{--                        <p class="text-white-50 mb-0 mt-1">Public</p>--}}
+{{--                        <p class="text-white-50 mb-0 mt-1">Check</p>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--        <div class="col-xl-3 col-md-6">--}}
+{{--            <div class="card mini-stat text-white" style="background: #f65657 !important;">--}}
+{{--                <div class="card-body">--}}
+{{--                    <div class="mb-4">--}}
+{{--                        <div class="float-left mini-stat-img mr-4">--}}
+{{--                            <img src="{{ URL::asset('img/icon/huawei.png') }}" alt="">--}}
+{{--                        </div>--}}
+{{--                        <h5 class="font-size-16 text-uppercase mt-0 text-white-50">Huawei</h5>--}}
+{{--                        <h4 class="font-weight-medium font-size-24">{{array_sum($Huawei_status)}} </h4>--}}
+{{--                    </div>--}}
+{{--                    <div class="pt-2">--}}
+{{--                        <div class="float-right">--}}
+{{--                            <p class="text-white-50 mb-0 mt-1">{{@$Huawei_status[1]}}</p>--}}
+{{--                            <p class="text-white-50 mb-0 mt-1">{{@$Huawei_status[6]}}</p>--}}
+{{--                        </div>--}}
+{{--                        <p class="text-white-50 mb-0 mt-1">Public</p>--}}
+{{--                        <p class="text-white-50 mb-0 mt-1">Check</p>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--    </div>--}}
     <?php } ?>
 
 @endsection

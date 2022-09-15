@@ -47,33 +47,33 @@ class HomeController extends Controller
             )
             ->count();
 
-        $data = ProjectModel::select(
-            'Chplay_status','Amazon_status','Samsung_status','Xiaomi_status','Oppo_status','Vivo_status','Huawei_status',
-            'Chplay_package','Amazon_package','Samsung_package','Xiaomi_package','Oppo_package','Vivo_package','Huawei_package'
-        )
-            ->get()
-            ->toArray();
-        $Chplay_status = array_count_values(array_filter(array_column($data, 'Chplay_status')));
-        $Amazon_status = array_count_values(array_filter(array_column($data, 'Amazon_status')));
-        $Samsung_status = array_count_values(array_filter(array_column($data, 'Samsung_status')));
-        $Xiaomi_status = array_count_values(array_filter(array_column($data, 'Xiaomi_status')));
-        $Oppo_status = array_count_values(array_filter(array_column($data, 'Oppo_status')));
-        $Vivo_status = array_count_values(array_filter(array_column($data, 'Vivo_status')));
-        $Huawei_status = array_count_values(array_filter(array_column($data, 'Huawei_status')));
+//        $data = ProjectModel::select(
+//            'Chplay_status','Amazon_status','Samsung_status','Xiaomi_status','Oppo_status','Vivo_status','Huawei_status',
+//            'Chplay_package','Amazon_package','Samsung_package','Xiaomi_package','Oppo_package','Vivo_package','Huawei_package'
+//        )
+//            ->get()
+//            ->toArray();
+//        $Chplay_status = array_count_values(array_filter(array_column($data, 'Chplay_status')));
+//        $Amazon_status = array_count_values(array_filter(array_column($data, 'Amazon_status')));
+//        $Samsung_status = array_count_values(array_filter(array_column($data, 'Samsung_status')));
+//        $Xiaomi_status = array_count_values(array_filter(array_column($data, 'Xiaomi_status')));
+//        $Oppo_status = array_count_values(array_filter(array_column($data, 'Oppo_status')));
+//        $Vivo_status = array_count_values(array_filter(array_column($data, 'Vivo_status')));
+//        $Huawei_status = array_count_values(array_filter(array_column($data, 'Huawei_status')));
 
         session(["secret_code" => $secretCode]);
         return view("index", compact(
             "qrCodeUrl",
             "project",
             "projectLastMonth",
-            "projectInMonth",
-            "Chplay_status",
-            "Amazon_status",
-            "Samsung_status",
-            "Xiaomi_status",
-            "Oppo_status",
-            "Vivo_status",
-            "Huawei_status"
+            "projectInMonth"
+//            "Chplay_status",
+//            "Amazon_status",
+//            "Samsung_status",
+//            "Xiaomi_status",
+//            "Oppo_status",
+//            "Vivo_status",
+//            "Huawei_status"
         ));
 
     }
