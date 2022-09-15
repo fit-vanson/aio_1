@@ -24,6 +24,10 @@ class Project extends Model
             ->withTimestamps();
     }
 
+    public function da(){
+        return $this->belongsTo(Da::class,'ma_da');
+    }
+
     public function ma_template(){
         return $this->belongsTo(Template::class,'template');
     }

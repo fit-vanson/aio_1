@@ -48,12 +48,15 @@ class Project_Controller extends Controller
             ->Where('projectname', 'like', '%' . $searchValue . '%')
             ->skip($start)
             ->take($rowperpage)
-            ->get()->load('markets','ma_template');
+            ->get()->load('markets','ma_template','da');
 
         $data_arr = array();
         foreach ($records as $record) {
 //            dd($record->toArray());
 //            dd($record->ma_template);
+
+//            dd($record->da->ma_da);
+
 
 
 
@@ -67,9 +70,7 @@ class Project_Controller extends Controller
 
 
             if(isset($record->logo)){
-//                        $logo = "<img class='rounded mx-auto d-block'  width='100px'  height='100px'  src='../uploads/project/$record->projectname/thumbnail/$record->logo'>";
-                $logo = "<img class='rounded mx-auto d-block'  width='100px'  height='100px'  src='../storage/projects/$record->ma_da/$record->projectname/lg114.png'>";
-
+                $logo = '<img class="rounded mx-auto d-block"  width="100px"  height="100px"  src="'.url('storage/projects/'.$record->da->ma_da.'/'.$record->projectname.'/lg114.png').'">';
             }else{
                 $logo = '<img class="rounded mx-auto d-block" width="100px" height="100px" src="assets\images\logo-sm.png">';
             }
