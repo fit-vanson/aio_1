@@ -249,6 +249,11 @@ Route::get('/fakeimage',[ProjectController::class,'getInfofake'])->name('project
 Route::group(['prefix'=>'project','middleware'=>['CheckLogout','2fa']], function (){
     Route::get('/',[Project_Controller::class,'index'])->name('project.index')->middleware('can:project-index');
     Route::post('/getIndex',[Project_Controller::class,'getIndex'])->name('project.getIndex')->middleware('can:project-index');
+    Route::post('/create',[Project_Controller::class,'create'])->name('project.create')->middleware('can:project-add');
+
+    Route::get('/edit/{id}',[Project_Controller::class,'edit'])->name('project.edit')->middleware('can:project-edit');
+    Route::post('/update',[Project_Controller::class,'update'])->name('project.update')->middleware('can:project-update');
+
     Route::get('/show/{id}',[ProjectController::class,'show'])->name('project.show');
     Route::get('/convert',[ProjectController::class,'convert'])->name('project.convert');
 });

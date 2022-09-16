@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Http\Resources\KeystoresResource;
 use App\Models\Keystore;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -300,6 +301,17 @@ class KeystoreController extends Controller
             $i++;
         }
         return $temp_array;
+    }
+
+
+    public function getKeystore(){
+        $searchValue = \request()->q;
+
+        $dev = Keystore::latest('id')
+            ->where('name_keystore', 'like', '%' . $searchValue . '%')
+            ->get();
+        $result = KeystoresResource::collection($dev);
+        return response()->json($result);
     }
 
 }

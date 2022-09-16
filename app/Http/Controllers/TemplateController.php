@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\TemplateResource;
 use App\Models\Dev;
 use App\Models\ProjectModel;
 use App\Models\Template;
@@ -580,6 +581,15 @@ class TemplateController extends Controller
     {
 //        dd(Auth::id());
         return view('template.upload');
+    }
+
+    public function getTemplate(){
+        $searchValue = \request()->q;
+        $project = Template::latest('id')
+            ->where('template', 'like', '%' . $searchValue . '%')
+            ->get();
+        $result = TemplateResource::collection($project);
+        return response()->json($result);
     }
 
 }

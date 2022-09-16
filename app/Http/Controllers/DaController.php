@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\DaResource;
 use App\Models\Da;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -149,5 +150,14 @@ class DaController extends Controller
     public function callAction($method, $parameters)
     {
         return parent::callAction($method, array_values($parameters));
+    }
+
+    public function getDa(){
+        $searchValue = \request()->q;
+        $project = Da::latest()
+            ->where('ma_da', 'like', '%' . $searchValue . '%')
+            ->get();
+        $result = DaResource::collection($project);
+        return response()->json($result);
     }
 }

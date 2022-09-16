@@ -1,6 +1,11 @@
 <?php
 
+use App\Http\Controllers\DaController;
+use App\Http\Controllers\KeystoreController;
+use App\Http\Controllers\MarketDevController;
+use App\Http\Controllers\MarketsController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\TemplateController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,3 +26,11 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 
 Route::get('/project-aio/{id}', [ProjectController::class, 'getProject']);
+
+Route::get('/getDa', [DaController::class, 'getDa'])->name('api.getDa');
+Route::get('/getTemplate', [TemplateController::class, 'getTemplate'])->name('api.getTemplate');
+Route::get('/getDev', [MarketDevController::class, 'getDev'])->name('api.getDev');
+Route::get('/getKeystore', [KeystoreController::class, 'getKeystore'])->name('api.getKeystore');
+
+Route::get('/market-dev/{id}',[MarketsController::class,'getDev_idMarket'])->name('market_dev.getDev_idMarket');
+
