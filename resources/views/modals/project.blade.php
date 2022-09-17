@@ -84,10 +84,10 @@ $markets = \App\Models\Markets::all();
 {{--                                                    <label for="name">Link Policy</label>--}}
 {{--                                                    <input type="text" id="buildinfo_link_policy_x" name="buildinfo_link_policy_x" class="form-control" >--}}
 {{--                                                </div>--}}
-                                                <div class="form-group col-lg-4 ">
-                                                    <label for="name">Link Youtube </label>
-                                                    <input type="text" id="buildinfo_link_youtube_x" name="buildinfo_link_youtube_x" class="form-control" >
-                                                </div>
+{{--                                                <div class="form-group col-lg-4 ">--}}
+{{--                                                    <label for="name">Link Youtube </label>--}}
+{{--                                                    <input type="text" id="buildinfo_link_youtube_x" name="buildinfo_link_youtube_x" class="form-control" >--}}
+{{--                                                </div>--}}
                                                 <div class="form-group col-lg-4 ">
                                                     <label for="name">Link Fanpage </label>
                                                     <input type="text" id="buildinfo_link_fanpage" name="buildinfo_link_fanpage" class="form-control" >
@@ -101,11 +101,7 @@ $markets = \App\Models\Markets::all();
                                                     <label for="name">Link Website</label>
                                                     <input type="text" id="buildinfo_link_website" name="buildinfo_link_website" class="form-control" >
                                                 </div>
-                                                <div class="form-group col-lg-4">
-                                                    <label>Logo</label><p></p>
-                                                    <input  id="logo" type="file" name="logo" class="form-control" hidden onchange="changeImg(this)" accept="image/*">
-                                                    <img id="avatar" class="thumbnail" width="50px" src="img/logo.png">
-                                                </div>
+
 
                                                 <div class="form-group col-lg-4">
                                                     <label class="d-block ">Data on/off :</label>
@@ -123,10 +119,14 @@ $markets = \App\Models\Markets::all();
                                                         <label class="custom-control-label" for="data_all">All</label>
                                                     </div>
                                                 </div>
-
                                                 <div class="form-group col-lg-4">
                                                     <label for="name">File</label><p></p>
                                                     <input type="file" name="project_file" id="project_file" class="filestyle" data-buttonname="btn-secondary" accept=".zip">
+                                                </div>
+                                                <div class="form-group col-lg-4">
+                                                    <label>Logo</label><p></p>
+                                                    <input  id="logo" type="file" name="logo" class="form-control" hidden onchange="changeImg(this)" accept="image/*">
+                                                    <img id="avatar" class="thumbnail" width="50px" src="img/logo.png">
                                                 </div>
                                             </div>
                                             <div class="progress m-b-10" style="height: 3px;">
@@ -288,6 +288,10 @@ $markets = \App\Models\Markets::all();
                                                     <div class="form-group col-lg-6 ">
                                                         <label for="name">SDK</label>
                                                         <input type="text" id="{{$market->market_name}}_sdk" name="market[{{$market->id}}][sdk]" class="form-control" >
+                                                    </div>
+                                                    <div class="form-group col-lg-6 ">
+                                                        <label for="name">Link Video</label>
+                                                        <input type="text" id="{{$market->market_name}}_video_link" name="market[{{$market->id}}][video_link]" class="form-control" >
                                                     </div>
                                                 </div>
                                             </div>

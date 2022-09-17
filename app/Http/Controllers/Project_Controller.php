@@ -196,7 +196,7 @@ class Project_Controller extends Controller
 //        $data['buildinfo_link_policy_x'] = $request->buildinfo_link_policy_x;
         $data['buildinfo_link_fanpage'] = $request->buildinfo_link_fanpage;
         $data['buildinfo_link_website'] =  $request->buildinfo_link_website;
-        $data['buildinfo_link_youtube_x'] = $request->buildinfo_link_youtube_x;
+//        $data['buildinfo_link_youtube_x'] = $request->buildinfo_link_youtube_x;
         $data['buildinfo_api_key_x'] = $request->buildinfo_api_key_x;
         $data['buildinfo_console'] = 0;
         $data['buildinfo_vernum' ]= $request->buildinfo_vernum;
@@ -245,6 +245,7 @@ class Project_Controller extends Controller
                     'ads' => json_encode($value['ads']),
                     'app_name_x' => $value['app_name_x'],
                     'appID' => $value['appID'],
+                    'video_link' => $value['video_link'],
                 ];
             }
         }
