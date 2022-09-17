@@ -332,12 +332,11 @@ class Project_Controller extends Controller
         $inset_market = [];
 
 
-
         foreach ($request->market as $key=>$value){
             if($value['package']){
                 $inset_market[$key] = [
                     'package' => $value['package'],
-                    'dev_id' => $value['dev_id'],
+                    'dev_id' => $value['dev_id']   ,
                     'keystore' => $value['keystore'],
                     'sdk' => $value['sdk'],
                     'app_link' => $value['app_link'],

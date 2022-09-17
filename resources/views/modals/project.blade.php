@@ -40,6 +40,7 @@ $markets = \App\Models\Markets::all();
                                                     <label for="name">Mã dự án <span style="color: red">*</span></label>
                                                     <div class="inner row">
                                                         <div class="col-md-10 col-10">
+                                                            <input type="hidden" name="ma_da" id="_ma_da" >
                                                             <select class="form-control choose_da" id="ma_da" name="ma_da">
                                                             </select>
                                                         </div>
@@ -53,6 +54,7 @@ $markets = \App\Models\Markets::all();
                                                     <label for="name">Mã template <span style="color: red">*</span></label>
                                                     <div class="inner row">
                                                         <div class="col-md-10 col-10">
+                                                            <input type="hidden" name="template" id="_template" >
                                                             <select class="form-control choose_template" id="template" name="template">
                                                             </select>
                                                         </div>
@@ -230,8 +232,8 @@ $markets = \App\Models\Markets::all();
                                                 <div  class="row input_buildinfo">
                                                     <div class="form-group col-lg-6">
                                                         <label for="name">Store Name ({{$market->market_name}}) </label>
+                                                        <input type="hidden" name="market[{{$market->id}}][dev_id]" id="_market_{{$market->id}}_dev_id" >
                                                         <select class="form-control select2" id="{{$market->market_name}}_dev_id"  name="market[{{$market->id}}][dev_id]">
-                                                            <option value="0" >---Vui lòng chọn---</option>
                                                         </select>
                                                     </div>
 
@@ -240,8 +242,8 @@ $markets = \App\Models\Markets::all();
                                                         <label for="name">Keystore Profile</label>
                                                         <div class="inner row">
                                                             <div class="col-md-10 col-10">
+                                                                <input type="hidden" name="market[{{$market->id}}][keystore]" id="_market_{{$market->id}}_keystore" >
                                                                 <select class="form-control select2" id="{{$market->market_name}}_keystore" name="market[{{$market->id}}][keystore]">
-                                                                    <option value="0">---Vui lòng chọn---</option>
                                                                 </select>
                                                             </div>
                                                             <div class="col-md-2 col-4">

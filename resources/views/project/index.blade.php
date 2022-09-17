@@ -10,13 +10,12 @@
     <link href="{{ URL::asset('assets/libs/toastr/ext-component-toastr.css') }}" rel="stylesheet" type="text/css"/>
     <link href="{{ URL::asset('assets/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css"/>
 
-    <link href="plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+{{--    <link href="plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />--}}
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 @endsection
 
 @section('content')
     @include('modals.project')
-
-
 
 
     <div class="row">
@@ -70,6 +69,63 @@
                 // addDisplayAllBtn: 'btn btn-secondary'
             });
 
+            $('#template').select2({
+                minimumInputLength: 2,
+                ajax: {
+                    url: '{{route('api.getTemplate')}}',
+                    dataType: 'json',
+                    type: "GET",
+                    // quietMillis: 50,
+                    data: function(params) {
+                        return {
+                            q: params.term, // search term
+                            page: params.page
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: $.map(data, function (item) {
+                                return {
+                                    text: item.name,
+                                    id: item.id
+                                }
+                            })
+                        };
+                    },
+                    cache: false
+                },
+            });
+            $('#ma_da').select2({
+                minimumInputLength: 2,
+                ajax: {
+                    url: '{{route('api.getDa')}}',
+                    dataType: 'json',
+                    type: "GET",
+                    // quietMillis: 50,
+                    data: function(params) {
+
+                        return {
+                            q: params.term, // search term
+                            page: params.page
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: $.map(data, function (item) {
+                                return {
+                                    text: item.name,
+                                    id: item.id
+                                }
+                            })
+                        };
+                    },
+                    // cache: false
+                },
+            });
+
+
+
+
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -121,74 +177,6 @@
                 $('.modal').on('hidden.bs.modal', function (e) {
                     $('body').addClass('modal-open');
                 });
-                // $('#projectForm').trigger("reset");
-                $('#projectForm')[0].reset();
-
-
-
-                $('#template').select2().empty()
-                $('#template').select2(
-                    {
-                        minimumInputLength: 2,
-                        ajax: {
-                            url: '{{route('api.getTemplate')}}',
-                            dataType: 'json',
-                            type: "GET",
-                            // quietMillis: 50,
-                            data: function(params) {
-                                return {
-                                    q: params.term, // search term
-                                    page: params.page
-                                };
-                            },
-                            processResults: function(data) {
-                                return {
-                                    results: $.map(data, function (item) {
-                                        return {
-                                            text: item.name,
-                                            id: item.id
-                                        }
-                                    })
-                                };
-                            },
-                            cache: false
-                        },
-                    }
-                );
-
-                $('#ma_da').select2().empty()
-                $('#ma_da').select2(
-                    {
-                        minimumInputLength: 2,
-                        ajax: {
-                            url: '{{route('api.getDa')}}',
-                            dataType: 'json',
-                            type: "GET",
-                            // quietMillis: 50,
-                            data: function(params) {
-
-                                return {
-                                    q: params.term, // search term
-                                    page: params.page
-                                };
-                            },
-                            processResults: function(data) {
-                                return {
-                                    results: $.map(data, function (item) {
-                                        return {
-                                            text: item.name,
-                                            id: item.id
-                                        }
-                                    })
-                                };
-                            },
-                            // cache: false
-                        },
-                    }
-                );
-
-                // $('#template').val('').trigger('change');
-
 
 
                 <?php
@@ -197,21 +185,69 @@
                 ?>
                     $('#nav_{{$market->market_name}}').hide()
                     $('#package_{{$market->market_name}}').hide()
-                    {{--$('#tab_{{$market->market_name}}').hide()--}}
+
 
                     $('#tab_{{$market->market_name}}').removeClass( 'active' );
-{{--                    $('#nav_{{$market->market_name}}').removeClass( 'active' );--}}
-{{--                    $('#package_{{$market->market_name}}').removeClass( 'active' );--}}
-
-
                 <?php
                 }
                 ?>
-               //
-               //  $('#ma_da').val(null).trigger('change');
-               //  $('#template').val(null).trigger('change');
 
 
+                $('#template').select2().empty()
+                $('#ma_da').select2().empty()
+                $('#template').select2({
+                    minimumInputLength: 2,
+                    ajax: {
+                        url: '{{route('api.getTemplate')}}',
+                        dataType: 'json',
+                        type: "GET",
+                        // quietMillis: 50,
+                        data: function(params) {
+                            return {
+                                q: params.term, // search term
+                                page: params.page
+                            };
+                        },
+                        processResults: function(data) {
+                            return {
+                                results: $.map(data, function (item) {
+                                    return {
+                                        text: item.name,
+                                        id: item.id
+                                    }
+                                })
+                            };
+                        },
+                        cache: false
+                    },
+                });
+                $('#ma_da').select2({
+                    minimumInputLength: 2,
+                    ajax: {
+                        url: '{{route('api.getDa')}}',
+                        dataType: 'json',
+                        type: "GET",
+                        // quietMillis: 50,
+                        data: function(params) {
+
+                            return {
+                                q: params.term, // search term
+                                page: params.page
+                            };
+                        },
+                        processResults: function(data) {
+                            return {
+                                results: $.map(data, function (item) {
+                                    return {
+                                        text: item.name,
+                                        id: item.id
+                                    }
+                                })
+                            };
+                        },
+                        // cache: false
+                    },
+                });
 
             });
 
@@ -284,7 +320,7 @@
                         if(data.{{ucfirst(strtolower($market->market_name))}}_category){
                             $('#nav_{{$market->market_name}}').show();
                             $('#package_{{$market->market_name}}').show();
-                            $('#tab_{{$market->market_name}}').show()
+                            {{--$('#tab_{{$market->market_name}}').show()--}}
 
                             $('#{{$market->market_name}}_dev_id').select2(
                                 {
@@ -391,6 +427,10 @@
                 $('#buildinfo_api_key_x').val(data.buildinfo_api_key_x)
                 $('#buildinfo_link_website').val(data.buildinfo_link_website)
 
+                $('#_template').val(data.template);
+                $('#_ma_da').val(data.ma_da);
+
+
 
 
                 if(data.logo) {
@@ -409,163 +449,103 @@
                 $.each(data.markets ,function( index, value ) {
                     markets[value.pivot.market_id] = value.pivot;
                 });
+                console.log(markets)
 
-                <?php
-                    $markets = \App\Models\Markets::all();
-                    foreach ($markets as $market){
+                    <?php
+                        $markets = \App\Models\Markets::all();
+                        foreach ($markets as $market){
+                        ?>
+                    if(data.ma_template.{{ucfirst(strtolower($market->market_name))}}_category){
+                        $('#nav_{{$market->market_name}}').show();
+                        $('#package_{{$market->market_name}}').show();
+                        {{--$('#tab_{{$market->market_name}}').show()--}}
+
+                        $('#{{$market->market_name}}_dev_id').select2(
+                            {
+                                minimumInputLength: 2,
+                                ajax: {
+                                    url: '{{route('api.getDev')}}',
+                                    dataType: 'json',
+                                    type: "GET",
+                                    // quietMillis: 50,
+                                    data: function(params) {
+
+                                        return {
+                                            q: params.term, // search term
+                                            dev_id: {{$market->id}},
+                                            page: params.page
+                                        };
+                                    },
+                                    processResults: function(data) {
+                                        return {
+                                            results: $.map(data, function (item) {
+                                                return {
+                                                    text: item.name + ' : ' + item.store,
+                                                    id: item.id
+                                                }
+                                            })
+                                        };
+                                    },
+                                    // cache: false
+                                },
+                            }
+                        );
+                        $('#{{$market->market_name}}_keystore').select2(
+                            {
+                                minimumInputLength: 2,
+                                ajax: {
+                                    url: '{{route('api.getKeystore')}}',
+                                    dataType: 'json',
+                                    type: "GET",
+                                    // quietMillis: 50,
+                                    data: function(params) {
+                                        return {
+                                            q: params.term, // search term
+                                            page: params.page
+                                        };
+                                    },
+                                    processResults: function(data) {
+                                        return {
+                                            results: $.map(data, function (item) {
+                                                return {
+                                                    text: item.name,
+                                                    id: item.name
+                                                }
+                                            })
+                                        };
+                                    },
+                                    // cache: false
+                                },
+                            }
+                        );
+
+                        if ((markets[{{$market->id}}])){
+                            $('#market_{{$market->id}}_package').val(markets[{{$market->id}}].package)
+                            $('#market_{{$market->id}}_app_link').val(markets[{{$market->id}}].app_link)
+                            $('#market_{{$market->id}}_policy_link').val(markets[{{$market->id}}].policy_link)
+                            $('#market_{{$market->id}}_app_id').val(markets[{{$market->id}}].appID)
+                            $('#market_{{$market->id}}_app_name_x').val(markets[{{$market->id}}].app_name_x)
+                            $('#market_{{$market->id}}_sdk').val(markets[{{$market->id}}].sdk)
+                            $('#market_{{$market->id}}_video_link').val(markets[{{$market->id}}].video_link)
+                            $('#_market_{{$market->id}}_dev_id').val(markets[{{$market->id}}].dev_id)
+                            $('#_market_{{$market->id}}_keystore').val(markets[{{$market->id}}].keystore)
+
+                            var ads = markets[{{$market->id}}].ads;
+                            var result = JSON.parse(ads)
+
+                            $.each(result ,function( index, value ) {
+                                $('#market_{{$market->id}}_'+index).val(value)
+                            });
+                        }
+                    }else {
+                        $('#nav_{{$market->market_name}}').hide()
+                        $('#package_{{$market->market_name}}').hide()
+                    }
+                    <?php
+                    }
                     ?>
-                if(data.ma_template.{{ucfirst(strtolower($market->market_name))}}_category){
-                    $('#nav_{{$market->market_name}}').show();
-                    $('#package_{{$market->market_name}}').show();
-                    {{--$('#tab_{{$market->market_name}}').show()--}}
-
-                    $('#{{$market->market_name}}_dev_id').select2(
-                        {
-                            minimumInputLength: 2,
-                            ajax: {
-                                url: '{{route('api.getDev')}}',
-                                dataType: 'json',
-                                type: "GET",
-                                // quietMillis: 50,
-                                data: function(params) {
-
-                                    return {
-                                        q: params.term, // search term
-                                        dev_id: {{$market->id}},
-                                        page: params.page
-                                    };
-                                },
-                                processResults: function(data) {
-                                    return {
-                                        results: $.map(data, function (item) {
-                                            return {
-                                                text: item.name + ' : ' + item.store,
-                                                id: item.id
-                                            }
-                                        })
-                                    };
-                                },
-                                // cache: false
-                            },
-                        }
-                    );
-                    $('#{{$market->market_name}}_keystore').select2(
-                        {
-                            minimumInputLength: 2,
-                            ajax: {
-                                url: '{{route('api.getKeystore')}}',
-                                dataType: 'json',
-                                type: "GET",
-                                // quietMillis: 50,
-                                data: function(params) {
-                                    return {
-                                        q: params.term, // search term
-                                        page: params.page
-                                    };
-                                },
-                                processResults: function(data) {
-                                    return {
-                                        results: $.map(data, function (item) {
-                                            return {
-                                                text: item.name,
-                                                id: item.name
-                                            }
-                                        })
-                                    };
-                                },
-                                // cache: false
-                            },
-                        }
-                    );
-                    if ((markets[{{$market->id}}])){
-                        $('#market_{{$market->id}}_package').val(markets[{{$market->id}}].package)
-                        $('#market_{{$market->id}}_app_link').val(markets[{{$market->id}}].app_link)
-                        $('#market_{{$market->id}}_policy_link').val(markets[{{$market->id}}].policy_link)
-                        $('#market_{{$market->id}}_app_id').val(markets[{{$market->id}}].appID)
-                        $('#market_{{$market->id}}_app_name_x').val(markets[{{$market->id}}].app_name_x)
-                        $('#market_{{$market->id}}_sdk').val(markets[{{$market->id}}].sdk)
-                        $('#market_{{$market->id}}_video_link').val(markets[{{$market->id}}].video_link)
-
-                        var ads = markets[{{$market->id}}].ads;
-                        var result = JSON.parse(ads)
-
-                        $.each(result ,function( index, value ) {
-                            $('#market_{{$market->id}}_'+index).val(value)
-                        });
-                    }
-                }else {
-                    $('#nav_{{$market->market_name}}').hide()
-                    $('#package_{{$market->market_name}}').hide()
-                }
-                <?php
-                }
-                ?>
 
 
-                // $('#template').select2().empty()
-
-                $('#template').select2(
-                    {
-                        minimumInputLength: 2,
-                        ajax: {
-                            url: '{{route('api.getTemplate')}}',
-                            dataType: 'json',
-                            type: "GET",
-                            // quietMillis: 50,
-                            data: function(params) {
-                                return {
-                                    q: params.term, // search term
-                                    page: params.page
-                                };
-                            },
-                            processResults: function(data) {
-                                return {
-                                    results: $.map(data, function (item) {
-                                        return {
-                                            text: item.name,
-                                            id: item.id
-                                        }
-                                    })
-                                };
-                            },
-                        },
-                        initSelection : function (element, callback) {
-                            var id = 9942;//$(element).val();
-                            alert('initSelection');
-                        }
-                    }
-                );
-
-                $('#ma_da').select2().empty()
-                $('#ma_da').select2(
-                    {
-                        minimumInputLength: 2,
-                        ajax: {
-                            url: '{{route('api.getDa')}}',
-                            dataType: 'json',
-                            type: "GET",
-                            // quietMillis: 50,
-                            data: function(params) {
-
-                                return {
-                                    q: params.term, // search term
-                                    page: params.page
-                                };
-                            },
-                            processResults: function(data) {
-                                return {
-                                    results: $.map(data, function (item) {
-                                        return {
-                                            text: item.name,
-                                            id: item.id
-                                        }
-                                    })
-                                };
-                            },
-                            // cache: false
-                        },
-                    }
-                );
             });
         }
 
