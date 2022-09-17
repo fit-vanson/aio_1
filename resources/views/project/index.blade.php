@@ -123,9 +123,6 @@
                 },
             });
 
-
-
-
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -396,7 +393,6 @@
                 $('#projectname').val(_text+'-');
 
             })
-
             $(document).on('change', '#buildinfo_vernum', function () {
                 var today = new Date();
                 var dd = String(today.getDate()).padStart(2, '0');
@@ -405,6 +401,32 @@
                 var num = $(this).val()
                 $('#buildinfo_verstr').val(num + '.'+dd+mm+'.'+yyyy)
             })
+
+            $(document).on('click','.deleteProject', function (data){
+                var project_id = $(this).data("id");
+                swal({
+                        title: "Bạn có chắc muốn xóa?",
+                        text: "Your will not be able to recover this imaginary file!",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonClass: "btn-danger",
+                        confirmButtonText: "Xác nhận xóa!",
+                        closeOnConfirm: false
+                    },
+                    function(){
+                        $.ajax({
+                            type: "get",
+                            url: "{{ asset("project/delete") }}/" + project_id,
+                            success: function (data) {
+                                table.draw();
+                            },
+                            error: function (data) {
+                                console.log('Error:', data);
+                            }
+                        });
+                        swal("Đã xóa!", "Your imaginary file has been deleted.", "success");
+                    });
+            });
         });
 
         function editProject(id) {
@@ -430,9 +452,6 @@
                 $('#_template').val(data.template);
                 $('#_ma_da').val(data.ma_da);
 
-
-
-
                 if(data.logo) {
                     $("#avatar").attr("src","../storage/projects/"+data.da.ma_da+"/"+data.projectname+"/lg114.png");
                 }else {
@@ -449,8 +468,6 @@
                 $.each(data.markets ,function( index, value ) {
                     markets[value.pivot.market_id] = value.pivot;
                 });
-                console.log(markets)
-
                     <?php
                         $markets = \App\Models\Markets::all();
                         foreach ($markets as $market){
