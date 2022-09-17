@@ -1,6 +1,5 @@
 <?php
 $markets = \App\Models\Markets::all();
-
 ?>
 <div class="modal fade bd-example-modal-xl" id="ajaxModel"  role="dialog">
     <div class="modal-dialog modal-xl">
@@ -21,13 +20,13 @@ $markets = \App\Models\Markets::all();
                                     <!-- Nav tabs -->
                                     <ul class="nav nav-tabs nav-tabs-custom" role="tablist">
                                         <li class="nav-item">
-                                            <a class="nav-link _home active" data-toggle="tab" href="#home" role="tab" id="nav_link_home">
+                                            <a class="nav-link active" data-toggle="tab" href="#tab_home" role="tab" id="nav_link_home">
                                                 <span class="d-none d-sm-block">Home</span>
                                             </a>
                                         </li>
                                         @foreach($markets as $market)
-                                            <li class="nav-item" id="nav_{{$market->market_name}}" style="display: none" >
-                                                <a class="nav-link"  data-toggle="tab" href="#{{$market->market_name}}" role="tab">
+                                            <li class="nav-item" id="nav_{{$market->market_name}}" >
+                                                <a class="nav-link"  data-toggle="tab" href="#tab_{{$market->market_name}}" role="tab">
                                                     <span class="d-none d-sm-block">{{$market->market_name}}</span>
                                                 </a>
                                             </li>
@@ -35,13 +34,13 @@ $markets = \App\Models\Markets::all();
                                     </ul>
                                     <!-- Tab panes -->
                                     <div class="tab-content">
-                                        <div class="tab-pane active p-3" id="home" role="tabpanel">
+                                        <div class="tab-pane active  p-3" id="tab_home" role="tabpanel">
                                             <div class="row">
                                                 <div class="form-group col-lg-4">
                                                     <label for="name">Mã dự án <span style="color: red">*</span></label>
                                                     <div class="inner row">
                                                         <div class="col-md-10 col-10">
-                                                            <select class="form-control select2" id="ma_da" name="ma_da">
+                                                            <select class="form-control choose_da" id="ma_da" name="ma_da">
                                                             </select>
                                                         </div>
                                                         <div class="col-md-2 col-4">
@@ -65,35 +64,26 @@ $markets = \App\Models\Markets::all();
                                                 </div>
                                                 <div class="form-group col-lg-4">
                                                     <label for="name">Mã Project <span style="color: red">*</span></label>
-                                                    <input type="text" id="projectname" name="projectname" class="form-control" required>
+                                                    <input type="text" id="projectname" name="projectname" class="form-control" required />
                                                 </div>
 
                                                 <div class="form-group col-lg-4 input_title_app">
-                                                    <label for="name">Tiêu đề ứng dụng  <span style="color: red">*</span></label>
-                                                    <input type="text" id="title_app" name="title_app" class="form-control" required >
+                                                    <label for="name">Tiêu đề ứng dụng  </label>
+                                                    <input type="text" id="title_app" name="title_app" class="form-control"/>
                                                 </div>
                                                 <div class="form-group col-lg-4">
                                                     <label for="name">Version Number <span style="color: red">*</span></label>
-                                                    <input type="number" id="buildinfo_vernum" name="buildinfo_vernum" class="form-control" required >
+                                                    <input type="number" id="buildinfo_vernum" name="buildinfo_vernum" class="form-control" required />
                                                 </div>
                                                 <div class="form-group col-lg-4">
                                                     <label for="name">Version String<span style="color: red">*</span></label>
-                                                    <input type="text" id="buildinfo_verstr" name="buildinfo_verstr" class="form-control" required >
+                                                    <input type="text" id="buildinfo_verstr" name="buildinfo_verstr" class="form-control" required />
                                                 </div>
-
 
 {{--                                                <div class="form-group col-lg-4 ">--}}
-{{--                                                    <label for="name">App Name (APP_NAME_X)</label>--}}
-{{--                                                    <input type="text" id="buildinfo_app_name_x" name="buildinfo_app_name_x" class="form-control" >--}}
+{{--                                                    <label for="name">Link Policy</label>--}}
+{{--                                                    <input type="text" id="buildinfo_link_policy_x" name="buildinfo_link_policy_x" class="form-control" >--}}
 {{--                                                </div>--}}
-
-
-
-
-                                                <div class="form-group col-lg-4 ">
-                                                    <label for="name">Link Policy</label>
-                                                    <input type="text" id="buildinfo_link_policy_x" name="buildinfo_link_policy_x" class="form-control" >
-                                                </div>
                                                 <div class="form-group col-lg-4 ">
                                                     <label for="name">Link Youtube </label>
                                                     <input type="text" id="buildinfo_link_youtube_x" name="buildinfo_link_youtube_x" class="form-control" >
@@ -144,7 +134,7 @@ $markets = \App\Models\Markets::all();
                                             </div>
 
                                             @foreach($markets as $market)
-                                                <div class="row"  id="package_{{$market->market_name}}" style="display: none">
+                                                <div class="row"  id="package_{{$market->market_name}}">
                                                     <div class="col-lg-12">
                                                         <h4 class="mt-0 header-title">Package {{$market->market_name}}</h4>
                                                         <input type="text" id="{{$market->market_name}}_package_input" name="market[{{$market->id}}][package]" class="form-control">
@@ -236,7 +226,7 @@ $markets = \App\Models\Markets::all();
 
 
                                         @foreach($markets as $market)
-                                            <div class="tab-pane p-3" id="{{$market->market_name}}" role="tabpanel">
+                                            <div class="tab-pane p-3" id="tab_{{$market->market_name}}" role="tabpanel">
                                                 <div  class="row input_buildinfo">
                                                     <div class="form-group col-lg-6">
                                                         <label for="name">Store Name ({{$market->market_name}}) </label>

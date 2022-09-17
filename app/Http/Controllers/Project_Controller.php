@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Intervention\Image\Facades\Image;
 
 class Project_Controller extends Controller
 {
@@ -71,7 +72,7 @@ class Project_Controller extends Controller
                 $logo = '<img class="rounded mx-auto d-block" width="100px" height="100px" src="assets\images\logo-sm.png">';
             }
 
-            $project    = '<span class="font-16 mt-0" style="line-height:0.5;font-weight: 500;"> '.$record->projectname.' </span>';
+            $project    = '<span class="h3 "> '.$record->projectname.' </span>';
             $template = '<span class="text-muted" style="line-height:0.5"> ('.$record->ma_template->template.') </span>';
             $version  = 'Version: <span class="text-muted" style="line-height:0.5"> '.$record->buildinfo_vernum .' | '.$record->buildinfo_verstr.' </span>';
 
@@ -92,36 +93,36 @@ class Project_Controller extends Controller
 
             foreach ($record->markets as $key=>$market){
                 if($market->pivot->package){
-                    $package .= '<span style="color:black;line-height:0.5"><img src="img/icon/'.$market->market_logo.'"> '.$market->pivot->package.'</span> <button onclick="copyPackage(this)" type="button" data-text="'.$market->pivot->package.'" class="btn btn-link waves-effect"><i class="mdi mdi-content-copy"></i></button><br>';
+                    $package .= '<p class="card-title-desc font-16"><img src="img/icon/'.$market->market_logo.'"> '.$market->pivot->package.'</p>';
 
                     $status = $market->pivot->status_app;
                     switch ($status){
                         case 0:
-                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-secondary"> Mặc định</p> </div>';
+                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-secondary font-16"> Mặc định</p> </div>';
                             break;
                         case 1:
-                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-success"> Publish</p></div>';
+                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-success font-16"> Publish</p></div>';
                             break;
                         case 2:
-                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-warning"> Suppend</p></div>';
+                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-warning font-16"> Suppend</p></div>';
                             break;
                         case 3:
-                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-info"> UnPublish</p></div>';
+                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-info font-16"> UnPublish</p></div>';
                             break;
                         case 4:
-                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-primary"> Remove</p></div>';
+                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-primary font-16"> Remove</p></div>';
                             break;
                         case 5:
-                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-dark"> Reject</p></div>';
+                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-dark font-16"> Reject</p></div>';
                             break;
                         case 6:
-                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-danger"> Check</p></div>';
+                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-danger font-16"> Check</p></div>';
                             break;
                         case 7:
-                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-warning"> Pending</p></div>';
+                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-warning font-16"> Pending</p></div>';
                             break;
                         default:
-                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-secondary"> Mặc định</p></div>';
+                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-secondary font-16"> Mặc định</p></div>';
                             break;
                     }
 
@@ -135,6 +136,7 @@ class Project_Controller extends Controller
             }
 
             $data_arr[] = array(
+                "projectid" => $record->projectid,
                 "logo" => $logo,
                 "projectname"=>$project.$template.'<br>'.$version.'<br>'.$sdk.'<br>'.$keystore,
                 "markets"=>$package,
@@ -155,11 +157,12 @@ class Project_Controller extends Controller
 
     public function create(Request $request){
 
+
         $rules = [
             'projectname' =>'required|unique:ngocphandang_project,projectname',
             'ma_da' => 'required|not_in:0',
             'template' => 'required|not_in:0',
-            'title_app' =>'required',
+
             'buildinfo_vernum' =>'required',
             'buildinfo_verstr' =>'required',
             'project_file' => 'mimes:zip',
@@ -168,7 +171,7 @@ class Project_Controller extends Controller
             'projectname.unique'=>'Tên Project đã tồn tại',
             'projectname.required'=>'Tên Project không để trống',
             'ma_da.required'=>'Mã dự án không để trống',
-            'template.required'=>'Mã template không để trống',
+
             'ma_da.not_in'=>'Mã dự án không để trống',
             'template.not_in'=>'Mã template không để trống',
             'title_app.required'=>'Tiêu đề ứng không để trống',
@@ -190,7 +193,7 @@ class Project_Controller extends Controller
         $data['template'] = $request->template;
         $data['ma_da'] = $request->ma_da;
         $data['title_app'] = $request->title_app;
-        $data['buildinfo_link_policy_x'] = $request->buildinfo_link_policy_x;
+//        $data['buildinfo_link_policy_x'] = $request->buildinfo_link_policy_x;
         $data['buildinfo_link_fanpage'] = $request->buildinfo_link_fanpage;
         $data['buildinfo_link_website'] =  $request->buildinfo_link_website;
         $data['buildinfo_link_youtube_x'] = $request->buildinfo_link_youtube_x;
@@ -212,8 +215,22 @@ class Project_Controller extends Controller
             $data['project_file'] = $file_name;
             $file->move($destinationPath, $file_name);
         }
+        if(isset($request->logo)){
+            $du_an = preg_split("/[-]+/",$request->projectname) ? preg_split("/[-]+/",$request->projectname)[0] : 'DA';
+            $path_logo = storage_path('app/public/projects/'.$du_an.'/'.$request->projectname.'/');
+            if (!file_exists($path_logo)) {
+                mkdir($path_logo, 777, true);
+            }
+            $file = $request->file('logo');
+            $img = Image::make($file->path());
+            $img->resize(512, 512)
+                ->save($path_logo.'lg.png',85);
+            $img->resize(114, 114)
+                ->save($path_logo.'lg114.png',85);
+            $data['logo'] = 'lg.png';
+        }
 
-//        dd($request->market);
+
         $inset_market = [];
 
         foreach ($request->market as $key=>$value){
@@ -232,22 +249,13 @@ class Project_Controller extends Controller
             }
         }
 
-
-
         $data->save();
         $data->markets()->attach($inset_market);
         return response()->json(['success'=>'Thành công']);
-
-
-
-
-
-
-
     }
 
     public function edit($id){
         $project = Project::find($id);
-        return response()->json($project);
+        return response()->json($project->load('markets','da','ma_template'));
     }
 }

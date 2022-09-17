@@ -30,6 +30,7 @@
                                 <thead>
                                 <tr>
                                     <th style="width: 10%">Logo</th>
+                                    <th style="width: 10%">Logo</th>
                                     <th style="width: 20%">Mã Project</th>
                                     <th style="width: 30%">Package</th>
                                     <th style="width: 30%">Trạng thái Ứng dụng | Policy</th>
@@ -90,6 +91,7 @@
                     type: "post"
                 },
                 columns: [
+                    {data: 'projectid', name: 'projectid'},
                     {data: 'logo', name: 'logo',orderable: false},
                     {data: 'projectname', name: 'projectname'},
                     {data: 'markets', name: 'markets'},
@@ -98,76 +100,14 @@
                     // {data: 'status', name: 'status',orderable: false},
                     {data: 'action', name: 'action',className: "text-center", orderable: false, searchable: false},
                 ],
-                // dom:
-                //     '<"d-flex justify-content-between mx-2 row mt-75"' +
-                //     // '<" col-sm-12 col-lg-4 d-flex justify-content-center justify-content-lg-start" l>' +
-                //     '<"button-items"B>'+
-                //     '<"col-sm-12 col-lg-4 ps-xl-75 ps-0"<" d-flex align-items-center justify-content-center justify-content-lg-end flex-lg-nowrap flex-wrap"<"me-1"f>>>' +
-                //     '>t' +
-                //     '<"d-flex justify-content-between mx-2 row mb-1"' +
-                //     '<"col-sm-12 col-md-3"l>' +
-                //     '<"col-sm-12 col-md-3"i>' +
-                //     '<"col-sm-12 col-md-6"p>' +
-                //     '>',
-
-                // buttons: [
-                //     {
-                //         text: 'Add New',
-                //         className: 'btn-success',
-                //         attr: {
-                //             'id' : 'createNewProject',
-                //         },
-                //         init: function (api, node, config) {
-                //             $(node).removeClass('btn-secondary');
-                //         }
-                //     },
-                //     {
-                //         text: 'Buil and Check',
-                //         className: 'btn btn-success ',
-                //         attr: {
-                //             'id' : 'buildandcheck',
-                //         },
-                //         init: function (api, node, config) {
-                //             $(node).removeClass('btn-secondary');
-                //         }
-                //     },
-                //     {
-                //         text: 'Status',
-                //         className: 'btn btn-success',
-                //         attr: {
-                //             'id' : 'dev_status',
-                //         },
-                //         init: function (api, node, config) {
-                //             $(node).removeClass('btn-secondary');
-                //         }
-                //     },
-                //     {
-                //         text: 'Keystore',
-                //         className: 'btn btn-success',
-                //         attr: {
-                //             'id' : 'change_keystore',
-                //         },
-                //         init: function (api, node, config) {
-                //             $(node).removeClass('btn-secondary');
-                //         }
-                //     },
-                //     {
-                //         text: 'SDK',
-                //         className: 'btn btn-success',
-                //         attr: {
-                //             'id' : 'change_sdk',
-                //         },
-                //         init: function (api, node, config) {
-                //             $(node).removeClass('btn-secondary');
-                //         }
-                //     }
-                // ],
-
-                // deferRender:    true,
-                // scrollY:       '78vh',
-                // scroller: true,
-                // scrollCollapse: true,
-                // order: [[ 2, 'desc' ]]
+                columnDefs: [
+                    {
+                        "targets": [ 0 ],
+                        "visible": false,
+                        "searchable": false
+                    }
+                ],
+                order: [[ 0, 'desc' ]]
             });
 
 
@@ -180,7 +120,9 @@
                 $('.modal').on('hidden.bs.modal', function (e) {
                     $('body').addClass('modal-open');
                 });
-                $('#projectForm').trigger("reset");
+                // $('#projectForm').trigger("reset");
+                $('#projectForm')[0].reset();
+
 
 
                 $('#template').select2(
@@ -207,10 +149,11 @@
                                     })
                                 };
                             },
-                            // cache: false
+                            cache: false
                         },
                     }
                 );
+
                 $('#ma_da').select2(
                     {
                         minimumInputLength: 2,
@@ -240,6 +183,31 @@
                         },
                     }
                 );
+                // $('#ma_da').val('').trigger('change');
+                // $('#template').val('').trigger('change');
+
+
+                <?php
+                $markets = \App\Models\Markets::all();
+                foreach ($markets as $market){
+                ?>
+                    $('#nav_{{$market->market_name}}').hide()
+                    $('#package_{{$market->market_name}}').hide()
+                    {{--$('#tab_{{$market->market_name}}').hide()--}}
+
+                    $('#tab_{{$market->market_name}}').removeClass( 'active' );
+{{--                    $('#nav_{{$market->market_name}}').removeClass( 'active' );--}}
+{{--                    $('#package_{{$market->market_name}}').removeClass( 'active' );--}}
+
+
+                <?php
+                }
+                ?>
+               //
+               //  $('#ma_da').val(null).trigger('change');
+               //  $('#template').val(null).trigger('change');
+
+
 
             });
 
@@ -312,8 +280,7 @@
                         if(data.{{ucfirst(strtolower($market->market_name))}}_category){
                             $('#nav_{{$market->market_name}}').show();
                             $('#package_{{$market->market_name}}').show();
-
-
+                            {{--$('#tab_{{$market->market_name}}').show()--}}
 
                             $('#{{$market->market_name}}_dev_id').select2(
                                 {
@@ -345,8 +312,6 @@
                                     },
                                 }
                             );
-
-
                         $('#{{$market->market_name}}_keystore').select2(
                             {
                                 minimumInputLength: 2,
@@ -386,6 +351,12 @@
 
             });
 
+            $(document).on('change', '.choose_da', function () {
+                var _text = $(this).select2('data')[0].text;
+                $('#projectname').val(_text+'-');
+
+            })
+
             $(document).on('change', '#buildinfo_vernum', function () {
                 var today = new Date();
                 var dd = String(today.getDate()).padStart(2, '0');
@@ -401,12 +372,116 @@
 
                 console.log(data)
 
-                $('#modelHeading').html("Edit Project");
+                $('#modelHeading').html("Edit Project " + data.projectname);
                 $('#saveBtn').val("edit-project");
                 $('#ajaxModel').modal('show');
                 $('.modal').on('hidden.bs.modal', function (e) {
                     $('body').addClass('modal-open');
                 });
+
+                $('#projectname').val(data.projectname)
+                $('#title_app').val(data.title_app)
+                $('#buildinfo_vernum').val(data.buildinfo_vernum)
+                $('#buildinfo_verstr').val(data.buildinfo_verstr)
+                $('#buildinfo_link_youtube_x').val(data.buildinfo_link_youtube_x)
+                $('#buildinfo_link_fanpage').val(data.buildinfo_link_fanpage)
+                $('#buildinfo_api_key_x').val(data.buildinfo_api_key_x)
+                $('#buildinfo_link_website').val(data.buildinfo_link_website)
+
+                if(data.logo) {
+                    $("#avatar").attr("src","../storage/projects/"+data.da.ma_da+"/"+data.projectname+"/lg114.png");
+                }else {
+                    $("#avatar").attr("src","img/logo.png");
+                }
+                if(data.data_onoff == 1){
+                    $("#data_online").prop('checked', true);
+                }else if (data.data_onoff == 2){
+                    $("#data_offline").prop('checked', true);
+                }else if (data.data_onoff == 3){
+                    $("#data_all").prop('checked', true);
+                }
+
+
+                <?php
+                    $markets = \App\Models\Markets::all();
+                    foreach ($markets as $market){
+                    ?>
+                if(data.ma_template.{{ucfirst(strtolower($market->market_name))}}_category){
+                    $('#nav_{{$market->market_name}}').show();
+                    $('#package_{{$market->market_name}}').show();
+                    {{--$('#tab_{{$market->market_name}}').show()--}}
+
+                    $('#{{$market->market_name}}_dev_id').select2(
+                        {
+                            minimumInputLength: 2,
+                            ajax: {
+                                url: '{{route('api.getDev')}}',
+                                dataType: 'json',
+                                type: "GET",
+                                // quietMillis: 50,
+                                data: function(params) {
+
+                                    return {
+                                        q: params.term, // search term
+                                        dev_id: {{$market->id}},
+                                        page: params.page
+                                    };
+                                },
+                                processResults: function(data) {
+                                    return {
+                                        results: $.map(data, function (item) {
+                                            return {
+                                                text: item.name + ' : ' + item.store,
+                                                id: item.id
+                                            }
+                                        })
+                                    };
+                                },
+                                // cache: false
+                            },
+                        }
+                    );
+                    $('#{{$market->market_name}}_keystore').select2(
+                        {
+                            minimumInputLength: 2,
+                            ajax: {
+                                url: '{{route('api.getKeystore')}}',
+                                dataType: 'json',
+                                type: "GET",
+                                // quietMillis: 50,
+                                data: function(params) {
+                                    return {
+                                        q: params.term, // search term
+                                        page: params.page
+                                    };
+                                },
+                                processResults: function(data) {
+                                    return {
+                                        results: $.map(data, function (item) {
+                                            return {
+                                                text: item.name,
+                                                id: item.name
+                                            }
+                                        })
+                                    };
+                                },
+                                // cache: false
+                            },
+                        }
+                    );
+                }else {
+                    $('#nav_{{$market->market_name}}').hide()
+                    $('#package_{{$market->market_name}}').hide()
+                }
+                <?php
+                }
+                ?>
+
+                $('#template').val(data.template);
+                $('#template').select2();
+
+
+
             })
         }
     </script>
