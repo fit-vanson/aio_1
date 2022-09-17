@@ -61,7 +61,8 @@
     <script src="{{ URL::asset('/assets/libs/sweetalert2/sweetalert2.min.js') }}"></script>
     <script src="{{ URL::asset('/assets/js/table.init.js') }}"></script>
 
-    <script src="plugins/select2/js/select2.min.js"></script>
+{{--    <script src="plugins/select2/js/select2.min.js"></script>--}}
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <script>
         $(function () {
@@ -125,6 +126,7 @@
 
 
 
+                $('#template').select2().empty()
                 $('#template').select2(
                     {
                         minimumInputLength: 2,
@@ -154,6 +156,7 @@
                     }
                 );
 
+                $('#ma_da').select2().empty()
                 $('#ma_da').select2(
                     {
                         minimumInputLength: 2,
@@ -183,8 +186,9 @@
                         },
                     }
                 );
-                // $('#ma_da').val('').trigger('change');
+
                 // $('#template').val('').trigger('change');
+
 
 
                 <?php
@@ -263,7 +267,7 @@
                                 $.notify(data.success, "success");
                                 $('#projectForm2').trigger("reset");
                                 $('#ajaxModel').modal('hide');
-                                // table.draw();
+                                table.draw();
                             }
                         },
                     });
@@ -280,7 +284,7 @@
                         if(data.{{ucfirst(strtolower($market->market_name))}}_category){
                             $('#nav_{{$market->market_name}}').show();
                             $('#package_{{$market->market_name}}').show();
-                            {{--$('#tab_{{$market->market_name}}').show()--}}
+                            $('#tab_{{$market->market_name}}').show()
 
                             $('#{{$market->market_name}}_dev_id').select2(
                                 {
@@ -370,8 +374,6 @@
         function editProject(id) {
             $.get('{{asset('project/edit')}}/'+id,function (data) {
 
-                console.log(data)
-
                 $('#modelHeading').html("Edit Project " + data.projectname);
                 $('#saveBtn').val("edit-project");
                 $('#ajaxModel').modal('show');
@@ -379,6 +381,7 @@
                     $('body').addClass('modal-open');
                 });
 
+                $('#project_id').val(data.projectid)
                 $('#projectname').val(data.projectname)
                 $('#title_app').val(data.title_app)
                 $('#buildinfo_vernum').val(data.buildinfo_vernum)
@@ -387,6 +390,8 @@
                 $('#buildinfo_link_fanpage').val(data.buildinfo_link_fanpage)
                 $('#buildinfo_api_key_x').val(data.buildinfo_api_key_x)
                 $('#buildinfo_link_website').val(data.buildinfo_link_website)
+
+
 
                 if(data.logo) {
                     $("#avatar").attr("src","../storage/projects/"+data.da.ma_da+"/"+data.projectname+"/lg114.png");
@@ -400,7 +405,10 @@
                 }else if (data.data_onoff == 3){
                     $("#data_all").prop('checked', true);
                 }
-
+                var markets = [];
+                $.each(data.markets ,function( index, value ) {
+                    markets[value.pivot.market_id] = value.pivot;
+                });
 
                 <?php
                     $markets = \App\Models\Markets::all();
@@ -469,6 +477,22 @@
                             },
                         }
                     );
+                    if ((markets[{{$market->id}}])){
+                        $('#market_{{$market->id}}_package').val(markets[{{$market->id}}].package)
+                        $('#market_{{$market->id}}_app_link').val(markets[{{$market->id}}].app_link)
+                        $('#market_{{$market->id}}_policy_link').val(markets[{{$market->id}}].policy_link)
+                        $('#market_{{$market->id}}_app_id').val(markets[{{$market->id}}].appID)
+                        $('#market_{{$market->id}}_app_name_x').val(markets[{{$market->id}}].app_name_x)
+                        $('#market_{{$market->id}}_sdk').val(markets[{{$market->id}}].sdk)
+                        $('#market_{{$market->id}}_video_link').val(markets[{{$market->id}}].video_link)
+
+                        var ads = markets[{{$market->id}}].ads;
+                        var result = JSON.parse(ads)
+
+                        $.each(result ,function( index, value ) {
+                            $('#market_{{$market->id}}_'+index).val(value)
+                        });
+                    }
                 }else {
                     $('#nav_{{$market->market_name}}').hide()
                     $('#package_{{$market->market_name}}').hide()
@@ -477,13 +501,168 @@
                 }
                 ?>
 
-                $('#template').val(data.template);
-                $('#template').select2();
 
+                // $('#template').select2().empty()
 
+                $('#template').select2(
+                    {
+                        minimumInputLength: 2,
+                        ajax: {
+                            url: '{{route('api.getTemplate')}}',
+                            dataType: 'json',
+                            type: "GET",
+                            // quietMillis: 50,
+                            data: function(params) {
+                                return {
+                                    q: params.term, // search term
+                                    page: params.page
+                                };
+                            },
+                            processResults: function(data) {
+                                return {
+                                    results: $.map(data, function (item) {
+                                        return {
+                                            text: item.name,
+                                            id: item.id
+                                        }
+                                    })
+                                };
+                            },
+                        },
+                        initSelection : function (element, callback) {
+                            var id = 9942;//$(element).val();
+                            alert('initSelection');
+                        }
+                    }
+                );
 
-            })
+                $('#ma_da').select2().empty()
+                $('#ma_da').select2(
+                    {
+                        minimumInputLength: 2,
+                        ajax: {
+                            url: '{{route('api.getDa')}}',
+                            dataType: 'json',
+                            type: "GET",
+                            // quietMillis: 50,
+                            data: function(params) {
+
+                                return {
+                                    q: params.term, // search term
+                                    page: params.page
+                                };
+                            },
+                            processResults: function(data) {
+                                return {
+                                    results: $.map(data, function (item) {
+                                        return {
+                                            text: item.name,
+                                            id: item.id
+                                        }
+                                    })
+                                };
+                            },
+                            // cache: false
+                        },
+                    }
+                );
+            });
         }
+
+        $("#AddDaForm").submit(function (e) {
+            e.preventDefault();
+            let data = new FormData(document.getElementById('AddDaForm'));
+            $.ajax({
+                url:"{{route('da.create')}}",
+                type: "post",
+                data:data,
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                beForeSend : () => {
+                },
+                success:function (data) {
+                    if(data.errors){
+                        for( var count=0 ; count <data.errors.length; count++){
+                            $("#AddDaForm").notify(
+                                data.errors[count],"error",
+                                { position:"right" }
+                            );
+                        }
+                    }
+                    $.notify(data.success, "success");
+                    $('#AddDaForm').trigger("reset");
+                    $('#addMaDa').modal('hide');
+
+                    // if(typeof data.du_an == 'undefined'){
+                    //     data.du_an = {};
+                    // }
+                    // if(typeof rebuildMadaOption == 'function'){
+                    //     rebuildMadaOption(data.du_an)
+                    // }
+                }
+            });
+
+        });
+        $("#AddTempForm").submit(function (e) {
+            e.preventDefault();
+            let data = new FormData(document.getElementById('AddTempForm'));
+            $.ajax({
+                url:"{{route('template.create')}}",
+                type: "post",
+                data:data,
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                beForeSend : () => {
+                },
+                success:function (data) {
+
+                    if(data.errors){
+                        for( var count=0 ; count <data.errors.length; count++){
+                            $("#AddTempForm").notify(
+                                data.errors[count],"error",
+                                { position:"right" }
+                            );
+                        }
+                    }
+                    $.notify(data.success, "success");
+                    $('#AddTempForm').trigger("reset");
+                    $('#addTemplate').modal('hide');
+
+                }
+            });
+
+        });
+        $("#keystoreForm").submit(function (e) {
+            e.preventDefault();
+            let data = new FormData(document.getElementById('keystoreForm'));
+            $.ajax({
+                url:"{{route('keystore.create')}}",
+                type: "post",
+                data:data,
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                beForeSend : () => {
+                },
+                success:function (data) {
+                    if(data.errors){
+                        for( var count=0 ; count <data.errors.length; count++){
+                            $("#keystoreForm").notify(
+                                data.errors[count],"error",
+                                { position:"right" }
+                            );
+                        }
+                    }
+                    $.notify(data.success, "success");
+                    $('#keystoreForm').trigger("reset");
+                    $('#addKeystore').modal('hide');
+                }
+            });
+
+        });
+
     </script>
 
 @endsection

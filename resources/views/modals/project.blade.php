@@ -11,7 +11,7 @@ $markets = \App\Models\Markets::all();
             <div class="modal-body">
                 <form id="projectForm" name="projectForm" class="form-horizontal" enctype="multipart/form-data">
                     <input type="hidden" name="project_id" id="project_id">
-                    <input type="hidden" name="buildinfo_console" id="buildinfo_console">
+{{--                    <input type="hidden" name="buildinfo_console" id="buildinfo_console">--}}
 
                     <div class="row">
                         <div class="col-lg-12">
@@ -137,7 +137,7 @@ $markets = \App\Models\Markets::all();
                                                 <div class="row"  id="package_{{$market->market_name}}">
                                                     <div class="col-lg-12">
                                                         <h4 class="mt-0 header-title">Package {{$market->market_name}}</h4>
-                                                        <input type="text" id="{{$market->market_name}}_package_input" name="market[{{$market->id}}][package]" class="form-control">
+                                                        <input type="text" id="market_{{$market->id}}_package" name="market[{{$market->id}}][package]" class="form-control">
                                                         <div id="accordion">
                                                             <div class="card mb-1">
                                                                 <div class="card-header p-3" id="headingOne">
@@ -156,27 +156,27 @@ $markets = \App\Models\Markets::all();
                                                                         </div>
                                                                         <div class="row">
                                                                             <div class="form-group col-sm-4">
-                                                                                <input type="text" id="{{$market->market_name}}_ads_id" name="market[{{$market->id}}][ads][ads_id]" placeholder="id"  class="form-control"/>
+                                                                                <input type="text" id="market_{{$market->id}}_ads_id" name="market[{{$market->id}}][ads][ads_id]" placeholder="id"  class="form-control"/>
                                                                             </div>
 
                                                                             <div class="form-group col-sm-4">
-                                                                                <input type="text" id="{{$market->market_name}}_ads_banner" name="market[{{$market->id}}][ads][ads_banner]" placeholder="banner"   class="form-control"/>
+                                                                                <input type="text" id="market_{{$market->id}}_ads_banner" name="market[{{$market->id}}][ads][ads_banner]" placeholder="banner"   class="form-control"/>
                                                                             </div>
 
                                                                             <div class="form-group col-sm-4">
-                                                                                <input type="text" id="{{$market->market_name}}_ads_inter" name="market[{{$market->id}}][ads][ads_inter]" placeholder="inter"   class="form-control">
+                                                                                <input type="text" id="market_{{$market->id}}_ads_inter" name="market[{{$market->id}}][ads][ads_inter]" placeholder="inter"   class="form-control">
                                                                             </div>
 
                                                                             <div class="form-group col-sm-4">
-                                                                                <input type="text" id="{{$market->market_name}}_ads_reward" name="market[{{$market->id}}][ads][ads_reward]" placeholder="reward"   class="form-control"/>
+                                                                                <input type="text" id="market_{{$market->id}}_ads_reward" name="market[{{$market->id}}][ads][ads_reward]" placeholder="reward"   class="form-control"/>
                                                                             </div>
 
                                                                             <div class="form-group col-sm-4">
-                                                                                <input type="text" id="{{$market->market_name}}_ads_native" name="market[{{$market->id}}][ads][ads_native]" placeholder="native"   class="form-control"/>
+                                                                                <input type="text" id="market_{{$market->id}}_ads_native" name="market[{{$market->id}}][ads][ads_native]" placeholder="native"   class="form-control"/>
                                                                             </div>
 
                                                                             <div class="form-group col-sm-4">
-                                                                                <input type="text" id="{{$market->market_name}}_ads_open" name="market[{{$market->id}}][ads][ads_open]" placeholder="open"   class="form-control"/>
+                                                                                <input type="text" id="market_{{$market->id}}_ads_open" name="market[{{$market->id}}][ads][ads_open]" placeholder="open"   class="form-control"/>
                                                                             </div>
                                                                         </div>
                                                                         <div class="divider">
@@ -184,7 +184,7 @@ $markets = \App\Models\Markets::all();
                                                                         </div>
                                                                         <div class="row" >
                                                                             <div class="col-sm">
-                                                                                <input type="text" id="{{$market->market_name}}_ads_start" name="market[{{$market->id}}][ads][ads_start]" placeholder="start"  class="form-control" />
+                                                                                <input type="text" id="market_{{$market->id}}_ads_start" name="market[{{$market->id}}][ads][ads_start]" placeholder="start"  class="form-control" />
                                                                             </div>
                                                                         </div>
                                                                         <div class="divider">
@@ -192,26 +192,26 @@ $markets = \App\Models\Markets::all();
                                                                         </div>
                                                                         <div class="row" >
                                                                             <div class="form-group col-sm-4">
-                                                                                <input type="text" id="{{$market->market_name}}_ads_banner_huawei" name="market[{{$market->id}}][ads][ads_banner_huawei]" placeholder="banner"   class="form-control"/>
+                                                                                <input type="text" id="market_{{$market->id}}_ads_banner_huawei" name="market[{{$market->id}}][ads][ads_banner_huawei]" placeholder="banner"   class="form-control"/>
                                                                             </div>
 
                                                                             <div class="form-group col-sm-4">
-                                                                                <input type="text" id="{{$market->market_name}}_ads_inter_huawei" name="market[{{$market->id}}][ads][ads_inter_huawei]" placeholder="inter"   class="form-control"/>
+                                                                                <input type="text" id="market_{{$market->id}}_ads_inter_huawei" name="market[{{$market->id}}][ads][ads_inter_huawei]" placeholder="inter"   class="form-control"/>
                                                                             </div>
 
                                                                             <div class="form-group col-sm-4">
-                                                                                <input type="text" id="{{$market->market_name}}_ads_reward_huawei" name="market[{{$market->id}}][ads][ads_reward_huawei]" placeholder="reward"   class="form-control" />
+                                                                                <input type="text" id="market_{{$market->id}}_ads_reward_huawei" name="market[{{$market->id}}][ads][ads_reward_huawei]" placeholder="reward"   class="form-control" />
                                                                             </div>
 
                                                                             <div class="form-group col-sm-4">
-                                                                                <input type="text" id="{{$market->market_name}}_ads_native_huawei" name="market[{{$market->id}}][ads][ads_native_huawei]" placeholder="native"   class="form-control"/>
+                                                                                <input type="text" id="market_{{$market->id}}_ads_native_huawei" name="market[{{$market->id}}][ads][ads_native_huawei]" placeholder="native"   class="form-control"/>
                                                                             </div>
 
                                                                             <div class="form-group col-sm-4">
-                                                                                <input type="text" id="{{$market->market_name}}_ads_splash_huawei" name="market[{{$market->id}}][ads][ads_splash_huawei]" placeholder="splash"   class="form-control" />
+                                                                                <input type="text" id="market_{{$market->id}}_ads_splash_huawei" name="market[{{$market->id}}][ads][ads_splash_huawei]" placeholder="splash"   class="form-control" />
                                                                             </div>
                                                                             <div class="form-group col-sm-4">
-                                                                                <input type="text" id="{{$market->market_name}}_ads_roll_huawei" name="market[{{$market->id}}][ads][ads_roll_huawei]" placeholder="roll"   class="form-control"/>
+                                                                                <input type="text" id="market_{{$market->id}}_ads_roll_huawei" name="market[{{$market->id}}][ads][ads_roll_huawei]" placeholder="roll"   class="form-control"/>
                                                                             </div>
                                                                         </div>
 
@@ -249,49 +249,33 @@ $markets = \App\Models\Markets::all();
                                                                 </button>
                                                             </div>
                                                         </div>
-                                                        {{--                                                    <input type="text" id="Chplay_keystore_profile" name="Chplay_keystore_profile" class="form-control" >--}}
                                                     </div>
-{{--                                                    <div class="form-group col-lg-6">--}}
-{{--                                                        <label for="name">Trạng thái Ứng dụng</label>--}}
-{{--                                                        <div>--}}
-{{--                                                            <select class="form-control" id="Chplay_status" name="Chplay_status">--}}
-{{--                                                                <option value="0">Mặc định</option>--}}
-{{--                                                                <option value="1">Publish</option>--}}
-{{--                                                                <option value="2">Suppend</option>--}}
-{{--                                                                <option value="3">UnPublish</option>--}}
-{{--                                                                <option value="4">Remove</option>--}}
-{{--                                                                <option value="5">Reject</option>--}}
-{{--                                                                <option value="6">Check</option>--}}
-{{--                                                            </select>--}}
-{{--                                                        </div>--}}
-{{--                                                    </div>--}}
-
                                                     <div class="form-group col-lg-6">
                                                         <label for="name">Link App</label>
-                                                        <input type="text" id="{{$market->market_name}}_app_link" name="market[{{$market->id}}][app_link]" class="form-control" >
+                                                        <input type="text" id="market_{{$market->id}}_app_link" name="market[{{$market->id}}][app_link]" class="form-control" >
                                                     </div>
                                                     <div class="form-group col-lg-6 ">
                                                         <label for="name">Link Policy</label>
-                                                        <input type="text" id="{{$market->market_name}}_policy_link" name="market[{{$market->id}}][policy_link]" class="form-control" >
+                                                        <input type="text" id="market_{{$market->id}}_policy_link" name="market[{{$market->id}}][policy_link]" class="form-control" >
                                                     </div>
 
                                                     <div class="form-group col-lg-6">
                                                         <label for="name">AppID</label>
-                                                        <input type="text" id="{{$market->market_name}}_app_id" name="market[{{$market->id}}][appID]" class="form-control" >
+                                                        <input type="text" id="market_{{$market->id}}_app_id" name="market[{{$market->id}}][appID]" class="form-control" >
                                                     </div>
 
                                                     <div class="form-group col-lg-6">
                                                         <label for="name">App Name X</label>
-                                                        <input type="text" id="{{$market->market_name}}_app_name_x" name="market[{{$market->id}}][app_name_x]" class="form-control" >
+                                                        <input type="text" id="market_{{$market->id}}_app_name_x" name="market[{{$market->id}}][app_name_x]" class="form-control" >
                                                     </div>
 
                                                     <div class="form-group col-lg-6 ">
                                                         <label for="name">SDK</label>
-                                                        <input type="text" id="{{$market->market_name}}_sdk" name="market[{{$market->id}}][sdk]" class="form-control" >
+                                                        <input type="text" id="market_{{$market->id}}_sdk" name="market[{{$market->id}}][sdk]" class="form-control" >
                                                     </div>
                                                     <div class="form-group col-lg-6 ">
                                                         <label for="name">Link Video</label>
-                                                        <input type="text" id="{{$market->market_name}}_video_link" name="market[{{$market->id}}][video_link]" class="form-control" >
+                                                        <input type="text" id="market_{{$market->id}}_video_link" name="market[{{$market->id}}][video_link]" class="form-control" >
                                                     </div>
                                                 </div>
                                             </div>

@@ -2260,6 +2260,7 @@
             });
 
         });
+
         $('.choose_template').change(function (){
             var template = $(this).val();
             var _token = $('input[name=_token]').val();

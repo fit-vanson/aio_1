@@ -72,7 +72,7 @@ class Project_Controller extends Controller
                 $logo = '<img class="rounded mx-auto d-block" width="100px" height="100px" src="assets\images\logo-sm.png">';
             }
 
-            $project    = '<span class="h3 "> '.$record->projectname.' </span>';
+            $project    = '<span class="h3 font-16 "> '.$record->projectname.' </span>';
             $template = '<span class="text-muted" style="line-height:0.5"> ('.$record->ma_template->template.') </span>';
             $version  = 'Version: <span class="text-muted" style="line-height:0.5"> '.$record->buildinfo_vernum .' | '.$record->buildinfo_verstr.' </span>';
 
@@ -185,18 +185,15 @@ class Project_Controller extends Controller
             return response()->json(['errors'=> $error->errors()->all()]);
         }
 
-
-
         $data = new Project();
-
         $data['projectname'] = $request->projectname;
         $data['template'] = $request->template;
         $data['ma_da'] = $request->ma_da;
         $data['title_app'] = $request->title_app;
-//        $data['buildinfo_link_policy_x'] = $request->buildinfo_link_policy_x;
+
         $data['buildinfo_link_fanpage'] = $request->buildinfo_link_fanpage;
         $data['buildinfo_link_website'] =  $request->buildinfo_link_website;
-//        $data['buildinfo_link_youtube_x'] = $request->buildinfo_link_youtube_x;
+
         $data['buildinfo_api_key_x'] = $request->buildinfo_api_key_x;
         $data['buildinfo_console'] = 0;
         $data['buildinfo_vernum' ]= $request->buildinfo_vernum;
@@ -258,5 +255,104 @@ class Project_Controller extends Controller
     public function edit($id){
         $project = Project::find($id);
         return response()->json($project->load('markets','da','ma_template'));
+    }
+
+    public function update(Request $request){
+
+        $id = $request->project_id;
+        $rules = [
+            'projectname' =>'unique:ngocphandang_project,projectname,'.$id.',projectid',
+//            'ma_da' => 'required',
+//            'template' => 'required',
+//            'title_app' =>'required',
+            'buildinfo_vernum' =>'required',
+            'buildinfo_verstr' =>'required',
+            'project_file' => 'mimes:zip',
+        ];
+        $message = [
+            'projectname.unique'=>'Tên Project đã tồn tại',
+            'projectname.required'=>'Tên Project không để trống',
+//            'ma_da.required'=>'Mã dự án không để trống',
+//            'template.required'=>'Mã template không để trống',
+//            'title_app.required'=>'Tiêu đề ứng không để trống',
+            'buildinfo_vernum.required'=>'Version Number không để trống',
+            'buildinfo_verstr.required'=>'Version String không để trống',
+            'project_file.mimes'=>'*.zip',
+        ];
+
+        $error = Validator::make($request->all(),$rules, $message );
+
+        if($error->fails()){
+            return response()->json(['errors'=> $error->errors()->all()]);
+        }
+
+
+        $data = Project::find($id)->load('markets');
+        $data->template = $request->template ? $request->template : $data->template ;
+        $data->ma_da = $request->ma_da ? $request->ma_da : $data->ma_da ;
+        $data->title_app = $request->title_app;
+
+        $data['buildinfo_link_fanpage'] = $request->buildinfo_link_fanpage;
+        $data['buildinfo_link_website'] =  $request->buildinfo_link_website;
+
+        $data['buildinfo_api_key_x'] = $request->buildinfo_api_key_x;
+        $data['buildinfo_console'] = 0;
+        $data['buildinfo_vernum' ]= $request->buildinfo_vernum;
+        $data['buildinfo_verstr'] = $request->buildinfo_verstr;
+        $data['data_onoff'] = $request->data_status ? (int)  $request->data_status :0;
+
+
+
+        if($request->project_file){
+            $du_an = preg_split("/[-]+/",$request->projectname) ? preg_split("/[-]+/",$request->projectname)[0] : 'DA';
+            $destinationPath = storage_path('app/public/projects/'.$du_an.'/'.$request->projectname.'/');
+            if (!file_exists($destinationPath)) {
+                mkdir($destinationPath, 0777, true);
+            }
+            $file = $request->project_file;
+            $extension = $file->getClientOriginalExtension();
+            $file_name = 'DATA'.'.'.$extension;
+            $data['project_file'] = $file_name;
+            $file->move($destinationPath, $file_name);
+        }
+        if(isset($request->logo)){
+            $du_an = preg_split("/[-]+/",$request->projectname) ? preg_split("/[-]+/",$request->projectname)[0] : 'DA';
+            $path_logo = storage_path('app/public/projects/'.$du_an.'/'.$request->projectname.'/');
+            if (!file_exists($path_logo)) {
+                mkdir($path_logo, 777, true);
+            }
+            $file = $request->file('logo');
+            $img = Image::make($file->path());
+            $img->resize(512, 512)
+                ->save($path_logo.'lg.png',85);
+            $img->resize(114, 114)
+                ->save($path_logo.'lg114.png',85);
+            $data['logo'] = 'lg.png';
+        }
+        $inset_market = [];
+
+
+
+        foreach ($request->market as $key=>$value){
+            if($value['package']){
+                $inset_market[$key] = [
+                    'package' => $value['package'],
+                    'dev_id' => $value['dev_id'],
+                    'keystore' => $value['keystore'],
+                    'sdk' => $value['sdk'],
+                    'app_link' => $value['app_link'],
+                    'policy_link' => $value['policy_link'],
+                    'ads' => json_encode($value['ads']),
+                    'app_name_x' => $value['app_name_x'],
+                    'appID' => $value['appID'],
+                    'video_link' => $value['video_link'],
+                ];
+            }
+        }
+
+        $data->save();
+        $data->markets()->sync($inset_market);
+        return response()->json(['success'=>'Thành công']);
+
     }
 }
