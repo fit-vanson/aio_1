@@ -357,6 +357,34 @@ class Project_Controller extends Controller
 
     public function delete($id){
         $project = Project::find($id);
-        dd($project);
+//        $path =   public_path('uploads/project/').$project->projectname;
+//        $this->deleteDirectory($path_image);
+        $project->markets()->delete();
+        $project->lang()->delete();
+        $project->delete();
+        return response()->json(['success'=>'Xóa thành công.']);
+
+    }
+    function deleteDirectory($dir) {
+        if (!file_exists($dir)) {
+            return true;
+        }
+
+        if (!is_dir($dir)) {
+            return unlink($dir);
+        }
+
+        foreach (scandir($dir) as $item) {
+            if ($item == '.' || $item == '..') {
+                continue;
+            }
+
+            if (!$this->deleteDirectory($dir . DIRECTORY_SEPARATOR . $item)) {
+                return false;
+            }
+
+        }
+
+        return rmdir($dir);
     }
 }

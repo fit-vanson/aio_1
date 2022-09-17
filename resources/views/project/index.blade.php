@@ -404,16 +404,16 @@
 
             $(document).on('click','.deleteProject', function (data){
                 var project_id = $(this).data("id");
-                swal({
-                        title: "Bạn có chắc muốn xóa?",
-                        text: "Your will not be able to recover this imaginary file!",
-                        type: "warning",
-                        showCancelButton: true,
-                        confirmButtonClass: "btn-danger",
-                        confirmButtonText: "Xác nhận xóa!",
-                        closeOnConfirm: false
-                    },
-                    function(){
+                // swal({
+                //         title: "Bạn có chắc muốn xóa?",
+                //         text: "Your will not be able to recover this imaginary file!",
+                //         type: "warning",
+                //         showCancelButton: true,
+                //         confirmButtonClass: "btn-danger",
+                //         confirmButtonText: "Xác nhận xóa!",
+                //         closeOnConfirm: false
+                //     },
+                //     function(){
                         $.ajax({
                             type: "get",
                             url: "{{ asset("project/delete") }}/" + project_id,
@@ -424,8 +424,8 @@
                                 console.log('Error:', data);
                             }
                         });
-                        swal("Đã xóa!", "Your imaginary file has been deleted.", "success");
-                    });
+                        // swal("Đã xóa!", "Your imaginary file has been deleted.", "success");
+                    // });
             });
         });
 
