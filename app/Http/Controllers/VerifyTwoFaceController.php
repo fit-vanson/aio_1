@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use PragmaRX\Google2FA\Google2FA;
 
 class VerifyTwoFaceController extends Controller
 {
@@ -36,4 +37,13 @@ class VerifyTwoFaceController extends Controller
         session(["2fa_verified" => true]);
         return response()->json(['success'=>'Đăng nhập thành công.']);
     }
+
+    public function fa(){
+        $secret = $_GET['secret'];
+        $googleAuthenticator =  new Google2FA();
+        return $googleAuthenticator->getCurrentOtp($secret);
+
+    }
+
+
 }
