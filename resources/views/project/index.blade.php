@@ -28,7 +28,7 @@
                                        style="width: 100%;">
                                 <thead>
                                 <tr>
-                                    <th style="width: 10%">Logo</th>
+
                                     <th style="width: 10%">Logo</th>
                                     <th style="width: 20%">Mã Project</th>
                                     <th style="width: 30%">Package</th>
@@ -145,7 +145,7 @@
                     type: "post"
                 },
                 columns: [
-                    {data: 'projectid', name: 'projectid'},
+
                     {data: 'logo', name: 'logo',orderable: false},
                     {data: 'projectname', name: 'projectname'},
                     {data: 'markets', name: 'markets'},
@@ -154,13 +154,13 @@
                     // {data: 'status', name: 'status',orderable: false},
                     {data: 'action', name: 'action',className: "text-center", orderable: false, searchable: false},
                 ],
-                columnDefs: [
-                    {
-                        "targets": [ 0 ],
-                        "visible": false,
-                        "searchable": false
-                    }
-                ],
+                // columnDefs: [
+                //     {
+                //         "targets": [ 0 ],
+                //         "visible": false,
+                //         "searchable": false
+                //     }
+                // ],
                 order: [[ 0, 'desc' ]]
             });
 
