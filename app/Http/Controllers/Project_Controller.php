@@ -66,27 +66,29 @@ class Project_Controller extends Controller
             }
             $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$record->projectid.'" data-original-title="Delete" class="btn btn-danger deleteProject"><i class="ti-trash"></i></a>';
 
-
-
+            $mada =  $template = '';
+            if($record->da){
+                $mada = $record->da->ma_da;
+            }
+            if($record->ma_template){
+                $template = $record->ma_template->template;
+            }
             if(isset($record->logo)){
-                $logo = '<img class="rounded mx-auto d-block"  width="100px"  height="100px"  src="'.url('storage/projects/'.$record->da->ma_da.'/'.$record->projectname.'/lg114.png').'">';
+                $logo = '<img class="rounded mx-auto d-block"  width="100px"  height="100px"  src="'.url('storage/projects/'.$mada.'/'.$record->projectname.'/lg114.png').'">';
             }else{
                 $logo = '<img class="rounded mx-auto d-block" width="100px" height="100px" src="assets\images\logo-sm.png">';
             }
 
             $project    = '<span class="h3 font-16 "> '.$record->projectname.' </span>';
-//            $template = '<span class="text-muted" style="line-height:0.5"> ('.$record->ma_template->template.') </span>';
-            $template = '';
-//            $mada = '<span class="" style="line-height:0.5"> - '.$record->da->ma_da.'</span>';
-            $mada = '';
+            $template = '<span class="text-muted" style="line-height:0.5"> ('.$template.') </span>';
+            $mada = '<span class="" style="line-height:0.5"> - '.$mada.'</span>';
+
             $version  = 'Version: <span class="text-muted" style="line-height:0.5"> '.$record->buildinfo_vernum .' | '.$record->buildinfo_verstr.' </span>';
 
             $package = $status_app =  '';
             $keystore = 'Key: ';
             $sdk = 'SDK : <span class="badge badge-secondary" style="font-size: 12px">'.$record->buildinfo_keystore.'</span>';
-//            dd($record->markets);
             $badges = [
-
                 'primary',
                 'success',
                 'info',
