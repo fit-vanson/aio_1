@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Keystore;
+use App\Models\Markets;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -333,8 +335,6 @@ class Project_Controller extends Controller
             $data['logo'] = 'lg.png';
         }
         $inset_market = [];
-
-
         foreach ($request->market as $key=>$value){
             if($value['package']){
                 $inset_market[$key] = [
@@ -362,12 +362,13 @@ class Project_Controller extends Controller
         $project = Project::find($id);
 //        $path =   public_path('uploads/project/').$project->projectname;
 //        $this->deleteDirectory($path_image);
-        $project->markets()->delete();
-        $project->lang()->delete();
+        $project->markets()->sync([]);
+        $project->lang()->sync([]);
         $project->delete();
         return response()->json(['success'=>'Xóa thành công.']);
 
     }
+
     function deleteDirectory($dir) {
         if (!file_exists($dir)) {
             return true;
@@ -415,5 +416,69 @@ class Project_Controller extends Controller
                 ]);
         }
         return response()->json(['success'=>'Cập nhật thành công']);
+    }
+
+    public function updateMultiple(Request $request){
+        $data = explode("\r\n",$request->changeMultiple);
+        $markets = Markets::all()->pluck('id')->toArray();
+        $action = $request->action;
+        foreach ($data as $item){
+            try {
+                [$ID_Project, $Key_C, $Key_A, $Key_S, $Key_X, $Key_O, $Key_V, $Key_H ] = explode("|",$item);
+
+                $store = [
+                    $Key_C, $Key_A, $Key_S, $Key_X, $Key_O, $Key_V, $Key_H
+                ];
+                $insert = [];
+
+
+                $project = Project::where('projectname',trim($ID_Project))->firstorfail()->load('markets');
+
+                switch ($action){
+                    case 'keystore':
+                        foreach ($markets as $key=>$market){
+                            $insert[$market] = ['keystore'=>$store[$key]];
+                        }
+
+                        $project->markets()->sync($insert);
+
+                        Keystore::updateorcreate([
+                            'name_keystore' => $Key_C
+                        ]);
+                        Keystore::updateorcreate([
+                            'name_keystore' => $Key_A
+                        ]);
+                        Keystore::updateorcreate([
+                            'name_keystore' => $Key_S
+                        ]);
+                        Keystore::updateorcreate([
+                            'name_keystore' => $Key_X
+                        ]);
+                        Keystore::updateorcreate([
+                            'name_keystore' => $Key_O
+                        ]);
+                        Keystore::updateorcreate([
+                            'name_keystore' => $Key_V
+                        ]);
+                        Keystore::updateorcreate([
+                            'name_keystore' => $Key_H
+                        ]);
+                        break;
+                    case 'sdk':
+                        foreach ($markets as $key=>$market){
+                            $insert[$market] = ['sdk'=>$store[$key]];
+                        }
+                        $project->markets()->sync($insert);
+                        break;
+                }
+
+
+            }catch (\Exception $exception) {
+                \Illuminate\Support\Facades\Log::error('Message:' . $exception->getMessage() . '--- chang key : ' . $exception->getLine());
+            }
+        }
+
+        return response()->json(['success'=>'Cập nhật thành công ']);
+
     }
 }

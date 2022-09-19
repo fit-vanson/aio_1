@@ -486,6 +486,56 @@
                 }
 
             });
+
+            $('#changeMultipleForm button').click(function (event){
+                event.preventDefault();
+                if($('#changeMultipleBtn').val() == 'change_keystore'){
+                    $.ajax({
+                        data: $('#changeMultipleForm').serialize(),
+                        url: "{{ route('project.updateMultiple')}}?action=keystore",
+                        type: "post",
+                        dataType: 'json',
+                        success: function (data) {
+                            console.log(data)
+                            if(data.errors){
+                                $.notify(data.errors, "error");
+                            }
+                            if(data.success){
+                                $.notify(data.success, "success");
+                                $('#changeMultipleForm').trigger("reset");
+                                $('#changeMultiple').modal('hide');
+                                table.draw();
+                            }
+                        },
+                    });
+                }
+                if($('#changeMultipleBtn').val() == 'change_sdk'){
+                    $.ajax({
+                        data: $('#changeMultipleForm').serialize(),
+                        url: "{{ route('project.updateMultiple')}}?action=sdk",
+                        type: "post",
+                        dataType: 'json',
+                        success: function (data) {
+                            console.log(data)
+                            if(data.errors){
+                                $.notify(data.errors, "error");
+                            }
+                            if(data.success){
+                                $.notify(data.success, "success");
+                                $('#changeMultipleForm').trigger("reset");
+                                $('#changeMultiple').modal('hide');
+                                table.draw();
+                            }
+                        },
+                    });
+                }
+
+
+
+
+            });
+
+
         });
 
         $("#AddDaForm").submit(function (e) {
@@ -584,6 +634,26 @@
 
         $('#build_check').on('click', function () {
             $('#buildcheckModel').modal('show');
+            $('.modal').on('hidden.bs.modal', function (e) {
+                $('body').addClass('modal-open');
+            });
+        });
+
+        $('#change_keystore').on('click', function () {
+            $('#changeMultiple').modal('show');
+            $('#changeMultipleTitle').html('KeyStore');
+            $('#changeMultipleName').html('ID Project | Key C| Key A | Key S |  Key X |  Key O |  Key V |  Key H');
+            $('#changeMultipleBtn').val('change_keystore');
+            $('.modal').on('hidden.bs.modal', function (e) {
+                $('body').addClass('modal-open');
+            });
+        });
+
+        $('#change_sdk').on('click', function () {
+            $('#changeMultiple').modal('show');
+            $('#changeMultipleTitle').html('SDK');
+            $('#changeMultipleName').html('ID Project | SDK C | SDK A | SDK S |  SDK X |  SDK O |  SDK V |  SDK H');
+            $('#changeMultipleBtn').val('change_sdk');
             $('.modal').on('hidden.bs.modal', function (e) {
                 $('body').addClass('modal-open');
             });
