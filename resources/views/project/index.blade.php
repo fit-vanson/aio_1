@@ -530,6 +530,31 @@
                     });
                 }
             });
+
+            $('#dev_statusForm button').click(function (event){
+                event.preventDefault();
+                $.ajax({
+                    data: $('#dev_statusForm').serialize(),
+                    url: "{{ route('project.updateDev_status')}}",
+                    type: "post",
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log(data)
+                        if(data.errors){
+                            $.notify(data.errors, "error");
+                        }
+                        if(data.success){
+                            $.notify(data.success, "success");
+                            $('#dev_statusForm').trigger("reset");
+                            $('#dev_statusModel').modal('hide');
+                            table.draw();
+                        }
+                    },
+                });
+
+
+
+            });
         });
 
         $("#AddDaForm").submit(function (e) {
@@ -652,6 +677,61 @@
                 $('body').addClass('modal-open');
             });
         });
+
+        $('#dev_status').on('click', function () {
+            $('#dev_statusModel').modal('show');
+            $('.modal').on('hidden.bs.modal', function (e) {
+                $('body').addClass('modal-open');
+            });
+
+            <?php
+                $markets = \App\Models\Markets::all();
+                foreach ($markets as $market){
+                ?>
+
+                $('#_{{$market->market_name}}_dev_id').select2(
+                    {
+                        minimumInputLength: 2,
+                        ajax: {
+                            url: '{{route('api.getDev')}}',
+                            dataType: 'json',
+                            type: "GET",
+                            // quietMillis: 50,
+                            data: function(params) {
+
+                                return {
+                                    q: params.term, // search term
+                                    dev_id: {{$market->id}},
+                                    page: params.page
+                                };
+                            },
+                            processResults: function(data) {
+                                return {
+                                    results: $.map(data, function (item) {
+                                        return {
+                                            text: item.name + ' : ' + item.store,
+                                            id: item.id
+                                        }
+                                    })
+                                };
+                            },
+                            // cache: false
+                        },
+                    }
+                );
+
+            <?php
+            }
+            ?>
+
+
+
+
+
+
+
+        });
+
 
         function editProject(id) {
             $.get('{{asset('project/edit')}}/'+id,function (data) {

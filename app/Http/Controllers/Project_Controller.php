@@ -483,4 +483,32 @@ class Project_Controller extends Controller
         return response()->json(['success'=>'Cập nhật thành công ']);
 
     }
+
+    public function updateDevStatus(Request $request){
+        $data = explode("\r\n",$request->project_data);
+        $project = Project::whereIN('projectname',$data)->get();
+        foreach ($project as $item){
+
+            $data_item = [];
+            foreach ($item->markets as $target) {
+                $data_item[$target->pivot->market_id] =
+                    [
+                        'dev_id'=>$target->pivot->dev_id,
+                        'status_app'=>$target->pivot->status_app
+                    ];
+            }
+            $inset_market = [];
+
+            foreach ($data_item as $key=>$value){
+                $inset_market[$key] = [
+                    'dev_id' => $request->market[$key]['dev_id'] == 0  ? $value['dev_id']  :   $request->market[$key]['dev_id'] ,
+                    'status_app' => $request->market[$key]['status_app'] == 0 ? $value['status_app'] : $request->market[$key]['status_app'],
+                ];
+            }
+
+            $item->markets()->sync($inset_market);
+        }
+        return response()->json(['success'=>'Cập nhật thành công ']);
+
+    }
 }

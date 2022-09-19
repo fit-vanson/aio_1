@@ -82,14 +82,6 @@ $markets = \App\Models\Markets::all();
                                                     <input type="text" id="buildinfo_verstr" name="buildinfo_verstr" class="form-control" required />
                                                 </div>
 
-{{--                                                <div class="form-group col-lg-4 ">--}}
-{{--                                                    <label for="name">Link Policy</label>--}}
-{{--                                                    <input type="text" id="buildinfo_link_policy_x" name="buildinfo_link_policy_x" class="form-control" >--}}
-{{--                                                </div>--}}
-{{--                                                <div class="form-group col-lg-4 ">--}}
-{{--                                                    <label for="name">Link Youtube </label>--}}
-{{--                                                    <input type="text" id="buildinfo_link_youtube_x" name="buildinfo_link_youtube_x" class="form-control" >--}}
-{{--                                                </div>--}}
                                                 <div class="form-group col-lg-4 ">
                                                     <label for="name">Link Fanpage </label>
                                                     <input type="text" id="buildinfo_link_fanpage" name="buildinfo_link_fanpage" class="form-control" >
@@ -902,23 +894,22 @@ $markets = \App\Models\Markets::all();
                                         </div>
 
                                         <div class="form-group col-lg-8">
-                                            <div class="divider Chplay_status">
-                                                <div class="divider-text"><img src="img/icon/google.png"></div>
+
+                                            @foreach($markets as $market)
+                                            <div class="divider">
+                                                <div class="divider-text"><img src="img/icon/{{$market->market_logo}}"></div>
                                             </div>
-                                            <div class="row Chplay_status">
+                                            <div class="row">
                                                 <div class="form-group col-lg-6 ">
-                                                    <label for="name">Store Name (CH Play) </label>
-                                                    <select class="form-control select2" id="Chplay_buildinfo_store_name_x2" name="Chplay_buildinfo_store_name_x">
+                                                    <label for="name">Store Name {{$market->market_name}} </label>
+                                                    <select class="form-control select2" id="_{{$market->market_name}}_dev_id"  name="market[{{$market->id}}][dev_id]">
                                                         <option value="0" >---Vui lòng chọn---</option>
-{{--                                                        @foreach($store_name as $item)--}}
-{{--                                                            <option value="{{$item->id}}">{{$item->dev_name}} : {{$item->store_name}}</option>--}}
-{{--                                                        @endforeach--}}
                                                     </select>
                                                 </div>
                                                 <div class="form-group col-lg-6 ">
-                                                    <label for="name">Trạng thái Ứng dụng (CHPlay)</label>
+                                                    <label for="name">Trạng thái {{$market->market_name}}</label>
                                                     <div>
-                                                        <select class="form-control" id="Chplay_status1" name="Chplay_status">
+                                                        <select class="form-control"  name="market[{{$market->id}}][status_app]">
                                                             <option value="0">Mặc định</option>
                                                             <option value="1">Publish</option>
                                                             <option value="6">Check</option>
@@ -926,163 +917,167 @@ $markets = \App\Models\Markets::all();
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="divider Amazon_status">
-                                                <div class="divider-text"><img src="img/icon/amazon.png"></div>
-                                            </div>
-                                            <div class="row Amazon_status">
-                                                <div class="form-group col-lg-6 ">
-                                                    <label for="name">Store Name (Amazon) </label>
-                                                    <select class="form-control select2" id="Amazon_buildinfo_store_name_x2" name="Amazon_buildinfo_store_name_x">
-                                                        <option value="0" >---Vui lòng chọn---</option>
+
+                                            @endforeach
+
+
+{{--                                            <div class="divider Amazon_status">--}}
+{{--                                                <div class="divider-text"><img src="img/icon/amazon.png"></div>--}}
+{{--                                            </div>--}}
+{{--                                            <div class="row Amazon_status">--}}
+{{--                                                <div class="form-group col-lg-6 ">--}}
+{{--                                                    <label for="name">Store Name (Amazon) </label>--}}
+{{--                                                    <select class="form-control select2" id="Amazon_buildinfo_store_name_x2" name="Amazon_buildinfo_store_name_x">--}}
+{{--                                                        <option value="0" >---Vui lòng chọn---</option>--}}
 {{--                                                        @foreach($store_name_amazon as $item)--}}
 {{--                                                            <option value="{{$item->id}}">{{$item->amazon_dev_name}} : {{$item->amazon_store_name}}</option>--}}
 {{--                                                        @endforeach--}}
-                                                    </select>
-                                                </div>
-                                                <div class="form-group col-lg-6 ">
-                                                    <label for="name">Trạng thái Ứng dụng (Amazon) </label>
-                                                    <div>
-                                                        <select class="form-control" id="Amazon_status1" name="Amazon_status">
-                                                            <option value="0">Mặc định</option>
-                                                            <option value="1">Publish</option>
-                                                            <option value="6">Check</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="divider Samsung_status">
-                                                <div class="divider-text"><img src="img/icon/samsung.png"></div>
-                                            </div>
-                                            <div class="row Samsung_status">
-                                                <div class="form-group col-lg-6 ">
-                                                    <label for="name">Store Name (Samsung) </label>
-                                                    <select class="form-control select2" id="Samsung_buildinfo_store_name_x2" name="Samsung_buildinfo_store_name_x">
-                                                        <option value="0"  >---Vui lòng chọn---</option>
+{{--                                                    </select>--}}
+{{--                                                </div>--}}
+{{--                                                <div class="form-group col-lg-6 ">--}}
+{{--                                                    <label for="name">Trạng thái Ứng dụng (Amazon) </label>--}}
+{{--                                                    <div>--}}
+{{--                                                        <select class="form-control" id="Amazon_status1" name="Amazon_status">--}}
+{{--                                                            <option value="0">Mặc định</option>--}}
+{{--                                                            <option value="1">Publish</option>--}}
+{{--                                                            <option value="6">Check</option>--}}
+{{--                                                        </select>--}}
+{{--                                                    </div>--}}
+{{--                                                </div>--}}
+{{--                                            </div>--}}
+{{--                                            <div class="divider Samsung_status">--}}
+{{--                                                <div class="divider-text"><img src="img/icon/samsung.png"></div>--}}
+{{--                                            </div>--}}
+{{--                                            <div class="row Samsung_status">--}}
+{{--                                                <div class="form-group col-lg-6 ">--}}
+{{--                                                    <label for="name">Store Name (Samsung) </label>--}}
+{{--                                                    <select class="form-control select2" id="Samsung_buildinfo_store_name_x2" name="Samsung_buildinfo_store_name_x">--}}
+{{--                                                        <option value="0"  >---Vui lòng chọn---</option>--}}
 {{--                                                        @foreach($store_name_samsung as $item)--}}
 {{--                                                            <option value="{{$item->id}}">{{$item->samsung_dev_name}} : {{$item->samsung_store_name}}</option>--}}
 {{--                                                        @endforeach--}}
-                                                    </select>
-                                                </div>
-                                                <div class="form-group col-lg-6 ">
-                                                    <label for="name">Trạng thái Ứng dụng (Samsung)</label>
-                                                    <div>
-                                                        <select class="form-control" id="Samsung_status1" name="Samsung_status">
-                                                            <option value="0">Mặc định</option>
-                                                            <option value="1">Publish</option>
-                                                            <option value="6">Check</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="divider Xiaomi_status">
-                                                <div class="divider-text"><img src="img/icon/xiaomi.png"></div>
-                                            </div>
-                                            <div class="row Xiaomi_status">
-                                                <div class="form-group col-lg-6 ">
-                                                    <label for="name">Store Name (Xiaomi) </label>
-                                                    <select class="form-control select2" id="Xiaomi_buildinfo_store_name_x2" name="Xiaomi_buildinfo_store_name_x">
-                                                        <option value="0"  >---Vui lòng chọn---</option>
+{{--                                                    </select>--}}
+{{--                                                </div>--}}
+{{--                                                <div class="form-group col-lg-6 ">--}}
+{{--                                                    <label for="name">Trạng thái Ứng dụng (Samsung)</label>--}}
+{{--                                                    <div>--}}
+{{--                                                        <select class="form-control" id="Samsung_status1" name="Samsung_status">--}}
+{{--                                                            <option value="0">Mặc định</option>--}}
+{{--                                                            <option value="1">Publish</option>--}}
+{{--                                                            <option value="6">Check</option>--}}
+{{--                                                        </select>--}}
+{{--                                                    </div>--}}
+{{--                                                </div>--}}
+{{--                                            </div>--}}
+{{--                                            <div class="divider Xiaomi_status">--}}
+{{--                                                <div class="divider-text"><img src="img/icon/xiaomi.png"></div>--}}
+{{--                                            </div>--}}
+{{--                                            <div class="row Xiaomi_status">--}}
+{{--                                                <div class="form-group col-lg-6 ">--}}
+{{--                                                    <label for="name">Store Name (Xiaomi) </label>--}}
+{{--                                                    <select class="form-control select2" id="Xiaomi_buildinfo_store_name_x2" name="Xiaomi_buildinfo_store_name_x">--}}
+{{--                                                        <option value="0"  >---Vui lòng chọn---</option>--}}
 {{--                                                        @foreach($store_name_xiaomi as $item)--}}
 {{--                                                            <option value="{{$item->id}}">{{$item->xiaomi_dev_name}} : {{$item->xiaomi_store_name}}</option>--}}
 {{--                                                        @endforeach--}}
-                                                    </select>
-                                                </div>
-                                                <div class="form-group col-lg-6 ">
-                                                    <label for="name">Trạng thái Ứng dụng (Xiaomi)</label>
-                                                    <div>
-                                                        <select class="form-control" id="Xiaomi_status1" name="Xiaomi_status">
-                                                            <option value="0">Mặc định</option>
-                                                            <option value="1">Publish</option>
-                                                            <option value="6">Check</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="divider Oppo_status">
-                                                <div class="divider-text"><img src="img/icon/oppo.png"></div>
-                                            </div>
-                                            <div  class="row Oppo_status">
-                                                <div class="form-group col-lg-6 ">
-                                                    <label for="name">Store Name (OPPO) </label>
-                                                    <select class="form-control select2" id="Oppo_buildinfo_store_name_x2" name="Oppo_buildinfo_store_name_x">
-                                                        <option value="0"  >---Vui lòng chọn---</option>
+{{--                                                    </select>--}}
+{{--                                                </div>--}}
+{{--                                                <div class="form-group col-lg-6 ">--}}
+{{--                                                    <label for="name">Trạng thái Ứng dụng (Xiaomi)</label>--}}
+{{--                                                    <div>--}}
+{{--                                                        <select class="form-control" id="Xiaomi_status1" name="Xiaomi_status">--}}
+{{--                                                            <option value="0">Mặc định</option>--}}
+{{--                                                            <option value="1">Publish</option>--}}
+{{--                                                            <option value="6">Check</option>--}}
+{{--                                                        </select>--}}
+{{--                                                    </div>--}}
+{{--                                                </div>--}}
+{{--                                            </div>--}}
+{{--                                            <div class="divider Oppo_status">--}}
+{{--                                                <div class="divider-text"><img src="img/icon/oppo.png"></div>--}}
+{{--                                            </div>--}}
+{{--                                            <div  class="row Oppo_status">--}}
+{{--                                                <div class="form-group col-lg-6 ">--}}
+{{--                                                    <label for="name">Store Name (OPPO) </label>--}}
+{{--                                                    <select class="form-control select2" id="Oppo_buildinfo_store_name_x2" name="Oppo_buildinfo_store_name_x">--}}
+{{--                                                        <option value="0"  >---Vui lòng chọn---</option>--}}
 {{--                                                        @foreach($store_name_oppo as $item)--}}
 {{--                                                            <option value="{{$item->id}}">{{$item->oppo_dev_name}} : {{$item->oppo_store_name}}</option>--}}
 {{--                                                        @endforeach--}}
-                                                    </select>
-                                                </div>
-                                                <div class="form-group col-lg-6 ">
-                                                    <label for="name">Trạng thái Ứng dụng (Oppo)</label>
-                                                    <div>
-                                                        <select class="form-control" id="Oppo_status1" name="Oppo_status">
-                                                            <option value="0">Mặc định</option>
-                                                            <option value="1">Publish</option>
-                                                            <option value="6">Check</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="divider Vivo_status">
-                                                <div class="divider-text"><img src="img/icon/vivo.png"></div>
-                                            </div>
-                                            <div class="row Vivo_status">
-                                                <div class="form-group col-lg-6 ">
-                                                    <label for="name">Store Name (Vivo) </label>
-                                                    <select class="form-control select2" id="Vivo_buildinfo_store_name_x2" name="Vivo_buildinfo_store_name_x">
-                                                        <option value="0" >---Vui lòng chọn---</option>
+{{--                                                    </select>--}}
+{{--                                                </div>--}}
+{{--                                                <div class="form-group col-lg-6 ">--}}
+{{--                                                    <label for="name">Trạng thái Ứng dụng (Oppo)</label>--}}
+{{--                                                    <div>--}}
+{{--                                                        <select class="form-control" id="Oppo_status1" name="Oppo_status">--}}
+{{--                                                            <option value="0">Mặc định</option>--}}
+{{--                                                            <option value="1">Publish</option>--}}
+{{--                                                            <option value="6">Check</option>--}}
+{{--                                                        </select>--}}
+{{--                                                    </div>--}}
+{{--                                                </div>--}}
+{{--                                            </div>--}}
+{{--                                            <div class="divider Vivo_status">--}}
+{{--                                                <div class="divider-text"><img src="img/icon/vivo.png"></div>--}}
+{{--                                            </div>--}}
+{{--                                            <div class="row Vivo_status">--}}
+{{--                                                <div class="form-group col-lg-6 ">--}}
+{{--                                                    <label for="name">Store Name (Vivo) </label>--}}
+{{--                                                    <select class="form-control select2" id="Vivo_buildinfo_store_name_x2" name="Vivo_buildinfo_store_name_x">--}}
+{{--                                                        <option value="0" >---Vui lòng chọn---</option>--}}
 {{--                                                        @foreach($store_name_vivo as $item)--}}
 {{--                                                            <option value="{{$item->id}}">{{$item->vivo_dev_name}} : {{$item->vivo_store_name}}</option>--}}
 {{--                                                        @endforeach--}}
-                                                    </select>
-                                                </div>
-                                                <div class="form-group col-lg-6 ">
-                                                    <label for="name">Trạng thái Ứng dụng (Vivo)</label>
-                                                    <div>
-                                                        <select class="form-control" id="Vivo_status1" name="Vivo_status">
-                                                            <option value="100">Mặc định</option>
-                                                            <option value="0">UnPublished</option>
-                                                            <option value="1">Published</option>
-                                                            <option value="2">Removed</option>
-                                                            <option value="3">To be published</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="divider Huawei_status">
-                                                <div class="divider-text"><img src="img/icon/huawei.png"></div>
-                                            </div>
-                                            <div class="row Huawei_status">
-                                                <div class="form-group col-lg-6 ">
-                                                    <label for="name">Store Name (Huawei) </label>
-                                                    <select class="form-control select2" id="Huawei_buildinfo_store_name_x2" name="Huawei_buildinfo_store_name_x">
-                                                        <option value="0" >---Vui lòng chọn---</option>
+{{--                                                    </select>--}}
+{{--                                                </div>--}}
+{{--                                                <div class="form-group col-lg-6 ">--}}
+{{--                                                    <label for="name">Trạng thái Ứng dụng (Vivo)</label>--}}
+{{--                                                    <div>--}}
+{{--                                                        <select class="form-control" id="Vivo_status1" name="Vivo_status">--}}
+{{--                                                            <option value="100">Mặc định</option>--}}
+{{--                                                            <option value="0">UnPublished</option>--}}
+{{--                                                            <option value="1">Published</option>--}}
+{{--                                                            <option value="2">Removed</option>--}}
+{{--                                                            <option value="3">To be published</option>--}}
+{{--                                                        </select>--}}
+{{--                                                    </div>--}}
+{{--                                                </div>--}}
+{{--                                            </div>--}}
+{{--                                            <div class="divider Huawei_status">--}}
+{{--                                                <div class="divider-text"><img src="img/icon/huawei.png"></div>--}}
+{{--                                            </div>--}}
+{{--                                            <div class="row Huawei_status">--}}
+{{--                                                <div class="form-group col-lg-6 ">--}}
+{{--                                                    <label for="name">Store Name (Huawei) </label>--}}
+{{--                                                    <select class="form-control select2" id="Huawei_buildinfo_store_name_x2" name="Huawei_buildinfo_store_name_x">--}}
+{{--                                                        <option value="0" >---Vui lòng chọn---</option>--}}
 {{--                                                        @foreach($store_name_huawei as $item)--}}
 {{--                                                            <option value="{{$item->id}}">{{$item->huawei_dev_name}} : {{$item->huawei_store_name}}</option>--}}
 {{--                                                        @endforeach--}}
-                                                    </select>
-                                                </div>
-                                                <div class="form-group col-lg-6  ">
-                                                    <label for="name">Trạng thái Ứng dụng (Huawei)</label>
-                                                    <div>
-                                                        <select class="form-control" id="Huawei_status1" name="Huawei_status">
-                                                            <option value="100">Mặc định</option>
-                                                            <option value="0">Released</option>
-                                                            <option value="1">Release Rejected</option>
-                                                            <option value="2">Removed (including forcible removal)</option>
-                                                            <option value="3">Releasing</option>
-                                                            <option value="4">Reviewing</option>
-                                                            <option value="5">Updating</option>
-                                                            <option value="6">Removal requested</option>
-                                                            <option value="7">Draft</option>
-                                                            <option value="8">Update rejected</option>
-                                                            <option value="9">Removal requested</option>
-                                                            <option value="10">Removed by developer</option>
-                                                            <option value="11">Release canceled</option>
+{{--                                                    </select>--}}
+{{--                                                </div>--}}
+{{--                                                <div class="form-group col-lg-6  ">--}}
+{{--                                                    <label for="name">Trạng thái Ứng dụng (Huawei)</label>--}}
+{{--                                                    <div>--}}
+{{--                                                        <select class="form-control" id="Huawei_status1" name="Huawei_status">--}}
+{{--                                                            <option value="100">Mặc định</option>--}}
+{{--                                                            <option value="0">Released</option>--}}
+{{--                                                            <option value="1">Release Rejected</option>--}}
+{{--                                                            <option value="2">Removed (including forcible removal)</option>--}}
+{{--                                                            <option value="3">Releasing</option>--}}
+{{--                                                            <option value="4">Reviewing</option>--}}
+{{--                                                            <option value="5">Updating</option>--}}
+{{--                                                            <option value="6">Removal requested</option>--}}
+{{--                                                            <option value="7">Draft</option>--}}
+{{--                                                            <option value="8">Update rejected</option>--}}
+{{--                                                            <option value="9">Removal requested</option>--}}
+{{--                                                            <option value="10">Removed by developer</option>--}}
+{{--                                                            <option value="11">Release canceled</option>--}}
 
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
+{{--                                                        </select>--}}
+{{--                                                    </div>--}}
+{{--                                                </div>--}}
+{{--                                            </div>--}}
                                         </div>
                                     </div>
                                     <button type="submit" class="btn btn-primary"  value="build" >Update</button>
