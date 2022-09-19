@@ -15,7 +15,7 @@ class Project_Controller extends Controller
             'title' => 'Project',
             'button' => [
                 'Create'            => 'createNewProject',
-                'Build And Check'   => 'buildandcheck',
+                'Build And Check'   => 'build_check',
                 'Status'            => 'dev_status',
                 'KeyStore'          => 'change_keystore',
                 'SDK'          => 'change_sdk',
@@ -63,7 +63,7 @@ class Project_Controller extends Controller
                 $btn = $btn. ' <br><br>  <a href="javascript:void(0)" onclick="quickEditProject('.$record->projectid.')" class="btn btn-success"><i class="mdi mdi-android-head"></i></a>';
             }
             $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$record->projectid.'" data-original-title="Delete" class="btn btn-danger deleteProject"><i class="ti-trash"></i></a>';
-//            $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$record->projectid.'"  class="btn btn-info fakeProject"><i class="ti-info-alt"></i></a>';
+
 
 
             if(isset($record->logo)){
@@ -74,6 +74,7 @@ class Project_Controller extends Controller
 
             $project    = '<span class="h3 font-16 "> '.$record->projectname.' </span>';
             $template = '<span class="text-muted" style="line-height:0.5"> ('.$record->ma_template->template.') </span>';
+            $title = '<span class="" style="line-height:0.5"> - '.$record->title_app.'</span>';
             $version  = 'Version: <span class="text-muted" style="line-height:0.5"> '.$record->buildinfo_vernum .' | '.$record->buildinfo_verstr.' </span>';
 
             $package = $status_app =  '';
@@ -138,7 +139,7 @@ class Project_Controller extends Controller
             $data_arr[] = array(
                 "projectid" => $record->projectid,
                 "logo" => $logo,
-                "projectname"=>$project.$template.'<br>'.$version.'<br>'.$sdk.'<br>'.$keystore,
+                "projectname"=>$project.$template.'<br>'.$record->title_app.'<br>'.$version.'<br>'.$sdk.'<br>'.$keystore,
                 "markets"=>$package,
                 "status"=>$status_app,
                 "action"=> $btn,

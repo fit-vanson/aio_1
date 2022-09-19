@@ -300,207 +300,206 @@ $markets = \App\Models\Markets::all();
 
 
 
-<div class="modal fade bd-example-modal-xl" id="ajaxPartTimeModel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="modelPartTimeHeading"></h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            </div>
-            <div class="modal-body">
-                <form id="parttimeprojectForm" name="parttimeprojectForm" class="form-horizontal">
-                    <input type="hidden" name="project_id" id="part_time_project_id">
-                    <div class="divider Chplay_status">
-                        <div class="divider-text"><img src="img/icon/google.png"></div>
-                    </div>
-                    <div class="row Chplay_status">
-                        <div class="form-group col-lg-6 ">
-                            <label for="name">Store Name (CH Play) </label>
-                            <select class="form-control select2" id="Chplay_buildinfo_store_name_x1" name="Chplay_buildinfo_store_name_x">
-                                <option value="0" >---Vui lòng chọn---</option>
+{{--<div class="modal fade bd-example-modal-xl" id="ajaxPartTimeModel" aria-hidden="true">--}}
+{{--    <div class="modal-dialog modal-xl">--}}
+{{--        <div class="modal-content">--}}
+{{--            <div class="modal-header">--}}
+{{--                <h4 class="modal-title" id="modelPartTimeHeading"></h4>--}}
+{{--                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>--}}
+{{--            </div>--}}
+{{--            <div class="modal-body">--}}
+{{--                <form id="parttimeprojectForm" name="parttimeprojectForm" class="form-horizontal">--}}
+{{--                    <input type="hidden" name="project_id" id="part_time_project_id">--}}
+{{--                    <div class="divider Chplay_status">--}}
+{{--                        <div class="divider-text"><img src="img/icon/google.png"></div>--}}
+{{--                    </div>--}}
+{{--                    <div class="row Chplay_status">--}}
+{{--                        <div class="form-group col-lg-6 ">--}}
+{{--                            <label for="name">Store Name (CH Play) </label>--}}
+{{--                            <select class="form-control select2" id="Chplay_buildinfo_store_name_x1" name="Chplay_buildinfo_store_name_x">--}}
+{{--                                <option value="0" >---Vui lòng chọn---</option>--}}
 {{--                                @foreach($store_name as $item)--}}
 {{--                                    <option value="{{$item->id}}">{{$item->dev_name}} : {{$item->store_name}}</option>--}}
 {{--                                @endforeach--}}
-                            </select>
-                        </div>
-                        <div class="form-group col-lg-6 ">
-                            <label for="name">Trạng thái Ứng dụng (CHPlay)</label>
-                            <div>
-                                <select class="form-control" id="Chplay_status1" name="Chplay_status">
-                                    <option value="0">Mặc định</option>
-                                    <option value="1">Publish</option>
-                                    <option value="6">Check</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="divider Amazon_status">
-                        <div class="divider-text"><img src="img/icon/amazon.png"></div>
-                    </div>
-                    <div class="row Amazon_status">
-                        <div class="form-group col-lg-6 ">
-                            <label for="name">Store Name (Amazon) </label>
-                            <select class="form-control select2" id="Amazon_buildinfo_store_name_x1" name="Amazon_buildinfo_store_name_x">
-                                <option value="0" >---Vui lòng chọn---</option>
+{{--                            </select>--}}
+{{--                        </div>--}}
+{{--                        <div class="form-group col-lg-6 ">--}}
+{{--                            <label for="name">Trạng thái Ứng dụng (CHPlay)</label>--}}
+{{--                            <div>--}}
+{{--                                <select class="form-control" id="Chplay_status1" name="Chplay_status">--}}
+{{--                                    <option value="0">Mặc định</option>--}}
+{{--                                    <option value="1">Publish</option>--}}
+{{--                                    <option value="6">Check</option>--}}
+{{--                                </select>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                    <div class="divider Amazon_status">--}}
+{{--                        <div class="divider-text"><img src="img/icon/amazon.png"></div>--}}
+{{--                    </div>--}}
+{{--                    <div class="row Amazon_status">--}}
+{{--                        <div class="form-group col-lg-6 ">--}}
+{{--                            <label for="name">Store Name (Amazon) </label>--}}
+{{--                            <select class="form-control select2" id="Amazon_buildinfo_store_name_x1" name="Amazon_buildinfo_store_name_x">--}}
+{{--                                <option value="0" >---Vui lòng chọn---</option>--}}
 {{--                                @foreach($store_name_amazon as $item)--}}
 {{--                                    <option value="{{$item->id}}">{{$item->amazon_dev_name}} : {{$item->amazon_store_name}}</option>--}}
 {{--                                @endforeach--}}
-                            </select>
-                        </div>
-                        <div class="form-group col-lg-6 ">
-                            <label for="name">Trạng thái Ứng dụng (Amazon) </label>
-                            <div>
-                                <select class="form-control" id="Amazon_status1" name="Amazon_status">
-                                    <option value="0">Mặc định</option>
-                                    <option value="1">Publish</option>
-                                    <option value="6">Check</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="divider Samsung_status">
-                        <div class="divider-text"><img src="img/icon/samsung.png"></div>
-                    </div>
-                    <div class="row Samsung_status">
-                        <div class="form-group col-lg-6 ">
-                            <label for="name">Store Name (Samsung) </label>
-                            <select class="form-control select2" id="Samsung_buildinfo_store_name_x1" name="Samsung_buildinfo_store_name_x">
-                                <option value="0"  >---Vui lòng chọn---</option>
+{{--                            </select>--}}
+{{--                        </div>--}}
+{{--                        <div class="form-group col-lg-6 ">--}}
+{{--                            <label for="name">Trạng thái Ứng dụng (Amazon) </label>--}}
+{{--                            <div>--}}
+{{--                                <select class="form-control" id="Amazon_status1" name="Amazon_status">--}}
+{{--                                    <option value="0">Mặc định</option>--}}
+{{--                                    <option value="1">Publish</option>--}}
+{{--                                    <option value="6">Check</option>--}}
+{{--                                </select>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                    <div class="divider Samsung_status">--}}
+{{--                        <div class="divider-text"><img src="img/icon/samsung.png"></div>--}}
+{{--                    </div>--}}
+{{--                    <div class="row Samsung_status">--}}
+{{--                        <div class="form-group col-lg-6 ">--}}
+{{--                            <label for="name">Store Name (Samsung) </label>--}}
+{{--                            <select class="form-control select2" id="Samsung_buildinfo_store_name_x1" name="Samsung_buildinfo_store_name_x">--}}
+{{--                                <option value="0"  >---Vui lòng chọn---</option>--}}
 {{--                                @foreach($store_name_samsung as $item)--}}
 {{--                                    <option value="{{$item->id}}">{{$item->samsung_dev_name}} : {{$item->samsung_store_name}}</option>--}}
 {{--                                @endforeach--}}
-                            </select>
-                        </div>
-                        <div class="form-group col-lg-6 ">
-                            <label for="name">Trạng thái Ứng dụng (Samsung)</label>
-                            <div>
-                                <select class="form-control" id="Samsung_status1" name="Samsung_status">
-                                    <option value="0">Mặc định</option>
-                                    <option value="1">Publish</option>
-                                    <option value="6">Check</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="divider Xiaomi_status">
-                        <div class="divider-text"><img src="img/icon/xiaomi.png"></div>
-                    </div>
-                    <div class="row Xiaomi_status">
-                        <div class="form-group col-lg-6 ">
-                            <label for="name">Store Name (Xiaomi) </label>
-                            <select class="form-control select2" id="Xiaomi_buildinfo_store_name_x1" name="Xiaomi_buildinfo_store_name_x">
-                                <option value="0"  >---Vui lòng chọn---</option>
+{{--                            </select>--}}
+{{--                        </div>--}}
+{{--                        <div class="form-group col-lg-6 ">--}}
+{{--                            <label for="name">Trạng thái Ứng dụng (Samsung)</label>--}}
+{{--                            <div>--}}
+{{--                                <select class="form-control" id="Samsung_status1" name="Samsung_status">--}}
+{{--                                    <option value="0">Mặc định</option>--}}
+{{--                                    <option value="1">Publish</option>--}}
+{{--                                    <option value="6">Check</option>--}}
+{{--                                </select>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                    <div class="divider Xiaomi_status">--}}
+{{--                        <div class="divider-text"><img src="img/icon/xiaomi.png"></div>--}}
+{{--                    </div>--}}
+{{--                    <div class="row Xiaomi_status">--}}
+{{--                        <div class="form-group col-lg-6 ">--}}
+{{--                            <label for="name">Store Name (Xiaomi) </label>--}}
+{{--                            <select class="form-control select2" id="Xiaomi_buildinfo_store_name_x1" name="Xiaomi_buildinfo_store_name_x">--}}
+{{--                                <option value="0"  >---Vui lòng chọn---</option>--}}
 {{--                                @foreach($store_name_xiaomi as $item)--}}
 {{--                                    <option value="{{$item->id}}">{{$item->xiaomi_dev_name}} : {{$item->xiaomi_store_name}}</option>--}}
 {{--                                @endforeach--}}
-                            </select>
-                        </div>
-                        <div class="form-group col-lg-6 ">
-                            <label for="name">Trạng thái Ứng dụng (Xiaomi)</label>
-                            <div>
-                                <select class="form-control" id="Xiaomi_status1" name="Xiaomi_status">
-                                    <option value="0">Mặc định</option>
-                                    <option value="1">Publish</option>
-                                    <option value="6">Check</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="divider Oppo_status">
-                        <div class="divider-text"><img src="img/icon/oppo.png"></div>
-                    </div>
-                    <div  class="row Oppo_status">
-                        <div class="form-group col-lg-6 ">
-                            <label for="name">Store Name (OPPO) </label>
-                            <select class="form-control select2" id="Oppo_buildinfo_store_name_x1" name="Oppo_buildinfo_store_name_x">
-                                <option value="0"  >---Vui lòng chọn---</option>
+{{--                            </select>--}}
+{{--                        </div>--}}
+{{--                        <div class="form-group col-lg-6 ">--}}
+{{--                            <label for="name">Trạng thái Ứng dụng (Xiaomi)</label>--}}
+{{--                            <div>--}}
+{{--                                <select class="form-control" id="Xiaomi_status1" name="Xiaomi_status">--}}
+{{--                                    <option value="0">Mặc định</option>--}}
+{{--                                    <option value="1">Publish</option>--}}
+{{--                                    <option value="6">Check</option>--}}
+{{--                                </select>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                    <div class="divider Oppo_status">--}}
+{{--                        <div class="divider-text"><img src="img/icon/oppo.png"></div>--}}
+{{--                    </div>--}}
+{{--                    <div  class="row Oppo_status">--}}
+{{--                        <div class="form-group col-lg-6 ">--}}
+{{--                            <label for="name">Store Name (OPPO) </label>--}}
+{{--                            <select class="form-control select2" id="Oppo_buildinfo_store_name_x1" name="Oppo_buildinfo_store_name_x">--}}
+{{--                                <option value="0"  >---Vui lòng chọn---</option>--}}
 {{--                                @foreach($store_name_oppo as $item)--}}
 {{--                                    <option value="{{$item->id}}">{{$item->oppo_dev_name}} : {{$item->oppo_store_name}}</option>--}}
 {{--                                @endforeach--}}
-                            </select>
-                        </div>
-                        <div class="form-group col-lg-6 ">
-                            <label for="name">Trạng thái Ứng dụng (Oppo)</label>
-                            <div>
-                                <select class="form-control" id="Oppo_status1" name="Oppo_status">
-                                    <option value="0">Mặc định</option>
-                                    <option value="1">Publish</option>
-                                    <option value="6">Check</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="divider Vivo_status">
-                        <div class="divider-text"><img src="img/icon/vivo.png"></div>
-                    </div>
-                    <div class="row Vivo_status">
-                        <div class="form-group col-lg-6 ">
-                            <label for="name">Store Name (Vivo) </label>
-                            <select class="form-control select2" id="Vivo_buildinfo_store_name_x1" name="Vivo_buildinfo_store_name_x">
-                                <option value="0" >---Vui lòng chọn---</option>
+{{--                            </select>--}}
+{{--                        </div>--}}
+{{--                        <div class="form-group col-lg-6 ">--}}
+{{--                            <label for="name">Trạng thái Ứng dụng (Oppo)</label>--}}
+{{--                            <div>--}}
+{{--                                <select class="form-control" id="Oppo_status1" name="Oppo_status">--}}
+{{--                                    <option value="0">Mặc định</option>--}}
+{{--                                    <option value="1">Publish</option>--}}
+{{--                                    <option value="6">Check</option>--}}
+{{--                                </select>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                    <div class="divider Vivo_status">--}}
+{{--                        <div class="divider-text"><img src="img/icon/vivo.png"></div>--}}
+{{--                    </div>--}}
+{{--                    <div class="row Vivo_status">--}}
+{{--                        <div class="form-group col-lg-6 ">--}}
+{{--                            <label for="name">Store Name (Vivo) </label>--}}
+{{--                            <select class="form-control select2" id="Vivo_buildinfo_store_name_x1" name="Vivo_buildinfo_store_name_x">--}}
+{{--                                <option value="0" >---Vui lòng chọn---</option>--}}
 {{--                                @foreach($store_name_vivo as $item)--}}
 {{--                                    <option value="{{$item->id}}">{{$item->vivo_dev_name}} : {{$item->vivo_store_name}}</option>--}}
 {{--                                @endforeach--}}
-                            </select>
-                        </div>
-                        <div class="form-group col-lg-6 ">
-                            <label for="name">Trạng thái Ứng dụng (Vivo)</label>
-                            <div>
-                                <select class="form-control" id="Vivo_status1" name="Vivo_status">
-                                    <option value="100">Mặc định</option>
-                                    <option value="0">UnPublished</option>
-                                    <option value="1">Published</option>
-                                    <option value="2">Removed</option>
-                                    <option value="3">To be published</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="divider Huawei_status">
-                        <div class="divider-text"><img src="img/icon/huawei.png"></div>
-                    </div>
-                    <div class="row Huawei_status">
-                        <div class="form-group col-lg-6 ">
-                            <label for="name">Store Name (Huawei) </label>
-                            <select class="form-control select2" id="Huawei_buildinfo_store_name_x1" name="Huawei_buildinfo_store_name_x">
-                                <option value="0" >---Vui lòng chọn---</option>
+{{--                            </select>--}}
+{{--                        </div>--}}
+{{--                        <div class="form-group col-lg-6 ">--}}
+{{--                            <label for="name">Trạng thái Ứng dụng (Vivo)</label>--}}
+{{--                            <div>--}}
+{{--                                <select class="form-control" id="Vivo_status1" name="Vivo_status">--}}
+{{--                                    <option value="100">Mặc định</option>--}}
+{{--                                    <option value="0">UnPublished</option>--}}
+{{--                                    <option value="1">Published</option>--}}
+{{--                                    <option value="2">Removed</option>--}}
+{{--                                    <option value="3">To be published</option>--}}
+{{--                                </select>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                    <div class="divider Huawei_status">--}}
+{{--                        <div class="divider-text"><img src="img/icon/huawei.png"></div>--}}
+{{--                    </div>--}}
+{{--                    <div class="row Huawei_status">--}}
+{{--                        <div class="form-group col-lg-6 ">--}}
+{{--                            <label for="name">Store Name (Huawei) </label>--}}
+{{--                            <select class="form-control select2" id="Huawei_buildinfo_store_name_x1" name="Huawei_buildinfo_store_name_x">--}}
+{{--                                <option value="0" >---Vui lòng chọn---</option>--}}
 {{--                                @foreach($store_name_huawei as $item)--}}
 {{--                                    <option value="{{$item->id}}">{{$item->huawei_dev_name}} : {{$item->huawei_store_name}}</option>--}}
 {{--                                @endforeach--}}
-                            </select>
-                        </div>
-                        <div class="form-group col-lg-6  ">
-                            <label for="name">Trạng thái Ứng dụng (Huawei)</label>
-                            <div>
-                                <select class="form-control" id="Huawei_status1" name="Huawei_status">
-                                    <option value="100">Mặc định</option>
-                                    <option value="0">Released</option>
-                                    <option value="1">Release Rejected</option>
-                                    <option value="2">Removed (including forcible removal)</option>
-                                    <option value="3">Releasing</option>
-                                    <option value="4">Reviewing</option>
-                                    <option value="5">Updating</option>
-                                    <option value="6">Removal requested</option>
-                                    <option value="7">Draft</option>
-                                    <option value="8">Update rejected</option>
-                                    <option value="9">Removal requested</option>
-                                    <option value="10">Removed by developer</option>
-                                    <option value="11">Release canceled</option>
+{{--                            </select>--}}
+{{--                        </div>--}}
+{{--                        <div class="form-group col-lg-6  ">--}}
+{{--                            <label for="name">Trạng thái Ứng dụng (Huawei)</label>--}}
+{{--                            <div>--}}
+{{--                                <select class="form-control" id="Huawei_status1" name="Huawei_status">--}}
+{{--                                    <option value="100">Mặc định</option>--}}
+{{--                                    <option value="0">Released</option>--}}
+{{--                                    <option value="1">Release Rejected</option>--}}
+{{--                                    <option value="2">Removed (including forcible removal)</option>--}}
+{{--                                    <option value="3">Releasing</option>--}}
+{{--                                    <option value="4">Reviewing</option>--}}
+{{--                                    <option value="5">Updating</option>--}}
+{{--                                    <option value="6">Removal requested</option>--}}
+{{--                                    <option value="7">Draft</option>--}}
+{{--                                    <option value="8">Update rejected</option>--}}
+{{--                                    <option value="9">Removal requested</option>--}}
+{{--                                    <option value="10">Removed by developer</option>--}}
+{{--                                    <option value="11">Release canceled</option>--}}
 
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-offset-2 col-sm-10">
-                        <button type="submit" class="btn btn-primary">Save changes</button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
+{{--                                </select>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                    <div class="col-sm-offset-2 col-sm-10">--}}
+{{--                        <button type="submit" class="btn btn-primary">Save changes</button>--}}
+{{--                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>--}}
+{{--                    </div>--}}
+{{--                </form>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--    </div>--}}
+{{--</div>--}}
 
 <div class="modal fade bd-example-modal-xl" id="ajaxQuickModel" aria-hidden="true">
     <div class="modal-dialog">
@@ -549,7 +548,6 @@ $markets = \App\Models\Markets::all();
     </div>
 </div>
 
-
 <div class="modal fade" id="addMaDa" tabindex="-1" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -578,7 +576,6 @@ $markets = \App\Models\Markets::all();
         </div>
     </div>
 </div>
-
 
 <div class="modal fade" id="addTemplate" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg">
@@ -659,7 +656,6 @@ $markets = \App\Models\Markets::all();
     </div>
 </div>
 
-
 <div class="modal fade" id="addKeystore" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -720,138 +716,135 @@ $markets = \App\Models\Markets::all();
     </div>
 </div>
 
-<div class="modal fade bd-example-modal-xl" id="showPolicy" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="modelHeadingPolicy"></h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            </div>
-            <div class="modal-body">
-                <div class="policy-1">
-                    <label for="name">Policy 1 <button type="button" onclick="copy1()" class="btn btn-link waves-effect copyboard"><i class="mdi mdi-content-copy"></i></button> </label>
-                    <textarea  type="text" id="policy1"  name="policy1" rows="8" class="form-control" > </textarea>
-                </div>
-                <div class="policy-2">
-                    <label  for="name">Policy 2 <button type="button" onclick="copy2()" class="btn btn-link waves-effect copyboard"><i class="mdi mdi-content-copy"></i></button></label>
-                    <textarea  type="text" id="policy2"  name="policy2" rows="8" class="form-control" > </textarea>
+{{--<div class="modal fade bd-example-modal-xl" id="showPolicy" aria-hidden="true">--}}
+{{--    <div class="modal-dialog modal-lg">--}}
+{{--        <div class="modal-content">--}}
+{{--            <div class="modal-header">--}}
+{{--                <h4 class="modal-title" id="modelHeadingPolicy"></h4>--}}
+{{--                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>--}}
+{{--            </div>--}}
+{{--            <div class="modal-body">--}}
+{{--                <div class="policy-1">--}}
+{{--                    <label for="name">Policy 1 <button type="button" onclick="copy1()" class="btn btn-link waves-effect copyboard"><i class="mdi mdi-content-copy"></i></button> </label>--}}
+{{--                    <textarea  type="text" id="policy1"  name="policy1" rows="8" class="form-control" > </textarea>--}}
+{{--                </div>--}}
+{{--                <div class="policy-2">--}}
+{{--                    <label  for="name">Policy 2 <button type="button" onclick="copy2()" class="btn btn-link waves-effect copyboard"><i class="mdi mdi-content-copy"></i></button></label>--}}
+{{--                    <textarea  type="text" id="policy2"  name="policy2" rows="8" class="form-control" > </textarea>--}}
 
-                </div>
+{{--                </div>--}}
 
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
+{{--            </div>--}}
+{{--            <div class="modal-footer">--}}
+{{--                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--    </div>--}}
+{{--</div>--}}
 
-
-
-
-<div class="modal fade bd-example-modal-xl" id="editDesEN"  role="dialog">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="modelEditDesEN"></h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            </div>
-            <div class="modal-body">
-                <form id="EditDesEN" name="EditDesEN" class="form-horizontal">
-                    <input type="hidden" name="project_id" id="project_id_edit_desEN">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div data-repeater-item="" class="row">
-                                        <div class="form-group col-lg-12">
-                                            <label for="name">Title App   &nbsp; &nbsp; &nbsp;
-                                                <span class="font-13 text-muted" id="count_title_app_en"></span>
-                                                <button type="button" onclick="copyTitleEN()" class="btn btn-link waves-effect copyboard"><i class="mdi mdi-content-copy"></i></button>
-                                            </label>
-                                            <input type="text" id="title_app_en" name="title_app" class="form-control">
+{{--<div class="modal fade bd-example-modal-xl" id="editDesEN"  role="dialog">--}}
+{{--    <div class="modal-dialog modal-xl">--}}
+{{--        <div class="modal-content">--}}
+{{--            <div class="modal-header">--}}
+{{--                <h4 class="modal-title" id="modelEditDesEN"></h4>--}}
+{{--                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>--}}
+{{--            </div>--}}
+{{--            <div class="modal-body">--}}
+{{--                <form id="EditDesEN" name="EditDesEN" class="form-horizontal">--}}
+{{--                    <input type="hidden" name="project_id" id="project_id_edit_desEN">--}}
+{{--                    <div class="row">--}}
+{{--                        <div class="col-12">--}}
+{{--                            <div class="card">--}}
+{{--                                <div class="card-body">--}}
+{{--                                    <div data-repeater-item="" class="row">--}}
+{{--                                        <div class="form-group col-lg-12">--}}
+{{--                                            <label for="name">Title App   &nbsp; &nbsp; &nbsp;--}}
+{{--                                                <span class="font-13 text-muted" id="count_title_app_en"></span>--}}
+{{--                                                <button type="button" onclick="copyTitleEN()" class="btn btn-link waves-effect copyboard"><i class="mdi mdi-content-copy"></i></button>--}}
+{{--                                            </label>--}}
+{{--                                            <input type="text" id="title_app_en" name="title_app" class="form-control">--}}
 
 
 
-                                        </div>
-                                        <div class="form-group col-lg-12">
-                                            <label for="name">Summary &nbsp; &nbsp; &nbsp;
-                                                <span class="font-13 text-muted" id="count_summary_en"></span>
-                                                <button type="button" onclick="copySumEN()" class="btn btn-link waves-effect copyboard"><i class="mdi mdi-content-copy"></i></button>
-                                            </label>
-                                            <input type="text" id="summary_en" name="summary_en" class="form-control">
-                                        </div>
-                                        <div class="form-group col-lg-12">
-                                            <label for="name">Description</label><button type="button" onclick="copyDesEN()" class="btn btn-link waves-effect copyboard"><i class="mdi mdi-content-copy"></i></button> </label>
-                                            <textarea id="des_en" name="des_en"></textarea>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> <!-- end col -->
-                        <div class="col-sm-offset-2 col-sm-10">
-                            <button type="submit" class="btn btn-primary" value="edit-des-en">Save changes</button>
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+{{--                                        </div>--}}
+{{--                                        <div class="form-group col-lg-12">--}}
+{{--                                            <label for="name">Summary &nbsp; &nbsp; &nbsp;--}}
+{{--                                                <span class="font-13 text-muted" id="count_summary_en"></span>--}}
+{{--                                                <button type="button" onclick="copySumEN()" class="btn btn-link waves-effect copyboard"><i class="mdi mdi-content-copy"></i></button>--}}
+{{--                                            </label>--}}
+{{--                                            <input type="text" id="summary_en" name="summary_en" class="form-control">--}}
+{{--                                        </div>--}}
+{{--                                        <div class="form-group col-lg-12">--}}
+{{--                                            <label for="name">Description</label><button type="button" onclick="copyDesEN()" class="btn btn-link waves-effect copyboard"><i class="mdi mdi-content-copy"></i></button> </label>--}}
+{{--                                            <textarea id="des_en" name="des_en"></textarea>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                        </div> <!-- end col -->--}}
+{{--                        <div class="col-sm-offset-2 col-sm-10">--}}
+{{--                            <button type="submit" class="btn btn-primary" value="edit-des-en">Save changes</button>--}}
+{{--                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                </form>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--    </div>--}}
+{{--</div>--}}
 
-<div class="modal fade bd-example-modal-xl" id="editDesVN"  role="dialog">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="modelEditDesVN"></h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            </div>
-            <div class="modal-body">
-                <form id="EditDesVN" name="EditDesVN" class="form-horizontal">
-                    <input type="hidden" name="project_id" id="project_id_edit_DesVN">
-
-
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div data-repeater-item="" class="row">
-                                        <div class="form-group col-lg-12">
-                                            <label for="name">Tiêu đề ứng dụng &nbsp; &nbsp; &nbsp;
-                                                <span class="font-13 text-muted" id="count_title_app_vn"></span>
-                                                <button type="button" onclick="copyTitleVN()" class="btn btn-link waves-effect copyboard"><i class="mdi mdi-content-copy"></i></button> </label>
-                                            <input type="text" id="title_app_vn" name="title_app" class="form-control">
-                                        </div>
-                                        <div class="form-group col-lg-12">
-                                            <label for="name">Mô tả ngắn &nbsp; &nbsp; &nbsp;
-                                                <span class="font-13 text-muted" id="count_summary_vn"></span>
-                                                <button type="button" onclick="copySumVN()" class="btn btn-link waves-effect copyboard"><i class="mdi mdi-content-copy"></i></button> </label>
-                                            <input type="text" id="summary_vn" name="summary_vn" class="form-control">
-                                        </div>
-                                        <div class="form-group col-lg-12">
-                                            <label for="name">Mô tả</label><button type="button" onclick="copyDesVN()" class="btn btn-link waves-effect copyboard"><i class="mdi mdi-content-copy"></i></button> </label>
-                                            <textarea id="des_vn" name="des_vn"></textarea>
-                                        </div>
-                                    </div>
+{{--<div class="modal fade bd-example-modal-xl" id="editDesVN"  role="dialog">--}}
+{{--    <div class="modal-dialog modal-xl">--}}
+{{--        <div class="modal-content">--}}
+{{--            <div class="modal-header">--}}
+{{--                <h4 class="modal-title" id="modelEditDesVN"></h4>--}}
+{{--                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>--}}
+{{--            </div>--}}
+{{--            <div class="modal-body">--}}
+{{--                <form id="EditDesVN" name="EditDesVN" class="form-horizontal">--}}
+{{--                    <input type="hidden" name="project_id" id="project_id_edit_DesVN">--}}
 
 
-                                </div>
-                            </div>
-                        </div> <!-- end col -->
-                        <div class="col-sm-offset-2 col-sm-10">
-                            <button type="submit" class="btn btn-primary" value="edit-des-en">Save changes</button>
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+{{--                    <div class="row">--}}
+{{--                        <div class="col-12">--}}
+{{--                            <div class="card">--}}
+{{--                                <div class="card-body">--}}
+{{--                                    <div data-repeater-item="" class="row">--}}
+{{--                                        <div class="form-group col-lg-12">--}}
+{{--                                            <label for="name">Tiêu đề ứng dụng &nbsp; &nbsp; &nbsp;--}}
+{{--                                                <span class="font-13 text-muted" id="count_title_app_vn"></span>--}}
+{{--                                                <button type="button" onclick="copyTitleVN()" class="btn btn-link waves-effect copyboard"><i class="mdi mdi-content-copy"></i></button> </label>--}}
+{{--                                            <input type="text" id="title_app_vn" name="title_app" class="form-control">--}}
+{{--                                        </div>--}}
+{{--                                        <div class="form-group col-lg-12">--}}
+{{--                                            <label for="name">Mô tả ngắn &nbsp; &nbsp; &nbsp;--}}
+{{--                                                <span class="font-13 text-muted" id="count_summary_vn"></span>--}}
+{{--                                                <button type="button" onclick="copySumVN()" class="btn btn-link waves-effect copyboard"><i class="mdi mdi-content-copy"></i></button> </label>--}}
+{{--                                            <input type="text" id="summary_vn" name="summary_vn" class="form-control">--}}
+{{--                                        </div>--}}
+{{--                                        <div class="form-group col-lg-12">--}}
+{{--                                            <label for="name">Mô tả</label><button type="button" onclick="copyDesVN()" class="btn btn-link waves-effect copyboard"><i class="mdi mdi-content-copy"></i></button> </label>--}}
+{{--                                            <textarea id="des_vn" name="des_vn"></textarea>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
 
 
-<div class="modal fade bd-example-modal-xl" id="buildandcheckModel" runat="server" role="dialog">
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                        </div> <!-- end col -->--}}
+{{--                        <div class="col-sm-offset-2 col-sm-10">--}}
+{{--                            <button type="submit" class="btn btn-primary" value="edit-des-en">Save changes</button>--}}
+{{--                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                </form>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--    </div>--}}
+{{--</div>--}}
+
+
+<div class="modal fade bd-example-modal-xl" id="buildcheckModel" runat="server" role="dialog">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -905,7 +898,7 @@ $markets = \App\Models\Markets::all();
                                     <div class="row">
                                         <div class="form-group col-lg-4">
                                             <p for="name">Mã Project</p>
-                                            <textarea id="project_data" name="project_data" rows="35" tyle="width: 100%"></textarea>
+                                            <textarea id="project_data" name="project_data" rows="35" style="width: 100%"></textarea>
                                         </div>
 
                                         <div class="form-group col-lg-8">

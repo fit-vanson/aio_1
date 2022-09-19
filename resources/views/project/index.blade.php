@@ -393,6 +393,7 @@
                 $('#projectname').val(_text+'-');
 
             })
+
             $(document).on('change', '#buildinfo_vernum', function () {
                 var today = new Date();
                 var dd = String(today.getDate()).padStart(2, '0');
@@ -659,6 +660,16 @@
             });
 
         });
+
+        $('#build_check').on('click', function () {
+            alert(1)
+            $('#buildcheckModel').modal('show');
+            $('.modal').on('hidden.bs.modal', function (e) {
+                $('body').addClass('modal-open');
+            });
+        });
+
+
 
     </script>
 
