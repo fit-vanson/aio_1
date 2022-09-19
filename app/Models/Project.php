@@ -10,6 +10,7 @@ class Project extends Model
     use HasFactory;
     protected $table = 'ngocphandang_project';
     protected $primaryKey = 'projectid';
+    protected $guarded =[];
 
 
     public function markets(){

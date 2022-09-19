@@ -73,8 +73,10 @@ class Project_Controller extends Controller
             }
 
             $project    = '<span class="h3 font-16 "> '.$record->projectname.' </span>';
-            $template = '<span class="text-muted" style="line-height:0.5"> ('.$record->ma_template->template.') </span>';
-            $title = '<span class="" style="line-height:0.5"> - '.$record->title_app.'</span>';
+//            $template = '<span class="text-muted" style="line-height:0.5"> ('.$record->ma_template->template.') </span>';
+            $template = '';
+//            $mada = '<span class="" style="line-height:0.5"> - '.$record->da->ma_da.'</span>';
+            $mada = '';
             $version  = 'Version: <span class="text-muted" style="line-height:0.5"> '.$record->buildinfo_vernum .' | '.$record->buildinfo_verstr.' </span>';
 
             $package = $status_app =  '';
@@ -139,7 +141,7 @@ class Project_Controller extends Controller
             $data_arr[] = array(
                 "projectid" => $record->projectid,
                 "logo" => $logo,
-                "projectname"=>$project.$template.'<br>'.$record->title_app.'<br>'.$version.'<br>'.$sdk.'<br>'.$keystore,
+                "projectname"=>$project.$template.$mada.'<br>'.$record->title_app.'<br>'.$version.'<br>'.$sdk.'<br>'.$keystore,
                 "markets"=>$package,
                 "status"=>$status_app,
                 "action"=> $btn,
@@ -387,5 +389,31 @@ class Project_Controller extends Controller
         }
 
         return rmdir($dir);
+    }
+
+    public function check_build(Request $request){
+        $project = Project::select('projectid','projectname','buildinfo_verstr','buildinfo_vernum')->whereIN('projectname',$request->projectname)->get();
+        return response()->json($project);
+    }
+
+    public function updateBuildCheck(Request $request){
+        $data = $request->data;
+        foreach (array_filter($data) as $item){
+            $arr = explode("|",$item);
+            Project::updateOrCreate(
+                [
+                    "projectname" => trim($arr[0]),
+                ],
+                [
+                    "buildinfo_vernum" => (int)trim($arr[1]),
+                    'buildinfo_verstr' => trim($arr[2]),
+                    'buildinfo_console' => (int)$request->buildinfo_console,
+                    'buildinfo_mess' => 'Chờ xử lý',
+                    'time_mess' => time(),
+                    'buildinfo_time' =>time(),
+
+                ]);
+        }
+        return response()->json(['success'=>'Cập nhật thành công']);
     }
 }

@@ -42,7 +42,6 @@ class VerifyTwoFaceController extends Controller
         $secret = $_GET['secret'];
         $googleAuthenticator =  new Google2FA();
         return $googleAuthenticator->getCurrentOtp($secret);
-
     }
 
 

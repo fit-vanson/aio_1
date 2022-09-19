@@ -428,144 +428,65 @@
                         // swal("Đã xóa!", "Your imaginary file has been deleted.", "success");
                     // });
             });
-        });
 
-        function editProject(id) {
-            $.get('{{asset('project/edit')}}/'+id,function (data) {
-
-                $('#modelHeading').html("Edit Project " + data.projectname);
-                $('#saveBtn').val("edit-project");
-                $('#ajaxModel').modal('show');
-                $('.modal').on('hidden.bs.modal', function (e) {
-                    $('body').addClass('modal-open');
-                });
-
-                $('#project_id').val(data.projectid)
-                $('#projectname').val(data.projectname)
-                $('#title_app').val(data.title_app)
-                $('#buildinfo_vernum').val(data.buildinfo_vernum)
-                $('#buildinfo_verstr').val(data.buildinfo_verstr)
-                $('#buildinfo_link_youtube_x').val(data.buildinfo_link_youtube_x)
-                $('#buildinfo_link_fanpage').val(data.buildinfo_link_fanpage)
-                $('#buildinfo_api_key_x').val(data.buildinfo_api_key_x)
-                $('#buildinfo_link_website').val(data.buildinfo_link_website)
-
-                $('#_template').val(data.template);
-                $('#_ma_da').val(data.ma_da);
-
-                if(data.logo) {
-                    $("#avatar").attr("src","../storage/projects/"+data.da.ma_da+"/"+data.projectname+"/lg114.png");
-                }else {
-                    $("#avatar").attr("src","img/logo.png");
-                }
-                if(data.data_onoff == 1){
-                    $("#data_online").prop('checked', true);
-                }else if (data.data_onoff == 2){
-                    $("#data_offline").prop('checked', true);
-                }else if (data.data_onoff == 3){
-                    $("#data_all").prop('checked', true);
-                }
-                var markets = [];
-                $.each(data.markets ,function( index, value ) {
-                    markets[value.pivot.market_id] = value.pivot;
-                });
-                    <?php
-                        $markets = \App\Models\Markets::all();
-                        foreach ($markets as $market){
-                        ?>
-                    if(data.ma_template.{{ucfirst(strtolower($market->market_name))}}_category){
-                        $('#nav_{{$market->market_name}}').show();
-                        $('#package_{{$market->market_name}}').show();
-                        {{--$('#tab_{{$market->market_name}}').show()--}}
-
-                        $('#{{$market->market_name}}_dev_id').select2(
-                            {
-                                minimumInputLength: 2,
-                                ajax: {
-                                    url: '{{route('api.getDev')}}',
-                                    dataType: 'json',
-                                    type: "GET",
-                                    // quietMillis: 50,
-                                    data: function(params) {
-
-                                        return {
-                                            q: params.term, // search term
-                                            dev_id: {{$market->id}},
-                                            page: params.page
-                                        };
-                                    },
-                                    processResults: function(data) {
-                                        return {
-                                            results: $.map(data, function (item) {
-                                                return {
-                                                    text: item.name + ' : ' + item.store,
-                                                    id: item.id
-                                                }
-                                            })
-                                        };
-                                    },
-                                    // cache: false
-                                },
+            $('#buildcheckForm button').click(function (event){
+                event.preventDefault();
+                var data = $('textarea#buildinfo_vernum').val()
+                var myArray = data.split("\n");
+                if($(this).attr("value") == "build"){
+                    $.ajax({
+                        data: {data: myArray},
+                        url: "{{ route('project.updateBuildCheck')}}?buildinfo_console=1",
+                        type: "post",
+                        dataType: 'json',
+                        success: function (data) {
+                            if(data.errors){
+                                for( var count=0 ; count <data.errors.length; count++){
+                                    $("#buildcheckForm").notify(
+                                        data.errors[count],"error",
+                                        { position:"right" }
+                                    );
+                                }
                             }
-                        );
-                        $('#{{$market->market_name}}_keystore').select2(
-                            {
-                                minimumInputLength: 2,
-                                ajax: {
-                                    url: '{{route('api.getKeystore')}}',
-                                    dataType: 'json',
-                                    type: "GET",
-                                    // quietMillis: 50,
-                                    data: function(params) {
-                                        return {
-                                            q: params.term, // search term
-                                            page: params.page
-                                        };
-                                    },
-                                    processResults: function(data) {
-                                        return {
-                                            results: $.map(data, function (item) {
-                                                return {
-                                                    text: item.name,
-                                                    id: item.name
-                                                }
-                                            })
-                                        };
-                                    },
-                                    // cache: false
-                                },
+                            if(data.success){
+                                $.notify(data.success, "success");
+                                $('#buildcheckForm').trigger("reset");
+                                $('#buildcheckModel').modal('hide');
+                                $('textarea#buildinfo_vernum').html('')
+                                table.draw();
                             }
-                        );
+                        },
+                    });
+                }
+                if($(this).attr("value") == "check"){
+                    $.ajax({
+                        data: {data: myArray},
+                        url: "{{ route('project.updateBuildCheck')}}?buildinfo_console=4",
+                        type: "post",
+                        dataType: 'json',
+                        success: function (data) {
+                            if(data.errors){
+                                for( var count=0 ; count <data.errors.length; count++){
+                                    $("#buildcheckForm").notify(
+                                        data.errors[count],"error",
+                                        { position:"right" }
+                                    );
+                                }
+                            }
+                            if(data.success){
+                                $.notify(data.success, "success");
+                                $('#buildcheckForm').trigger("reset");
+                                $('#buildandcheckModel').modal('hide');
+                                $('textarea#buildinfo_vernum').html('')
+                                table.draw();
+                            }
+                        },
+                    });
 
-                        if ((markets[{{$market->id}}])){
-                            $('#market_{{$market->id}}_package').val(markets[{{$market->id}}].package)
-                            $('#market_{{$market->id}}_app_link').val(markets[{{$market->id}}].app_link)
-                            $('#market_{{$market->id}}_policy_link').val(markets[{{$market->id}}].policy_link)
-                            $('#market_{{$market->id}}_app_id').val(markets[{{$market->id}}].appID)
-                            $('#market_{{$market->id}}_app_name_x').val(markets[{{$market->id}}].app_name_x)
-                            $('#market_{{$market->id}}_sdk').val(markets[{{$market->id}}].sdk)
-                            $('#market_{{$market->id}}_video_link').val(markets[{{$market->id}}].video_link)
-                            $('#_market_{{$market->id}}_dev_id').val(markets[{{$market->id}}].dev_id)
-                            $('#_market_{{$market->id}}_keystore').val(markets[{{$market->id}}].keystore)
-
-                            var ads = markets[{{$market->id}}].ads;
-                            var result = JSON.parse(ads)
-
-                            $.each(result ,function( index, value ) {
-                                $('#market_{{$market->id}}_'+index).val(value)
-                            });
-                        }
-                    }else {
-                        $('#nav_{{$market->market_name}}').hide()
-                        $('#package_{{$market->market_name}}').hide()
-                    }
-                    <?php
-                    }
-                    ?>
-
+                }
 
             });
-        }
+        });
 
         $("#AddDaForm").submit(function (e) {
             e.preventDefault();
@@ -662,12 +583,170 @@
         });
 
         $('#build_check').on('click', function () {
-            alert(1)
             $('#buildcheckModel').modal('show');
             $('.modal').on('hidden.bs.modal', function (e) {
                 $('body').addClass('modal-open');
             });
         });
+
+        function editProject(id) {
+            $.get('{{asset('project/edit')}}/'+id,function (data) {
+
+                $('#modelHeading').html("Edit Project " + data.projectname);
+                $('#saveBtn').val("edit-project");
+                $('#ajaxModel').modal('show');
+                $('.modal').on('hidden.bs.modal', function (e) {
+                    $('body').addClass('modal-open');
+                });
+
+                $('#project_id').val(data.projectid)
+                $('#projectname').val(data.projectname)
+                $('#title_app').val(data.title_app)
+                $('#buildinfo_vernum').val(data.buildinfo_vernum)
+                $('#buildinfo_verstr').val(data.buildinfo_verstr)
+                $('#buildinfo_link_youtube_x').val(data.buildinfo_link_youtube_x)
+                $('#buildinfo_link_fanpage').val(data.buildinfo_link_fanpage)
+                $('#buildinfo_api_key_x').val(data.buildinfo_api_key_x)
+                $('#buildinfo_link_website').val(data.buildinfo_link_website)
+
+                $('#_template').val(data.template);
+                $('#_ma_da').val(data.ma_da);
+
+                if(data.logo) {
+                    $("#avatar").attr("src","../storage/projects/"+data.da.ma_da+"/"+data.projectname+"/lg114.png");
+                }else {
+                    $("#avatar").attr("src","img/logo.png");
+                }
+                if(data.data_onoff == 1){
+                    $("#data_online").prop('checked', true);
+                }else if (data.data_onoff == 2){
+                    $("#data_offline").prop('checked', true);
+                }else if (data.data_onoff == 3){
+                    $("#data_all").prop('checked', true);
+                }
+                var markets = [];
+                $.each(data.markets ,function( index, value ) {
+                    markets[value.pivot.market_id] = value.pivot;
+                });
+                <?php
+                    $markets = \App\Models\Markets::all();
+                    foreach ($markets as $market){
+                    ?>
+                if(data.ma_template.{{ucfirst(strtolower($market->market_name))}}_category){
+                    $('#nav_{{$market->market_name}}').show();
+                    $('#package_{{$market->market_name}}').show();
+                    {{--$('#tab_{{$market->market_name}}').show()--}}
+
+                    $('#{{$market->market_name}}_dev_id').select2(
+                        {
+                            minimumInputLength: 2,
+                            ajax: {
+                                url: '{{route('api.getDev')}}',
+                                dataType: 'json',
+                                type: "GET",
+                                // quietMillis: 50,
+                                data: function(params) {
+
+                                    return {
+                                        q: params.term, // search term
+                                        dev_id: {{$market->id}},
+                                        page: params.page
+                                    };
+                                },
+                                processResults: function(data) {
+                                    return {
+                                        results: $.map(data, function (item) {
+                                            return {
+                                                text: item.name + ' : ' + item.store,
+                                                id: item.id
+                                            }
+                                        })
+                                    };
+                                },
+                                // cache: false
+                            },
+                        }
+                    );
+                    $('#{{$market->market_name}}_keystore').select2(
+                        {
+                            minimumInputLength: 2,
+                            ajax: {
+                                url: '{{route('api.getKeystore')}}',
+                                dataType: 'json',
+                                type: "GET",
+                                // quietMillis: 50,
+                                data: function(params) {
+                                    return {
+                                        q: params.term, // search term
+                                        page: params.page
+                                    };
+                                },
+                                processResults: function(data) {
+                                    return {
+                                        results: $.map(data, function (item) {
+                                            return {
+                                                text: item.name,
+                                                id: item.name
+                                            }
+                                        })
+                                    };
+                                },
+                                // cache: false
+                            },
+                        }
+                    );
+
+                    if ((markets[{{$market->id}}])){
+                        $('#market_{{$market->id}}_package').val(markets[{{$market->id}}].package)
+                        $('#market_{{$market->id}}_app_link').val(markets[{{$market->id}}].app_link)
+                        $('#market_{{$market->id}}_policy_link').val(markets[{{$market->id}}].policy_link)
+                        $('#market_{{$market->id}}_app_id').val(markets[{{$market->id}}].appID)
+                        $('#market_{{$market->id}}_app_name_x').val(markets[{{$market->id}}].app_name_x)
+                        $('#market_{{$market->id}}_sdk').val(markets[{{$market->id}}].sdk)
+                        $('#market_{{$market->id}}_video_link').val(markets[{{$market->id}}].video_link)
+                        $('#_market_{{$market->id}}_dev_id').val(markets[{{$market->id}}].dev_id)
+                        $('#_market_{{$market->id}}_keystore').val(markets[{{$market->id}}].keystore)
+
+                        var ads = markets[{{$market->id}}].ads;
+                        var result = JSON.parse(ads)
+
+                        $.each(result ,function( index, value ) {
+                            $('#market_{{$market->id}}_'+index).val(value)
+                        });
+                    }
+                }else {
+                    $('#nav_{{$market->market_name}}').hide()
+                    $('#package_{{$market->market_name}}').hide()
+                }
+                <?php
+                }
+                ?>
+
+
+            });
+        }
+
+        function getIndex(item){
+            let index = $(item).val();
+            let myArray = index.split("\n");
+            let data = {
+                projectname : myArray
+            }
+            let text = "";
+            $.ajax({
+                type: 'get',
+                url: '{{asset('project/check_build')}}',
+                data: data,
+                success: function (data) {
+                    data.forEach(element =>{
+                        text += element.projectname + " | " + element.buildinfo_vernum + " | " + element.buildinfo_verstr +"\n";
+                    });
+                    $("textarea#buildinfo_vernum").html(text)
+                },
+            });
+        }
+
+
 
 
 
