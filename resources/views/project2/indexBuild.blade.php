@@ -201,9 +201,9 @@
             $('.message-full').html(rowData.full_mess);
 
         });
-        setInterval( function () {
-            table.ajax.reload();
-        }, 15000 );
+        // setInterval( function () {
+        //     table.ajax.reload();
+        // }, 15000 );
 
         $('#all').on('click', function () {
             $('.console_status_button').val(null);

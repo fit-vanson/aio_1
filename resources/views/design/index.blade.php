@@ -59,8 +59,6 @@
                         <tr>
                             <th>Project Name</th>
                             <th>Ngôn ngữ </th>
-{{--                            <th style="width: 30%">Logo | Banner | Preview</th>--}}
-{{--                            <th style="width: 5%"> Video</th>--}}
                             <th>Status</th>
                             <th>User </th>
                             <th>Action</th>
@@ -118,10 +116,7 @@
         });
 
 
-        $('.data-table tfoot th').each(function () {
-            var title = $(this).text();
-            $(this).html('<input type="text" placeholder="Search ' + title + '" />');
-        });
+
 
         // var groupColumn = 0;
         var table = $('.data-table').DataTable({
@@ -210,36 +205,7 @@
                     } );
                 } );
             },
-            // order: [[1, 'asc']],
-            // rowGroup: {
-            //     dataSrc: 0
-            // },
-            // columnDefs: [{ visible: false, targets: groupColumn }],
-            // drawCallback: function (settings) {
-            //     var api = this.api();
-            //     var rows = api.rows({ page: 'current' }).nodes();
-            //     var last = null;
-            //     api
-            //         .column(groupColumn, { page: 'current' })
-            //         .data()
-            //         .each(function (group, i) {
-            //             if (last !== group) {
-            //                 $(rows)
-            //                     .eq(i)
-            //                     .before('<tr class="group"><td colspan="8">' + group + '</td></tr>');
-            //                 last = group;
-            //             }
-            //         });
-            //     $('.popup-youtube, .popup-vimeo, .popup-gmaps').magnificPopup({
-            //         disableOn: 700,
-            //         type: 'iframe',
-            //         mainClass: 'mfp-fade',
-            //         removalDelay: 160,
-            //         preloader: false,
-            //         fixedContentPos: false
-            //     });
-            //     $('.light_gallery').lightGallery({});
-            // },
+
         });
         var _id = null;
         var _name = null;

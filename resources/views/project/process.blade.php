@@ -44,21 +44,18 @@
                                    style="width: 100%;">
                                 <thead>
                                 <tr>
-
                                     <th style="width:10%">Logo</th>
                                     <th style="width:20%">Mã Project</th>
-                                    <th style="width:30%">Package</th>
-                                    <th style="width:30%">Message</th>
-                                    <th style="width:5%">Trạng thái Console</th>
-                                    <th style="width:5%">Action</th>
+                                    <th style="width:20%">Package</th>
+                                    <th style="width:20%">Message</th>
+                                    <th style="width:20%">Trạng thái Console</th>
+                                    <th style="width:10%">Action</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-
                                 </tbody>
                             </table>
                         </div>
-
                     </div>
 
                 </div>
@@ -96,7 +93,7 @@
             var hash = url.substring(url.indexOf('?')+1);
             $.fn.dataTable.ext.errMode = 'none';
             var table = $('#processTable').DataTable({
-                displayLength: 50,
+                displayLength: 5,
                 lengthMenu: [5, 10, 25, 50, 75, 100],
 
                 processing: true,
@@ -105,7 +102,13 @@
                 ajax: {
                     {{--url: "{{ route('project.getIndex')}}?"+hash,--}}
                     url: "{{ route('project.getProcess')}}",
-                    type: "post"
+                    type: "post",
+                    data: function (d){
+                        return $.extend({},d,{
+                            "console_status": $('.Process_button').val(),
+                            "remove_status": $('#RemoveA').val(),
+                        })
+                    }
                 },
                 columns: [
 
@@ -130,7 +133,9 @@
                         $('td', nRow).css('background-color', 'rgb(255 0 0 / 21%)');
                     }
                 },
-                order: [[ 0, 'desc' ]]
+                order: [[ 0, 'desc' ]],
+
+
             });
 
             function renderStatus(data, type, row) {
@@ -173,6 +178,36 @@
             setInterval( function () {
                 table.ajax.reload();
             }, 5000 );
+
+
+            $('#all').on('click', function () {
+                $('.Process_button').val(null);
+                $('#RemoveA').val('');
+                $('#RemoveA').hide();
+                table.draw();
+            });
+            $('#WaitProcessing').on('click', function () {
+                $('.Process_button').val('1%4');
+                $('#RemoveA').val('');
+                $('#RemoveA').hide();
+                table.draw();
+            });
+            $('#Processing').on('click', function () {
+                $('.Process_button').val('2%5');
+                $('#RemoveA').val('');
+                $('#RemoveA').hide();
+                table.draw();
+            });
+            $('#End').on('click', function () {
+                $('.Process_button').val('3%6%7%8');
+                $('#RemoveA').val('');
+                $('#RemoveA').show();
+                table.draw();
+            });
+            $('#RemoveA').on('click', function () {
+                $('#RemoveA').val('3%6%7%8');
+                table.ajax.reload();
+            });
 
 
             $(document).on('click','.removeProject', function (data){

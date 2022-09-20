@@ -68,18 +68,21 @@
 
     <ul class="list-inline menu-left mb-0">
         <li class="float-left">
-            <button class="button-menu-mobile open-left waves-effect" style="width: auto">
-                @if(isset($header))
-                <h4 class="font-size-18">{{$header['title']}}</h4>
-
-                        @foreach($header['button'] as $key=>$value)
-                            <button class="btn btn-success"  type="button" id="{{$value}}"><span>{{$key}}</span></button>
-                        @endforeach
-
-                @else
+            @if(isset($header))
+            <div class="{{$header['title']}}_button">
+                <button class="button-menu-mobile open-left waves-effect" style="width: auto">
+                    <h4 class="font-size-18">{{$header['title']}}</h4>
+                </button>
+            @foreach($header['button'] as $key=>$value)
+                <button class="btn btn-success"  type="button" id="{{$value}}"><span>{{$key}}</span></button>
+            @endforeach
+            </div>
+            @else
+                <button class="button-menu-mobile open-left waves-effect" style="width: auto">
                     <i class="mdi mdi-menu"></i>
-                @endif
-            </button>
+                </button>
+            @endif
+
         </li>
         <li class="d-none d-sm-block">
 

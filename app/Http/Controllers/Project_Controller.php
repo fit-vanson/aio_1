@@ -531,16 +531,25 @@ class Project_Controller extends Controller
         $header = [
             'title' => 'Process',
             'button' => [
-                'Create'            => 'createNewProject',
-                'Build And Check'   => 'build_check',
-                'Status'            => 'dev_status',
-                'KeyStore'          => 'change_keystore',
-                'SDK'          => 'change_sdk',
+                'All'            => 'all',
+                'Chờ xử lý'   => 'WaitProcessing',
+                'Đang xử lý'            => 'Processing',
+                'Kết thúc'          => 'End',
+
             ]
         ];
         return view('project.process')->with(compact('header'));
     }
     public function getProcess(Request $request){
+
+
+        $status_console = '1%4%2%5%3%6%7%8';
+        if(isset($request->console_status)){
+            $status_console = $request->console_status;
+        }
+        $status_console = explode('%',$status_console);
+
+
         $draw = $request->get('draw');
         $start = $request->get("start");
         $rowperpage = $request->get("length"); // total number of rows per page
@@ -557,14 +566,19 @@ class Project_Controller extends Controller
 
         $totalRecords = Project::select('count(*) as allcount')
             ->where('buildinfo_console','<>',0)
+
             ->count();
         $totalRecordswithFilter = Project::select('count(*) as allcount')
             ->Where('projectname', 'like', '%' . $searchValue . '%')
             ->where('buildinfo_console','<>',0)
+            ->whereIn('buildinfo_console',$status_console)
+
             ->count();
         $records = Project::orderBy($columnName, $columnSortOrder)
             ->with('markets','ma_template','da')
             ->Where('projectname', 'like', '%' . $searchValue . '%')
+            ->whereIn('buildinfo_console',$status_console)
+
             ->where('buildinfo_console','<>',0)
             ->skip($start)
             ->take($rowperpage)
@@ -613,36 +627,7 @@ class Project_Controller extends Controller
                 if($market->pivot->package){
                     $package .= '<p class="card-title-desc font-16"><img src="img/icon/'.$market->market_logo.'"> '.$market->pivot->package.'</p>';
 
-                    $status = $market->pivot->status_app;
-                    switch ($status){
-                        case 0:
-                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-secondary font-16"> Mặc định</p> </div>';
-                            break;
-                        case 1:
-                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-success font-16"> Publish</p></div>';
-                            break;
-                        case 2:
-                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-warning font-16"> Suppend</p></div>';
-                            break;
-                        case 3:
-                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-info font-16"> UnPublish</p></div>';
-                            break;
-                        case 4:
-                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-primary font-16"> Remove</p></div>';
-                            break;
-                        case 5:
-                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-dark font-16"> Reject</p></div>';
-                            break;
-                        case 6:
-                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-danger font-16"> Check</p></div>';
-                            break;
-                        case 7:
-                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-warning font-16"> Pending</p></div>';
-                            break;
-                        default:
-                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-secondary font-16"> Mặc định</p></div>';
-                            break;
-                    }
+
 
                     if($market->pivot->sdk){
                         $sdk .= ' <span class="badge badge-'.$badges[$key].'" style="font-size: 12px"> '.strtoupper($market->market_name[0]).': '.$market->pivot->sdk.' </span> ';
@@ -673,7 +658,7 @@ class Project_Controller extends Controller
                 "logo" => $logo,
                 "projectname"=>$project.$template.$mada.'<br>'.$record->title_app.'<br>'.$version.'<br>'.$sdk.'<br>'.$keystore,
                 "markets"=>$package,
-                "status"=>$status_app.$dev,
+
                 "buildinfo_mess" => $mess_info,
                 "full_mess" => $full_mess,
                 "buildinfo_console" =>$record->buildinfo_console,
