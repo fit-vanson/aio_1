@@ -51,7 +51,7 @@ class ProjectController extends Controller
     }
     public function indexBuild()
     {
-        return view('project.indexBuild');
+        return view('project2.indexBuild');
     }
     public function appAmazon()
     {

@@ -48,13 +48,11 @@ class Project_Controller extends Controller
             ->count();
         $records = Project::orderBy($columnName, $columnSortOrder)
             ->with('markets','ma_template','da')
-//            ->whereIN('projectid',[15,13,14,97])
-
             ->Where('projectname', 'like', '%' . $searchValue . '%')
             ->skip($start)
             ->take($rowperpage)
             ->get();
-//            ->get()->load('markets','ma_template','da');
+
 
         $data_arr = array();
         foreach ($records as $record) {
@@ -85,7 +83,7 @@ class Project_Controller extends Controller
 
             $version  = 'Version: <span class="text-muted" style="line-height:0.5"> '.$record->buildinfo_vernum .' | '.$record->buildinfo_verstr.' </span>';
 
-            $package = $status_app =  '';
+            $package = $status_app =$dev =  '';
             $keystore = 'Key: ';
             $sdk = 'SDK : <span class="badge badge-secondary" style="font-size: 12px">'.$record->buildinfo_keystore.'</span>';
             $badges = [
@@ -99,6 +97,7 @@ class Project_Controller extends Controller
             ];
 
             foreach ($record->markets as $key=>$market){
+
                 if($market->pivot->package){
                     $package .= '<p class="card-title-desc font-16"><img src="img/icon/'.$market->market_logo.'"> '.$market->pivot->package.'</p>';
 
@@ -139,6 +138,7 @@ class Project_Controller extends Controller
                     if($market->pivot->keystore){
                         $keystore .= ' <span class="badge badge-'.$badges[$key].'" style="font-size: 12px"> '.strtoupper($market->market_name[0]).': '.$market->pivot->keystore.' </span> ';
                     }
+
                 }
             }
 
@@ -147,7 +147,7 @@ class Project_Controller extends Controller
                 "logo" => $logo,
                 "projectname"=>$project.$template.$mada.'<br>'.$record->title_app.'<br>'.$version.'<br>'.$sdk.'<br>'.$keystore,
                 "markets"=>$package,
-                "status"=>$status_app,
+                "status"=>$status_app.$dev,
                 "action"=> $btn,
             );
         }
@@ -399,24 +399,38 @@ class Project_Controller extends Controller
         return response()->json($project);
     }
 
-    public function updateBuildCheck(Request $request){
-        $data = $request->data;
-        foreach (array_filter($data) as $item){
-            $arr = explode("|",$item);
-            Project::updateOrCreate(
-                [
-                    "projectname" => trim($arr[0]),
-                ],
-                [
-                    "buildinfo_vernum" => (int)trim($arr[1]),
-                    'buildinfo_verstr' => trim($arr[2]),
-                    'buildinfo_console' => (int)$request->buildinfo_console,
-                    'buildinfo_mess' => 'Chờ xử lý',
-                    'time_mess' => time(),
-                    'buildinfo_time' =>time(),
-
+    public function updateConsole(Request $request){
+        $console = $request->buildinfo_console;
+        switch ($console){
+            case '0':
+                $project = Project::findorFail($request->projectID)->update([
+                    'buildinfo_console' => 0,
+                    'buildinfo_mess' => '',
+                    'time_mess' =>time(),
+                    'buildinfo_time' => time(),
                 ]);
+                break;
+            default:
+                $data = $request->data;
+                foreach (array_filter($data) as $item){
+                    $arr = explode("|",$item);
+                    Project::updateOrCreate(
+                        [
+                            "projectname" => trim($arr[0]),
+                        ],
+                        [
+                            "buildinfo_vernum" => (int)trim($arr[1]),
+                            'buildinfo_verstr' => trim($arr[2]),
+                            'buildinfo_console' => (int)$request->buildinfo_console,
+                            'buildinfo_mess' => 'Chờ xử lý',
+                            'time_mess' => time(),
+                            'buildinfo_time' =>time(),
+
+                        ]);
+                }
         }
+
+
         return response()->json(['success'=>'Cập nhật thành công']);
     }
 
@@ -509,6 +523,171 @@ class Project_Controller extends Controller
             $item->markets()->sync($inset_market);
         }
         return response()->json(['success'=>'Cập nhật thành công ']);
+
+    }
+
+    public function process(Request $request)
+    {
+        $header = [
+            'title' => 'Process',
+            'button' => [
+                'Create'            => 'createNewProject',
+                'Build And Check'   => 'build_check',
+                'Status'            => 'dev_status',
+                'KeyStore'          => 'change_keystore',
+                'SDK'          => 'change_sdk',
+            ]
+        ];
+        return view('project.process')->with(compact('header'));
+    }
+    public function getProcess(Request $request){
+        $draw = $request->get('draw');
+        $start = $request->get("start");
+        $rowperpage = $request->get("length"); // total number of rows per page
+
+        $columnIndex_arr = $request->get('order');
+        $columnName_arr = $request->get('columns');
+        $order_arr = $request->get('order');
+        $search_arr = $request->get('search');
+
+        $columnIndex = $columnIndex_arr[0]['column']; // Column index
+        $columnName = $columnName_arr[$columnIndex]['data']; // Column name
+        $columnSortOrder = $order_arr[0]['dir']; // asc or desc
+        $searchValue = $search_arr['value']; // Search value
+
+        $totalRecords = Project::select('count(*) as allcount')
+            ->where('buildinfo_console','<>',0)
+            ->count();
+        $totalRecordswithFilter = Project::select('count(*) as allcount')
+            ->Where('projectname', 'like', '%' . $searchValue . '%')
+            ->where('buildinfo_console','<>',0)
+            ->count();
+        $records = Project::orderBy($columnName, $columnSortOrder)
+            ->with('markets','ma_template','da')
+            ->Where('projectname', 'like', '%' . $searchValue . '%')
+            ->where('buildinfo_console','<>',0)
+            ->skip($start)
+            ->take($rowperpage)
+            ->get();
+
+        $data_arr = array();
+        foreach ($records as $record) {
+
+            $btn = ' <a href="javascript:void(0)"data-id="'.$record->projectid.'" class="btn btn-warning removeProject"><i class="mdi mdi-file-move"></i></a>';
+
+            $mada =  $template = '';
+            if($record->da){
+                $mada = $record->da->ma_da;
+            }
+            if($record->ma_template){
+                $template = $record->ma_template->template;
+            }
+
+            if(isset($record->logo)){
+                $logo = '<img class="rounded mx-auto d-block"  width="100px"  height="100px"  src="'.url('storage/projects/'.$mada.'/'.$record->projectname.'/lg114.png').'">';
+            }else{
+                $logo = '<img class="rounded mx-auto d-block" width="100px" height="100px" src="assets\images\logo-sm.png">';
+            }
+
+            $project    = '<span class="h3 font-16 "> '.$record->projectname.' </span>';
+            $template = '<span class="text-muted" style="line-height:0.5"> ('.$template.') </span>';
+            $mada = '<span class="" style="line-height:0.5"> - '.$mada.'</span>';
+
+            $version  = 'Version: <span class="text-muted" style="line-height:0.5"> '.$record->buildinfo_vernum .' | '.$record->buildinfo_verstr.' </span>';
+
+            $package = $status_app =$dev =  '';
+            $keystore = 'Key: ';
+            $sdk = 'SDK : <span class="badge badge-secondary" style="font-size: 12px">'.$record->buildinfo_keystore.'</span>';
+            $badges = [
+                'primary',
+                'success',
+                'info',
+                'warning',
+                'danger',
+                'dark',
+                'secondary',
+            ];
+
+            foreach ($record->markets as $key=>$market){
+
+                if($market->pivot->package){
+                    $package .= '<p class="card-title-desc font-16"><img src="img/icon/'.$market->market_logo.'"> '.$market->pivot->package.'</p>';
+
+                    $status = $market->pivot->status_app;
+                    switch ($status){
+                        case 0:
+                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-secondary font-16"> Mặc định</p> </div>';
+                            break;
+                        case 1:
+                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-success font-16"> Publish</p></div>';
+                            break;
+                        case 2:
+                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-warning font-16"> Suppend</p></div>';
+                            break;
+                        case 3:
+                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-info font-16"> UnPublish</p></div>';
+                            break;
+                        case 4:
+                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-primary font-16"> Remove</p></div>';
+                            break;
+                        case 5:
+                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-dark font-16"> Reject</p></div>';
+                            break;
+                        case 6:
+                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-danger font-16"> Check</p></div>';
+                            break;
+                        case 7:
+                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-warning font-16"> Pending</p></div>';
+                            break;
+                        default:
+                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-secondary font-16"> Mặc định</p></div>';
+                            break;
+                    }
+
+                    if($market->pivot->sdk){
+                        $sdk .= ' <span class="badge badge-'.$badges[$key].'" style="font-size: 12px"> '.strtoupper($market->market_name[0]).': '.$market->pivot->sdk.' </span> ';
+                    }
+                    if($market->pivot->keystore){
+                        $keystore .= ' <span class="badge badge-'.$badges[$key].'" style="font-size: 12px"> '.strtoupper($market->market_name[0]).': '.$market->pivot->keystore.' </span> ';
+                    }
+                }
+            }
+
+            $mess_info = '';
+            $full_mess ='null';
+            if ($record->buildinfo_mess){
+                $buildinfo_mess = $record->buildinfo_mess;
+                $full_mess =  (str_replace('|','<br>',$buildinfo_mess));
+                $buildinfo_mess =  (explode('|',$buildinfo_mess));
+                $buildinfo_mess = array_reverse($buildinfo_mess);
+                for($i = 0 ; $i < 6 ; $i++){
+                    if(isset($buildinfo_mess[$i])){
+                        $mess_info .=  $buildinfo_mess[$i].'<br>';
+                    }
+                }
+            }
+
+
+            $data_arr[] = array(
+                "projectid" => $record->projectid,
+                "logo" => $logo,
+                "projectname"=>$project.$template.$mada.'<br>'.$record->title_app.'<br>'.$version.'<br>'.$sdk.'<br>'.$keystore,
+                "markets"=>$package,
+                "status"=>$status_app.$dev,
+                "buildinfo_mess" => $mess_info,
+                "full_mess" => $full_mess,
+                "buildinfo_console" =>$record->buildinfo_console,
+                "action"=> $btn,
+            );
+        }
+        $response = array(
+            "draw" => intval($draw),
+            "iTotalRecords" => $totalRecords,
+            "iTotalDisplayRecords" => $totalRecordswithFilter,
+            "aaData" => $data_arr,
+        );
+
+        echo json_encode($response);
 
     }
 }

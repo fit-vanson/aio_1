@@ -29,7 +29,7 @@
 
 
                                     @can('project-index')
-{{--                                        <li><a href="{{route('project.indexBuild')}}">Tiến trình xử lý</a></li>--}}
+                                        <li><a href="{{route('project.process')}}">Tiến trình xử lý</a></li>
 {{--                                        <li><a href="{{route('project.appChplay')}}">Quản lý APP (CHPlay)</a></li>--}}
 {{--                                        <li><a href="{{route('project.appAmazon')}}">Quản lý APP (Amazon)</a></li>--}}
 {{--                                        <li><a href="{{route('project.appSamsung')}}">Quản lý APP (Samsung)</a></li>--}}
