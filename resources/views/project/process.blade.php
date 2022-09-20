@@ -45,11 +45,11 @@
                                 <thead>
                                 <tr>
                                     <th style="width:10%">Logo</th>
-                                    <th style="width:20%">Mã Project</th>
-                                    <th style="width:20%">Package</th>
+                                    <th style="width:25%">Mã Project</th>
+                                    <th style="width:30%">Package</th>
                                     <th style="width:20%">Message</th>
-                                    <th style="width:20%">Trạng thái Console</th>
-                                    <th style="width:10%">Action</th>
+                                    <th style="width:10%">Trạng thái Console</th>
+                                    <th style="width:5%">Action</th>
                                 </tr>
                                 </thead>
                                 <tbody>
