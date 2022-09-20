@@ -59,8 +59,6 @@
 
                                     @if( in_array( "Admin" ,array_column(auth()->user()->roles()->get()->toArray(),'name')))
                                         <li><a href="{{route('design_content.index')}}">Duyệt Design</a></li>
-{{--                                        <li><a href="{{route('design_content.index')}}?action=faildesign">Fail Design</a></li>--}}
-{{--                                        <li><a href="{{route('design_content.index')}}?action=passdesign">Pass Design</a></li>--}}
                                     @endif
 
                                 </ul>
@@ -182,11 +180,12 @@
                                 </ul>
                             </li>
                             <li>
-                                <a href="javascript:void(0);" class="waves-effect"><i class="ti-email"></i> <span>Job Auto CHplay<span class="float-right menu-arrow"><i class="mdi mdi-chevron-right"></i></span> </span> </a>
+                                <a href="javascript:void(0);" class="waves-effect"><i class="ti-email"></i> <span>Job Auto <span class="float-right menu-arrow"><i class="mdi mdi-chevron-right"></i></span> </span> </a>
                                 <ul class="submenu">
                                     @can('mail_manage-index')
                                         <li><a href="{{route('mail_manage.index')}}">Tài nguyên Gmail</a></li>
                                     @endcan
+                                        <li><a href="{{route('bot.index')}}" >  Bot  </a></li>
                                 </ul>
                             </li>
                             <li>
@@ -238,10 +237,7 @@
 
                             </li>
 
-                            <li>
-                                <a href="{{route('bot.index')}}" class="waves-effect"><i class="ti-check-box"></i> <span> Bot <span class="float-right menu-arrow"></span> </span> </a>
 
-                            </li>
                             <li>
                                 <a href="javascript:void(0);" class="waves-effect"><i class="ti-archive"></i> <span> Quản trị phân quyền <span class="float-right menu-arrow"><i class="mdi mdi-chevron-right"></i></span> </span> </a>
                                 <ul class="submenu">
