@@ -167,7 +167,10 @@
                 $('.modal').on('hidden.bs.modal', function (e) {
                     $('body').addClass('modal-open');
                 });
-
+                $('#projectForm').trigger("reset");
+                $('#tab_home').addClass( 'active' );
+                $('#nav_link_home').addClass( 'active' );
+                $('#nav_link_home').prop('aria-selected', true);
 
                 <?php
                 $markets = \App\Models\Markets::all();
@@ -649,6 +652,11 @@
                 });
 
 
+                $('#tab_home').addClass( 'active' );
+                $('#nav_link_home').addClass( 'active' );
+                $('#nav_link_home').prop('aria-selected', true);
+
+
 
 
                 if(data.logo) {
@@ -672,8 +680,15 @@
                     foreach ($markets as $market){
                     ?>
                 if(data.ma_template.{{ucfirst(strtolower($market->market_name))}}_category){
+
                     $('#nav_{{$market->market_name}}').show();
                     $('#package_{{$market->market_name}}').show();
+
+                    $('#tab_{{$market->market_name}}').removeClass( 'active' );
+                    $('#nav_{{$market->market_name}}').removeClass( 'active' );
+
+
+
                     {{--$('#tab_{{$market->market_name}}').show()--}}
 
                     $('#{{$market->market_name}}_dev_id').select2(

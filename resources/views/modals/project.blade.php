@@ -23,8 +23,8 @@ $markets = \App\Models\Markets::all();
                                             </a>
                                         </li>
                                         @foreach($markets as $market)
-                                            <li class="nav-item" id="nav_{{$market->market_name}}" >
-                                                <a class="nav-link"  data-toggle="tab" href="#tab_{{$market->market_name}}" role="tab">
+                                            <li class="nav-item">
+                                                <a class="nav-link"  data-toggle="tab" href="#tab_{{$market->market_name}}" role="tab" id="nav_{{$market->market_name}}">
                                                     <span class="d-none d-sm-block">{{$market->market_name}}</span>
                                                 </a>
                                             </li>
@@ -108,23 +108,21 @@ $markets = \App\Models\Markets::all();
                                             </div>
 
                                             @foreach($markets as $market)
-                                                <div class="row"  id="package_{{$market->market_name}}">
-                                                    <div class="col-lg-12">
+                                                <div class="row mb-0"  id="package_{{$market->market_name}}">
+                                                    <div class="form-group col-lg-12">
                                                         <h4 class="mt-0 header-title">Package {{$market->market_name}}</h4>
                                                         <input type="text" id="market_{{$market->id}}_package" name="market[{{$market->id}}][package]" class="form-control">
-                                                        <div id="accordion">
-                                                            <div class="card mb-1">
-                                                                <div class="card-header p-3" id="headingOne">
-                                                                    <h6 class="font-14">
-                                                                        <a href="#collapseOne" class="text-dark collapsed" data-toggle="collapse" aria-expanded="false" aria-controls="collapseOne">
-                                                                            ADS {{$market->market_name}}
-                                                                        </a>
-                                                                    </h6>
+                                                    </div>
+                                                    <div class="form-group col-lg-11" style="margin-left: auto;">
+                                                        <div id="accordion_{{$market->id}}">
+                                                            <div class="card mb-0">
+                                                                <div class="card-header" id="heading_{{$market->id}}">
+                                                                    <a href="#collapse_{{$market->id}}" class="text-dark collapsed" data-toggle="collapse" aria-expanded="false" aria-controls="collapse_{{$market->id}}">
+                                                                        ADS {{$market->market_name}}
+                                                                    </a>
                                                                 </div>
-
-                                                                <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion" style="">
+                                                                <div id="collapse_{{$market->id}}" class="collapse" aria-labelledby="heading_{{$market->id}}" data-parent="#accordion_{{$market->id}}" style="">
                                                                     <div class="card-body">
-
                                                                         <div class="divider">
                                                                             <div class="divider-text"><b>Admod</b></div>
                                                                         </div>
