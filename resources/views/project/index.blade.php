@@ -436,7 +436,7 @@
                 if($(this).attr("value") == "build"){
                     $.ajax({
                         data: {data: myArray},
-                        url: "{{ route('project.updateBuildCheck')}}?buildinfo_console=1",
+                        url: "{{ route('project.updateConsole')}}?buildinfo_console=1",
                         type: "post",
                         dataType: 'json',
                         success: function (data) {
@@ -461,7 +461,7 @@
                 if($(this).attr("value") == "check"){
                     $.ajax({
                         data: {data: myArray},
-                        url: "{{ route('project.updateBuildCheck')}}?buildinfo_console=4",
+                        url: "{{ route('project.updateConsole')}}?buildinfo_console=4",
                         type: "post",
                         dataType: 'json',
                         success: function (data) {
