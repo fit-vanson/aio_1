@@ -15,13 +15,15 @@ class Project_Controller extends Controller
     {
         $header = [
             'title' => 'Project',
+
             'button' => [
-                'Create'            => 'createNewProject',
-                'Build And Check'   => 'build_check',
-                'Status'            => 'dev_status',
-                'KeyStore'          => 'change_keystore',
-                'SDK'          => 'change_sdk',
+                'Create'            => ['id'=>'createNewProject','style'=>'primary'],
+                'Build And Check'   => ['id'=>'build_check','style'=>'warning'],
+                'Status'            => ['id'=>'dev_status','style'=>'info'],
+                'KeyStore'          => ['id'=>'change_keystore','style'=>'success'],
+                'SDK'               => ['id'=>'change_sdk','style'=>'danger'],
             ]
+
         ];
         return view('project.index')->with(compact('header'));
     }
@@ -401,6 +403,7 @@ class Project_Controller extends Controller
 
     public function updateConsole(Request $request){
         $console = $request->buildinfo_console;
+
         switch ($console){
             case '0':
                 $project = Project::findorFail($request->projectID)->update([
@@ -531,16 +534,18 @@ class Project_Controller extends Controller
         $header = [
             'title' => 'Process',
             'button' => [
-                'All'            => 'all',
-                'Chờ xử lý'   => 'WaitProcessing',
-                'Đang xử lý'            => 'Processing',
-                'Kết thúc'          => 'End',
-
+                'All'       => ['id'=>'all','style'=>'primary'],
+                'Chờ xử lý' => ['id'=>'WaitProcessing','style'=>'warning'],
+                'Đang xử lý'=> ['id'=>'Processing','style'=>'info'],
+                'Kết thúc'  => ['id'=>'End','style'=>'success'],
+                'Remove'    => ['id'=>'RemoveA','style'=>'danger'],
             ]
         ];
         return view('project.process')->with(compact('header'));
     }
     public function getProcess(Request $request){
+
+
 
 
         $status_console = '1%4%2%5%3%6%7%8';

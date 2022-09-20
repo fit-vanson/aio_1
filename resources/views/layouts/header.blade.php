@@ -58,14 +58,6 @@
 
     </ul>
 
-{{--    <ul class="list-inline menu-left mb-0">--}}
-{{--        <li class="float-left">--}}
-{{--            <button class="button-menu-mobile open-left waves-effect">--}}
-{{--                <i class="mdi mdi-menu"></i>--}}
-{{--            </button>--}}
-{{--        </li>--}}
-{{--    </ul>--}}
-
     <ul class="list-inline menu-left mb-0">
         <li class="float-left">
             @if(isset($header))
@@ -74,7 +66,7 @@
                     <h4 class="font-size-18">{{$header['title']}}</h4>
                 </button>
             @foreach($header['button'] as $key=>$value)
-                <button class="btn btn-success"  type="button" id="{{$value}}"><span>{{$key}}</span></button>
+                <button class="btn btn-{{$value['style']}}"  type="button" id="{{$value['id']}}"><span>{{$key}}</span></button>
             @endforeach
             </div>
             @else
