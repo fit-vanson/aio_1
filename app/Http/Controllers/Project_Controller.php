@@ -552,8 +552,29 @@ class Project_Controller extends Controller
         if(isset($request->console_status)){
             $status_console = $request->console_status;
         }
+
         $status_console = explode('%',$status_console);
 
+
+
+        if(isset($request->remove_status)){
+            $remove_status = $request->remove_status;
+            $remove_status = explode('%',$remove_status);
+            $projects = Project::whereIn('buildinfo_console',$remove_status)->get();
+            foreach ($projects as $project){
+                Project::updateOrCreate(
+                    [
+                        "projectid" => $project->projectid,
+                    ],
+                    [
+                        'buildinfo_console' => 0,
+                        'buildinfo_mess' => '',
+                        'time_mess' =>time(),
+                        'buildinfo_time' => time(),
+
+                    ]);
+            }
+        }
 
         $draw = $request->get('draw');
         $start = $request->get("start");
