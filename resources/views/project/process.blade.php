@@ -93,7 +93,7 @@
             var hash = url.substring(url.indexOf('?')+1);
             $.fn.dataTable.ext.errMode = 'none';
             var table = $('#processTable').DataTable({
-                displayLength: 50,
+                displayLength: 10,
                 lengthMenu: [5, 10, 25, 50, 75, 100],
 
                 processing: true,
@@ -114,7 +114,7 @@
 
                     {data: 'logo', name: 'logo',orderable: false},
                     {data: 'projectname', name: 'projectname'},
-                    {data: 'markets', name: 'markets'},
+                    {data: 'markets', name: 'markets',orderable: false},
                     {data: 'buildinfo_mess', name: 'buildinfo_mess',orderable: false},
                     {data: 'buildinfo_console', render:renderStatus,  name: 'buildinfo_console',orderable: false},
                     {data: 'action', name: 'action',className: "text-center", orderable: false, searchable: false},

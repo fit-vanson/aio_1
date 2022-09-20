@@ -154,13 +154,6 @@
                     // {data: 'status', name: 'status',orderable: false},
                     {data: 'action', name: 'action',className: "text-center", orderable: false, searchable: false},
                 ],
-                // columnDefs: [
-                //     {
-                //         "targets": [ 0 ],
-                //         "visible": false,
-                //         "searchable": false
-                //     }
-                // ],
                 order: [[ 0, 'desc' ]]
             });
 
@@ -188,7 +181,6 @@
                 <?php
                 }
                 ?>
-
 
                 $('#template').select2().empty()
                 $('#ma_da').select2().empty()
@@ -391,7 +383,6 @@
             $(document).on('change', '.choose_da', function () {
                 var _text = $(this).select2('data')[0].text;
                 $('#projectname').val(_text+'-');
-
             })
 
             $(document).on('change', '#buildinfo_vernum', function () {
@@ -405,28 +396,16 @@
 
             $(document).on('click','.deleteProject', function (data){
                 var project_id = $(this).data("id");
-                // swal({
-                //         title: "Bạn có chắc muốn xóa?",
-                //         text: "Your will not be able to recover this imaginary file!",
-                //         type: "warning",
-                //         showCancelButton: true,
-                //         confirmButtonClass: "btn-danger",
-                //         confirmButtonText: "Xác nhận xóa!",
-                //         closeOnConfirm: false
-                //     },
-                //     function(){
-                        $.ajax({
-                            type: "get",
-                            url: "{{ asset("project/delete") }}/" + project_id,
-                            success: function (data) {
-                                table.draw();
-                            },
-                            error: function (data) {
-                                console.log('Error:', data);
-                            }
-                        });
-                        // swal("Đã xóa!", "Your imaginary file has been deleted.", "success");
-                    // });
+                $.ajax({
+                    type: "get",
+                    url: "{{ asset("project/delete") }}/" + project_id,
+                    success: function (data) {
+                        table.draw();
+                    },
+                    error: function (data) {
+                        console.log('Error:', data);
+                    }
+                });
             });
 
             $('#buildcheckForm button').click(function (event){
@@ -557,100 +536,6 @@
             });
         });
 
-        $("#AddDaForm").submit(function (e) {
-            e.preventDefault();
-            let data = new FormData(document.getElementById('AddDaForm'));
-            $.ajax({
-                url:"{{route('da.create')}}",
-                type: "post",
-                data:data,
-                processData: false,
-                contentType: false,
-                dataType: 'json',
-                beForeSend : () => {
-                },
-                success:function (data) {
-                    if(data.errors){
-                        for( var count=0 ; count <data.errors.length; count++){
-                            $("#AddDaForm").notify(
-                                data.errors[count],"error",
-                                { position:"right" }
-                            );
-                        }
-                    }
-                    $.notify(data.success, "success");
-                    $('#AddDaForm').trigger("reset");
-                    $('#addMaDa').modal('hide');
-
-                    // if(typeof data.du_an == 'undefined'){
-                    //     data.du_an = {};
-                    // }
-                    // if(typeof rebuildMadaOption == 'function'){
-                    //     rebuildMadaOption(data.du_an)
-                    // }
-                }
-            });
-
-        });
-        $("#AddTempForm").submit(function (e) {
-            e.preventDefault();
-            let data = new FormData(document.getElementById('AddTempForm'));
-            $.ajax({
-                url:"{{route('template.create')}}",
-                type: "post",
-                data:data,
-                processData: false,
-                contentType: false,
-                dataType: 'json',
-                beForeSend : () => {
-                },
-                success:function (data) {
-
-                    if(data.errors){
-                        for( var count=0 ; count <data.errors.length; count++){
-                            $("#AddTempForm").notify(
-                                data.errors[count],"error",
-                                { position:"right" }
-                            );
-                        }
-                    }
-                    $.notify(data.success, "success");
-                    $('#AddTempForm').trigger("reset");
-                    $('#addTemplate').modal('hide');
-
-                }
-            });
-
-        });
-        $("#keystoreForm").submit(function (e) {
-            e.preventDefault();
-            let data = new FormData(document.getElementById('keystoreForm'));
-            $.ajax({
-                url:"{{route('keystore.create')}}",
-                type: "post",
-                data:data,
-                processData: false,
-                contentType: false,
-                dataType: 'json',
-                beForeSend : () => {
-                },
-                success:function (data) {
-                    if(data.errors){
-                        for( var count=0 ; count <data.errors.length; count++){
-                            $("#keystoreForm").notify(
-                                data.errors[count],"error",
-                                { position:"right" }
-                            );
-                        }
-                    }
-                    $.notify(data.success, "success");
-                    $('#keystoreForm').trigger("reset");
-                    $('#addKeystore').modal('hide');
-                }
-            });
-
-        });
-
         $('#build_check').on('click', function () {
             $('#buildcheckModel').modal('show');
             $('.modal').on('hidden.bs.modal', function (e) {
@@ -756,6 +641,16 @@
                 $('#_template').val(data.template);
                 $('#_ma_da').val(data.ma_da);
 
+                $('#template').select2({
+                    placeholder: data.ma_template.template,
+                });
+                $('#ma_da').select2({
+                    placeholder: data.da.ma_da,
+                });
+
+
+
+
                 if(data.logo) {
                     $("#avatar").attr("src","../storage/projects/"+data.da.ma_da+"/"+data.projectname+"/lg114.png");
                 }else {
@@ -784,6 +679,7 @@
                     $('#{{$market->market_name}}_dev_id').select2(
                         {
                             minimumInputLength: 2,
+                            placeholder: "Search for a Creditor",
                             ajax: {
                                 url: '{{route('api.getDev')}}',
                                 dataType: 'json',
@@ -811,9 +707,11 @@
                             },
                         }
                     );
+
                     $('#{{$market->market_name}}_keystore').select2(
                         {
                             minimumInputLength: 2,
+                            placeholder: markets[{{$market->id}}] ? markets[{{$market->id}}].keystore : '',
                             ajax: {
                                 url: '{{route('api.getKeystore')}}',
                                 dataType: 'json',
@@ -865,6 +763,7 @@
                 <?php
                 }
                 ?>
+
 
 
             });

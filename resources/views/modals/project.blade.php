@@ -11,8 +11,6 @@ $markets = \App\Models\Markets::all();
             <div class="modal-body">
                 <form id="projectForm" name="projectForm" class="form-horizontal" enctype="multipart/form-data">
                     <input type="hidden" name="project_id" id="project_id">
-{{--                    <input type="hidden" name="buildinfo_console" id="buildinfo_console">--}}
-
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="card">
@@ -38,31 +36,13 @@ $markets = \App\Models\Markets::all();
                                             <div class="row">
                                                 <div class="form-group col-lg-4">
                                                     <label for="name">Mã dự án <span style="color: red">*</span></label>
-                                                    <div class="inner row">
-                                                        <div class="col-md-10 col-10">
-                                                            <input type="hidden" name="ma_da" id="_ma_da" >
-                                                            <select class="form-control choose_da" id="ma_da" name="ma_da">
-                                                            </select>
-                                                        </div>
-                                                        <div class="col-md-2 col-4">
-                                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addMaDa" style="border-radius: 0 3px 3px 0; box-shadow: none;">...
-                                                            </button>
-                                                        </div>
-                                                    </div>
+                                                    <input type="hidden" name="ma_da" id="_ma_da" >
+                                                    <select class="form-control choose_da" id="ma_da" name="ma_da"></select>
                                                 </div>
                                                 <div class="form-group col-lg-4">
                                                     <label for="name">Mã template <span style="color: red">*</span></label>
-                                                    <div class="inner row">
-                                                        <div class="col-md-10 col-10">
-                                                            <input type="hidden" name="template" id="_template" >
-                                                            <select class="form-control choose_template" id="template" name="template">
-                                                            </select>
-                                                        </div>
-                                                        <div class="col-md-2 col-4">
-                                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addTemplate" style="border-radius: 0 3px 3px 0; box-shadow: none;">...
-                                                            </button>
-                                                        </div>
-                                                    </div>
+                                                    <input type="hidden" name="template" id="_template" >
+                                                    <select class="form-control choose_template" id="template" name="template"></select>
                                                 </div>
                                                 <div class="form-group col-lg-4">
                                                     <label for="name">Mã Project <span style="color: red">*</span></label>
@@ -228,21 +208,10 @@ $markets = \App\Models\Markets::all();
                                                         <select class="form-control select2" id="{{$market->market_name}}_dev_id"  name="market[{{$market->id}}][dev_id]">
                                                         </select>
                                                     </div>
-
-
                                                     <div class="form-group col-lg-6">
                                                         <label for="name">Keystore Profile</label>
-                                                        <div class="inner row">
-                                                            <div class="col-md-10 col-10">
-                                                                <input type="hidden" name="market[{{$market->id}}][keystore]" id="_market_{{$market->id}}_keystore" >
-                                                                <select class="form-control select2" id="{{$market->market_name}}_keystore" name="market[{{$market->id}}][keystore]">
-                                                                </select>
-                                                            </div>
-                                                            <div class="col-md-2 col-4">
-                                                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addKeystore" style="border-radius: 0 3px 3px 0; box-shadow: none;">...
-                                                                </button>
-                                                            </div>
-                                                        </div>
+                                                        <input type="hidden" name="market[{{$market->id}}][keystore]" id="_market_{{$market->id}}_keystore" >
+                                                        <select class="form-control select2" id="{{$market->market_name}}_keystore" name="market[{{$market->id}}][keystore]"></select>
                                                     </div>
                                                     <div class="form-group col-lg-6">
                                                         <label for="name">Link App</label>
@@ -289,8 +258,6 @@ $markets = \App\Models\Markets::all();
         </div>
     </div>
 </div>
-
-
 
 {{--<div class="modal fade bd-example-modal-xl" id="ajaxPartTimeModel" aria-hidden="true">--}}
 {{--    <div class="modal-dialog modal-xl">--}}
@@ -917,177 +884,15 @@ $markets = \App\Models\Markets::all();
                                                     </div>
                                                 </div>
                                             </div>
-
                                             @endforeach
-
-
-{{--                                            <div class="divider Amazon_status">--}}
-{{--                                                <div class="divider-text"><img src="img/icon/amazon.png"></div>--}}
-{{--                                            </div>--}}
-{{--                                            <div class="row Amazon_status">--}}
-{{--                                                <div class="form-group col-lg-6 ">--}}
-{{--                                                    <label for="name">Store Name (Amazon) </label>--}}
-{{--                                                    <select class="form-control select2" id="Amazon_buildinfo_store_name_x2" name="Amazon_buildinfo_store_name_x">--}}
-{{--                                                        <option value="0" >---Vui lòng chọn---</option>--}}
-{{--                                                        @foreach($store_name_amazon as $item)--}}
-{{--                                                            <option value="{{$item->id}}">{{$item->amazon_dev_name}} : {{$item->amazon_store_name}}</option>--}}
-{{--                                                        @endforeach--}}
-{{--                                                    </select>--}}
-{{--                                                </div>--}}
-{{--                                                <div class="form-group col-lg-6 ">--}}
-{{--                                                    <label for="name">Trạng thái Ứng dụng (Amazon) </label>--}}
-{{--                                                    <div>--}}
-{{--                                                        <select class="form-control" id="Amazon_status1" name="Amazon_status">--}}
-{{--                                                            <option value="0">Mặc định</option>--}}
-{{--                                                            <option value="1">Publish</option>--}}
-{{--                                                            <option value="6">Check</option>--}}
-{{--                                                        </select>--}}
-{{--                                                    </div>--}}
-{{--                                                </div>--}}
-{{--                                            </div>--}}
-{{--                                            <div class="divider Samsung_status">--}}
-{{--                                                <div class="divider-text"><img src="img/icon/samsung.png"></div>--}}
-{{--                                            </div>--}}
-{{--                                            <div class="row Samsung_status">--}}
-{{--                                                <div class="form-group col-lg-6 ">--}}
-{{--                                                    <label for="name">Store Name (Samsung) </label>--}}
-{{--                                                    <select class="form-control select2" id="Samsung_buildinfo_store_name_x2" name="Samsung_buildinfo_store_name_x">--}}
-{{--                                                        <option value="0"  >---Vui lòng chọn---</option>--}}
-{{--                                                        @foreach($store_name_samsung as $item)--}}
-{{--                                                            <option value="{{$item->id}}">{{$item->samsung_dev_name}} : {{$item->samsung_store_name}}</option>--}}
-{{--                                                        @endforeach--}}
-{{--                                                    </select>--}}
-{{--                                                </div>--}}
-{{--                                                <div class="form-group col-lg-6 ">--}}
-{{--                                                    <label for="name">Trạng thái Ứng dụng (Samsung)</label>--}}
-{{--                                                    <div>--}}
-{{--                                                        <select class="form-control" id="Samsung_status1" name="Samsung_status">--}}
-{{--                                                            <option value="0">Mặc định</option>--}}
-{{--                                                            <option value="1">Publish</option>--}}
-{{--                                                            <option value="6">Check</option>--}}
-{{--                                                        </select>--}}
-{{--                                                    </div>--}}
-{{--                                                </div>--}}
-{{--                                            </div>--}}
-{{--                                            <div class="divider Xiaomi_status">--}}
-{{--                                                <div class="divider-text"><img src="img/icon/xiaomi.png"></div>--}}
-{{--                                            </div>--}}
-{{--                                            <div class="row Xiaomi_status">--}}
-{{--                                                <div class="form-group col-lg-6 ">--}}
-{{--                                                    <label for="name">Store Name (Xiaomi) </label>--}}
-{{--                                                    <select class="form-control select2" id="Xiaomi_buildinfo_store_name_x2" name="Xiaomi_buildinfo_store_name_x">--}}
-{{--                                                        <option value="0"  >---Vui lòng chọn---</option>--}}
-{{--                                                        @foreach($store_name_xiaomi as $item)--}}
-{{--                                                            <option value="{{$item->id}}">{{$item->xiaomi_dev_name}} : {{$item->xiaomi_store_name}}</option>--}}
-{{--                                                        @endforeach--}}
-{{--                                                    </select>--}}
-{{--                                                </div>--}}
-{{--                                                <div class="form-group col-lg-6 ">--}}
-{{--                                                    <label for="name">Trạng thái Ứng dụng (Xiaomi)</label>--}}
-{{--                                                    <div>--}}
-{{--                                                        <select class="form-control" id="Xiaomi_status1" name="Xiaomi_status">--}}
-{{--                                                            <option value="0">Mặc định</option>--}}
-{{--                                                            <option value="1">Publish</option>--}}
-{{--                                                            <option value="6">Check</option>--}}
-{{--                                                        </select>--}}
-{{--                                                    </div>--}}
-{{--                                                </div>--}}
-{{--                                            </div>--}}
-{{--                                            <div class="divider Oppo_status">--}}
-{{--                                                <div class="divider-text"><img src="img/icon/oppo.png"></div>--}}
-{{--                                            </div>--}}
-{{--                                            <div  class="row Oppo_status">--}}
-{{--                                                <div class="form-group col-lg-6 ">--}}
-{{--                                                    <label for="name">Store Name (OPPO) </label>--}}
-{{--                                                    <select class="form-control select2" id="Oppo_buildinfo_store_name_x2" name="Oppo_buildinfo_store_name_x">--}}
-{{--                                                        <option value="0"  >---Vui lòng chọn---</option>--}}
-{{--                                                        @foreach($store_name_oppo as $item)--}}
-{{--                                                            <option value="{{$item->id}}">{{$item->oppo_dev_name}} : {{$item->oppo_store_name}}</option>--}}
-{{--                                                        @endforeach--}}
-{{--                                                    </select>--}}
-{{--                                                </div>--}}
-{{--                                                <div class="form-group col-lg-6 ">--}}
-{{--                                                    <label for="name">Trạng thái Ứng dụng (Oppo)</label>--}}
-{{--                                                    <div>--}}
-{{--                                                        <select class="form-control" id="Oppo_status1" name="Oppo_status">--}}
-{{--                                                            <option value="0">Mặc định</option>--}}
-{{--                                                            <option value="1">Publish</option>--}}
-{{--                                                            <option value="6">Check</option>--}}
-{{--                                                        </select>--}}
-{{--                                                    </div>--}}
-{{--                                                </div>--}}
-{{--                                            </div>--}}
-{{--                                            <div class="divider Vivo_status">--}}
-{{--                                                <div class="divider-text"><img src="img/icon/vivo.png"></div>--}}
-{{--                                            </div>--}}
-{{--                                            <div class="row Vivo_status">--}}
-{{--                                                <div class="form-group col-lg-6 ">--}}
-{{--                                                    <label for="name">Store Name (Vivo) </label>--}}
-{{--                                                    <select class="form-control select2" id="Vivo_buildinfo_store_name_x2" name="Vivo_buildinfo_store_name_x">--}}
-{{--                                                        <option value="0" >---Vui lòng chọn---</option>--}}
-{{--                                                        @foreach($store_name_vivo as $item)--}}
-{{--                                                            <option value="{{$item->id}}">{{$item->vivo_dev_name}} : {{$item->vivo_store_name}}</option>--}}
-{{--                                                        @endforeach--}}
-{{--                                                    </select>--}}
-{{--                                                </div>--}}
-{{--                                                <div class="form-group col-lg-6 ">--}}
-{{--                                                    <label for="name">Trạng thái Ứng dụng (Vivo)</label>--}}
-{{--                                                    <div>--}}
-{{--                                                        <select class="form-control" id="Vivo_status1" name="Vivo_status">--}}
-{{--                                                            <option value="100">Mặc định</option>--}}
-{{--                                                            <option value="0">UnPublished</option>--}}
-{{--                                                            <option value="1">Published</option>--}}
-{{--                                                            <option value="2">Removed</option>--}}
-{{--                                                            <option value="3">To be published</option>--}}
-{{--                                                        </select>--}}
-{{--                                                    </div>--}}
-{{--                                                </div>--}}
-{{--                                            </div>--}}
-{{--                                            <div class="divider Huawei_status">--}}
-{{--                                                <div class="divider-text"><img src="img/icon/huawei.png"></div>--}}
-{{--                                            </div>--}}
-{{--                                            <div class="row Huawei_status">--}}
-{{--                                                <div class="form-group col-lg-6 ">--}}
-{{--                                                    <label for="name">Store Name (Huawei) </label>--}}
-{{--                                                    <select class="form-control select2" id="Huawei_buildinfo_store_name_x2" name="Huawei_buildinfo_store_name_x">--}}
-{{--                                                        <option value="0" >---Vui lòng chọn---</option>--}}
-{{--                                                        @foreach($store_name_huawei as $item)--}}
-{{--                                                            <option value="{{$item->id}}">{{$item->huawei_dev_name}} : {{$item->huawei_store_name}}</option>--}}
-{{--                                                        @endforeach--}}
-{{--                                                    </select>--}}
-{{--                                                </div>--}}
-{{--                                                <div class="form-group col-lg-6  ">--}}
-{{--                                                    <label for="name">Trạng thái Ứng dụng (Huawei)</label>--}}
-{{--                                                    <div>--}}
-{{--                                                        <select class="form-control" id="Huawei_status1" name="Huawei_status">--}}
-{{--                                                            <option value="100">Mặc định</option>--}}
-{{--                                                            <option value="0">Released</option>--}}
-{{--                                                            <option value="1">Release Rejected</option>--}}
-{{--                                                            <option value="2">Removed (including forcible removal)</option>--}}
-{{--                                                            <option value="3">Releasing</option>--}}
-{{--                                                            <option value="4">Reviewing</option>--}}
-{{--                                                            <option value="5">Updating</option>--}}
-{{--                                                            <option value="6">Removal requested</option>--}}
-{{--                                                            <option value="7">Draft</option>--}}
-{{--                                                            <option value="8">Update rejected</option>--}}
-{{--                                                            <option value="9">Removal requested</option>--}}
-{{--                                                            <option value="10">Removed by developer</option>--}}
-{{--                                                            <option value="11">Release canceled</option>--}}
-
-{{--                                                        </select>--}}
-{{--                                                    </div>--}}
-{{--                                                </div>--}}
-{{--                                            </div>--}}
                                         </div>
                                     </div>
                                     <button type="submit" class="btn btn-primary"  value="build" >Update</button>
-
                                 </form>
                             </div>
                         </div>
                     </div>
                 </div>
-                {{--                </form>--}}
             </div>
         </div>
     </div>
@@ -1123,9 +928,6 @@ $markets = \App\Models\Markets::all();
         </div>
     </div>
 </div>
-
-
-
 
 <div class="modal fade bd-example-modal-xl" id="fakeProjectModel"  role="dialog">
     <div class="modal-dialog modal-xl">
