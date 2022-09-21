@@ -53,39 +53,23 @@ class KeystoreController extends Controller
             ->orWhere('pass_aliases', 'like', '%' . $searchValue . '%')
             ->orWhere('SHA_256_keystore', 'like', '%' . $searchValue . '%')
             ->orWhere('note', 'like', '%' . $searchValue . '%')
-            ->select('*')
+
+            ->withCount('market_project')
             ->skip($start)
             ->take($rowperpage)
-            ->with('project',
-                'project_chplay',
-                'project_amazon',
-                'project_samsung',
-                'project_xiaomi',
-                'project_oppo',
-                'project_vivo',
-                'project_huawei'
-            )
-            ->get()->toArray();
+            ->get();
+
+
         $data_arr = array();
         foreach ($records as $record) {
-            $data = array_merge(
-                $record['project'],
-                $record['project_chplay'],
-                $record['project_amazon'],
-                $record['project_samsung'],
-                $record['project_xiaomi'],
-                $record['project_oppo'],
-                $record['project_vivo'],
-                $record['project_huawei']
-            );
+
             $btn = ' <a href="javascript:void(0)" onclick="editKeytore('.$record['id'].')" class="btn btn-warning"><i class="ti-pencil-alt"></i></a>';
             $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$record['id'].'" data-original-title="Delete" class="btn btn-danger deleteKeystore"><i class="ti-trash"></i></a>';
 
             $html = '../uploads/keystore/'.$record['file'];
             $data_arr[] = array(
-//                "name_keystore" => $record->name_keystore,
-//                "name_keystore" => '<a href="/project?q=key_store&id='.$record->name_keystore.'"> <span>'.$record->name_keystore.' - ('.$project.')</span></a>',
-                "name_keystore" => '<a href="/project?q=key_store&id='.$record['name_keystore'].'"> <span>'.$record['name_keystore'].' - ('.count($this->unique_multidim_array($data,'projectid')).')</span></a>',
+//                "name_keystore" => '<a href="/project?q=key_store&id='.$record['name_keystore'].'"> <span>'.$record['name_keystore'].' - ('.$record->market_project_count.')</span></a>',
+                "name_keystore" => '<span>'.$record['name_keystore'].' - ('.$record->market_project_count.')</span>',
                 "pass_keystore" => $record['pass_keystore'],
                 "aliases_keystore" => $record['aliases_keystore'],
                 "SHA_256_keystore" => $record['SHA_256_keystore'],
