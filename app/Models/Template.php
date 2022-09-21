@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Template extends Model
 {
     use HasFactory;
+    use \Staudenmeir\EloquentJsonRelations\HasJsonRelationships;
     public $timestamps = false;
     protected $table = 'ngocphandang_template';
 
@@ -16,7 +17,18 @@ class Template extends Model
         'time_create', 'time_update','time_get','note','link_chplay','category'
     ];
 
+    protected $casts = [
+        'category' => 'json',
+    ];
+
+    public function markets()
+    {
+        return $this->belongsToJson(Markets::class, 'category[]->market_id');
+//        return $this->belongsToJson(Markets::class, 'category[]');
+    }
+
     public function project(){
         return $this->hasMany(ProjectModel::class,'template');
     }
+
 }

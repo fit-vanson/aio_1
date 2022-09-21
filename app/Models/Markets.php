@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Markets extends Model
 {
     use HasFactory;
+
+    use \Staudenmeir\EloquentJsonRelations\HasJsonRelationships;
+
+    public function templates()
+    {
+        return $this->hasManyJson(Template::class, 'category->markets[]->market_id');
+    }
 }

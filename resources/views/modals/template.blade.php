@@ -12,7 +12,7 @@
                     <input type="hidden" name="template_id" id="template_id">
 
                     <div data-repeater-list="group-a">
-                        <div data-repeater-item="" class="row">
+                        <div  class="row">
                             <div class="form-group col-lg-3">
                                 <label>Logo</label>
                                 <input  id="logo" type="file" name="logo" class="form-control" hidden onchange="changeImg(this)" accept="image/*">
@@ -31,8 +31,6 @@
                                 <input type="text" id="template_name" name="template_name" class="form-control">
                             </div>
 
-                        </div>
-                        <div data-repeater-item="" class="row">
                             <div class="form-group col-lg-3">
                                 <label for="name">Mã Template <span style="color: red">*</span></label>
                                 <input type="text" id="template" name="template" class="form-control" required>
@@ -60,19 +58,13 @@
                                     </select>
                                 </div>
                             </div>
-                        </div>
-                        <div data-repeater-item="" class="row">
-                            <div class="form-group col-lg-4">
+                            <div class="form-group col-lg-6">
                                 <label for="name">Package</label>
                                 <input type="text" id="package" name="package" class="form-control" >
                             </div>
-                            <div class="form-group col-lg-4">
+                            <div class="form-group col-lg-6">
                                 <label for="name">Link của ứng dụng</label>
                                 <input type="text" id="link" name="link" class="form-control" >
-                            </div>
-                            <div class="form-group col-lg-4 ">
-                                <label for="name">Link Store VietMMO</label>
-                                <input type="url" id="link_store_vietmmo" name="link_store_vietmmo" class="form-control" >
                             </div>
                         </div>
 
@@ -81,7 +73,7 @@
                         </div>
                         <div>
                             <div class="col-lg-11 text-right">
-                                <div data-repeater-item="" class="row">
+                                <div class="row">
                                     <div class="form-group col-lg-2">
                                         <label for="name">Ads ID</label>
                                         <input type="checkbox" class="control-input" name="Check_ads_id" id="Check_ads_id" value="1">
@@ -116,7 +108,7 @@
                         </div>
                         <div>
                             <div class="col-lg-11 text-right">
-                                <div data-repeater-item="" class="row">
+                                <div class="row">
                                     <div class="form-group col-lg-2 ">
                                         <label for="name" style="color:#00d986">Ads Start</label>
                                         <input type="checkbox" class="control-input" name="Check_ads_start" id="Check_ads_start" value="1">
@@ -130,7 +122,7 @@
                         </div>
                         <div>
                             <div class="col-lg-11 text-right">
-                                <div data-repeater-item="" class="row">
+                                <div class="row">
                                     <div class="form-group col-lg-2">
                                         <label for="name">Ads banner</label>
                                         <input type="checkbox" class="control-input" name="Check_ads_banner_huawei" id="Check_ads_banner_huawei" value="1">
@@ -161,18 +153,16 @@
                         </div>
 
 
-                        <div data-repeater-item="" class="row">
-                            <div class="form-group col-lg-6 input_package">
+                        <div class="row">
+                            <div class="form-group col-lg-6 ">
                                 <label for="name">SCRIPT: Copy File & Folder </label>
                                 <textarea id="script_copy" name="script_copy" class="form-control" rows="4" ></textarea>
                             </div>
-                            <div class="form-group col-lg-6 input_title_app">
+                            <div class="form-group col-lg-6 ">
                                 <label for="name">SCRIPT: IMG</label>
                                 <textarea id="script_img" name="script_img" class="form-control" rows="4" ></textarea>
                             </div>
-                        </div>
 
-                        <div data-repeater-item="" class="row">
                             <div class="form-group col-lg-6 input_package">
                                 <label for="name">SCRIPT: Convert SVG to XML </label>
                                 <textarea id="script_svg2xml" name="script_svg2xml" class="form-control" rows="4" ></textarea>
@@ -181,19 +171,14 @@
                                 <label for="name">SCRIPT: Files</label>
                                 <textarea id="script_file" name="script_file" class="form-control" rows="4" ></textarea>
                             </div>
-                        </div>
-                        <div data-repeater-item="" class="row">
                             <div class="form-group col-lg-6 input_package">
                                 <label for="name">Permissions</label>
                                 <textarea id="permissions" name="permissions" class="form-control" rows="4" ></textarea>
                             </div>
-
                             <div class="form-group col-lg-6 input_title_app">
                                 <label for="name">Ghi chú</label>
                                 <textarea id="note" name="note" class="form-control" rows="4" ></textarea>
                             </div>
-                        </div>
-                        <div data-repeater-item="" class="row">
                             <div class="form-group col-lg-6 input_package">
                                 <label for="name">Policy 1 </label>
                                 <textarea id="policy1" name="policy1" class="form-control" rows="4" ></textarea>
@@ -202,38 +187,16 @@
                                 <label for="name">Policy 2</label>
                                 <textarea id="policy2" name="policy2" class="form-control" rows="4" ></textarea>
                             </div>
-                        </div>
-                        <div class="row">
                             @foreach(\App\Models\Markets::all() as $market)
                             <div class="form-group col-lg-6">
                                 <label for="name">Category {{$market->market_name}}</label>
-                                <input type="text" id="{{ucfirst(strtolower($market->market_name))}}_category" name="{{ucfirst(strtolower($market->market_name))}}_category" class="form-control" />
+{{--                                <input type="text" id="{{ucfirst(strtolower($market->market_name))}}_category" name="{{ucfirst(strtolower($market->market_name))}}_category" class="form-control" />--}}
+                                <input type="text" id="category_{{$market->id}}" name="category[{{$market->id}}]" class="form-control" />
+{{--                                <input type="text" id="category_{{$market->id}}_value" name="category[{{$market->id}}][value]" class="form-control" />--}}
+{{--                                <input type="text" hidden id="category_{{$market->id}}" name="category[{{$market->id}}][market_id]" value="{{$market->id}}" class="form-control" />--}}
                             </div>
                             @endforeach
-{{--                            <div class="form-group col-lg-6">--}}
-{{--                                <label for="name">Category Amazon</label>--}}
-{{--                                <input type="text" id="Amazon_category" name="Amazon_category" class="form-control">--}}
-{{--                            </div>--}}
-{{--                            <div class="form-group col-lg-6">--}}
-{{--                                <label for="name">Category Samsung</label>--}}
-{{--                                <input type="text" id="Samsung_category" name="Samsung_category" class="form-control" >--}}
-{{--                            </div>--}}
-{{--                            <div class="form-group col-lg-6">--}}
-{{--                                <label for="name">Category Xiaomi</label>--}}
-{{--                                <input type="text" id="Xiaomi_category" name="Xiaomi_category" class="form-control">--}}
-{{--                            </div>--}}
-{{--                            <div class="form-group col-lg-6">--}}
-{{--                                <label for="name">Category Oppo</label>--}}
-{{--                                <input type="text" id="Oppo_category" name="Oppo_category" class="form-control" >--}}
-{{--                            </div>--}}
-{{--                            <div class="form-group col-lg-6">--}}
-{{--                                <label for="name">Category Vivo</label>--}}
-{{--                                <input type="text" id="Vivo_category" name="Vivo_category" class="form-control">--}}
-{{--                            </div>--}}
-{{--                            <div class="form-group col-lg-6">--}}
-{{--                                <label for="name">Category Huawei</label>--}}
-{{--                                <input type="text" id="Huawei_category" name="Huawei_category" class="form-control">--}}
-{{--                            </div>--}}
+
                         </div>
 
                     </div>

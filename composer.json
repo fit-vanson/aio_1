@@ -30,6 +30,7 @@
         "pragmarx/google2fa": "^8.0",
         "pusher/pusher-php-server": "^7.0",
         "staudenmeir/eloquent-eager-limit": "*",
+        "staudenmeir/eloquent-json-relations": "*",
         "sunra/php-simple-html-dom-parser": "^1.5",
         "voku/portable-utf8": "^5.4",
         "voku/simple_html_dom": "^4.7",

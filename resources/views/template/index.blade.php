@@ -46,11 +46,11 @@
                      <table class="table table-bordered dt-responsive nowrap data-table" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                         <thead>
                         <tr>
-                            <th>Logo</th>
-                            <th>Tên Template</th>
-                            <th>Phân loại</th>
-                            <th>Thông tin Template</th>
-                            <th>Action</th>
+                            <th style="width: 10%">Logo</th>
+                            <th style="width: 20%">Tên Template</th>
+                            <th style="width: 20%">Phân loại</th>
+                            <th style="width: 20%">Thông tin Template</th>
+                            <th style="width: 10%">Action</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -107,7 +107,7 @@
                 {data: 'action',className: "text-center", name: 'action', orderable: false, searchable: false},
             ],
             "columnDefs": [
-                { "orderable": false, "targets": [0,2,3] }
+                { "orderable": false, "targets": [0,3] }
             ],
             order:[1,'asc']
 
@@ -239,6 +239,9 @@
 <script>
     function editTemplate(id) {
         $.get('{{asset('template/edit')}}/'+id,function (data) {
+
+
+
             if(data.ads != null){
                 var ads = jQuery.parseJSON(data.ads);
                 if(ads.ads_id !=null){
@@ -357,14 +360,9 @@
             $('#package').val(data.package);
             $('#convert_aab').val(data.convert_aab);
             $('#startus').val(data.startus);
-            $('#link_store_vietmmo').val(data.link_store_vietmmo);
-            $('#Chplay_category').val(data.Chplay_category);
-            $('#Amazon_category').val(data.Amazon_category);
-            $('#Samsung_category').val(data.Samsung_category);
-            $('#Xiaomi_category').val(data.Xiaomi_category);
-            $('#Oppo_category').val(data.Oppo_category);
-            $('#Vivo_category').val(data.Vivo_category);
-            $('#Huawei_category').val(data.Huawei_category);
+            $.each(data.markets, function (k,v){
+                $('#category_'+v.id).val(v.pivot.value);
+            });
 
             $('#modelHeading').html("Edit");
             $('#saveBtn').val("edit-template");
@@ -374,10 +372,6 @@
             });
         })
     }
-
-
-
-
 </script>
 
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\TemplateResource;
 use App\Models\Dev;
+use App\Models\Markets;
 use App\Models\ProjectModel;
 use App\Models\Template;
 use Illuminate\Database\Eloquent\Model;
@@ -43,38 +44,31 @@ class TemplateController extends Controller
             ->where('template', 'like', '%' . $searchValue . '%')
             ->orwhere('template_name', 'like', '%' . $searchValue . '%')
             ->orWhere('ver_build', 'like', '%' . $searchValue . '%')
-            ->orWhere('Chplay_category', 'like', '%' . $searchValue . '%')
-            ->orWhere('Amazon_category', 'like', '%' . $searchValue . '%')
-            ->orWhere('Samsung_category', 'like', '%' . $searchValue . '%')
-            ->orWhere('Xiaomi_category', 'like', '%' . $searchValue . '%')
-            ->orWhere('Oppo_category', 'like', '%' . $searchValue . '%')
-            ->orWhere('Vivo_category', 'like', '%' . $searchValue . '%')
-            ->orWhere('Huawei_category', 'like', '%' . $searchValue . '%')
+            ->orWhere('category', 'like', '%' . $searchValue . '%')
+//            ->orWhere('ver_build', 'like', '%' . $searchValue . '%')
+//            ->orwhereJsonContains('category', ['value' => $searchValue])
             ->count();
 
 
         // Get records, also we have included search filter as well
         $records = Template::orderBy($columnName, $columnSortOrder)
+
+
             ->where('template', 'like', '%' . $searchValue . '%')
-//            ->where('template', 'TA002')
             ->orwhere('template_name', 'like', '%' . $searchValue . '%')
             ->orWhere('ver_build', 'like', '%' . $searchValue . '%')
-            ->orWhere('Chplay_category', 'like', '%' . $searchValue . '%')
-            ->orWhere('Amazon_category', 'like', '%' . $searchValue . '%')
-            ->orWhere('Samsung_category', 'like', '%' . $searchValue . '%')
-            ->orWhere('Xiaomi_category', 'like', '%' . $searchValue . '%')
-            ->orWhere('Oppo_category', 'like', '%' . $searchValue . '%')
-            ->orWhere('Vivo_category', 'like', '%' . $searchValue . '%')
-            ->orWhere('Huawei_category', 'like', '%' . $searchValue . '%')
-            ->select('*')
+            ->orWhere('category', 'like', '%' . $searchValue . '%')
             ->skip($start)
             ->take($rowperpage)
-            ->with('project')
+            ->with('project','markets')
             ->get();
 
 
         $data_arr = array();
         foreach ($records as $record) {
+//            dd($record);
+
+
             $btn = ' <a href="javascript:void(0)" onclick="editTemplate('.$record->id.')" class="btn btn-warning"><i class="ti-pencil-alt"></i></a>';
             $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$record->id.'" data-original-title="Check" class="btn btn-info checkDataTemplate"><i class="ti-file"></i></a>';
             $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$record->id.'" data-original-title="Delete" class="btn btn-danger deleteTemplate"><i class="ti-trash"></i></a>';
@@ -182,48 +176,12 @@ class TemplateController extends Controller
             }else{
                 $time_get =  date( 'd/m/Y',$record->time_get);
             }
-            if(isset($record->Chplay_category)){
-                $Chplay_category = 'CH Play: '.$record->Chplay_category;
-            }else{
-                $Chplay_category ='';
-            }
 
-            if(isset($record->Amazon_category)){
-                $Amazon_category = 'Amazon: '.$record->Amazon_category;
-            }else{
-                $Amazon_category ='';
-            }
+            $categories = '';
 
-            if(isset($record->Samsung_category)){
-                $Samsung_category = 'Samsung: '.$record->Samsung_category;
-            }else{
-                $Samsung_category ='';
+            foreach ($record->markets as $category){
+                $categories .= '<p class="card-title-desc font-16"><img src="img/icon/'.$category->market_logo.'"> '.$category->pivot->value.'</p>';
             }
-
-            if(isset($record->Xiaomi_category)){
-                $Xiaomi_category = 'Xiaomi: '.$record->Xiaomi_category;
-            }else{
-                $Xiaomi_category ='';
-            }
-
-            if(isset($record->Oppo_category)){
-                $Oppo_category = 'Oppo: '.$record->Oppo_category;
-            }else{
-                $Oppo_category ='';
-            }
-
-            if(isset($record->Vivo_category)){
-                $Vivo_category = 'Vivo: '.$record->Vivo_category;
-            }else{
-                $Vivo_category ='';
-            }
-
-            if(isset($record->Huawei_category)){
-                $Huawei_category = 'Huawei: '.$record->Huawei_category;
-            }else{
-                $Huawei_category ='';
-            }
-
 
             if ($record->link_chplay !== null){
                 $link= "<a  target= _blank href='$record->link_chplay'>Link</a>";
@@ -242,7 +200,6 @@ class TemplateController extends Controller
                 $logo = '<img class="rounded mx-auto d-block" width="100px" height="100px" src="assets\images\logo-sm.png">';
             }
 
-//            $template_apk  = $record->template_apk ?  " <a href='/file-manager/ProjectApk/$record->template_apk' target='_blank' </a>" : '1111';
             $template_apk   = $record->template_apk ?  '<a href="/file-manager/download?disk=File%20Manager&path=TemplateApk%2F/'.$record->template_apk.'" class="badge badge-success" style="font-size: 12px">APK</a>' : '<span  class="badge badge-danger" style="font-size: 12px">APK</span>';
             $template_data  = $record->template_data ? '<a href="/file-manager/TemplateData/'.$record->template_data.'" class="badge badge-success" style="font-size: 12px">Data</a>' : '<span  class="badge badge-danger" style="font-size: 12px">Data</span>';
 
@@ -251,7 +208,8 @@ class TemplateController extends Controller
             $data_arr[] = array(
                 "logo" => $logo,
                 "template" => $template. '<br>'.$link.$template_apk.'  ' .$template_data ,
-                "category"=>$Chplay_category.'<br>'.$Amazon_category.'<br>'.$Samsung_category.'<br>'.$Xiaomi_category.'<br>'.$Oppo_category.'<br>'.$Vivo_category.'<br>'.$Huawei_category,
+                "category"=>$categories,
+//                "category"=>$Chplay_category.'<br>'.$Amazon_category.'<br>'.$Samsung_category.'<br>'.$Xiaomi_category.'<br>'.$Oppo_category.'<br>'.$Vivo_category.'<br>'.$Huawei_category,
                 "script" => $script.$ads.$convert_aab.$startus.'<br>Package: '.$record->package,
                 "time_create"=> $time_create,
                 "time_update"=> $time_update,
@@ -292,6 +250,8 @@ class TemplateController extends Controller
             return response()->json(['errors'=> $error->errors()->all()]);
         }
 
+
+
         $ads = [
             'ads_id' => $request->Check_ads_id,
             'ads_banner' => $request->Check_ads_banner,
@@ -308,6 +268,18 @@ class TemplateController extends Controller
             'ads_roll_huawei' => $request->Check_ads_roll_huawei,
 
         ];
+
+
+//
+        $categories = [];
+
+        foreach (array_filter($request->category)  as $key=>$value){
+            $categories[] = [
+                'market_id' =>$key,
+                'value' =>$value
+            ];
+        }
+
         $ads =  json_encode($ads);
         $data = new Template();
         $data['template'] = $request->template;
@@ -329,15 +301,8 @@ class TemplateController extends Controller
         $data['link'] = $request->link;
         $data['convert_aab'] = $request->convert_aab;
         $data['startus'] = $request->startus;
-        $data['link_store_vietmmo'] = $request->link_store_vietmmo;
-        $data['Chplay_category'] =  $request->Chplay_category;
-        $data['Amazon_category'] =  $request->Amazon_category;
-        $data['Samsung_category'] =  $request->Samsung_category;
-        $data['Xiaomi_category'] =  $request->Xiaomi_category;
-        $data['Oppo_category'] =  $request->Oppo_category;
-        $data['Vivo_category'] =  $request->Vivo_category;
-        $data['Huawei_category'] =  $request->Huawei_category;
 
+        $data['category'] =  $categories;
         if(isset($request->logo)){
             $image = $request->file('logo');
             $data['template_logo'] = 'logo_'.time().'.'.$image->extension();
@@ -415,7 +380,7 @@ class TemplateController extends Controller
     public function edit($id)
     {
         $temp = Template::find($id);
-        return response()->json($temp);
+        return response()->json($temp->load('markets'));
     }
 
     /**
@@ -458,6 +423,17 @@ class TemplateController extends Controller
             'ads_roll_huawei' => $request->Check_ads_roll_huawei,
         ];
 
+        $categories = [];
+
+        foreach (array_filter($request->category)  as $key=>$value){
+            $categories[] = [
+                'market_id' =>$key,
+                'value' =>$value
+            ];
+        }
+
+
+
         $ads =  json_encode($ads);
         $data = Template::find($id);
 
@@ -476,14 +452,8 @@ class TemplateController extends Controller
         $data->link = $request->link;
         $data->convert_aab = $request->convert_aab;
         $data->startus = $request->startus;
-        $data->link_store_vietmmo = $request->link_store_vietmmo;
-        $data->Chplay_category =  $request->Chplay_category;
-        $data->Amazon_category =  $request->Amazon_category;
-        $data->Samsung_category =  $request->Samsung_category;
-        $data->Xiaomi_category =  $request->Xiaomi_category;
-        $data->Oppo_category =  $request->Oppo_category;
-        $data->Vivo_category =  $request->Vivo_category;
-        $data->Huawei_category =  $request->Huawei_category;
+        $data->category = $categories ;
+
 
         if($data->template_logo){
             if($data->template <> $request->template){
@@ -590,6 +560,63 @@ class TemplateController extends Controller
             ->get();
         $result = TemplateResource::collection($project);
         return response()->json($result);
+    }
+
+
+
+    public function convert(){
+        $templates = Template::select('id','Chplay_category','Amazon_category','Samsung_category','Xiaomi_category','Oppo_category','Vivo_category','Huawei_category')->get();
+
+
+
+        $insert = [];
+        foreach ($templates as $template){
+            $insert = [
+                [
+                    'market_id'=>1,
+                    'value'=> $template->Chplay_category,
+                ],
+                [
+                    'market_id'=>2,
+                    'value'=> $template->Amazon_category,
+                ],
+                [
+                    'market_id'=>3,
+                    'value'=> $template->Samsung_category,
+                ],
+                [
+                    'market_id'=>4,
+                    'value'=> $template->Xiaomi_category,
+                ],
+                [
+                    'market_id'=>5,
+                    'value'=> $template->Oppo_category,
+                ],
+                [
+                    'market_id'=>6,
+                    'value'=> $template->Vivo_category,
+                ],
+                [
+                    'market_id'=>7,
+                    'value'=> $template->Huawei_category,
+                ]
+            ];
+
+            $result=array();
+            foreach($insert as $key => $value)
+            {
+
+                if(!empty($value["value"]))
+                {
+                    $result[]=$value;
+                }
+            }
+
+            $convert = Template::find($template->id);
+            $convert->update(['category'=>$result]);
+
+        }
+
     }
 
 }

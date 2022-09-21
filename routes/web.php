@@ -284,6 +284,7 @@ Route::group(['prefix'=>'template','middleware'=>['CheckLogout','2fa']], functio
     Route::post('/update',[TemplateController::class,'update'])->name('template.update')->middleware('can:template-update');
     Route::get('/delete/{id}',[TemplateController::class,'delete'])->name('template.delete')->middleware('can:template-delete');
     Route::get('/upload',[TemplateController::class,'upload'])->name('template.upload')->middleware('can:template-index');
+    Route::get('/convert',[TemplateController::class,'convert'])->name('template.convert')->middleware('can:template-index');
 });
 
 Route::group(['prefix'=>'template-preview'], function (){
