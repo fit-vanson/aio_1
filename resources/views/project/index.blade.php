@@ -68,61 +68,6 @@
             $('.table-responsive').responsiveTable({
                 // addDisplayAllBtn: 'btn btn-secondary'
             });
-
-            $('#template').select2({
-                minimumInputLength: 2,
-                ajax: {
-                    url: '{{route('api.getTemplate')}}',
-                    dataType: 'json',
-                    type: "GET",
-                    // quietMillis: 50,
-                    data: function(params) {
-                        return {
-                            q: params.term, // search term
-                            page: params.page
-                        };
-                    },
-                    processResults: function(data) {
-                        return {
-                            results: $.map(data, function (item) {
-                                return {
-                                    text: item.name,
-                                    id: item.id
-                                }
-                            })
-                        };
-                    },
-                    cache: false
-                },
-            });
-            $('#ma_da').select2({
-                minimumInputLength: 2,
-                ajax: {
-                    url: '{{route('api.getDa')}}',
-                    dataType: 'json',
-                    type: "GET",
-                    // quietMillis: 50,
-                    data: function(params) {
-
-                        return {
-                            q: params.term, // search term
-                            page: params.page
-                        };
-                    },
-                    processResults: function(data) {
-                        return {
-                            results: $.map(data, function (item) {
-                                return {
-                                    text: item.name,
-                                    id: item.id
-                                }
-                            })
-                        };
-                    },
-                    // cache: false
-                },
-            });
-
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -132,7 +77,7 @@
             var hash = url.substring(url.indexOf('?')+1);
             $.fn.dataTable.ext.errMode = 'none';
             var table = $('#projectTable').DataTable({
-                displayLength: 50,
+                displayLength: 5,
                 lengthMenu: [5, 10, 25, 50, 75, 100],
                 // orderCellsTop: true,
                 // fixedHeader: true,
@@ -181,6 +126,8 @@
 
 
                     $('#tab_{{$market->market_name}}').removeClass( 'active' );
+                    $('#collapse_{{$market->id}}').removeClass( 'show' );
+
                 <?php
                 }
                 ?>
@@ -313,6 +260,9 @@
                             $('#nav_{{$market->market_name}}').show();
                             $('#package_{{$market->market_name}}').show();
                             {{--$('#tab_{{$market->market_name}}').show()--}}
+
+                            $('#tab_{{$market->market_name}}').removeClass( 'active' );
+                            $('#collapse_{{$market->id}}').removeClass( 'show' );
 
                             $('#{{$market->market_name}}_dev_id').select2(
                                 {
@@ -612,12 +562,6 @@
             }
             ?>
 
-
-
-
-
-
-
         });
 
 
@@ -644,11 +588,64 @@
                 $('#_template').val(data.template);
                 $('#_ma_da').val(data.ma_da);
 
+
+
+
+
                 $('#template').select2({
                     placeholder: data.ma_template.template,
+                    minimumInputLength: 2,
+                    ajax: {
+                        url: '{{route('api.getTemplate')}}',
+                        dataType: 'json',
+                        type: "GET",
+                        // quietMillis: 50,
+                        data: function(params) {
+                            return {
+                                q: params.term, // search term
+                                page: params.page
+                            };
+                        },
+                        processResults: function(data) {
+                            return {
+                                results: $.map(data, function (item) {
+                                    return {
+                                        text: item.name,
+                                        id: item.id
+                                    }
+                                })
+                            };
+                        },
+                        cache: false
+                    },
                 });
                 $('#ma_da').select2({
                     placeholder: data.da.ma_da,
+                    minimumInputLength: 2,
+                    ajax: {
+                        url: '{{route('api.getDa')}}',
+                        dataType: 'json',
+                        type: "GET",
+                        // quietMillis: 50,
+                        data: function(params) {
+
+                            return {
+                                q: params.term, // search term
+                                page: params.page
+                            };
+                        },
+                        processResults: function(data) {
+                            return {
+                                results: $.map(data, function (item) {
+                                    return {
+                                        text: item.name,
+                                        id: item.id
+                                    }
+                                })
+                            };
+                        },
+                        // cache: false
+                    },
                 });
 
 
@@ -671,6 +668,12 @@
                 }else if (data.data_onoff == 3){
                     $("#data_all").prop('checked', true);
                 }
+
+
+
+
+
+
                 var markets = [];
                 $.each(data.markets ,function( index, value ) {
                     markets[value.pivot.market_id] = value.pivot;
@@ -679,17 +682,23 @@
                     $markets = \App\Models\Markets::all();
                     foreach ($markets as $market){
                     ?>
-                if(data.ma_template.{{ucfirst(strtolower($market->market_name))}}_category){
 
-                    $('#nav_{{$market->market_name}}').show();
-                    $('#package_{{$market->market_name}}').show();
+                $('#nav_{{$market->market_name}}').hide();
+                $('#package_{{$market->market_name}}').hide();
 
-                    $('#tab_{{$market->market_name}}').removeClass( 'active' );
-                    $('#nav_{{$market->market_name}}').removeClass( 'active' );
+                $('#tab_{{$market->market_name}}').removeClass( 'active' );
+                $('#nav_{{$market->market_name}}').removeClass( 'active' );
+                $('#collapse_{{$market->id}}').removeClass( 'show' );
 
 
 
-                    {{--$('#tab_{{$market->market_name}}').show()--}}
+
+                {{--if(data.ma_template.{{ucfirst(strtolower($market->market_name))}}_category){--}}
+                {{--    $('#nav_{{$market->market_name}}').show();--}}
+                {{--    $('#package_{{$market->market_name}}').show();--}}
+                {{--    $('#tab_{{$market->market_name}}').removeClass( 'active' );--}}
+                {{--    $('#nav_{{$market->market_name}}').removeClass( 'active' );--}}
+                {{--    --}}{{--$('#tab_{{$market->market_name}}').show()--}}
 
                     $('#{{$market->market_name}}_dev_id').select2(
                         {
@@ -771,16 +780,19 @@
                             $('#market_{{$market->id}}_'+index).val(value)
                         });
                     }
-                }else {
-                    $('#nav_{{$market->market_name}}').hide()
-                    $('#package_{{$market->market_name}}').hide()
-                }
+                {{--}else {--}}
+                {{--    $('#nav_{{$market->market_name}}').hide()--}}
+                {{--    $('#package_{{$market->market_name}}').hide()--}}
+                {{--}--}}
                 <?php
                 }
                 ?>
 
 
-
+                $.each(data.ma_template.markets ,function( index, value ) {
+                    $('#nav_'+value.market_name).show();
+                    $('#package_'+value.market_name).show();
+                });
             });
         }
 

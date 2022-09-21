@@ -13,6 +13,6 @@ class Markets extends Model
 
     public function templates()
     {
-        return $this->hasManyJson(Template::class, 'category->markets[]->market_id');
+        return $this->hasManyJson(Template::class, 'category[]->market_id');
     }
 }

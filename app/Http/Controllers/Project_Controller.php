@@ -263,7 +263,7 @@ class Project_Controller extends Controller
 
     public function edit($id){
         $project = Project::find($id);
-        return response()->json($project->load('markets','da','ma_template'));
+        return response()->json($project->load('markets','da','ma_template.markets'));
     }
 
     public function update(Request $request){
