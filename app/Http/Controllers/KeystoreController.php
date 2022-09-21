@@ -53,8 +53,8 @@ class KeystoreController extends Controller
             ->orWhere('pass_aliases', 'like', '%' . $searchValue . '%')
             ->orWhere('SHA_256_keystore', 'like', '%' . $searchValue . '%')
             ->orWhere('note', 'like', '%' . $searchValue . '%')
-
-            ->withCount('market_project')
+            ->with('market_project')
+//            ->withCount('market_project')
             ->skip($start)
             ->take($rowperpage)
             ->get();
@@ -63,13 +63,16 @@ class KeystoreController extends Controller
         $data_arr = array();
         foreach ($records as $record) {
 
+
+
             $btn = ' <a href="javascript:void(0)" onclick="editKeytore('.$record['id'].')" class="btn btn-warning"><i class="ti-pencil-alt"></i></a>';
             $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$record['id'].'" data-original-title="Delete" class="btn btn-danger deleteKeystore"><i class="ti-trash"></i></a>';
 
             $html = '../uploads/keystore/'.$record['file'];
             $data_arr[] = array(
 //                "name_keystore" => '<a href="/project?q=key_store&id='.$record['name_keystore'].'"> <span>'.$record['name_keystore'].' - ('.$record->market_project_count.')</span></a>',
-                "name_keystore" => '<span>'.$record['name_keystore'].' - ('.$record->market_project_count.')</span>',
+//                "name_keystore" => '<span>'.$record['name_keystore'].' - ('.$record->market_project_count.')</span>',
+                "name_keystore" => '<span>'.$record['name_keystore'].' - ('.count($record->market_project).')</span>',
                 "pass_keystore" => $record['pass_keystore'],
                 "aliases_keystore" => $record['aliases_keystore'],
                 "SHA_256_keystore" => $record['SHA_256_keystore'],
