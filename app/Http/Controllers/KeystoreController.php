@@ -54,16 +54,12 @@ class KeystoreController extends Controller
             ->orWhere('SHA_256_keystore', 'like', '%' . $searchValue . '%')
             ->orWhere('note', 'like', '%' . $searchValue . '%')
             ->with('market_project')
-//            ->withCount('market_project')
             ->skip($start)
             ->take($rowperpage)
             ->get();
 
-
         $data_arr = array();
         foreach ($records as $record) {
-
-
 
             $btn = ' <a href="javascript:void(0)" onclick="editKeytore('.$record['id'].')" class="btn btn-warning"><i class="ti-pencil-alt"></i></a>';
             $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$record['id'].'" data-original-title="Delete" class="btn btn-danger deleteKeystore"><i class="ti-trash"></i></a>';
