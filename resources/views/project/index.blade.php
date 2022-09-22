@@ -646,6 +646,9 @@
                 $.each(data.markets ,function( index, value ) {
                     markets[value.pivot.market_id] = value.pivot;
                 });
+
+                console.log(markets)
+
                 <?php
                     $markets = \App\Models\Markets::all();
                     foreach ($markets as $market){
@@ -671,7 +674,7 @@
                     $('#{{$market->market_name}}_dev_id').select2(
                         {
                             minimumInputLength: 2,
-                            placeholder: "Search for a Creditor",
+                            placeholder: "Search for ...",
                             ajax: {
                                 url: '{{route('api.getDev')}}',
                                 dataType: 'json',
@@ -697,13 +700,21 @@
                                 },
                                 // cache: false
                             },
+                            initSelection : function (element, callback) {
+                                var data = [];
+                                $(element.val()).each(function () {
+                                    data.push({id: this, text: this});
+                                });
+                                callback(data);
+                            }
                         }
                     );
 
                     $('#{{$market->market_name}}_keystore').select2(
                         {
                             minimumInputLength: 2,
-                            placeholder: markets[{{$market->id}}] ? markets[{{$market->id}}].keystore : '',
+                            placeholder: "Search for ...",
+                            {{--placeholder: markets[{{$market->id}}] ? markets[{{$market->id}}].keystore : '',--}}
                             ajax: {
                                 url: '{{route('api.getKeystore')}}',
                                 dataType: 'json',
@@ -727,8 +738,25 @@
                                 },
                                 // cache: false
                             },
+                            initSelection : function (element, callback) {
+                                var data = [];
+                                $(element.val()).each(function () {
+                                    data.push({id: this, text: this});
+                                });
+                                callback(data);
+                            }
                         }
                     );
+
+                    {{--$("#{{$market->market_name}}_dev_id").select2("trigger", "select", {--}}
+                    {{--    data: { id: data.ma_da,text: data.da.ma_da }--}}
+                    {{--});--}}
+
+                    $("#{{$market->market_name}}_keystore").select2("trigger", "select", {
+                        data: { id: markets[{{$market->id}}] ? markets[{{$market->id}}].keystore:"",text: markets[{{$market->id}}] ? markets[{{$market->id}}].keystore:"" }
+                    });
+
+
 
                     if ((markets[{{$market->id}}])){
                         $('#market_{{$market->id}}_package').val(markets[{{$market->id}}].package)

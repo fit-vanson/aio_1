@@ -267,7 +267,7 @@ class Project_Controller extends Controller
     }
 
     public function update(Request $request){
-        dd($request->all());
+//        dd($request->all());
         $id = $request->project_id;
         $rules = [
             'projectname' =>'unique:ngocphandang_project,projectname,'.$id.',projectid',
