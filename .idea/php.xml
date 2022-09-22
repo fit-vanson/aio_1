@@ -155,6 +155,8 @@
       <path value="$PROJECT_DIR$/vendor/psr/http-factory" />
       <path value="$PROJECT_DIR$/vendor/staudenmeir/eloquent-eager-limit" />
       <path value="$PROJECT_DIR$/vendor/nelexa/google-play-scraper" />
+      <path value="$PROJECT_DIR$/vendor/mavinoo/laravel-batch" />
+      <path value="$PROJECT_DIR$/vendor/staudenmeir/eloquent-json-relations" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.1" />
