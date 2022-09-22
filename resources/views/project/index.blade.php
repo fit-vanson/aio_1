@@ -73,6 +73,83 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
+
+
+            $('#template').select2({
+                // initialValue:true,
+                placeholder: "Select a customer",
+                minimumInputLength: 2,
+                ajax: {
+                    url: '{{route('api.getTemplate')}}',
+                    dataType: 'json',
+                    type: "GET",
+                    // quietMillis: 50,
+                    data: function(params) {
+                        return {
+                            q: params.term, // search term
+                            page: params.page
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: $.map(data, function (item) {
+                                return {
+                                    text: item.name,
+                                    id: item.id
+                                }
+                            })
+                        };
+                    },
+                    cache: false
+                },
+                initSelection : function (element, callback) {
+
+                    var data = [];
+                    $(element.val()).each(function () {
+                        data.push({id: this, text: this});
+                    });
+                    callback(data);
+                }
+            });
+            $('#ma_da').select2({
+                // initialValue:true,
+                placeholder: "Select a customer",
+                minimumInputLength: 2,
+                ajax: {
+                    url: '{{route('api.getDa')}}',
+                    dataType: 'json',
+                    type: "GET",
+                    // quietMillis: 50,
+                    data: function(params) {
+
+                        return {
+                            q: params.term, // search term
+                            page: params.page
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: $.map(data, function (item) {
+                                return {
+                                    text: item.name,
+                                    id: item.id
+                                }
+                            })
+                        };
+                    },
+                    // cache: false
+                },
+                initSelection : function (element, callback) {
+                    var data = [];
+                    $(element.val()).each(function () {
+                        data.push({id: this, text: this});
+                    });
+                    callback(data);
+                }
+            });
+
+
+
             var url = window.location.href;
             var hash = url.substring(url.indexOf('?')+1);
             $.fn.dataTable.ext.errMode = 'none';
@@ -132,62 +209,10 @@
                 }
                 ?>
 
-                $('#template').select2().empty()
-                $('#ma_da').select2().empty()
-                $('#template').select2({
-                    minimumInputLength: 2,
-                    ajax: {
-                        url: '{{route('api.getTemplate')}}',
-                        dataType: 'json',
-                        type: "GET",
-                        // quietMillis: 50,
-                        data: function(params) {
-                            return {
-                                q: params.term, // search term
-                                page: params.page
-                            };
-                        },
-                        processResults: function(data) {
-                            return {
-                                results: $.map(data, function (item) {
-                                    return {
-                                        text: item.name,
-                                        id: item.id
-                                    }
-                                })
-                            };
-                        },
-                        cache: false
-                    },
-                });
-                $('#ma_da').select2({
-                    minimumInputLength: 2,
-                    ajax: {
-                        url: '{{route('api.getDa')}}',
-                        dataType: 'json',
-                        type: "GET",
-                        // quietMillis: 50,
-                        data: function(params) {
-
-                            return {
-                                q: params.term, // search term
-                                page: params.page
-                            };
-                        },
-                        processResults: function(data) {
-                            return {
-                                results: $.map(data, function (item) {
-                                    return {
-                                        text: item.name,
-                                        id: item.id
-                                    }
-                                })
-                            };
-                        },
-                        // cache: false
-                    },
-                });
-
+                $('#template').val('');
+                $('#template').trigger('change.select2');
+                $('#ma_da').val('');
+                $('#ma_da').trigger('change.select2');
             });
 
             $('#projectForm').on('submit',function (event){
@@ -574,6 +599,12 @@
                 $('.modal').on('hidden.bs.modal', function (e) {
                     $('body').addClass('modal-open');
                 });
+                $("#ma_da").select2("trigger", "select", {
+                    data: { id: data.ma_da,text: data.da.ma_da }
+                });
+                $("#template").select2("trigger", "select", {
+                    data: { id: data.template,text: data.ma_template.template }
+                });
 
                 $('#project_id').val(data.projectid)
                 $('#projectname').val(data.projectname)
@@ -584,69 +615,6 @@
                 $('#buildinfo_link_fanpage').val(data.buildinfo_link_fanpage)
                 $('#buildinfo_api_key_x').val(data.buildinfo_api_key_x)
                 $('#buildinfo_link_website').val(data.buildinfo_link_website)
-
-                $('#_template').val(data.template);
-                $('#_ma_da').val(data.ma_da);
-
-
-
-
-
-                $('#template').select2({
-                    placeholder: data.ma_template.template,
-                    minimumInputLength: 2,
-                    ajax: {
-                        url: '{{route('api.getTemplate')}}',
-                        dataType: 'json',
-                        type: "GET",
-                        // quietMillis: 50,
-                        data: function(params) {
-                            return {
-                                q: params.term, // search term
-                                page: params.page
-                            };
-                        },
-                        processResults: function(data) {
-                            return {
-                                results: $.map(data, function (item) {
-                                    return {
-                                        text: item.name,
-                                        id: item.id
-                                    }
-                                })
-                            };
-                        },
-                        cache: false
-                    },
-                });
-                $('#ma_da').select2({
-                    placeholder: data.da.ma_da,
-                    minimumInputLength: 2,
-                    ajax: {
-                        url: '{{route('api.getDa')}}',
-                        dataType: 'json',
-                        type: "GET",
-                        // quietMillis: 50,
-                        data: function(params) {
-
-                            return {
-                                q: params.term, // search term
-                                page: params.page
-                            };
-                        },
-                        processResults: function(data) {
-                            return {
-                                results: $.map(data, function (item) {
-                                    return {
-                                        text: item.name,
-                                        id: item.id
-                                    }
-                                })
-                            };
-                        },
-                        // cache: false
-                    },
-                });
 
 
                 $('#tab_home').addClass( 'active' );
