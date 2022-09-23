@@ -292,9 +292,6 @@
                     }
 
                     tab_content += '<dl class="row mb-0">'+
-                        '<dt class="col-sm-3">App Name X</dt>'+
-                        '<dd class="col-sm-9">A description list is perfect for defining terms.</dd>' +
-
                         '<dt class="col-sm-3">Title</dt>'+
                         '<dd class="col-sm-9">Vestibulum id ligula porta felis euismod semper eget lacinia odio sem nec elit.</dd>'+
 
@@ -325,10 +322,11 @@
 
                     market += '<tr>'+
                         '<th style="width: 10%">'+value.market_name+'</th>'+
-                        '<td style="width: 15%">'+value.pivot.dev_id+'</td>'+
+                        '<td style="width: 10%">'+value.pivot.dev_id+'</td>'+
                         '<td style="width: 20%">Category</td>'+
+                        '<td style="width: 20%">'+value.pivot.app_name_x+'</td>'+
                         '<td style="width: 30%">'+value.pivot.package+'</td>'+
-                        '<td style="width: 15%">Down</td>'+
+                        '<td style="width: 10%">Down</td>'+
                         '<td style="width: 10%">com</td>'+
                         '</tr>';
 
