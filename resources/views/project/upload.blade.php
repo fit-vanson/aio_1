@@ -311,17 +311,17 @@
 
                         '<a class="img_class" style="margin:5px" href="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/bn.jpg" title="preview ' + i + '">' +
                         // '<div class="img-responsive img-container">' +
-                        '<img src="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/bn.jpg" alt="" height="500">' +
+                        '<img src="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/bn.jpg" alt="" height="300">' +
                         // '</div>' +
                         '</a>' +
                         '</div></div>';
                 })
-                tab_content = '</div>';
+                tab_content += '</div>';
 
 
 
                 $.each(data.markets, function (key, value) {
-                    console.log(value)
+
 
                     market += '<tr>'+
                         '<th style="width: 10%">'+value.market_name+'</th>'+
