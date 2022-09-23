@@ -41,10 +41,9 @@
                             <th>Ga name</th>
                             <th>Dev name</th>
                             <th>Gmail </th>
-                            <th style="width: 10%">Tổng App | App Release | App Check </th>
                             <th>Thuộc tính</th>
-{{--                            <th>Thuộc tính</th>--}}
                             <th>Link | Web | Fanpage |Policy</th>
+                            <th style="width: 10%">Market</th>
                             <th>Trạng thái</th>
                             <th>Action</th>
                         </tr>
@@ -92,6 +91,7 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
+            var marketAll = <?php echo \App\Models\Markets::all() ?>;
             var table = $('.data-table').DataTable({
                 processing: true,
                 serverSide: true,
@@ -101,17 +101,69 @@
                 },
                 columns: [
                     // {data: 'info_logo'},
-                    {data: 'id_ga'},
+                    {data: 'ga_id'},
                     {data: 'dev_name'},
-                    {data: 'gmail_gadev_chinh'},
-                    {data: 'project_count',searchable: false,className: "text-center"},
-                    {data: 'thuoc_tinh',className: "text-center"},
-                    // {data: 'info_phone'},
+                    {data: 'mail_id_1'},
+                    {data: 'company_pers',className: "text-center"},
                     {data: 'info_url'},
-                    {data: 'status'},
+                    {data: 'market_id',orderable: false},
+                    {data: 'status',orderable: false},
                     {data: 'action', className: "text-center",name: 'action', orderable: false, searchable: false},
                 ],
-                order:[1,'asc']
+                order:[1,'asc'],
+                initComplete: function () {
+                    this.api().columns([5]).every( function () {
+                        var column = this;
+                        var select = $('<select class="form-control"><option value="">Market</option></select>')
+                            .appendTo( $(column.header()).empty() )
+                            .on( 'change', function () {
+                                var val = $.fn.dataTable.util.escapeRegex(
+                                    $(this).val()
+                                );
+
+                                column
+                                    .search( val ? val : '', true, false )
+                                    .draw();
+                            } );
+
+                        $.each(marketAll, function ( d, j ) {
+                            select.append( '<option value="'+j.id+'">'+j.market_name+'</option>' )
+                        } );
+                    } );
+                    this.api().columns([6]).every( function () {
+                        var column = this;
+                        var select = $('<select class="form-control"><option value="">Status</option></select>')
+                            .appendTo( $(column.header()).empty() )
+                            .on( 'change', function () {
+                                var val = $.fn.dataTable.util.escapeRegex(
+                                    $(this).val()
+                                );
+
+                                column
+                                    .search( val ? val : '', true, false )
+                                    .draw();
+                            } );
+
+                        $.each([0,1,2,3], function ( d, j ) {
+                            var status ='';
+                            switch (j){
+                                case 0:
+                                    status ='Chưa xử dụng' ;
+                                    break;
+                                case 1:
+                                    status = 'Đang phát triển';
+                                    break;
+                                case 2:
+                                    status = 'Đóng';
+                                    break;
+                                case 3:
+                                    status = 'Suspend';
+                                    break;
+                            }
+                            select.append( '<option value="'+j+'">'+status+'</option>' )
+                        } );
+                    } );
+                },
             });
             $('#createNewDev').click(function () {
                 $('#saveBtn').val("create");

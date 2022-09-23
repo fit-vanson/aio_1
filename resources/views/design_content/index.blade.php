@@ -74,24 +74,20 @@
 @section('content')
 
     <div class="row">
-
         <div style="width: 9%;min-width: 200px">
             <div class="card">
                 <div class="card-body">
-{{--                    <p class="card-text">--}}
-{{--                        Duyệt app--}}
-{{--                    </p>--}}
                     <ul class="list-group" style="height: 1000px; overflow: auto">
                         @if(isset($projects))
 
                             @foreach($projects as $key=>$project)
                             <a href="javascript:void(0)" id="project_{{$project->projectid}}" class="showProject" data-id="{{$project->projectid}}">
-                                <li class="list-group-item">{{$project->projectname}}</li>
+                                <li class="list-group-item list_project_{{$project->projectid}}">{{$project->projectname}}</li>
                             </a>
                             @endforeach
                         @endif
-
                     </ul>
+
                 </div>
             </div>
         </div>
@@ -152,6 +148,12 @@
 
         <!-- end col -->
     </div> <!-- end row -->
+
+
+
+
+
+
 @endsection
 @section('script')
 
@@ -216,6 +218,7 @@
 
             // console.log(_id);
             $('#project_detail').show()
+            $('.list_project_'+_id).addClass('active')
 
             $.get('{{asset('design-content/edit')}}/'+_id,function (data) {
 
@@ -223,7 +226,7 @@
                 $('#notes_design').val(data.notes_design);
                 $('#project_id').val(data.projectid);
                 $('#pro_name').html(data.projectname);
-                $('#template').html(' - ('+data.matemplate.template+') - ');
+                $('#template').html(' - ('+data.ma_template.template+') - ');
                 $('#title_app').html(data.title_app);
                 var tablist = '';
                 var tab_content = ''

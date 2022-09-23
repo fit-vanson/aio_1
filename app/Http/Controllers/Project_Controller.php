@@ -51,6 +51,7 @@ class Project_Controller extends Controller
         $records = Project::orderBy($columnName, $columnSortOrder)
             ->with('markets','ma_template','da')
             ->Where('projectname', 'like', '%' . $searchValue . '%')
+            ->latest()
             ->skip($start)
             ->take($rowperpage)
             ->get();
@@ -529,7 +530,7 @@ class Project_Controller extends Controller
 
     }
 
-    public function process(Request $request)
+    public function process()
     {
         $header = [
             'title' => 'Process',
@@ -543,6 +544,7 @@ class Project_Controller extends Controller
         ];
         return view('project.process')->with(compact('header'));
     }
+
     public function getProcess(Request $request){
 
 
@@ -701,4 +703,29 @@ class Project_Controller extends Controller
         echo json_encode($response);
 
     }
+
+    public function show($id){
+        $project = Project::find($id)->load('lang','da','ma_template');
+        return view('project.show')->with(compact('project'));
+    }
+
+
+    public function upload()
+    {
+        $header = [
+            'title' => 'Process',
+            'button' => [
+                'All'       => ['id'=>'all','style'=>'primary'],
+                'Chờ xử lý' => ['id'=>'WaitProcessing','style'=>'warning'],
+                'Đang xử lý'=> ['id'=>'Processing','style'=>'info'],
+                'Kết thúc'  => ['id'=>'End','style'=>'success'],
+                'Remove'    => ['id'=>'RemoveA','style'=>'danger'],
+            ]
+        ];
+
+        $projects = Project::has('lang')->whereIN('status_design',[0,1])->orderByDesc('projectname')->get();
+//        return view('design_content.index')->with(compact('projects'));
+        return view('project.upload')->with(compact('projects'));
+    }
+
 }

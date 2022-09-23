@@ -102,25 +102,25 @@
                     <form id="browseappForm" name="browseappForm" class="form-horizontal">
                         <input type="hidden" name="project_id" id="project_id">
                         <h4><span id="pro_name">{{$project->projectname}}</span>
-                            <span style="font-weight: 500;" id="template"> - {{$project->matemplate->template}}</span>
+                            <span style="font-weight: 500;" id="template"> - {{$project->ma_template->template}}</span>
                             <span style="font-weight: 500;" id="title_app"> - {{$project->title_app}}</span>
                             <span style="font-weight: 600;" class="badge badge-success">  Download</span>
                         </h4>
 
                         <div class="row">
 
-                            <div class="form-group col-lg-2">
+                            <div class="form-group col-lg-6">
                                 <label for="name">Logo</label>
                                 <p class="card-title-desc">
                                     <img id="logo_project" class="d-block img-fluid" src="../storage/projects/{{$project->da->ma_da}}/{{$project->projectname}}/lg.png" height="200" width="200px" alt="{{$project->projectname}}">
                                 </p>
                             </div>
-                            <div class="form-group col-lg-4">
-                                <label for="name">Ghi chú</label>
-                                <textarea id="notes_design" name="notes_design" class="form-control" rows="9" >{{$project->notes_design}}</textarea>
-                            </div>
+{{--                            <div class="form-group col-lg-4">--}}
+{{--                                <label for="name">Ghi chú</label>--}}
+{{--                                <textarea id="notes_design" name="notes_design" class="form-control" rows="9" >{{$project->notes_design}}</textarea>--}}
+{{--                            </div>--}}
 
-                            <div class="form-group col-lg-4">
+                            <div class="form-group col-lg-6">
                                 <label for="name">Market</label>
                                 <div id="accordion">
 

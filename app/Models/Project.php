@@ -33,6 +33,9 @@ class Project extends Model
     public function ma_template(){
         return $this->belongsTo(Template::class,'template');
     }
+//    public function matemplate(){
+//        return $this->belongsTo(Template::class,'template');
+//    }
 
 
 
