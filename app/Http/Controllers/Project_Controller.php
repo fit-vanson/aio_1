@@ -547,9 +547,6 @@ class Project_Controller extends Controller
 
     public function getProcess(Request $request){
 
-
-
-
         $status_console = '1%4%2%5%3%6%7%8';
         if(isset($request->console_status)){
             $status_console = $request->console_status;
@@ -723,8 +720,10 @@ class Project_Controller extends Controller
             ]
         ];
 
-        $projects = Project::has('lang')->whereIN('status_design',[0,1])->orderByDesc('projectname')->get();
+        $projects = Project::has('lang')->where('status_design',4)->orderByDesc('projectname')->get();
 //        return view('design_content.index')->with(compact('projects'));
+        dd($projects);
+
         return view('project.upload')->with(compact('projects'));
     }
 

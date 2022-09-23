@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\ProjectResource;
 use App\Models\Language;
+use App\Models\Project;
 use App\Models\ProjectHasLang;
 use App\Models\ProjectModel;
 use Illuminate\Http\Request;
@@ -43,12 +44,12 @@ class DesignController extends Controller
 
         if( in_array( "Admin" ,array_column(auth()->user()->roles()->get()->toArray(),'name'))){
             // Total records
-            $totalRecords = ProjectModel::has('lang')->select('count(*) as allcount')->count();
-            $totalRecordswithFilter = ProjectModel::has('lang')->select('count(*) as allcount')
+            $totalRecords = Project::has('lang')->select('count(*) as allcount')->count();
+            $totalRecordswithFilter = Project::has('lang')->select('count(*) as allcount')
                 ->where('projectname','like', '%' . $searchValue . '%')
                 ->Where('status_design', 'like', '%' .$columnName_arr[2]['search']['value'] . '%')
                 ->count();
-            $records = ProjectModel::has('lang')
+            $records = Project::has('lang')
                 ->where('projectname','like', '%' . $searchValue . '%')
                 ->Where('status_design', 'like', '%' . $columnName_arr[2]['search']['value'] . '%')
                 ->select('*')
@@ -57,13 +58,13 @@ class DesignController extends Controller
                 ->take($rowperpage)
                 ->get();
         }else{
-            $totalRecords = ProjectModel::has('lang')->where('user_design',auth()->id())->select('count(*) as allcount')->count();
-            $totalRecordswithFilter = ProjectModel::has('lang')->select('count(*) as allcount')
+            $totalRecords = Project::has('lang')->where('user_design',auth()->id())->select('count(*) as allcount')->count();
+            $totalRecordswithFilter = Project::has('lang')->select('count(*) as allcount')
                 ->where('projectname','like', '%' . $searchValue . '%')
                 ->Where('status_design', 'like', '%' .$columnName_arr[2]['search']['value'] . '%')
                 ->where('user_design',auth()->id())
                 ->count();
-            $records = ProjectModel::has('lang')
+            $records = Project::has('lang')
                 ->where('projectname','like', '%' . $searchValue . '%')
                 ->Where('status_design', 'like', '%' .$columnName_arr[2]['search']['value'] . '%')
                 ->where('user_design',auth()->id())
@@ -129,7 +130,7 @@ class DesignController extends Controller
 
     public function project_show(){
         $searchValue = \request()->q;
-        $project = ProjectModel::latest()
+        $project = Project::latest()
             ->where('projectname', 'like', '%' . $searchValue . '%')
             ->get();
         $result = ProjectResource::collection($project);
@@ -232,12 +233,12 @@ class DesignController extends Controller
 
     public function edit($id)
     {
-        $data= ProjectModel::find($id);
+        $data= Project::find($id);
         return response()->json($data->load('lang','da'));
     }
 
     public function update(Request $request){
-        $data = ProjectModel::find($request->design_id_edit);
+        $data = Project::find($request->design_id_edit);
         $data->notes_design     = $request->notes;
         $data->status_design    = $request->status;
         $data->save();
