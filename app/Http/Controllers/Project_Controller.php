@@ -51,7 +51,7 @@ class Project_Controller extends Controller
         $records = Project::orderBy($columnName, $columnSortOrder)
             ->with('markets','ma_template','da')
             ->Where('projectname', 'like', '%' . $searchValue . '%')
-            ->latest()
+
             ->skip($start)
             ->take($rowperpage)
             ->get();

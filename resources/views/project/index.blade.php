@@ -29,6 +29,7 @@
                                 <thead>
                                 <tr>
 
+                                    <th style="display: none">ID</th>
                                     <th style="width: 10%">Logo</th>
                                     <th style="width: 20%">Mã Project</th>
                                     <th style="width: 30%">Package</th>
@@ -168,6 +169,7 @@
                 },
                 columns: [
 
+                    {data: 'projectid', name: 'projectid',orderable: false,visible: false},
                     {data: 'logo', name: 'logo',orderable: false},
                     {data: 'projectname', name: 'projectname'},
                     {data: 'markets', name: 'markets'},
@@ -176,7 +178,7 @@
                     // {data: 'status', name: 'status',orderable: false},
                     {data: 'action', name: 'action',className: "text-center", orderable: false, searchable: false},
                 ],
-                // order: [[ 0, 'desc' ]]
+                order: [[ 0, 'desc' ]]
             });
 
 
