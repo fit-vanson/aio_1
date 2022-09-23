@@ -271,11 +271,11 @@
                 var market = '';
                 $.each(data.lang, function (key, value) {
 
-                    active = (value.lang_code == 'en') ? 'active' : ((value.lang_code == 'vn') ? 'active': '');
+                    // active = (value.lang_code == 'en') ? 'active' : ((value.lang_code == 'vn') ? 'active': '');
 
-                    // if ( isset(value.lang_code == 'en') {
-                    //     active = 'active'
-                    // }
+                    if ( value.lang_code == 'en') {
+                        active = 'active'
+                    }
                     tablist += '<li class="nav-item">' +
                         '<a class="nav-link ' + active + '" data-toggle="tab" href="#' + value.lang_code + '" role="tab">' +
                         '<span class="d-block d-sm-none"><i class="fas fa-home"></i></span>' +
