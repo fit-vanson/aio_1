@@ -290,6 +290,21 @@
                             // '</div>' +
                             '</a>'
                     }
+
+                    tab_content += '<dl class="row mb-0">'+
+                        '<dt class="col-sm-3">App Name X</dt>'+
+                        '<dd class="col-sm-9">A description list is perfect for defining terms.</dd>' +
+
+                        '<dt class="col-sm-3">Title</dt>'+
+                        '<dd class="col-sm-9">Vestibulum id ligula porta felis euismod semper eget lacinia odio sem nec elit.</dd>'+
+
+                        '<dt class="col-sm-3">Summary </dt>'+
+                        '<dd class="col-sm-9 offset-sm-3">Donec id elit non mi porta gravida at eget metus.</dd>' +
+
+                        '<dt class="col-sm-3">Description </dt>'+
+                        '<dd class="col-sm-9 offset-sm-3">Donec id elit non mi porta gravida at eget metus.</dd></dl>';
+
+
                     tab_content += '<div class="tab-pane ' + active + ' p-3 gallery" id="' + value.lang_code + '" role="tabpanel">' +
                         '<div class="light_gallery img-list" id="light_gallery">'
                         + preview +
@@ -299,7 +314,7 @@
                         '<img src="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/bn.jpg" alt="" height="500">' +
                         // '</div>' +
                         '</a>' +
-                        '</div></div>'
+                        '</div></div>';
                 })
 
 
