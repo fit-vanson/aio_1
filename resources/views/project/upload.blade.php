@@ -266,7 +266,7 @@
                 $('#template').html(' - (' + data.ma_template.template + ') - ');
                 $('#title_app').html(data.title_app);
                 var tablist = '';
-                var tab_content = ''
+                var tab_content = '<div>'
                 var active = '';
                 var market = '';
                 $.each(data.lang, function (key, value) {
@@ -316,6 +316,8 @@
                         '</a>' +
                         '</div></div>';
                 })
+                tab_content = '</div>';
+
 
 
                 $.each(data.markets, function (key, value) {
