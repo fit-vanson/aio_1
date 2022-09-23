@@ -10,17 +10,12 @@
                 <form id="devForm" name="devForm" class="form-horizontal">
                     <input type="hidden" name="dev_id" id="dev_id">
                     <div data-repeater-list="group-a">
-                        <div data-repeater-item="" class="row">
+                        <div  class="row">
                             <div class="form-group col-lg-6">
                                 <label for="name">Ga Name</label>
                                 <div class="inner row">
                                     <div class="col-md-12 col-12">
-                                        <select class="form-control select2js" id="id_ga" name="id_ga">
-                                            <option value="0">---Vui lòng chọn---</option>
-                                            @foreach($ga_name as $item)
-                                                <option value="{{$item->id}}">{{$item->ga_name}}</option>
-                                            @endforeach
-                                        </select>
+                                        <select class="form-control select2js" id="ga_id" name="ga_id"></select>
                                     </div>
                                 </div>
                             </div>
@@ -32,7 +27,7 @@
 
                         </div>
 
-                        <div data-repeater-item="" class="row">
+                        <div class="row">
                             <div class="form-group col-lg-4">
                                 <label for="name">Store Name  <span style="color: red">*</span></label>
                                 <input type="text" id="store_name" name="store_name" class="form-control" required>
@@ -45,9 +40,7 @@
                                 <label for="name">Mật khẩu </label>
                                 <input type="text" id="pass" name="pass" class="form-control">
                             </div>
-                        </div>
 
-                        <div data-repeater-item="" class="row">
                             <div class="form-group col-lg-4">
                                 <label for="name">Email <span style="color: red">*</span></label>
                                 <div class="inner row">
@@ -91,8 +84,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div data-repeater-item="" class="row">
+
                             <div class="form-group col-lg-4">
                                 <label for="name">Đường dẫn</label>
                                 <input type="url" id="info_url" name="info_url" class="form-control">
@@ -105,8 +97,7 @@
                                 <label for="name">Banner</label>
                                 <input type="url" id="info_banner" name="info_banner" class="form-control">
                             </div>
-                        </div>
-                        <div data-repeater-item="" class="row">
+
                             <div class="form-group col-lg-4 ">
                                 <label for="name">Policy</label>
                                 <input type="url" id="info_policydev" name="info_policydev" class="form-control">

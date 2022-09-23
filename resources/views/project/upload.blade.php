@@ -108,85 +108,18 @@
 
                         <div class="row">
 
-                            <div class="form-group col-lg-6">
+                            <div class="form-group col-lg-3">
                                 <label for="name">Logo</label>
                                 <p class="card-title-desc">
-                                    <img id="logo_project" class="d-block img-fluid" src="" height="200" width="200px" alt="First slide">
-{{--                                    <img id="logo_project" class="d-block img-fluid" src="../storage/projects/{{$project->da->ma_da}}/{{$project->projectname}}/lg.png" height="200" width="200px" alt="{{$project->projectname}}">--}}
+                                    <img id="logo_project" class="d-block img-fluid" src="" height="200" width="200px" alt="">
                                 </p>
                             </div>
-                            {{--                            <div class="form-group col-lg-4">--}}
-                            {{--                                <label for="name">Ghi chú</label>--}}
-                            {{--                                <textarea id="notes_design" name="notes_design" class="form-control" rows="9" >{{$project->notes_design}}</textarea>--}}
-                            {{--                            </div>--}}
-
-                            <div class="form-group col-lg-6">
+                            <div class="form-group col-lg-9">
                                 <label for="name">Market</label>
                                 <div id="accordion">
 
-                                    <div class="card mb-1">
-                                        <div class="card-header p-3" id="headingOne">
-                                            <h6 class="m-0 font-14">
-                                                <a href="#collapseOne" class="text-dark collapsed" data-toggle="collapse" aria-expanded="false" aria-controls="collapseOne">
-                                                    Collapsible Group Item #1
-                                                </a>
-                                            </h6>
-                                        </div>
 
-                                        <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion" style="">
-                                            <div class="card-body">
 
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="card mb-1">
-                                        <div class="card-header p-3" id="headingTwo">
-                                            <h6 class="m-0 font-14">
-                                                <a href="#collapseTwo" class="text-dark collapsed" data-toggle="collapse" aria-expanded="false" aria-controls="collapseTwo">
-                                                    Collapsible Group Item #2
-                                                </a>
-                                            </h6>
-                                        </div>
-                                        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
-                                            <div class="card-body">
-                                                Anim pariatur cliche reprehenderit, enim eiusmod high life
-                                                accusamus terry richardson ad squid. 3 wolf moon officia
-                                                aute, non cupidatat skateboard dolor brunch. Food truck
-                                                quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor,
-                                                sunt aliqua put a bird on it squid single-origin coffee
-                                                nulla assumenda shoreditch et. Nihil anim keffiyeh
-                                                helvetica, craft beer labore wes anderson cred nesciunt
-                                                sapiente ea proident. Ad vegan excepteur butcher vice lomo.
-                                                Leggings occaecat craft beer farm-to-table, raw denim
-                                                aesthetic synth nesciunt you probably haven't heard of them
-                                                accusamus labore sustainable VHS.
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="card mb-0">
-                                        <div class="card-header p-3" id="headingThree">
-                                            <h6 class="m-0 font-14">
-                                                <a href="#collapseThree" class="text-dark collapsed" data-toggle="collapse" aria-expanded="false" aria-controls="collapseThree">
-                                                    Collapsible Group Item #3
-                                                </a>
-                                            </h6>
-                                        </div>
-                                        <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
-                                            <div class="card-body">
-                                                Anim pariatur cliche reprehenderit, enim eiusmod high life
-                                                accusamus terry richardson ad squid. 3 wolf moon officia
-                                                aute, non cupidatat skateboard dolor brunch. Food truck
-                                                quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor,
-                                                sunt aliqua put a bird on it squid single-origin coffee
-                                                nulla assumenda shoreditch et. Nihil anim keffiyeh
-                                                helvetica, craft beer labore wes anderson cred nesciunt
-                                                sapiente ea proident. Ad vegan excepteur butcher vice lomo.
-                                                Leggings occaecat craft beer farm-to-table, raw denim
-                                                aesthetic synth nesciunt you probably haven't heard of them
-                                                accusamus labore sustainable VHS.
-                                            </div>
-                                        </div>
-                                    </div>
 
                                 </div>
                                 {{--                                <textarea id="notes_design" name="notes_design" class="form-control" rows="9" >{{$project->notes_design}}</textarea>--}}
@@ -284,11 +217,7 @@
 
 <script src="{{ URL::asset('/assets/libs/lightgallery/js/lightgallery-all.js') }}"></script>
 
-
-
-
 <script type="text/javascript">
-
 
     $(function () {
         $.ajaxSetup({
@@ -296,7 +225,7 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-        $(document).on('click','#btnDuyet', function (data){
+        $(document).on('click', '#btnDuyet', function (data) {
             var formData = new FormData($("#browseappForm")[0])
             $.ajax({
                 data: formData,
@@ -308,12 +237,12 @@
                 success: function (data) {
                     $.notify(data.success, "success")
                     $('#project_detail').hide()
-                    $('#project_'+data.id).remove()
+                    $('#project_' + data.id).remove()
                 }
             });
         });
 
-        $(document).on('click','#btnChinh_sua', function (data){
+        $(document).on('click', '#btnChinh_sua', function (data) {
             var formData = new FormData($("#browseappForm")[0])
             $.ajax({
                 data: formData,
@@ -325,64 +254,98 @@
                 success: function (data) {
                     $.notify(data.success, "success")
                     $('#project_detail').hide()
-                    $('#project_'+data.id).remove()
+                    $('#project_' + data.id).remove()
                 }
             });
         })
 
-        $(document).on('click','.showProject', function (data){
+        $(document).on('click', '.showProject', function (data) {
             var _id = $(this).data("id");
 
             // console.log(_id);
             $('#project_detail').show()
-            $('.list_project_'+_id).addClass('active')
+            $('.list_project_' + _id).addClass('active')
 
-            $.get('{{asset('design-content/edit')}}/'+_id,function (data) {
+            $.get('{{asset('project/edit')}}/' + _id, function (data) {
 
-                $("#logo_project").attr("src","../storage/projects/"+data.da.ma_da+'/'+data.projectname+"/"+data.logo);
+                $("#logo_project").attr("src", "../storage/projects/" + data.da.ma_da + '/' + data.projectname + "/" + data.logo);
                 $('#notes_design').val(data.notes_design);
                 $('#project_id').val(data.projectid);
                 $('#pro_name').html(data.projectname);
-                $('#template').html(' - ('+data.ma_template.template+') - ');
+                $('#template').html(' - (' + data.ma_template.template + ') - ');
                 $('#title_app').html(data.title_app);
                 var tablist = '';
                 var tab_content = ''
                 var active = '';
-                    $.each( data.lang, function( key, value ) {
-                        if(value.lang_code == 'en'){
-                         active = 'active'
-                        }
-                        tablist += '<li class="nav-item">'+
-                            '<a class="nav-link '+active+'" data-toggle="tab" href="#'+value.lang_code+'" role="tab">'+
-                            '<span class="d-block d-sm-none"><i class="fas fa-home"></i></span>'+
-                            '<span class="d-none d-sm-block">'+value.lang_name+'</span>'+
-                            '</a></li>';
-                        var preview = '';
-                        for(var i = 1; i <= 8; i++) {
-                            preview +=
-                                '<a class="img_class" style="margin:5px" href="{{ URL::asset('/storage/projects') }}/'+data.da.ma_da+'/'+data.projectname+'/'+value.lang_code+'/pr'+i+'.jpg" title="preview '+i+'">' +
-                                // '<div class="img-responsive img-container">' +
-                                '<img  src="{{ URL::asset('/storage/projects') }}/'+data.da.ma_da+'/'+data.projectname+'/'+value.lang_code+'/pr'+i+'.jpg" alt="" height="500">' +
-                                // '</div>' +
-                                '</a>'
-                        }
-                         tab_content += '<div class="tab-pane '+active+' p-3 gallery" id="'+value.lang_code+'" role="tabpanel">'+
-                             '<div class="light_gallery img-list" id="light_gallery">'
-                                +preview+
+                var market = '';
+                $.each(data.lang, function (key, value) {
+                    if (key == 0) {
+                        active = 'active'
+                    }
+                    tablist += '<li class="nav-item">' +
+                        '<a class="nav-link ' + active + '" data-toggle="tab" href="#' + value.lang_code + '" role="tab">' +
+                        '<span class="d-block d-sm-none"><i class="fas fa-home"></i></span>' +
+                        '<span class="d-none d-sm-block">' + value.lang_name + '</span>' +
+                        '</a></li>';
+                    var preview = '';
+                    for (var i = 1; i <= 8; i++) {
+                        preview +=
+                            '<a class="img_class" style="margin:5px" href="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/pr' + i + '.jpg" title="preview ' + i + '">' +
+                            // '<div class="img-responsive img-container">' +
+                            '<img  src="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/pr' + i + '.jpg" alt="" height="500">' +
+                            // '</div>' +
+                            '</a>'
+                    }
+                    tab_content += '<div class="tab-pane ' + active + ' p-3 gallery" id="' + value.lang_code + '" role="tabpanel">' +
+                        '<div class="light_gallery img-list" id="light_gallery">'
+                        + preview +
 
-                             '<a class="img_class" style="margin:5px" href="{{ URL::asset('/storage/projects') }}/'+data.da.ma_da+'/'+data.projectname+'/'+value.lang_code+'/bn.jpg" title="preview '+i+'">' +
-                             // '<div class="img-responsive img-container">' +
-                             '<img src="{{ URL::asset('/storage/projects') }}/'+data.da.ma_da+'/'+data.projectname+'/'+value.lang_code+'/bn.jpg" alt="" height="500">' +
-                             // '</div>' +
-                             '</a>'+
-                             '</div></div>'
+                        '<a class="img_class" style="margin:5px" href="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/bn.jpg" title="preview ' + i + '">' +
+                        // '<div class="img-responsive img-container">' +
+                        '<img src="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/bn.jpg" alt="" height="500">' +
+                        // '</div>' +
+                        '</a>' +
+                        '</div></div>'
                 })
 
+                console.log(data)
+                $.each(data.markets, function (key, value) {
+
+                    market += '<div class="card mb-1">' +
+                        '<div class="card-header p-3" id="heading' + key + '">' +
+                        '<h6 class="m-0 font-14">' +
+                        '<a href="#collapse' + key + '" class="text-dark collapsed" data-toggle="collapse" aria-expanded="false" aria-controls="collapse' + key + '">' + value.market_name + '</a></h6></div>' +
+
+                        '<div id="collapse' + key + '" class="collapse" aria-labelledby="heading' + key + '" data-parent="#accordion" style="">' +
+                        '<div class="card-body">' +
+                        '<p class="mt-0 h6">Package: <span class="text-muted m-b-30">' + value.pivot.package + '</span><button onclick="copy(this)" type="button" data-text="' + value.pivot.package + '" class="btn btn-link waves-effect"><i class="mdi mdi-content-copy"></i></button></p>' +
+
+                        '</div></div></div>';
+
+
+                })
                 $('#tablist').html(tablist)
                 $('#tab_content').html(tab_content)
-            })
+                $('#accordion').html(market)
+            });
+
+
         });
-    });
+    })
+
+    function copy (e) {
+        var copyText = $(e).attr('data-text');
+        var textarea = document.createElement("textarea");
+        textarea.textContent = copyText;
+        textarea.style.position = "fixed"; // Prevent scrolling to bottom of page in MS Edge.
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+    }
+
+
+
 
 
     </script>
