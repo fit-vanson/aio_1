@@ -57,7 +57,7 @@
     .img_class {
         white-space: nowrap;
         width: auto;
-        height: 800px;
+        height: 200px;
     }
 </style>
 
