@@ -722,7 +722,7 @@ class Project_Controller extends Controller
 
         $projects = Project::has('lang')->where('status_design',4)->orderByDesc('projectname')->get();
 //        return view('design_content.index')->with(compact('projects'));
-        dd($projects);
+//        dd($projects);
 
         return view('project.upload')->with(compact('projects'));
     }

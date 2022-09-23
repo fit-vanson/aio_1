@@ -115,24 +115,15 @@
                                 </p>
                             </div>
                             <div class="form-group col-lg-9">
-                                <label for="name">Market</label>
-                                <div id="accordion">
+                                    <table class="table table-bordered table-striped mb-0">
+                                        <tbody id="market_upload" >
 
 
+                                        </tbody>
+                                    </table>
 
 
-                                </div>
-                                {{--                                <textarea id="notes_design" name="notes_design" class="form-control" rows="9" >{{$project->notes_design}}</textarea>--}}
                             </div>
-                            {{--                            <div class="col-lg-2 align-self-center">--}}
-
-                            {{--                                <a href="javascript:void(0)" class="btn btn-success btn-block" style="height: 100px; display:flex;align-items:center; justify-content:center; font-size: 20px" id="btnDuyet"   >--}}
-                            {{--                                    Duyệt--}}
-                            {{--                                </a>--}}
-                            {{--                                <a href="javascript:void(0)" class="btn btn-warning btn-block" style="height: 100px; display:flex;align-items:center; justify-content:center; font-size: 20px" id="btnChinh_sua">--}}
-                            {{--                                    Chỉnh sửa--}}
-                            {{--                                </a>--}}
-                            {{--                            </div>--}}
                         </div>
 
                         <!-- Nav tabs -->
@@ -308,25 +299,24 @@
                         '</div></div>'
                 })
 
-                console.log(data)
+
                 $.each(data.markets, function (key, value) {
+                    console.log(value)
 
-                    market += '<div class="card mb-1">' +
-                        '<div class="card-header p-3" id="heading' + key + '">' +
-                        '<h6 class="m-0 font-14">' +
-                        '<a href="#collapse' + key + '" class="text-dark collapsed" data-toggle="collapse" aria-expanded="false" aria-controls="collapse' + key + '">' + value.market_name + '</a></h6></div>' +
-
-                        '<div id="collapse' + key + '" class="collapse" aria-labelledby="heading' + key + '" data-parent="#accordion" style="">' +
-                        '<div class="card-body">' +
-                        '<p class="mt-0 h6">Package: <span class="text-muted m-b-30">' + value.pivot.package + '</span><button onclick="copy(this)" type="button" data-text="' + value.pivot.package + '" class="btn btn-link waves-effect"><i class="mdi mdi-content-copy"></i></button></p>' +
-
-                        '</div></div></div>';
+                    market += '<tr>'+
+                        '<th style="width: 10%">'+value.market_name+'</th>'+
+                        '<td style="width: 15%">'+value.pivot.dev_id+'</td>'+
+                        '<td style="width: 20%">Category</td>'+
+                        '<td style="width: 30%">'+value.pivot.package+'</td>'+
+                        '<td style="width: 15%">Down</td>'+
+                        '<td style="width: 10%">com</td>'+
+                        '</tr>';
 
 
                 })
                 $('#tablist').html(tablist)
                 $('#tab_content').html(tab_content)
-                $('#accordion').html(market)
+                $('#market_upload').html(market)
             });
 
 
