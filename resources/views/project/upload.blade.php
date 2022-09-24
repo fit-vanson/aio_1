@@ -106,7 +106,8 @@
                             <span style="font-weight: 500;" id="template"></span>
                             <span style="font-weight: 500;" id="title_app"></span>
                             <span style="font-weight: 500;">Download</span>
-                            <a href="javascript:void(0)" id="download" data-download="1"  class="btn btn-success">Download</a>
+{{--                            <a href="javascript:void(0)" id="download" data-download="1"  class="btn btn-success">Download</a>--}}
+                            <a href="" id="download"  target="_blank" class="btn btn-success">Download</a>
                         </h4>
 
                         <div class="row">
@@ -218,7 +219,8 @@
                 $('#pro_name').html(data.projectname);
                 $('#template').html(' - (' + data.ma_template.template + ') - ');
                 $('#title_app').html(data.title_app);
-                $('#download').data("download",data.projectid); //setter
+                // $('#download').data("download",data.projectid); //setter
+                $('#download').attr("href", "project/download/"+_id) //setter
                 var tablist = '';
                 var tab_content = ''
                 var active = '';
@@ -299,12 +301,12 @@
             });
         });
 
-        $(document).on('click', '#download', function (data) {
-            var download = $(this).data("download");
-            $.get('{{asset('project/download')}}/' + download, function (data) {
+        {{--$(document).on('click', '#download', function (data) {--}}
+        {{--    var download = $(this).data("download");--}}
+        {{--    $.get('{{asset('project/download')}}/' + download, function (data) {--}}
 
-            })
-        })
+        {{--    })--}}
+        {{--})--}}
     })
 
     function copy (e) {
