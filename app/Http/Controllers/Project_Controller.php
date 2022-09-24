@@ -802,7 +802,8 @@ class Project_Controller extends Controller
                 }
             }
             $zip->close();
-            return response()->download($zip_file);
+            return Response::download($zip_file, $project->projectname.'.zip', array('Content-Type: application/octet-stream','Content-Length: '. filesize($zip_file)))->deleteFileAfterSend(true);
+//            return response()->download($zip_file);
         }catch (\Exception $exception) {
             Log::error('Message:' . $exception->getMessage() . '--' . $exception->getLine());
         }
