@@ -263,12 +263,15 @@ class Project_Controller extends Controller
     }
 
     public function edit($id){
-//        $project = Project::where('projectid',$id)->with('markets')
-//            ->wherePivot('package','<>', null)
-//            ->get();
+
+//        $project = Project::where('projectid',$id)->whereHas('markets', function ($query) {
+//            return $query->where('package', '<>', null);
+//        })->first();
+
 
 //        $project = Project::find($id)->markets()->where('package','<>', null)->get();
         $project = Project::find($id);
+
         return response()->json($project->load('markets','da','ma_template.markets','lang'));
 //        return response()->json($project);
     }

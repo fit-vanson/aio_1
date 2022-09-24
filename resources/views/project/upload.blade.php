@@ -210,9 +210,6 @@
 
             $.get('{{asset('project/edit')}}/' + _id, function (data) {
 
-
-                console.log(data)
-
                 $("#logo_project").attr("src", "../storage/projects/" + data.da.ma_da + '/' + data.projectname + "/" + data.logo);
                 $('#notes_design').val(data.notes_design);
                 $('#project_id').val(data.projectid);
@@ -245,15 +242,15 @@
 
                         '<tr>'+
                         '<th style="width: 20%">Title</th>'+
-                        '<td style="width: 80%">'+value.lang_code+'</td>'+
+                        '<td style="width: 80%">'+value.pivot.title+'</td>'+
                         '</tr>'+
                         '<tr>'+
                         '<th style="width: 20%">Summary</th>'+
-                        '<td style="width: 80%">dddddddddddddđ</td>'+
+                        '<td style="width: 80%">'+value.pivot.summary+'</td>'+
                         '</tr>'+
                         '<tr>'+
                         '<th style="width: 20%">Description</th>'+
-                        '<td style="width: 80%">dddddddddddddđ</td>'+
+                        '<td style="width: 80%">'+value.pivot.description+'</td>'+
                         '</tr>'+
 
                         '</tbody></table></div></div></div>'+
@@ -277,10 +274,8 @@
                     categories[value.market_id] = value.value
 
                 })
-                console.log(categories)
 
                 $.each(data.markets, function (key, value) {
-                    console.log(value)
 
 
                     market += '<tr>'+
