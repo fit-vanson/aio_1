@@ -5,9 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Keystore;
 use App\Models\Markets;
 use App\Models\Project;
+
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Intervention\Image\Facades\Image;
+use ZipArchive;
+use File;
 
 class Project_Controller extends Controller
 {
@@ -735,5 +740,76 @@ class Project_Controller extends Controller
 
         return view('project.upload')->with(compact('projects'));
     }
+
+//    public function download($id){
+//
+//        $zip = new ZipArchive;
+//        $project = Project::find($id);
+//        $fileName = $project->projectname.'.zip';
+////        $fileName = '444444.zip';
+//
+//        if ($zip->open(public_path($fileName), ZipArchive::CREATE) === TRUE)
+//        {
+//            // Folder files to zip and download
+//            // files folder must be existing to your public folder
+////            $file = public_path('storage\projects\DA122\DA122-01');
+//            $file = public_path('storage/projects/'.$project->da->ma_da.'/'.$project->projectname);
+//
+//
+//            if (file_exists($file)) {
+//                $files = File::files($file);
+//
+//                // loop the files result
+//                foreach ($files as $key => $value) {
+//                    $relativeNameInZipFile = basename($value);
+//                    $zip->addFile($value, $relativeNameInZipFile);
+//                }
+//                $zip->close();
+//            }
+//        }
+//
+//        // Download the generated zip
+//        return response()->download(public_path($fileName));
+//
+//    }
+
+
+
+    public function download($id)
+    {
+        Artisan::call('optimize:clear');
+        $project = Project::find($id);
+
+        $zip_file = $project->projectname.'.zip';
+        $zip = new \ZipArchive();
+        $zip->open($zip_file, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
+
+//        $path = storage_path('invoices');
+        $path = storage_path('app/public/projects/'.$project->da->ma_da.'/'.$project->projectname);
+        try {
+            $files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path));
+
+            foreach ($files as $name => $file)
+            {
+                // We're skipping all subfolders
+                if (!$file->isDir()) {
+                    $filePath     = $file->getRealPath();
+
+                    // extracting filename with substr/strlen
+                    $relativePath = $project->projectname.'/' . substr($filePath, strlen($path) + 1);
+
+                    $zip->addFile($filePath, $relativePath);
+                }
+            }
+            $zip->close();
+            return response()->download($zip_file);
+        }catch (\Exception $exception) {
+            Log::error('Message:' . $exception->getMessage() . '--' . $exception->getLine());
+        }
+
+    }
+
+
+
 
 }

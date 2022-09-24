@@ -98,13 +98,16 @@
 
         <div style="width: 88%">
             <div class="card">
-                <div class="card-body " id="project_detail" >
+                <div class="card-body " id="project_detail" style="display:none;" >
 
                     <form id="browseappForm" name="browseappForm" class="form-horizontal">
                         <input type="hidden" name="project_id" id="project_id">
                         <h4><span id="pro_name"></span>
                             <span style="font-weight: 500;" id="template"></span>
-                            <span style="font-weight: 500;" id="title_app"></span></h4>
+                            <span style="font-weight: 500;" id="title_app"></span>
+                            <span style="font-weight: 500;">Download</span>
+                            <a href="javascript:void(0)" id="download" data-download="1"  class="btn btn-success">Download</a>
+                        </h4>
 
                         <div class="row">
 
@@ -207,7 +210,6 @@
             // console.log(_id);
             $('#project_detail').show()
             $('.list_project_' + _id).addClass('active')
-
             $.get('{{asset('project/edit')}}/' + _id, function (data) {
 
                 $("#logo_project").attr("src", "../storage/projects/" + data.da.ma_da + '/' + data.projectname + "/" + data.logo);
@@ -216,6 +218,7 @@
                 $('#pro_name').html(data.projectname);
                 $('#template').html(' - (' + data.ma_template.template + ') - ');
                 $('#title_app').html(data.title_app);
+                $('#download').data("download",data.projectid); //setter
                 var tablist = '';
                 var tab_content = ''
                 var active = '';
@@ -294,9 +297,14 @@
                 $('#tab_content').html(tab_content)
                 $('#market_upload').html(market)
             });
-
-
         });
+
+        $(document).on('click', '#download', function (data) {
+            var download = $(this).data("download");
+            $.get('{{asset('project/download')}}/' + download, function (data) {
+
+            })
+        })
     })
 
     function copy (e) {
