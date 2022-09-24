@@ -233,13 +233,36 @@
                             '<img  src="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/pr' + i + '.jpg" alt="" height="200">' +
                             '</a>'
                     }
-                    tab_content +='<div class="card-body d-flex justify-content-center"><div class="row"><div class="form-group col-lg-9">'+
+                    // tab_content +='<div class="card-body d-flex justify-content-center"><div class="row"><div class="form-group col-lg-9">'+
+                    //     '<table class="table table-bordered table-striped mb-0">'+
+                    //     '<tbody id="market_upload" >'+
+                    //
+                    //     '<tr>'+
+                    //         '<th style="width: 20%">Title</th>'+
+                    //         '<td style="width: 80%">'+value.lang_code+'</td>'+
+                    //     '</tr>'+
+                    //     '<tr>'+
+                    //     '<th style="width: 20%">Summary</th>'+
+                    //     '<td style="width: 80%">dddddddddddddđ</td>'+
+                    //     '</tr>'+
+                    //     '<tr>'+
+                    //     '<th style="width: 20%">Description</th>'+
+                    //     '<td style="width: 80%">dddddddddddddđ</td>'+
+                    //     '</tr>'+
+                    //
+                    //     '</tbody></table></div></div></div>';
+
+
+                    tab_content += '<div class="tab-pane  p-3 gallery" id="' + value.lang_code + '" role="tabpanel">' +
+
+
+                        '<div class="card-body d-flex justify-content-center"><div class="row"><div class="form-group col-lg-9">'+
                         '<table class="table table-bordered table-striped mb-0">'+
                         '<tbody id="market_upload" >'+
 
                         '<tr>'+
-                            '<th style="width: 20%">Title</th>'+
-                            '<td style="width: 80%">dddddddddddddđ</td>'+
+                        '<th style="width: 20%">Title</th>'+
+                        '<td style="width: 80%">'+value.lang_code+'</td>'+
                         '</tr>'+
                         '<tr>'+
                         '<th style="width: 20%">Summary</th>'+
@@ -250,10 +273,8 @@
                         '<td style="width: 80%">dddddddddddddđ</td>'+
                         '</tr>'+
 
-                        '</tbody></table></div></div></div>';
+                        '</tbody></table></div></div></div>'+
 
-
-                    tab_content += '<div class="tab-pane  p-3 gallery" id="' + value.lang_code + '" role="tabpanel">' +
                         '<div class="light_gallery img-list" id="light_gallery">'
                         + preview +
 
