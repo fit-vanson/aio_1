@@ -255,7 +255,6 @@
 
                     tab_content += '<div class="tab-pane  p-3 gallery" id="' + value.lang_code + '" role="tabpanel">' +
 
-
                         '<div class="card-body d-flex justify-content-center"><div class="row"><div class="form-group col-lg-9">'+
                         '<table class="table table-bordered table-striped mb-0">'+
                         '<tbody id="market_upload" >'+
@@ -275,7 +274,7 @@
 
                         '</tbody></table></div></div></div>'+
 
-                        '<div class="light_gallery img-list" id="light_gallery">'
+                        '<div class="light_gallery  d-flex justify-content-center img-list" id="light_gallery">'
                         + preview +
 
                         '<a class="img_class" style="margin:5px" href="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/bn.jpg" title="preview ' + i + '">' +
