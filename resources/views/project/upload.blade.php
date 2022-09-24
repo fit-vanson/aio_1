@@ -210,6 +210,9 @@
 
             $.get('{{asset('project/edit')}}/' + _id, function (data) {
 
+
+                console.log(data)
+
                 $("#logo_project").attr("src", "../storage/projects/" + data.da.ma_da + '/' + data.projectname + "/" + data.logo);
                 $('#notes_design').val(data.notes_design);
                 $('#project_id').val(data.projectid);
@@ -218,10 +221,11 @@
                 $('#title_app').html(data.title_app);
                 var tablist = '';
                 var tab_content = ''
-                // var active = '';
+                var active = '';
                 var market = '';
                 $.each(data.lang, function (key, value) {
-                    tablist += '<li class="nav-item">' +
+
+                    tablist += '<li class="nav-item '+active+'">' +
                         '<a class="nav-link" data-toggle="tab" href="#' + value.lang_code + '" role="tab">' +
                         '<span class="d-block d-sm-none"><i class="fas fa-home"></i></span>' +
                         '<span class="d-none d-sm-block">' + value.lang_name + '</span>' +
@@ -233,27 +237,7 @@
                             '<img  src="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/pr' + i + '.jpg" alt="" height="200">' +
                             '</a>'
                     }
-                    // tab_content +='<div class="card-body d-flex justify-content-center"><div class="row"><div class="form-group col-lg-9">'+
-                    //     '<table class="table table-bordered table-striped mb-0">'+
-                    //     '<tbody id="market_upload" >'+
-                    //
-                    //     '<tr>'+
-                    //         '<th style="width: 20%">Title</th>'+
-                    //         '<td style="width: 80%">'+value.lang_code+'</td>'+
-                    //     '</tr>'+
-                    //     '<tr>'+
-                    //     '<th style="width: 20%">Summary</th>'+
-                    //     '<td style="width: 80%">dddddddddddddđ</td>'+
-                    //     '</tr>'+
-                    //     '<tr>'+
-                    //     '<th style="width: 20%">Description</th>'+
-                    //     '<td style="width: 80%">dddddddddddddđ</td>'+
-                    //     '</tr>'+
-                    //
-                    //     '</tbody></table></div></div></div>';
-
-
-                    tab_content += '<div class="tab-pane  p-3 gallery" id="' + value.lang_code + '" role="tabpanel">' +
+                    tab_content += '<div class="tab-pane p-3 gallery  '+active+'" id="' + value.lang_code + '" role="tabpanel">' +
 
                         '<div class="card-body d-flex justify-content-center"><div class="row"><div class="form-group col-lg-9">'+
                         '<table class="table table-bordered table-striped mb-0">'+
@@ -288,13 +272,21 @@
 
 
 
+                var categories = [];
+                $.each(data.ma_template.category, function (key, value) {
+                    categories[value.market_id] = value.value
+
+                })
+                console.log(categories)
+
                 $.each(data.markets, function (key, value) {
+                    console.log(value)
 
 
                     market += '<tr>'+
                         '<th style="width: 10%">'+value.market_name+'</th>'+
                         '<td style="width: 10%">'+value.pivot.dev_id+'</td>'+
-                        '<td style="width: 20%">Category</td>'+
+                        '<td style="width: 20%">'+categories[value.id]+'</td>'+
                         '<td style="width: 20%">'+value.pivot.app_name_x+'</td>'+
                         '<td style="width: 30%">'+value.pivot.package+'</td>'+
                         '<td style="width: 10%">Down</td>'+
