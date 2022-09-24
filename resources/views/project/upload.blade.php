@@ -138,55 +138,6 @@
         </div>
 
 
-{{--        <div style="width: 88%">--}}
-{{--            <div class="card">--}}
-{{--                <div class="card-body " id="project_detail" style="display: none" >--}}
-
-{{--                    <form id="browseappForm" name="browseappForm" class="form-horizontal">--}}
-{{--                        <input type="hidden" name="project_id" id="project_id">--}}
-{{--                        <h4><span id="pro_name"></span>--}}
-{{--                            <span style="font-weight: 500;" id="template"></span>--}}
-{{--                            <span style="font-weight: 500;" id="title_app"></span></h4>--}}
-
-
-{{--                        <div class="row">--}}
-
-{{--                            <div class="form-group col-lg-2">--}}
-{{--                                <label for="name">Logo</label>--}}
-{{--                                <p class="card-title-desc">--}}
-{{--                                    <img id="logo_project" class="d-block img-fluid" src="" height="200" width="200px" alt="First slide">--}}
-
-{{--                                </p>--}}
-
-
-{{--                            </div>--}}
-{{--                            <div class="form-group col-lg-8">--}}
-{{--                                <label for="name">Ghi chú</label>--}}
-{{--                                <textarea id="notes_design" name="notes_design" class="form-control" rows="9" ></textarea>--}}
-{{--                            </div>--}}
-{{--                            <div class="col-lg-2 align-self-center">--}}
-
-{{--                                <a href="javascript:void(0)" class="btn btn-success btn-block" style="height: 100px; display:flex;align-items:center; justify-content:center; font-size: 20px" id="btnDuyet"   >--}}
-{{--                                    Duyệt--}}
-{{--                                </a>--}}
-{{--                                <a href="javascript:void(0)" class="btn btn-warning btn-block" style="height: 100px; display:flex;align-items:center; justify-content:center; font-size: 20px" id="btnChinh_sua">--}}
-{{--                                    Chỉnh sửa--}}
-{{--                                </a>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
-
-{{--                        <!-- Nav tabs -->--}}
-{{--                        <ul class="nav nav-tabs" role="tablist" id="tablist">--}}
-{{--                        </ul>--}}
-{{--                        <!-- Tab panes -->--}}
-{{--                        <div class="tab-content" id="tab_content">--}}
-{{--                        </div>--}}
-{{--                    </form>--}}
-
-{{--                </div>--}}
-{{--            </div>--}}
-{{--        </div>--}}
-
         <!-- end col -->
     </div> <!-- end row -->
 
@@ -266,18 +217,12 @@
                 $('#template').html(' - (' + data.ma_template.template + ') - ');
                 $('#title_app').html(data.title_app);
                 var tablist = '';
-                var tab_content = '<div>'
-                var active = '';
+                var tab_content = ''
+                // var active = '';
                 var market = '';
                 $.each(data.lang, function (key, value) {
-
-                    // active = (value.lang_code == 'en') ? 'active' : ((value.lang_code == 'vn') ? 'active': '');
-
-                    if ( value.lang_code == 'en') {
-                        active = 'active'
-                    }
                     tablist += '<li class="nav-item">' +
-                        '<a class="nav-link ' + active + '" data-toggle="tab" href="#' + value.lang_code + '" role="tab">' +
+                        '<a class="nav-link" data-toggle="tab" href="#' + value.lang_code + '" role="tab">' +
                         '<span class="d-block d-sm-none"><i class="fas fa-home"></i></span>' +
                         '<span class="d-none d-sm-block">' + value.lang_name + '</span>' +
                         '</a></li>';
@@ -285,24 +230,30 @@
                     for (var i = 1; i <= 8; i++) {
                         preview +=
                             '<a class="img_class" style="margin:5px" href="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/pr' + i + '.jpg" title="preview ' + i + '">' +
-                            // '<div class="img-responsive img-container">' +
                             '<img  src="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/pr' + i + '.jpg" alt="" height="200">' +
-                            // '</div>' +
                             '</a>'
                     }
+                    tab_content +='<div class="card-body d-flex justify-content-center"><div class="row"><div class="form-group col-lg-9">'+
+                        '<table class="table table-bordered table-striped mb-0">'+
+                        '<tbody id="market_upload" >'+
 
-                    tab_content += '<dl class="row mb-0">'+
-                        '<dt class="col-sm-3">Title</dt>'+
-                        '<dd class="col-sm-9">Vestibulum id ligula porta felis euismod semper eget lacinia odio sem nec elit.</dd>'+
+                        '<tr>'+
+                            '<th style="width: 20%">Title</th>'+
+                            '<td style="width: 80%">dddddddddddddđ</td>'+
+                        '</tr>'+
+                        '<tr>'+
+                        '<th style="width: 20%">Summary</th>'+
+                        '<td style="width: 80%">dddddddddddddđ</td>'+
+                        '</tr>'+
+                        '<tr>'+
+                        '<th style="width: 20%">Description</th>'+
+                        '<td style="width: 80%">dddddddddddddđ</td>'+
+                        '</tr>'+
 
-                        '<dt class="col-sm-3">Summary </dt>'+
-                        '<dd class="col-sm-9 offset-sm-3">Donec id elit non mi porta gravida at eget metus.</dd>' +
-
-                        '<dt class="col-sm-3">Description </dt>'+
-                        '<dd class="col-sm-9 offset-sm-3">Donec id elit non mi porta gravida at eget metus.</dd></dl>';
+                        '</tbody></table></div></div></div>';
 
 
-                    tab_content += '<div class="tab-pane ' + active + ' p-3 gallery" id="' + value.lang_code + '" role="tabpanel">' +
+                    tab_content += '<div class="tab-pane  p-3 gallery" id="' + value.lang_code + '" role="tabpanel">' +
                         '<div class="light_gallery img-list" id="light_gallery">'
                         + preview +
 
@@ -313,7 +264,7 @@
                         '</a>' +
                         '</div></div>';
                 })
-                tab_content += '</div>';
+
 
 
 
@@ -351,9 +302,6 @@
         document.execCommand("copy");
         document.body.removeChild(textarea);
     }
-
-
-
 
 
     </script>
