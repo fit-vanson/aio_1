@@ -22,8 +22,6 @@ class DesignController extends Controller
     }
     public function getIndex(Request $request)
     {
-
-//        dd($request->all());
         $draw = $request->get('draw');
         $start = $request->get("start");
         $rowperpage = $request->get("length"); // total number of rows per page

@@ -279,10 +279,25 @@
                         + preview +
 
                         '<a class="img_class" style="margin:5px" href="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/bn.jpg" title="preview ' + i + '">' +
-                        // '<div class="img-responsive img-container">' +
                         '<img src="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/bn.jpg" alt="" height="200">' +
-                        // '</div>' +
                         '</a>' +
+
+                        '<video width="320" height="240" controls>'+
+                        '<source src="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/video.mp4" type="video/mp4">'+
+                        '<source src="movie.ogg" type="video/ogg">'+
+                        'Your browser does not support the video tag.'+
+                        '</video>'+
+
+
+
+
+
+
+                        {{--'<a class="img_class" style="margin:5px" href="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/video.mp4" title="preview ' + i + '">' +--}}
+                        {{--'<img src="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/video.mp4" alt="" height="200">' +--}}
+                        {{--'</a>' +--}}
+
+
                         '</div></div>';
                 })
 

@@ -258,6 +258,15 @@
                              '<img src="{{ URL::asset('/storage/projects') }}/'+data.da.ma_da+'/'+data.projectname+'/'+value.lang_code+'/bn.jpg" alt="" height="500">' +
                              // '</div>' +
                              '</a>'+
+
+                             '<a class="img_class" style="margin:5px" href="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/video.mp4" >' +
+                             '<video  height="500" controls>'+
+                             '<source src="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/video.mp4" type="video/mp4">'+
+                             '<source src="movie.ogg" type="video/ogg">'+
+                             'Your browser does not support the video tag.'+
+                             '</video>'+
+                             '</a>'+
+
                              '</div></div>'
                 })
 

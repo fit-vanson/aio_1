@@ -458,7 +458,6 @@
                         type: "post",
                         dataType: 'json',
                         success: function (data) {
-                            console.log(data)
                             if(data.errors){
                                 $.notify(data.errors, "error");
                             }
@@ -478,7 +477,7 @@
                         type: "post",
                         dataType: 'json',
                         success: function (data) {
-                            console.log(data)
+
                             if(data.errors){
                                 $.notify(data.errors, "error");
                             }
@@ -491,6 +490,27 @@
                         },
                     });
                 }
+                if($('#changeMultipleBtn').val() == 'change_upload_status'){
+                    $.ajax({
+                        data: $('#changeMultipleForm').serialize(),
+                        url: "{{ route('project.updateMultiple')}}?action=upload_status",
+                        type: "post",
+                        dataType: 'json',
+                        success: function (data) {
+
+                            if(data.errors){
+                                $.notify(data.errors, "error");
+                            }
+                            if(data.success){
+                                $.notify(data.success, "success");
+                                $('#changeMultipleForm').trigger("reset");
+                                $('#changeMultiple').modal('hide');
+                                table.draw();
+                            }
+                        },
+                    });
+                }
+
             });
 
             $('#dev_statusForm button').click(function (event){
@@ -517,6 +537,19 @@
 
 
             });
+
+            $('#Check_all').change(function () {
+                $('.cb-element').prop('checked',this.checked);
+            });
+
+            $('.cb-element').change(function () {
+                if ($('.cb-element:checked').length == $('.cb-element').length){
+                    $('#checkall').prop('checked',true);
+                }
+                else {
+                    $('#checkall').prop('checked',false);
+                }
+            });
         });
 
         $('#build_check').on('click', function () {
@@ -541,6 +574,16 @@
             $('#changeMultipleTitle').html('SDK');
             $('#changeMultipleName').html('ID Project | SDK C | SDK A | SDK S |  SDK X |  SDK O |  SDK V |  SDK H');
             $('#changeMultipleBtn').val('change_sdk');
+            $('.modal').on('hidden.bs.modal', function (e) {
+                $('body').addClass('modal-open');
+            });
+        });
+
+        $('#change_upload_status').on('click', function () {
+            $('#changeMultiple').modal('show');
+            $('#changeMultipleTitle').html('Upload Project');
+            $('#changeMultipleName').html('ID Project');
+            $('#changeMultipleBtn').val('change_upload_status');
             $('.modal').on('hidden.bs.modal', function (e) {
                 $('body').addClass('modal-open');
             });
@@ -818,6 +861,7 @@
                 },
             });
         }
+
 
     </script>
 

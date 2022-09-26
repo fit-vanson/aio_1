@@ -921,13 +921,28 @@ $markets = \App\Models\Markets::all();
                         <div class="card">
                             <div class="card-body">
                                 <form class="repeater" id="changeMultipleForm">
+
+                                    <div class="col-lg-12">
+                                        <div class="row">
+                                            <div class="form-group col-lg-2">
+                                                <label for="name">All Market</label>
+                                                <input type="checkbox" class="control-input" id="Check_all">
+                                            </div>
+                                            @foreach($markets as $market)
+                                            <div class="form-group col-lg-2">
+                                                <label for="name">{{$market->market_name}}</label>
+                                                <input type="checkbox" class="control-input cb-element" name="market_upload[]" value="{{$market->id}}" required>
+                                            </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
                                     <div class="row">
                                         <div class="form-group col-lg-12">
                                             <p for="name" id="changeMultipleName"></p>
                                             <textarea id="changeMultiple" name="changeMultiple" rows="20" style="width: 100%"></textarea>
                                         </div>
                                     </div>
-                                    <button type="submit" class="btn btn-primary" id="changeMultipleBtn" >Create</button>
+                                    <button type="submit" class="btn btn-success" id="changeMultipleBtn" >Update</button>
                                 </form>
                             </div>
                         </div>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Keystore;
+use App\Models\MarketProject;
 use App\Models\Markets;
 use App\Models\Project;
 
@@ -27,6 +28,7 @@ class Project_Controller extends Controller
                 'Status'            => ['id'=>'dev_status','style'=>'info'],
                 'KeyStore'          => ['id'=>'change_keystore','style'=>'success'],
                 'SDK'               => ['id'=>'change_sdk','style'=>'danger'],
+                'Upload Status'     => ['id'=>'change_upload_status','style'=>'secondary'],
             ]
 
         ];
@@ -454,64 +456,113 @@ class Project_Controller extends Controller
     }
 
     public function updateMultiple(Request $request){
+
         $data = explode("\r\n",$request->changeMultiple);
+
         $markets = Markets::all()->pluck('id')->toArray();
         $action = $request->action;
-        foreach ($data as $item){
-            try {
-                [$ID_Project, $Key_C, $Key_A, $Key_S, $Key_X, $Key_O, $Key_V, $Key_H ] = explode("|",$item);
 
-                $store = [
-                    $Key_C, $Key_A, $Key_S, $Key_X, $Key_O, $Key_V, $Key_H
-                ];
-                $insert = [];
+        if ($action == 'upload_status'){
+            $projects = Project::whereIN('projectname',array_map('trim', $data))->pluck('projectid');
+            $projects_market =
+                MarketProject::whereIN('project_id',$projects)
+                    ->whereIn('market_id',$request->market_upload)
+                    ->get();
 
-
-                $project = Project::where('projectname',trim($ID_Project))->firstorfail()->load('markets');
-
-                switch ($action){
-                    case 'keystore':
-                        foreach ($markets as $key=>$market){
-                            $insert[$market] = ['keystore'=>$store[$key]];
-                        }
-
-                        $project->markets()->sync($insert);
-
-                        Keystore::updateorcreate([
-                            'name_keystore' => $Key_C
-                        ]);
-                        Keystore::updateorcreate([
-                            'name_keystore' => $Key_A
-                        ]);
-                        Keystore::updateorcreate([
-                            'name_keystore' => $Key_S
-                        ]);
-                        Keystore::updateorcreate([
-                            'name_keystore' => $Key_X
-                        ]);
-                        Keystore::updateorcreate([
-                            'name_keystore' => $Key_O
-                        ]);
-                        Keystore::updateorcreate([
-                            'name_keystore' => $Key_V
-                        ]);
-                        Keystore::updateorcreate([
-                            'name_keystore' => $Key_H
-                        ]);
+            foreach ($projects_market as $project){
+                $status = $project->status_upload;
+                switch ($status){
+                    case 0:
+                        $status = 1;
                         break;
-                    case 'sdk':
-                        foreach ($markets as $key=>$market){
-                            $insert[$market] = ['sdk'=>$store[$key]];
-                        }
-                        $project->markets()->sync($insert);
+//                    case 1:
+//                        $status_change = 1;
+//                        break;
+                    case 2:
+                        $status = 2;
                         break;
+//                    case 3:
+//                        $status_change = 2;
+//                        break;
                 }
+                $project->status_upload = $status;
+                $project->save();
+            }
+
+        }else{
+            foreach ($data as $item){
+
+                try {
+
+                    switch ($action){
+                        case 'keystore':
+                            [$ID_Project, $Key_C, $Key_A, $Key_S, $Key_X, $Key_O, $Key_V, $Key_H ] = explode("|",$item);
+                            $store = [
+                                $Key_C, $Key_A, $Key_S, $Key_X, $Key_O, $Key_V, $Key_H
+                            ];
+                            $insert = [];
+                            $project = Project::where('projectname',trim($ID_Project))->firstorfail()->load('markets');
+                            foreach ($markets as $key=>$market){
+                                $insert[$market] = ['keystore'=>$store[$key]];
+                            }
+
+                            $project->markets()->sync($insert);
+
+                            Keystore::updateorcreate([
+                                'name_keystore' => $Key_C
+                            ]);
+                            Keystore::updateorcreate([
+                                'name_keystore' => $Key_A
+                            ]);
+                            Keystore::updateorcreate([
+                                'name_keystore' => $Key_S
+                            ]);
+                            Keystore::updateorcreate([
+                                'name_keystore' => $Key_X
+                            ]);
+                            Keystore::updateorcreate([
+                                'name_keystore' => $Key_O
+                            ]);
+                            Keystore::updateorcreate([
+                                'name_keystore' => $Key_V
+                            ]);
+                            Keystore::updateorcreate([
+                                'name_keystore' => $Key_H
+                            ]);
+                            break;
+                        case 'sdk':
+                            [$ID_Project, $Key_C, $Key_A, $Key_S, $Key_X, $Key_O, $Key_V, $Key_H ] = explode("|",$item);
+                            $store = [
+                                $Key_C, $Key_A, $Key_S, $Key_X, $Key_O, $Key_V, $Key_H
+                            ];
+                            $insert = [];
+                            $project = Project::where('projectname',trim($ID_Project))->firstorfail()->load('markets');
+                            foreach ($markets as $key=>$market){
+                                $insert[$market] = ['sdk'=>$store[$key]];
+                            }
+                            $project->markets()->sync($insert);
+                            break;
+                        case 'upload_status':
+
+                            $project = Project::where('projectname',trim($item))->firstorfail()->load('markets');
+                            dd($project);
+                    }
 
 
-            }catch (\Exception $exception) {
-                \Illuminate\Support\Facades\Log::error('Message:' . $exception->getMessage() . '--- chang key : ' . $exception->getLine());
+                }catch (\Exception $exception) {
+                    \Illuminate\Support\Facades\Log::error('Message:' . $exception->getMessage() . '--- chang key : ' . $exception->getLine());
+                }
             }
         }
+
+
+
+
+
+
+
+
+
 
         return response()->json(['success'=>'Cập nhật thành công ']);
 
