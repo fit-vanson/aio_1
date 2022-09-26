@@ -269,20 +269,14 @@ class Project_Controller extends Controller
 
     public function edit($id){
 
-//        $project = Project::where('projectid',$id)->whereHas('markets', function ($query) {
-//            return $query->where('package', '<>', null);
-//        })->first();
-
-
-//        $project = Project::find($id)->markets()->where('package','<>', null)->get();
         $project = Project::find($id);
 
-        return response()->json($project->load('markets','da','ma_template.markets','lang'));
+        return response()->json($project->load('markets.devs','da','ma_template.markets','lang','dev'));
 //        return response()->json($project);
     }
 
     public function update(Request $request){
-//        dd($request->all());
+
         $id = $request->project_id;
         $rules = [
             'projectname' =>'unique:ngocphandang_project,projectname,'.$id.',projectid',
@@ -311,16 +305,18 @@ class Project_Controller extends Controller
         }
 
 
+
         $data = Project::find($id)->load('markets');
-        $data->template = $request->template ? $request->template : $data->template ;
-        $data->ma_da = $request->ma_da ? $request->ma_da : $data->ma_da ;
+        $data->projectname = $request->projectname;
+        $data->template = $request->template  ;
+        $data->ma_da = $request->ma_da;
         $data->title_app = $request->title_app;
 
         $data['buildinfo_link_fanpage'] = $request->buildinfo_link_fanpage;
         $data['buildinfo_link_website'] =  $request->buildinfo_link_website;
 
         $data['buildinfo_api_key_x'] = $request->buildinfo_api_key_x;
-        $data['buildinfo_console'] = 0;
+
         $data['buildinfo_vernum' ]= $request->buildinfo_vernum;
         $data['buildinfo_verstr'] = $request->buildinfo_verstr;
         $data['data_onoff'] = $request->data_status ? (int)  $request->data_status :0;
@@ -352,6 +348,8 @@ class Project_Controller extends Controller
             $img->resize(114, 114)
                 ->save($path_logo.'lg114.png',85);
             $data['logo'] = 'lg.png';
+
+//            dd($data);
         }
         $inset_market = [];
         foreach ($request->market as $key=>$value){
@@ -724,54 +722,87 @@ class Project_Controller extends Controller
     public function upload()
     {
         $header = [
-            'title' => 'Process',
+            'title' => 'Upload Project',
             'button' => [
-                'All'       => ['id'=>'all','style'=>'primary'],
-                'Chờ xử lý' => ['id'=>'WaitProcessing','style'=>'warning'],
-                'Đang xử lý'=> ['id'=>'Processing','style'=>'info'],
-                'Kết thúc'  => ['id'=>'End','style'=>'success'],
-                'Remove'    => ['id'=>'RemoveA','style'=>'danger'],
+//                'All'       => ['id'=>'all','style'=>'primary'],
+//                'Chờ xử lý' => ['id'=>'WaitProcessing','style'=>'warning'],
+//                'Đang xử lý'=> ['id'=>'Processing','style'=>'info'],
+//                'Kết thúc'  => ['id'=>'End','style'=>'success'],
+//                'Remove'    => ['id'=>'RemoveA','style'=>'danger'],
             ]
         ];
+//
+//
+//        $projects = Project::has('lang')->where('status_design',4)->orderByDesc('projectname')->get();
+////        return view('design_content.index')->with(compact('projects'));
+////        dd($projects);
 
-        $projects = Project::has('lang')->where('status_design',4)->orderByDesc('projectname')->get();
-//        return view('design_content.index')->with(compact('projects'));
-//        dd($projects);
-
-        return view('project.upload')->with(compact('projects'));
+        return view('project.upload')->with(compact('header'));
     }
 
-//    public function download($id){
-//
-//        $zip = new ZipArchive;
-//        $project = Project::find($id);
-//        $fileName = $project->projectname.'.zip';
-////        $fileName = '444444.zip';
-//
-//        if ($zip->open(public_path($fileName), ZipArchive::CREATE) === TRUE)
-//        {
-//            // Folder files to zip and download
-//            // files folder must be existing to your public folder
-////            $file = public_path('storage\projects\DA122\DA122-01');
-//            $file = public_path('storage/projects/'.$project->da->ma_da.'/'.$project->projectname);
-//
-//
-//            if (file_exists($file)) {
-//                $files = File::files($file);
-//
-//                // loop the files result
-//                foreach ($files as $key => $value) {
-//                    $relativeNameInZipFile = basename($value);
-//                    $zip->addFile($value, $relativeNameInZipFile);
-//                }
-//                $zip->close();
-//            }
-//        }
-//
-//        // Download the generated zip
-//        return response()->download(public_path($fileName));
-//
-//    }
+    public function getProjectUpload(Request $request){
+
+        $draw = $request->get('draw');
+        $start = $request->get("start");
+        $rowperpage = $request->get("length"); // total number of rows per page
+
+        $columnIndex_arr = $request->get('order');
+        $columnName_arr = $request->get('columns');
+        $order_arr = $request->get('order');
+        $search_arr = $request->get('search');
+
+        $columnIndex = $columnIndex_arr[0]['column']; // Column index
+        $columnName = $columnName_arr[$columnIndex]['data']; // Column name
+        $columnSortOrder = $order_arr[0]['dir']; // asc or desc
+        $searchValue = $search_arr['value']; // Search value
+
+
+        $totalRecords = Project::select('count(*) as allcount')
+            ->whereHas('markets',function($q)
+            {
+                $q
+                    ->where('status_upload', 1);
+            })
+            ->count();
+        $totalRecordswithFilter = Project::select('count(*) as allcount')
+            ->whereHas('markets',function($q)
+            {
+                $q
+                    ->where('status_upload', 1);
+            })
+
+            ->count();
+        $records = Project::orderBy($columnName, $columnSortOrder)
+            ->whereHas('markets',function($q)
+            {
+                $q
+                    ->where('status_upload', 1);
+            })
+            ->skip($start)
+            ->take($rowperpage)
+            ->get();
+
+        $data_arr = array();
+        foreach ($records as $record) {
+            $data_arr[] = array(
+                "projectname"=>' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$record->projectid.'" class="showProject">'.$record->projectname.'</a>'
+
+            );
+        }
+
+        $response = array(
+            "draw" => intval($draw),
+            "iTotalRecords" => $totalRecords,
+            "iTotalDisplayRecords" => $totalRecordswithFilter,
+            "start" => $start,
+            "length" => $rowperpage,
+            "aaData" => $data_arr,
+        );
+
+        echo json_encode($response);
+
+    }
+
 
 
 
@@ -807,7 +838,6 @@ class Project_Controller extends Controller
         }catch (\Exception $exception) {
             Log::error('Message:' . $exception->getMessage() . '--' . $exception->getLine());
         }
-
     }
 
 
