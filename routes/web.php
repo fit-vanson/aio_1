@@ -265,6 +265,7 @@ Route::group(['prefix'=>'project','middleware'=>['CheckLogout','2fa']], function
     Route::post('/getProcess',[Project_Controller::class,'getProcess'])->name('project.getProcess')->middleware('can:project-index');
 
     Route::get('/upload',[Project_Controller::class,'upload'])->name('project.upload')->middleware('can:project-index');
+    Route::post('/getProjectUpload',[Project_Controller::class,'getProjectUpload'])->name('project.getProjectUpload')->middleware('can:project-index');
     Route::get('/download/{id}',[Project_Controller::class,'download'])->name('project.download')->middleware('can:project-index');
 
 

@@ -24,4 +24,8 @@ class MarketProject extends Model
         'status_app',
     ];
     public $timestamps= false;
+
+    public function dev(){
+        return $this->belongsTo(Market_dev::class,'dev_id');
+    }
 }
