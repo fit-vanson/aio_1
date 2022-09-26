@@ -12,6 +12,7 @@
         "ext-fileinfo": "*",
         "ext-zip": "*",
         "adrianorosa/laravel-geolocation": "^1.0",
+        "ajcastro/eager-load-pivot-relations": "^0.2.2",
         "alexusmai/laravel-file-manager": "^2.5",
         "awobaz/compoships": "^2.1",
         "elasticquent/elasticquent": "dev-master",
