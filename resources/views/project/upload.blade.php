@@ -291,20 +291,16 @@
                     categories[value.market_id] = value.value
                 })
 
-                var devs = [];
-                $.each(data.devs, function (key, value) {
-                    devs[value.market_id] = value
-                })
-
                 console.log(data)
 
+
+
+
                 $.each(data.markets, function (key, value) {
-
-
                     if(value.pivot.package){
                         market += '<tr>'+
                             '<th style="width: 10%">'+value.market_name+'</th>'+
-                            '<td style="width: 10%">'+devs[value.id]   +'</td>'+
+                            '<td style="width: 10%">'+value.pivot.dev.dev_name  +'</td>'+
                             '<td style="width: 20%">'+categories[value.id]+'</td>'+
                             '<td class="copyButton">'+value.pivot.app_name_x +'</button></td>'+
                             '<td class="copyButton">'+value.pivot.package +'</button></td>'+

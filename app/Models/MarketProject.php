@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use AjCastro\EagerLoadPivotRelations\EagerLoadPivotTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class MarketProject extends Model
+class MarketProject extends  \Illuminate\Database\Eloquent\Relations\Pivot
 {
     use HasFactory;
+    use EagerLoadPivotTrait;
     protected $fillable = [
         'market_id',
         'project_id',
@@ -25,7 +27,11 @@ class MarketProject extends Model
     ];
     public $timestamps= false;
 
-    public function dev(){
+    protected $table = 'market_projects';
+
+    public function dev()
+    {
+
         return $this->belongsTo(Market_dev::class,'dev_id');
     }
 }

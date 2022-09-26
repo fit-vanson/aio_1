@@ -4,10 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use AjCastro\EagerLoadPivotRelations\EagerLoadPivotTrait;
+
 
 class Project extends Model
 {
     use HasFactory;
+    use EagerLoadPivotTrait;
     protected $table = 'ngocphandang_project';
     protected $primaryKey = 'projectid';
     protected $guarded =[];

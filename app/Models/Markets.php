@@ -4,10 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use AjCastro\EagerLoadPivotRelations\EagerLoadPivotTrait;
 
 class Markets extends Model
 {
     use HasFactory;
+    use EagerLoadPivotTrait;
+
 
     use \Staudenmeir\EloquentJsonRelations\HasJsonRelationships;
 
@@ -22,13 +25,11 @@ class Markets extends Model
 
 
 
-    public function devs(){
-        return $this->belongsToMany(Market_dev::class,MarketProject::class,'market_id','dev_id')
-            ->withPivot('project_id','appID','app_name_x','package','ads','app_link','policy_link','video_link','sdk','keystore','status_app','status_upload','time_upload');
-    }
-    public function dev(){
-        return $this->belongsTo(Market_dev::class,'dev_id');
-    }
+//    public function devs(){
+//        return $this->belongsToMany(Market_dev::class,MarketProject::class,'market_id','dev_id')
+//            ->withPivot('project_id','appID','app_name_x','package','ads','app_link','policy_link','video_link','sdk','keystore','status_app','status_upload','time_upload');
+//    }
+
 
 
 

@@ -270,7 +270,7 @@ class Project_Controller extends Controller
 
         $project = Project::find($id);
 
-        return response()->json($project->load('markets.devs','da','ma_template.markets','lang','dev'));
+        return response()->json($project->load('markets.pivot.dev','da','ma_template.markets','lang'));
 //        return response()->json($project);
     }
 
