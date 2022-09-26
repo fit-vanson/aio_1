@@ -895,6 +895,14 @@ class Project_Controller extends Controller
     }
 
 
+    public function update_upload_status($id){
+        $project = MarketProject::find($id);
+        $project->status_upload = 3;
+        $project->save();
+        return response()->json(['success'=>'Thành công']);
+    }
+
+
 
 
 }

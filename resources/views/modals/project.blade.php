@@ -922,7 +922,7 @@ $markets = \App\Models\Markets::all();
                             <div class="card-body">
                                 <form class="repeater" id="changeMultipleForm">
 
-                                    <div class="col-lg-12">
+                                    <div class="col-lg-12" id="market_upload" style="display: none">
                                         <div class="row">
                                             <div class="form-group col-lg-2">
                                                 <label for="name">All Market</label>

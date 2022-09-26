@@ -306,16 +306,17 @@
                     categories[value.market_id] = value.value
                 })
 
+                console.log(data)
                 $.each(data.markets, function (key, value) {
                     if(value.pivot.package){
                         market += '<tr>'+
                             '<th style="width: 10%">'+value.market_name+'</th>'+
-                            '<td style="width: 10%">'+value.pivot.dev.dev_name  +'</td>'+
+                            // '<td style="width: 10%">'+value.pivot.dev ? value.pivot.dev.dev_name : ''  +'</td>'+
                             '<td style="width: 20%">'+categories[value.id]+'</td>'+
                             '<td class="copyButton">'+value.pivot.app_name_x +'</button></td>'+
                             '<td class="copyButton">'+value.pivot.package +'</button></td>'+
                             '<td style="width: 10%">Down</td>'+
-                            '<td style="width: 10%">com</td>'+
+                            '<td class="submit_upload_status btn-success"  style="width: 10%" data-value="'+value.pivot.id +'">Submit</td>'+
                             '</tr>';
                     }
                 })
@@ -332,6 +333,19 @@
             document.execCommand("copy");
             $temp.remove();
             $.notify('Copy success ', "success");
+        })
+        $(document).on("click", ".submit_upload_status", function(){
+            var id = $(this).data('value')
+            $.ajax({
+                type: 'get',
+                url: '{{asset('project/update_upload_status')}}/'+id,
+                success: function (data) {
+                    $(".submit_upload_status").hide();
+                    $.notify(' success ', "success");
+                },
+            });
+
+
         })
     })
 

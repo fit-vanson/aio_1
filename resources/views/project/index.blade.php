@@ -561,6 +561,7 @@
 
         $('#change_keystore').on('click', function () {
             $('#changeMultiple').modal('show');
+            $('#market_upload').hide();
             $('#changeMultipleTitle').html('KeyStore');
             $('#changeMultipleName').html('ID Project | Key C| Key A | Key S |  Key X |  Key O |  Key V |  Key H');
             $('#changeMultipleBtn').val('change_keystore');
@@ -571,6 +572,7 @@
 
         $('#change_sdk').on('click', function () {
             $('#changeMultiple').modal('show');
+            $('#market_upload').hide();
             $('#changeMultipleTitle').html('SDK');
             $('#changeMultipleName').html('ID Project | SDK C | SDK A | SDK S |  SDK X |  SDK O |  SDK V |  SDK H');
             $('#changeMultipleBtn').val('change_sdk');
@@ -581,6 +583,7 @@
 
         $('#change_upload_status').on('click', function () {
             $('#changeMultiple').modal('show');
+            $('#market_upload').show();
             $('#changeMultipleTitle').html('Upload Project');
             $('#changeMultipleName').html('ID Project');
             $('#changeMultipleBtn').val('change_upload_status');
