@@ -291,11 +291,6 @@
                     categories[value.market_id] = value.value
                 })
 
-                console.log(data)
-
-
-
-
                 $.each(data.markets, function (key, value) {
                     if(value.pivot.package){
                         market += '<tr>'+

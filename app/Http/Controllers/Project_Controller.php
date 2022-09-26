@@ -171,9 +171,6 @@ class Project_Controller extends Controller
     }
 
     public function create(Request $request){
-
-
-        dd($request->all());
         $rules = [
             'projectname' =>'required|unique:ngocphandang_project,projectname',
             'ma_da' => 'required|not_in:0',
