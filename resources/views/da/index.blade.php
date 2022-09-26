@@ -48,7 +48,7 @@
                             <th class="all" style="width:15%">Mã dự án</th>
                             <th class="all" style="width:25%">Chủ đề</th>
                             <th class="all" style="width:25%">Key words</th>
-                            <th style="width:5%">Link store</th>
+
                             <th class="all" style="width:20%">Ghi chú</th>
                             <th class="all" style="width:5%">Action</th>
                         </tr>
@@ -106,7 +106,7 @@
                     {data: 'ma_da'},
                     {data: 'chude'},
                     {data: 'keywords'},
-                    {data: 'link_store_vietmmo'},
+
                     {data: 'note'},
                     {data: 'action',className: "text-center", name: 'action', orderable: false, searchable: false},
                 ],

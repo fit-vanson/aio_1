@@ -14,10 +14,7 @@
                             <input type="hidden" name="da_id" id="da_id">
                             <input type="text" class="form-control" id="ma_da" name="ma_da" required>
                         </div>
-                        <div class="form-group col-lg-6 ">
-                            <label for="name">Link Store VietMMO</label>
-                            <input type="url" id="link_store_vietmmo" name="link_store_vietmmo" class="form-control" >
-                        </div>
+
                     </div>
 
                     <div data-repeater-item="" class="row">
