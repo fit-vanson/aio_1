@@ -155,7 +155,7 @@
             var hash = url.substring(url.indexOf('?')+1);
             $.fn.dataTable.ext.errMode = 'none';
             var table = $('#projectTable').DataTable({
-                displayLength: 50,
+                displayLength: 5,
                 lengthMenu: [5, 10, 25, 50, 75, 100],
                 // orderCellsTop: true,
                 // fixedHeader: true,
@@ -196,6 +196,7 @@
                 $('#nav_link_home').addClass( 'active' );
                 $('#nav_link_home').prop('aria-selected', true);
 
+
                 <?php
                 $markets = \App\Models\Markets::all();
                 foreach ($markets as $market){
@@ -215,6 +216,7 @@
                 $('#template').trigger('change.select2');
                 $('#ma_da').val('');
                 $('#ma_da').trigger('change.select2');
+                $("#ma_da").select2('enable');
             });
 
             $('#projectForm').on('submit',function (event){
@@ -363,6 +365,7 @@
             $(document).on('change', '.choose_da', function () {
                 var _text = $(this).select2('data')[0].text;
                 $('#projectname').val(_text+'-');
+                $('#project_da_name').val(_text);
             })
 
             $(document).on('change', '#buildinfo_vernum', function () {
@@ -604,6 +607,8 @@
                 $("#ma_da").select2("trigger", "select", {
                     data: { id: data.ma_da,text: data.da.ma_da }
                 });
+                $("#ma_da").select2('enable', false);
+                $("#project_da_name").val(data.da.ma_da);
                 $("#template").select2("trigger", "select", {
                     data: { id: data.template,text: data.ma_template.template }
                 });

@@ -49,7 +49,10 @@ $markets = \App\Models\Markets::all();
                                                 </div>
                                                 <div class="form-group col-lg-4">
                                                     <label for="name">Mã Project <span style="color: red">*</span></label>
-                                                    <input type="text" id="projectname" name="projectname" class="form-control" required />
+                                                        <input type="text" hidden id="project_da_name" name="project_da_name" class="form-control"/>
+                                                        <input type="text" id="projectname" name="projectname" class="form-control" required />
+
+
                                                 </div>
                                                 <div class="form-group col-lg-4 input_title_app">
                                                     <label for="name">Tiêu đề ứng dụng  </label>

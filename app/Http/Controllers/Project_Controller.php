@@ -173,6 +173,7 @@ class Project_Controller extends Controller
     public function create(Request $request){
 
 
+        dd($request->all());
         $rules = [
             'projectname' =>'required|unique:ngocphandang_project,projectname',
             'ma_da' => 'required|not_in:0',
@@ -188,7 +189,7 @@ class Project_Controller extends Controller
             'ma_da.required'=>'Mã dự án không để trống',
 
             'ma_da.not_in'=>'Mã dự án không để trống',
-            'template.not_in'=>'Mã template không để trống',
+            'template.required'=>'Mã template không để trống',
             'title_app.required'=>'Tiêu đề ứng không để trống',
             'buildinfo_vernum.required'=>'Version Number không để trống',
             'buildinfo_verstr.required'=>'Version String không để trống',
@@ -216,20 +217,18 @@ class Project_Controller extends Controller
         $data['data_onoff'] = $request->data_status ? (int)  $request->data_status :0;
 
         if($request->project_file){
-            $du_an = preg_split("/[-]+/",$request->projectname) ? preg_split("/[-]+/",$request->projectname)[0] : 'DA';
-            $destinationPath = storage_path('app/public/projects/'.$du_an.'/'.$request->projectname.'/');
-            if (!file_exists($destinationPath)) {
-                mkdir($destinationPath, 0777, true);
+            $path_file = storage_path('app/public/projects/'.$request->project_da_name.'/'.$request->projectname.'/');
+            if (!file_exists($path_file)) {
+                mkdir($path_file, 0777, true);
             }
             $file = $request->project_file;
             $extension = $file->getClientOriginalExtension();
             $file_name = 'DATA'.'.'.$extension;
             $data['project_file'] = $file_name;
-            $file->move($destinationPath, $file_name);
+            $file->move($path_file, $file_name);
         }
         if(isset($request->logo)){
-            $du_an = preg_split("/[-]+/",$request->projectname) ? preg_split("/[-]+/",$request->projectname)[0] : 'DA';
-            $path_logo = storage_path('app/public/projects/'.$du_an.'/'.$request->projectname.'/');
+            $path_logo = storage_path('app/public/projects/'.$request->project_da_name.'/'.$request->projectname.'/');
             if (!file_exists($path_logo)) {
                 mkdir($path_logo, 777, true);
             }
@@ -281,7 +280,7 @@ class Project_Controller extends Controller
         $rules = [
             'projectname' =>'unique:ngocphandang_project,projectname,'.$id.',projectid',
 //            'ma_da' => 'required',
-//            'template' => 'required',
+            'template' => 'required',
 //            'title_app' =>'required',
             'buildinfo_vernum' =>'required',
             'buildinfo_verstr' =>'required',
@@ -291,7 +290,7 @@ class Project_Controller extends Controller
             'projectname.unique'=>'Tên Project đã tồn tại',
             'projectname.required'=>'Tên Project không để trống',
 //            'ma_da.required'=>'Mã dự án không để trống',
-//            'template.required'=>'Mã template không để trống',
+            'template.required'=>'Mã template không để trống',
 //            'title_app.required'=>'Tiêu đề ứng không để trống',
             'buildinfo_vernum.required'=>'Version Number không để trống',
             'buildinfo_verstr.required'=>'Version String không để trống',
@@ -304,12 +303,10 @@ class Project_Controller extends Controller
             return response()->json(['errors'=> $error->errors()->all()]);
         }
 
-
-
         $data = Project::find($id)->load('markets');
-        $data->projectname = $request->projectname;
+
         $data->template = $request->template  ;
-        $data->ma_da = $request->ma_da;
+//        $data->ma_da = $request->ma_da;
         $data->title_app = $request->title_app;
 
         $data['buildinfo_link_fanpage'] = $request->buildinfo_link_fanpage;
@@ -321,23 +318,20 @@ class Project_Controller extends Controller
         $data['buildinfo_verstr'] = $request->buildinfo_verstr;
         $data['data_onoff'] = $request->data_status ? (int)  $request->data_status :0;
 
-
-
         if($request->project_file){
             $du_an = preg_split("/[-]+/",$request->projectname) ? preg_split("/[-]+/",$request->projectname)[0] : 'DA';
-            $destinationPath = storage_path('app/public/projects/'.$du_an.'/'.$request->projectname.'/');
-            if (!file_exists($destinationPath)) {
-                mkdir($destinationPath, 0777, true);
+            $path_file = storage_path('app/public/projects/'.$request->project_da_name.'/'.$request->projectname.'/');
+            if (!file_exists($path_file)) {
+                mkdir($path_file, 0777, true);
             }
             $file = $request->project_file;
             $extension = $file->getClientOriginalExtension();
             $file_name = 'DATA'.'.'.$extension;
             $data['project_file'] = $file_name;
-            $file->move($destinationPath, $file_name);
+            $file->move($path_file, $file_name);
         }
         if(isset($request->logo)){
-            $du_an = preg_split("/[-]+/",$request->projectname) ? preg_split("/[-]+/",$request->projectname)[0] : 'DA';
-            $path_logo = storage_path('app/public/projects/'.$du_an.'/'.$request->projectname.'/');
+            $path_logo = storage_path('app/public/projects/'.$request->project_da_name.'/'.$request->projectname.'/');
             if (!file_exists($path_logo)) {
                 mkdir($path_logo, 777, true);
             }
@@ -348,9 +342,20 @@ class Project_Controller extends Controller
             $img->resize(114, 114)
                 ->save($path_logo.'lg114.png',85);
             $data['logo'] = 'lg.png';
-
-//            dd($data);
         }
+
+
+        if($request->projectname != $data->projectname){
+            try {
+                $dir = (storage_path('app/public/projects/'.$request->project_da_name.'/'));
+                rename($dir.$data->projectname, $dir.$request->projectname);
+                $this->deleteDirectory($dir . $data->projectname);
+            }catch (\Exception $exception) {
+                Log::error('Message:' . $exception->getMessage() . '--' . $exception->getLine());
+            }
+
+        }
+
         $inset_market = [];
         foreach ($request->market as $key=>$value){
             if($value['package']){
@@ -369,6 +374,7 @@ class Project_Controller extends Controller
             }
         }
 
+        $data->projectname = $request->projectname;
         $data->save();
         $data->markets()->sync($inset_market);
         return response()->json(['success'=>'Thành công']);
