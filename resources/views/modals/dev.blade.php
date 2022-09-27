@@ -13,162 +13,113 @@
                         <div  class="row">
                             <div class="form-group col-lg-6">
                                 <label for="name">Ga Name</label>
-                                <div class="inner row">
-                                    <div class="col-md-12 col-12">
-                                        <select class="form-control select2js" id="ga_id" name="ga_id"></select>
-                                    </div>
-                                </div>
+                                <select class="form-control select2js" id="ga_id" name="ga_id"></select>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label for="name">Makert</label>
+                                <select class="form-control select2js" id="market_id" name="market_id"></select>
                             </div>
 
                             <div class="form-group col-lg-6">
                                 <label for="name">Dev Name  <span style="color: red">*</span></label>
                                 <input type="text" id="dev_name" name="dev_name" class="form-control" required>
                             </div>
-
-                        </div>
-
-                        <div class="row">
-                            <div class="form-group col-lg-4">
+                            <div class="form-group col-lg-6">
                                 <label for="name">Store Name  <span style="color: red">*</span></label>
                                 <input type="text" id="store_name" name="store_name" class="form-control" required>
                             </div>
-                            <div class="form-group col-lg-4">
-                                <label for="name">Mã hóa đơn </label>
-                                <input type="text" id="ma_hoa_don" name="ma_hoa_don" class="form-control">
+                            <div class="form-group col-lg-6">
+                                <label for="name">Email 1 <span style="color: red">*</span></label>
+                                <select class="form-control select2js" id="mail_id_1" name="mail_id_1"></select>
                             </div>
-                            <div class="form-group col-lg-4">
+                            <div class="form-group col-lg-6">
+                                <label for="name">Email 2 <span style="color: red">*</span></label>
+                                <select class="form-control select2js" id="mail_id_2" name="mail_id_2"></select>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label for="name">Mã hóa đơn </label>
+                                <input type="text" id="mahoadon" name="mahoadon" class="form-control">
+                            </div>
+                            <div class="form-group col-lg-6">
                                 <label for="name">Mật khẩu </label>
                                 <input type="text" id="pass" name="pass" class="form-control">
                             </div>
 
-                            <div class="form-group col-lg-4">
-                                <label for="name">Email <span style="color: red">*</span></label>
-                                <div class="inner row">
-                                    <div class="col-md-10 col-10">
-                                        <select class="form-control select2js" id="gmail_gadev_chinh" name="gmail_gadev_chinh">
-                                            <option value="0">---Vui lòng chọn---</option>
-                                            @foreach($ga_dev as $item)
-                                                <option value="{{$item->id}}">{{$item->gmail}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="col-md-2 col-4">
-                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addGaDev" style="border-radius: 0 3px 3px 0; box-shadow: none;">...
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group col-lg-4">
-                                <label for="name">Email 1</label>
-                                <div class="inner row">
-                                    <div class="col-md-12 col-12">
-                                        <select class="form-control select2js" id="gmail_gadev_phu_1" name="gmail_gadev_phu_1">
-                                            <option>---Vui lòng chọn---</option>
-                                            @foreach($ga_dev as $item)
-                                                <option value="{{$item->id}}">{{$item->gmail}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group col-lg-4">
-                                <label for="name">Email 2</label>
-                                <div class="inner row">
-                                    <div class="col-md-12 col-12">
-                                        <select class="form-control select2js" id="gmail_gadev_phu_2" name="gmail_gadev_phu_2">
-                                            <option>---Vui lòng chọn---</option>
-                                            @foreach($ga_dev as $item)
-                                                <option value="{{$item->id}}">{{$item->gmail}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group col-lg-4">
-                                <label for="name">Đường dẫn</label>
-                                <input type="url" id="info_url" name="info_url" class="form-control">
-                            </div>
-                            <div class="form-group col-lg-4">
+                            <div class="form-group col-lg-6">
                                 <label for="name">Logo</label>
                                 <input type="url" id="info_logo" name="info_logo" class="form-control">
                             </div>
-                            <div class="form-group col-lg-4 ">
+                            <div class="form-group col-lg-6 ">
                                 <label for="name">Banner</label>
                                 <input type="url" id="info_banner" name="info_banner" class="form-control">
                             </div>
 
-                            <div class="form-group col-lg-4 ">
+                            <div class="form-group col-lg-6 ">
                                 <label for="name">Policy</label>
                                 <input type="url" id="info_policydev" name="info_policydev" class="form-control">
                             </div>
-                            <div class="form-group col-lg-4 ">
+                            <div class="form-group col-lg-6 ">
                                 <label for="name">Fanpage</label>
                                 <input type="url" id="info_fanpage" name="info_fanpage" class="form-control">
                             </div>
-                            <div class="form-group col-lg-4 ">
-                                <label for="name">Link</label>
-                                <input type="url" id="info_web" name="info_web" class="form-control">
-                            </div>
-                        </div>
-                        <div data-repeater-item="" class="row">
-                            <div class="form-group col-lg-4 ">
+
+                            <div class="form-group col-lg-6 ">
                                 <label for="name">Số điện thoại</label>
                                 <input type="text" id="info_phone" name="info_phone" class="form-control">
                             </div>
-                            <div class="form-group col-lg-4 ">
-                                <label for="name">Profile Info</label>
-                                <select class="form-control select2js" id="profile_info" name="profile_info">
-                                    <option value="0">---Vui lòng chọn---</option>
-                                    @foreach($profiles as $item)
-                                        <option value="{{$item->id}}">{{$item->profile_name}} -  ({{$item->profile_ho_va_ten}} - {{$item->profile_add}})</option>
-                                    @endforeach
+
+                            <div class="form-group col-lg-6">
+                                <label for="name">Trạng thái </label>
+                                <select class="form-control ma_da" id="status" name="status">
+                                    <option value="0">Chưa sử dụng</option>
+                                    <option value="1">Đang phát triển</option>
+                                    <option value="2">Đóng</option>
+                                    <option value="3">Suspend</option>
                                 </select>
 
-
                             </div>
-                            <div class="form-group col-lg-4">
-                                <label for="name">Trạng thái </label>
-                                <div class="inner row">
-                                    <div class="col-md-12 col-12">
-                                        <select class="form-control ma_da" id="status" name="status">
-                                            <option value="0">Chưa sử dụng</option>
-                                            <option value="1">Đang phát triển</option>
-                                            <option value="2">Đóng</option>
-                                            <option value="3">Suspend</option>
-                                        </select>
-                                    </div>
-                                </div>
+
+                            <div class="form-group col-lg-6 ">
+                                <label for="name">Profile Info</label>
+                                <select class="form-control select2js" id="profile_id" name="profile_id"></select>
                             </div>
-                        </div>
 
 
 
-
-
-                        <div class="row thuoc_tinh" style="display:none;">
-                            <div class="form-group col-lg-4">
-                                <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" id="company1" name="attribute1" class="custom-control-input" onchange="getit();" value="0">
-                                    <label class="custom-control-label" for="company1">Công ty</label>
+                            <div class="form-group col-lg-6">
+                                <label class="form-label mb-3 d-flex">Công ty || Cá nhân</label>
+                                <div class="form-check form-check-inline">
+                                    <input type="radio" id="company" name="attribute" class="form-check-input" value="0">
+                                    <label class="form-check-label" for="company">Công ty</label>
                                 </div>
-                                <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" id="individual1" name="attribute1" class="custom-control-input" onchange="getit();" value="1" checked="">
-                                    <label class="custom-control-label" for="individual1">Cá nhân</label>
+                                <div class="form-check form-check-inline">
+                                    <input type="radio" id="person" name="attribute" class="form-check-input" value="1" checked="">
+                                    <label class="form-check-label" for="person">Cá nhân</label>
                                 </div>
                             </div>
 
-                            <div class="form-group col-lg-8 info_company" style="display: none">
-                                <label for="name">Công ty đăng ký</label>
-                                <input id="info_company" name="info_company" class="form-control"/>
-                            </div>
-                        </div>
+{{--                            <div class="form-group col-lg-6">--}}
 
-                        <div class="row" >
-                            <div class="form-group col-lg-6 dia_chi">
-                                <label for="name">Địa chỉ</label>
-                                <textarea id="info_andress" name="info_andress" class="form-control" rows="4" ></textarea>
-                            </div>
+{{--                                <label for="name">Profile Info</label>--}}
+{{--                                <div class="custom-control custom-radio custom-control-inline">--}}
+{{--                                    <input type="radio" id="company1" name="attribute1" class="custom-control-input" onchange="getit();" value="0">--}}
+{{--                                    <label class="custom-control-label" for="company1">Công ty</label>--}}
+{{--                                </div>--}}
+{{--                                <div class="custom-control custom-radio custom-control-inline">--}}
+{{--                                    <input type="radio" id="individual1" name="attribute1" class="custom-control-input" onchange="getit();" value="1" checked="">--}}
+{{--                                    <label class="custom-control-label" for="individual1">Cá nhân</label>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+
+{{--                            <div class="form-group col-lg-8 info_company">--}}
+{{--                                <label for="name">Công ty đăng ký</label>--}}
+{{--                                <input id="info_company" name="info_company" class="form-control"/>--}}
+{{--                            </div>--}}
+
+{{--                            <div class="form-group col-lg-6 dia_chi">--}}
+{{--                                <label for="name">Địa chỉ</label>--}}
+{{--                                <textarea id="info_andress" name="info_andress" class="form-control" rows="4" ></textarea>--}}
+{{--                            </div>--}}
                             <div class="form-group col-lg-6 ">
                                 <label for="name">Ghi chú</label>
                                 <textarea id="note" name="note" class="form-control" rows="4" ></textarea>

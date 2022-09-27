@@ -146,12 +146,4 @@ class DaController extends Controller
         return parent::callAction($method, array_values($parameters));
     }
 
-    public function getDa(){
-        $searchValue = \request()->q;
-        $project = Da::latest()
-            ->where('ma_da', 'like', '%' . $searchValue . '%')
-            ->get();
-        $result = DaResource::collection($project);
-        return response()->json($result);
-    }
 }

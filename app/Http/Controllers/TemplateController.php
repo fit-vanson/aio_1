@@ -553,14 +553,6 @@ class TemplateController extends Controller
         return view('template.upload');
     }
 
-    public function getTemplate(){
-        $searchValue = \request()->q;
-        $project = Template::latest('id')
-            ->where('template', 'like', '%' . $searchValue . '%')
-            ->get();
-        $result = TemplateResource::collection($project);
-        return response()->json($result);
-    }
 
 
 

@@ -19,10 +19,25 @@ class DevController extends Controller
 {
     public function index()
     {
-        $ga_name = Ga::orderBy('ga_name','asc')->get();
-        $ga_dev = Ga_dev::orderBy('gmail','asc')->get();
-        $profiles = ProfileV2::orderBy('profile_name','asc')->get();
-        return view('dev.index',compact(['ga_name','ga_dev','profiles']));
+
+        $header = [
+            'title' => 'Dev',
+
+            'button' => [
+                'Create'            => ['id'=>'createNewDev','style'=>'primary'],
+//                'Build And Check'   => ['id'=>'build_check','style'=>'warning'],
+//                'Status'            => ['id'=>'dev_status','style'=>'info'],
+//                'KeyStore'          => ['id'=>'change_keystore','style'=>'success'],
+//                'SDK'               => ['id'=>'change_sdk','style'=>'danger'],
+//                'Upload Status'     => ['id'=>'change_upload_status','style'=>'secondary'],
+            ]
+
+        ];
+        return view('dev.index')->with(compact('header'));
+//        $ga_name = Ga::orderBy('ga_name','asc')->get();
+//        $ga_dev = Ga_dev::orderBy('gmail','asc')->get();
+//        $profiles = ProfileV2::orderBy('profile_name','asc')->get();
+//        return view('dev.index',compact(['ga_name','ga_dev','profiles']));
     }
     public function getIndex(Request $request)
     {

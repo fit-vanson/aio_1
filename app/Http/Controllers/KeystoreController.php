@@ -287,14 +287,5 @@ class KeystoreController extends Controller
     }
 
 
-    public function getKeystore(){
-        $searchValue = \request()->q;
-
-        $dev = Keystore::latest('id')
-            ->where('name_keystore', 'like', '%' . $searchValue . '%')
-            ->get();
-        $result = KeystoresResource::collection($dev);
-        return response()->json($result);
-    }
 
 }

@@ -24,22 +24,22 @@
                 <div class="card-body">
                     <div class="table-rep-plugin" >
                         <div class="table-responsive mb-0" data-pattern="priority-columns">
-                                <table id="projectTable" class="table table-striped table-bordered dt-responsive data-table"
-                                       style="width: 100%;">
-                                <thead>
-                                <tr>
+                            <table id="projectTable" class="table table-striped table-bordered dt-responsive data-table"
+                                   style="width: 100%;">
+                            <thead>
+                            <tr>
 
-                                    <th style="display: none">ID</th>
-                                    <th style="width: 10%">Logo</th>
-                                    <th style="width: 20%">Mã Project</th>
-                                    <th style="width: 30%">Package</th>
-                                    <th style="width: 30%">Trạng thái Ứng dụng | Policy</th>
-                                    <th>Action</th>
-                                </tr>
-                                </thead>
-                                <tbody>
+                                <th style="display: none">ID</th>
+                                <th style="width: 10%">Logo</th>
+                                <th style="width: 20%">Mã Project</th>
+                                <th style="width: 30%">Package</th>
+                                <th style="width: 30%">Trạng thái Ứng dụng | Policy</th>
+                                <th>Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
 
-                                </tbody>
+                            </tbody>
                             </table>
                         </div>
 

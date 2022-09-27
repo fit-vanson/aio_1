@@ -6,7 +6,5 @@ use Illuminate\Http\Request;
 
 class MarketsController extends Controller
 {
-    public function getDev_idMarket($id){
 
-    }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApiController;
 use App\Http\Controllers\DaController;
 use App\Http\Controllers\KeystoreController;
 use App\Http\Controllers\MarketDevController;
@@ -27,10 +28,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::get('/project-aio/{id}', [ProjectController::class, 'getProject']);
 
-Route::get('/getDa', [DaController::class, 'getDa'])->name('api.getDa');
-Route::get('/getTemplate', [TemplateController::class, 'getTemplate'])->name('api.getTemplate');
-Route::get('/getDev', [MarketDevController::class, 'getDev'])->name('api.getDev');
-Route::get('/getKeystore', [KeystoreController::class, 'getKeystore'])->name('api.getKeystore');
+Route::get('/getDa', [ApiController::class, 'getDa'])->name('api.getDa');
+Route::get('/getTemplate', [ApiController::class, 'getTemplate'])->name('api.getTemplate');
+Route::get('/getDev', [ApiController::class, 'getDev'])->name('api.getDev');
+Route::get('/getKeystore', [ApiController::class, 'getKeystore'])->name('api.getKeystore');
+Route::get('/getGa', [ApiController::class, 'getGa'])->name('api.getGa');
 
-Route::get('/market-dev/{id}',[MarketsController::class,'getDev_idMarket'])->name('market_dev.getDev_idMarket');
 
