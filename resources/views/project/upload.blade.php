@@ -285,7 +285,7 @@
                 $.each(data.markets, function (key, value) {
                     if(value.pivot.package){
 
-                        var status_upload = dev = '';
+                        var status_upload = dev_name = download_apk = download_aab = '';
                         switch (value.pivot.status_upload) {
                             case 0 :
                                 status_upload = '<input class="btn btn-secondary disabled" data-value="'+value.pivot.id +'"   type="button" value="Mặc định"/>';
@@ -304,15 +304,14 @@
 
 
 
-                        console.log(value.pivot.dev_id)
+                        console.log(value)
 
                         if(value.pivot.dev_id){
-                            dev = value.pivot.dev.dev_name;
-
+                            dev_name = value.pivot.dev.dev_name;
                         }
                         market += '<tr>'+
                             '<th style="width: 10%">'+value.market_name+'</th>'+
-                            '<td style="width: 10%">'+dev+'</td>'+
+                            '<td style="width: 10%">'+dev_name+'</td>'+
                             '<td style="width: 20%">'+categories[value.id]+'</td>'+
                             '<td class="copyButton">'+value.pivot.app_name_x +'</td>'+
                             '<td class="copyButton">'+value.pivot.package +'</td>'+
