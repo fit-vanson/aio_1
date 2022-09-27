@@ -59,8 +59,9 @@
 
                                     @if( in_array( "Admin" ,array_column(auth()->user()->roles()->get()->toArray(),'name')))
                                         <li><a href="{{route('design_content.index')}}">Duyệt Design</a></li>
-                                        <li><a href="{{route('project.upload')}}">Upload</a></li>
+
                                     @endif
+                                        <li><a href="{{route('project.upload')}}">Upload</a></li>
 
 
                                 </ul>
