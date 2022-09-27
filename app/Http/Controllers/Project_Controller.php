@@ -126,7 +126,9 @@ class Project_Controller extends Controller
 
                     if($market->pivot->dev_id){
                         $dev = ' <span class="badge badge-'.$badges[$key].'" style="font-size: 16px">'.$market->pivot->dev->dev_name.'</span> ';
-                        $ga  = ' <span class="badge badge-'.$badges[$key].'" style="font-size: 16px">'.$market->pivot->dev->ga->ga_name.'</span> ';
+                        if($market->pivot->dev->ga_id) {
+                            $ga = ' <span class="badge badge-' . $badges[$key] . '" style="font-size: 16px">' . $market->pivot->dev->ga->ga_name . '</span> ';
+                        }
                     }
 //                    dd($market);
 
