@@ -96,7 +96,7 @@
                         <div class="form-group col-lg-3">
                             <label for="name">Logo</label>
                             <p class="card-title-desc">
-                                <img id="logo_project" class="d-block img-fluid" src="" height="200" width="200px" alt="">
+                                <img id="logo_project" class="d-block img-fluid" src="" width="200px" alt="">
                             </p>
                         </div>
                         <div class="form-group col-lg-9">
@@ -262,17 +262,6 @@
                         '<source src="movie.ogg" type="video/ogg">'+
                         'Your browser does not support the video tag.'+
                         '</video>'+
-
-
-
-
-
-
-                        {{--'<a class="img_class" style="margin:5px" href="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/video.mp4" title="preview ' + i + '">' +--}}
-                        {{--'<img src="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/video.mp4" alt="" height="200">' +--}}
-                        {{--'</a>' +--}}
-
-
                         '</div></div>';
                 })
 
@@ -282,6 +271,7 @@
                 })
 
 
+                console.log(data)
                 $.each(data.markets, function (key, value) {
                     if(value.pivot.package){
 
@@ -301,10 +291,14 @@
                                 break;
 
                         }
+                        if(value.pivot.aab_link){
+                            download_aab = '<a href="'+value.pivot.aab_link+'"  target="_blank"><img src="img/icon/aab.png" height="50px"  alt=""></a>';
+                        }
 
+                        if(value.pivot.apk_link){
+                            download_apk = '<a href="'+value.pivot.apk_link+'"  target="_blank"><img src="img/icon/apk.png" height="50px"  alt=""></a>';
+                        }
 
-
-                        console.log(value)
 
                         if(value.pivot.dev_id){
                             dev_name = value.pivot.dev.dev_name;
@@ -315,7 +309,7 @@
                             '<td style="width: 20%">'+categories[value.id]+'</td>'+
                             '<td class="copyButton">'+value.pivot.app_name_x +'</td>'+
                             '<td class="copyButton">'+value.pivot.package +'</td>'+
-                            '<td style="width: 10%">Down</td>'+
+                            '<td style="width: 10%">'+download_apk+download_aab+'</td>'+
                             '<td>'+status_upload+'</td>'+
                             '</tr>';
                     }
