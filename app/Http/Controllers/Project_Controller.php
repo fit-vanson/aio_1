@@ -65,6 +65,9 @@ class Project_Controller extends Controller
 
 
         $data_arr = array();
+
+
+
         foreach ($records as $record) {
 
             $btn = ' <a href="javascript:void(0)" onclick="editProject('.$record->projectid.')" class="btn btn-warning"><i class="ti-pencil-alt"></i></a>';
@@ -110,44 +113,44 @@ class Project_Controller extends Controller
             foreach ($record->markets as $key=>$market){
 
                 if($market->pivot->package){
+                    $download_aab = $download_apk =' <a><i class="ion ion-md-close-circle" style="color: red"></i></a> ';
                     $package .= '<p class="card-title-desc font-16"><img src="img/icon/'.$market->market_logo.'"> '.$market->pivot->package.'</p>';
-
                     if($market->pivot->aab_link){
-                        $download_aab = '<a href="'.$market->pivot->aab_link.'"  target="_blank"><img src="img/icon/aab.png" height="50px"  alt=""></a>';
+                        $download_aab = ' <a href="'.$market->pivot->aab_link.'"  target="_blank"><i class="ion ion-md-checkmark-circle" style="color: green"></i></a> ';
                     }
                     if($market->pivot->apk_link){
-                        $download_apk = '<a href="'.$market->pivot->apk_link.'"  target="_blank"><img src="img/icon/apk.png" height="50px"  alt=""></a>';
+                        $download_apk = ' <a href="'.$market->pivot->apk_link.'"  target="_blank"><i class="ion ion-md-checkmark-circle" style="color: green"></i></a> ';
                     }
 
 
                     $status = $market->pivot->status_app;
                     switch ($status){
                         case 0:
-                            $status_app .=  '<img src="img/icon/'.$market->market_logo.'"> <span class="badge badge-secondary font-16"> Mặc định</span>';
+                            $status_app .=  '<img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-secondary font-16"> Mặc định</p>';
                             break;
                         case 1:
-                            $status_app .=  '<img src="img/icon/'.$market->market_logo.'"> <span class="badge badge-success font-16"> Publish</span>';
+                            $status_app .=  '<img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-success font-16"> Publish</p>';
                             break;
                         case 2:
-                            $status_app .=  '<img src="img/icon/'.$market->market_logo.'"> <span class="badge badge-warning font-16"> Suppend</span>';
+                            $status_app .=  '<img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-warning font-16"> Suppend</p>';
                             break;
                         case 3:
-                            $status_app .=  '<img src="img/icon/'.$market->market_logo.'"> <span class="badge badge-info font-16"> UnPublish</span>';
+                            $status_app .=  '<img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-info font-16"> UnPublish</p>';
                             break;
                         case 4:
-                            $status_app .=  '<img src="img/icon/'.$market->market_logo.'"> <span class="badge badge-primary font-16"> Remove</span>';
+                            $status_app .=  '<img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-primary font-16"> Remove</p>';
                             break;
                         case 5:
-                            $status_app .=  '<img src="img/icon/'.$market->market_logo.'"> <span class="badge badge-dark font-16"> Reject</span>';
+                            $status_app .=  '<img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-dark font-16"> Reject</p>';
                             break;
                         case 6:
-                            $status_app .=  '<img src="img/icon/'.$market->market_logo.'"> <span class="badge badge-danger font-16"> Check</span>';
+                            $status_app .=  '<img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-danger font-16"> Check</p>';
                             break;
                         case 7:
-                            $status_app .=  '<img src="img/icon/'.$market->market_logo.'"> <span class="badge badge-warning font-16"> Pending</span>';
+                            $status_app .=  '<img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-warning font-16"> Pending</p>';
                             break;
                         default:
-                            $status_app .=  '<img src="img/icon/'.$market->market_logo.'"> <span class="badge badge-secondary font-16"> Mặc định</span>';
+                            $status_app .=  '<img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-secondary font-16"> Mặc định</p>';
                             break;
                     }
 
@@ -166,7 +169,7 @@ class Project_Controller extends Controller
                 "logo" => $logo,
                 "projectname"=>$project.$template.$mada.'<br>'.$record->title_app.'<br>'.$version.'<br>'.$sdk.'<br>'.$keystore,
                 "markets"=>$package,
-                "status"=>@$download_aab.@$download_apk.$status_app.$dev,
+                "status"=>'<div>'.@$download_apk.@$download_aab.$status_app.$dev .'</div>',
                 "action"=> $btn,
             );
         }
