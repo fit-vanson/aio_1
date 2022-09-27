@@ -133,28 +133,28 @@
                                         <li><a href="{{route('gadev.index')}}">Gmail Quản lý</a></li>
                                     @endcan
                                     @can('dev-index')
-                                        <li><a href="{{route('dev.index')}}">Quản lý DEV (CH-Play)</a></li>
+                                        <li><a href="{{route('dev.index')}}">Quản lý DEV</a></li>
                                     @endcan
 
-                                    @can('dev_amazon-index')
-                                        <li><a href="{{route('dev_amazon.index')}}">Quản lý DEV (Amazon)</a></li>
-                                    @endcan
-                                    @can('dev_samsung-index')
-                                        <li><a href="{{route('dev_samsung.index')}}">Quản lý DEV (Samsung)</a></li>
-                                    @endcan
-                                    @can('dev_xiaomi-index')
-                                        <li><a href="{{route('dev_xiaomi.index')}}">Quản lý DEV (Xiaomi)</a></li>
-                                    @endcan
-                                    @can('dev_oppo-index')
-                                        <li><a href="{{route('dev_oppo.index')}}">Quản lý DEV (Oppo)</a></li>
-                                    @endcan
-                                    @can('dev_vivo-index')
-                                        <li><a href="{{route('dev_vivo.index')}}">Quản lý DEV (Vivo)</a></li>
-                                    @endcan
+{{--                                    @can('dev_amazon-index')--}}
+{{--                                        <li><a href="{{route('dev_amazon.index')}}">Quản lý DEV (Amazon)</a></li>--}}
+{{--                                    @endcan--}}
+{{--                                    @can('dev_samsung-index')--}}
+{{--                                        <li><a href="{{route('dev_samsung.index')}}">Quản lý DEV (Samsung)</a></li>--}}
+{{--                                    @endcan--}}
+{{--                                    @can('dev_xiaomi-index')--}}
+{{--                                        <li><a href="{{route('dev_xiaomi.index')}}">Quản lý DEV (Xiaomi)</a></li>--}}
+{{--                                    @endcan--}}
+{{--                                    @can('dev_oppo-index')--}}
+{{--                                        <li><a href="{{route('dev_oppo.index')}}">Quản lý DEV (Oppo)</a></li>--}}
+{{--                                    @endcan--}}
+{{--                                    @can('dev_vivo-index')--}}
+{{--                                        <li><a href="{{route('dev_vivo.index')}}">Quản lý DEV (Vivo)</a></li>--}}
+{{--                                    @endcan--}}
 
-                                    @can('dev_huawei-index')
-                                        <li><a href="{{route('dev_huawei.index')}}">Quản lý DEV (Huawei)</a></li>
-                                    @endcan
+{{--                                    @can('dev_huawei-index')--}}
+{{--                                        <li><a href="{{route('dev_huawei.index')}}">Quản lý DEV (Huawei)</a></li>--}}
+{{--                                    @endcan--}}
 
                                     @can('ga-index')
                                         <li><a href="{{route('ga.index')}}">Quản lý GA</a></li>
