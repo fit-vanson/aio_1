@@ -25,12 +25,4 @@ class Markets extends Model
 
 
 
-//    public function devs(){
-//        return $this->belongsToMany(Market_dev::class,MarketProject::class,'market_id','dev_id')
-//            ->withPivot('project_id','appID','app_name_x','package','ads','app_link','policy_link','video_link','sdk','keystore','status_app','status_upload','time_upload');
-//    }
-
-
-
-
 }

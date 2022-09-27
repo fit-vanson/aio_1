@@ -269,7 +269,7 @@ class Project_Controller extends Controller
 
         $project = Project::find($id);
 
-        return response()->json($project->load('markets.pivot.dev','da','ma_template.markets','lang'));
+        return response()->json($project->load('markets.pivot.dev','da','ma_template.markets','lang','markets.templates'));
 //        return response()->json($project);
     }
 
@@ -555,15 +555,6 @@ class Project_Controller extends Controller
             }
         }
 
-
-
-
-
-
-
-
-
-
         return response()->json(['success'=>'Cập nhật thành công ']);
 
     }
@@ -824,6 +815,7 @@ class Project_Controller extends Controller
                 $q
                     ->where('status_upload', 1);
             })
+            ->where('projectname', 'like', '%' . $searchValue . '%')
 
             ->count();
         $records = Project::orderBy($columnName, $columnSortOrder)
@@ -832,6 +824,7 @@ class Project_Controller extends Controller
                 $q
                     ->where('status_upload', 1);
             })
+            ->where('projectname', 'like', '%' . $searchValue . '%')
             ->skip($start)
             ->take($rowperpage)
             ->get();
@@ -896,6 +889,7 @@ class Project_Controller extends Controller
 
 
     public function update_upload_status($id){
+//        dd($id);
         $project = MarketProject::find($id);
         $project->status_upload = 3;
         $project->save();

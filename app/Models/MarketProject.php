@@ -31,7 +31,6 @@ class MarketProject extends  \Illuminate\Database\Eloquent\Relations\Pivot
 
     public function dev()
     {
-
         return $this->belongsTo(Market_dev::class,'dev_id');
     }
 }

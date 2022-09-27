@@ -700,7 +700,7 @@
                     markets[value.pivot.market_id] = value.pivot;
                 });
 
-                console.log(markets)
+
 
                 <?php
                     $markets = \App\Models\Markets::all();

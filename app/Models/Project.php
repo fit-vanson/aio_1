@@ -21,13 +21,6 @@ class Project extends Model
             ->withPivot('id','dev_id','appID','app_name_x','package','ads','app_link','policy_link','video_link','sdk','keystore','status_app','status_upload','time_upload');
     }
 
-    public function dev()
-    {
-        return $this->hasManyThrough(
-            Market_dev::class, MarketProject::class,
-            'dev_id', 'id', 'project_id'
-        );
-    }
 
 
 
@@ -44,9 +37,7 @@ class Project extends Model
     public function ma_template(){
         return $this->belongsTo(Template::class,'template');
     }
-//    public function matemplate(){
-//        return $this->belongsTo(Template::class,'template');
-//    }
+
 
 
 

@@ -33,6 +33,11 @@
 {{--<link href="{{ URL::asset('/assets/libs/dropzone/dropzone.min.css') }}" rel="stylesheet" type="text/css" />--}}
 
 <style>
+    div.dataTables_wrapper  div.dataTables_filter {
+        width: 100%;
+        float: none;
+        text-align: center;
+    }
 
     .img-list {
          /*height: 500px; */
@@ -53,33 +58,6 @@
 @endsection
 
 @section('content')
-
-{{--    <div class="row">--}}
-{{--        <div style="width: 9%;min-width: 200px">--}}
-{{--            <div class="card">--}}
-{{--                <div class="card-body">--}}
-{{--                    <ul class="list-group" style="height: 1000px; overflow: auto">--}}
-{{--                        @if(isset($projects))--}}
-
-{{--                            @foreach($projects as $key=>$project)--}}
-{{--                            <a href="javascript:void(0)" id="project_{{$project->projectid}}" class="showProject" data-id="{{$project->projectid}}">--}}
-{{--                                <li class="list-group-item list_project_{{$project->projectid}}">{{$project->projectname}}</li>--}}
-{{--                            </a>--}}
-{{--                            @endforeach--}}
-{{--                        @endif--}}
-{{--                    </ul>--}}
-
-{{--                </div>--}}
-{{--            </div>--}}
-{{--        </div>--}}
-
-
-
-
-
-{{--        <!-- end col -->--}}
-
-
 
     <div class="row">
         <div class="col-2">
@@ -108,38 +86,36 @@
         <div class="col-10">
             <div class="card">
                 <div class="card-body " id="project_detail" style="display:none;" >
-
-{{--                    <form id="browseappForm" name="browseappForm" class="form-horizontal">--}}
-                        <input type="hidden" name="project_id" id="project_id">
-                        <h4><span id="pro_name"></span>
-                            <span style="font-weight: 500;" id="template"></span>
-                            <span style="font-weight: 500;" id="title_app"></span>
-                            <a href="" id="download"  target="_blank" class="btn btn-success">Download</a>
-                        </h4>
-                        <div class="row">
-                            <div class="form-group col-lg-3">
-                                <label for="name">Logo</label>
-                                <p class="card-title-desc">
-                                    <img id="logo_project" class="d-block img-fluid" src="" height="200" width="200px" alt="">
-                                </p>
-                            </div>
-                            <div class="form-group col-lg-9">
-                                <table class="table table-bordered table-striped mb-0">
-                                    <tbody id="market_upload" >
-
-                                    </tbody>
-                                </table>
-
-
-                            </div>
+                    <input type="hidden" name="project_id" id="project_id">
+                    <h4><span id="pro_name"></span>
+                        <span style="font-weight: 500;" id="template"></span>
+                        <span style="font-weight: 500;" id="title_app"></span>
+                        <a href="" id="download"  target="_blank" class="btn btn-success">Download</a>
+                    </h4>
+                    <div class="row">
+                        <div class="form-group col-lg-3">
+                            <label for="name">Logo</label>
+                            <p class="card-title-desc">
+                                <img id="logo_project" class="d-block img-fluid" src="" height="200" width="200px" alt="">
+                            </p>
                         </div>
+                        <div class="form-group col-lg-9">
+                            <table class="table table-bordered table-striped mb-0">
+                                <tbody id="market_upload" >
 
-                        <!-- Nav tabs -->
-                        <ul class="nav nav-tabs" role="tablist" id="tablist"></ul>
-                        <!-- Tab panes -->
-                        <div class="tab-content" id="tab_content">
+                                </tbody>
+                            </table>
+
+
                         </div>
-{{--                    </form>--}}
+                    </div>
+
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs" role="tablist" id="tablist"></ul>
+                    <!-- Tab panes -->
+                    <div class="tab-content" id="tab_content">
+                    </div>
+
 
 
                 </div>
@@ -196,7 +172,7 @@
             displayLength: 50,
             bLengthChange: false,
 
-            searching: false,
+            // searching: false,
             scrollY: 950,
             scroller: {
                 loadingIndicator: true
@@ -238,7 +214,6 @@
                 var active = '';
                 var market = '';
                 $.each(data.lang, function (key, value) {
-
                     if(value.lang_code == 'en'){
                         active = 'active'
                     }
@@ -306,17 +281,43 @@
                     categories[value.market_id] = value.value
                 })
 
-                console.log(data)
+
                 $.each(data.markets, function (key, value) {
                     if(value.pivot.package){
+
+                        var status_upload = dev = '';
+                        switch (value.pivot.status_upload) {
+                            case 0 :
+                                status_upload = '<input class="btn btn-secondary disabled" data-value="'+value.pivot.id +'"   type="button" value="Mặc định"/>';
+                                break;
+                            case 1:
+                                status_upload = '<input class="btn btn-primary submit_upload_status" data-value="'+value.pivot.id +'" type="button" value="Upload"/>';
+                                break;
+                            case 2:
+                                status_upload = '<input class="btn btn-warning submit_upload_status" data-value="'+value.pivot.id +'"   type="button" value="Update"/>';
+                                break;
+                            case 3:
+                                status_upload = '<input class="btn btn-success disabled" data-value="'+value.pivot.id +'"   type="button" value="Hoàn thành"/>';
+                                break;
+
+                        }
+
+
+
+                        console.log(value.pivot.dev_id)
+
+                        if(value.pivot.dev_id){
+                            dev = value.pivot.dev.dev_name;
+
+                        }
                         market += '<tr>'+
                             '<th style="width: 10%">'+value.market_name+'</th>'+
-                            // '<td style="width: 10%">'+value.pivot.dev ? value.pivot.dev.dev_name : ''  +'</td>'+
+                            '<td style="width: 10%">'+dev+'</td>'+
                             '<td style="width: 20%">'+categories[value.id]+'</td>'+
-                            '<td class="copyButton">'+value.pivot.app_name_x +'</button></td>'+
-                            '<td class="copyButton">'+value.pivot.package +'</button></td>'+
+                            '<td class="copyButton">'+value.pivot.app_name_x +'</td>'+
+                            '<td class="copyButton">'+value.pivot.package +'</td>'+
                             '<td style="width: 10%">Down</td>'+
-                            '<td class="submit_upload_status btn-success"  style="width: 10%" data-value="'+value.pivot.id +'">Submit</td>'+
+                            '<td>'+status_upload+'</td>'+
                             '</tr>';
                     }
                 })
@@ -336,11 +337,14 @@
         })
         $(document).on("click", ".submit_upload_status", function(){
             var id = $(this).data('value')
+            var submit = $(this)
             $.ajax({
                 type: 'get',
                 url: '{{asset('project/update_upload_status')}}/'+id,
                 success: function (data) {
-                    $(".submit_upload_status").hide();
+                    submit.removeClass('btn-primary submit_upload_status');
+                    submit.addClass('btn-success disabled');
+                    submit.val("Hoàn thành");
                     $.notify(' success ', "success");
                 },
             });
