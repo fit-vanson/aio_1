@@ -111,6 +111,14 @@ class Project_Controller extends Controller
                 if($market->pivot->package){
                     $package .= '<p class="card-title-desc font-16"><img src="img/icon/'.$market->market_logo.'"> '.$market->pivot->package.'</p>';
 
+                    if($market->pivot->aab_link){
+                        $download_aab = '<a href="'.$market->pivot->aab_link.'"  target="_blank"><img src="img/icon/aab.png" height="50px"  alt=""></a>';
+                    }
+                    if($market->pivot->apk_link){
+                        $download_apk = '<a href="'.$market->pivot->apk_link.'"  target="_blank"><img src="img/icon/aab.png" height="50px"  alt=""></a>';
+                    }
+
+
                     $status = $market->pivot->status_app;
                     switch ($status){
                         case 0:
@@ -157,7 +165,7 @@ class Project_Controller extends Controller
                 "logo" => $logo,
                 "projectname"=>$project.$template.$mada.'<br>'.$record->title_app.'<br>'.$version.'<br>'.$sdk.'<br>'.$keystore,
                 "markets"=>$package,
-                "status"=>$status_app.$dev,
+                "status"=>@$download_aab.@$download_apk.$status_app.$dev,
                 "action"=> $btn,
             );
         }
