@@ -56,7 +56,7 @@ class Project_Controller extends Controller
             ->Where('projectname', 'like', '%' . $searchValue . '%')
             ->count();
         $records = Project::orderBy($columnName, $columnSortOrder)
-            ->with('markets','ma_template','da')
+            ->with('markets.pivot.dev.ga','ma_template','da')
             ->Where('projectname', 'like', '%' . $searchValue . '%')
 
             ->skip($start)
@@ -97,7 +97,7 @@ class Project_Controller extends Controller
 
             $version  = 'Version: <span class="text-muted" style="line-height:0.5"> '.$record->buildinfo_vernum .' | '.$record->buildinfo_verstr.' </span>';
 
-            $package = $status_app =$dev =  '';
+            $package = $status_app =$dev = $ga =  '';
             $keystore = 'Key: ';
             $sdk = 'SDK : <span class="badge badge-secondary" style="font-size: 12px">'.$record->buildinfo_keystore.'</span>';
             $badges = [
@@ -112,6 +112,8 @@ class Project_Controller extends Controller
 
             foreach ($record->markets as $key=>$market){
 
+
+
                 if($market->pivot->package){
                     $download_aab = $download_apk =' <a><i class="ion ion-md-close-circle" style="color: red"></i></a> ';
                     $package .= '<p class="card-title-desc font-16"><img src="img/icon/'.$market->market_logo.'"> '.$market->pivot->package.'</p>';
@@ -122,11 +124,21 @@ class Project_Controller extends Controller
                         $download_apk = ' <a href="'.$market->pivot->apk_link.'"  target="_blank"><i class="ion ion-md-checkmark-circle" style="color: green"></i></a> ';
                     }
 
+                    if($market->pivot->dev_id){
+                        $dev = ' <span class="badge badge-'.$badges[$key].'" style="font-size: 16px">'.$market->pivot->dev->dev_name.'</span> ';
+                        $ga  = ' <span class="badge badge-'.$badges[$key].'" style="font-size: 16px">'.$market->pivot->dev->ga->ga_name.'</span> ';
+                    }
+//                    dd($market);
+
+
+
+
+
 
                     $status = $market->pivot->status_app;
                     switch ($status){
                         case 0:
-                            $status_app .=  '<img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-secondary font-16"> Mặc định</p>';
+                            $status_app .=  '<img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-secondary font-16"> Mặc định</p> ';
                             break;
                         case 1:
                             $status_app .=  '<img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-success font-16"> Publish</p>';
@@ -169,7 +181,7 @@ class Project_Controller extends Controller
                 "logo" => $logo,
                 "projectname"=>$project.$template.$mada.'<br>'.$record->title_app.'<br>'.$version.'<br>'.$sdk.'<br>'.$keystore,
                 "markets"=>$package,
-                "status"=>'<div>'.@$download_apk.@$download_aab.$status_app.$dev .'</div>',
+                "status"=>'<div>'.@$download_apk.@$download_aab.$status_app.@$dev.$ga .'</div>',
                 "action"=> $btn,
             );
         }

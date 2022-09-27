@@ -47,7 +47,7 @@ class ApiController extends Controller
             ->where('dev_name', 'like', '%' . $searchValue . '%')
 //            ->orwhere('store_name', 'like', '%' . $searchValue . '%')
             ->where('market_id',  $market_id)
-            ->whereIn('startus',  [0,1])
+            ->whereIn('status',  [0,1])
             ->get();
         $result = MarketDevResource::collection($dev);
         return response()->json($result);
