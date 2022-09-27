@@ -776,6 +776,10 @@ class Project_Controller extends Controller
 //                'Remove'    => ['id'=>'RemoveA','style'=>'danger'],
             ]
         ];
+
+
+
+
 //
 //
 //        $projects = Project::has('lang')->where('status_design',4)->orderByDesc('projectname')->get();
@@ -816,7 +820,6 @@ class Project_Controller extends Controller
                     ->where('status_upload', 1);
             })
             ->where('projectname', 'like', '%' . $searchValue . '%')
-
             ->count();
         $records = Project::orderBy($columnName, $columnSortOrder)
             ->whereHas('markets',function($q)
@@ -889,14 +892,10 @@ class Project_Controller extends Controller
 
 
     public function update_upload_status($id){
-//        dd($id);
         $project = MarketProject::find($id);
         $project->status_upload = 3;
         $project->save();
         return response()->json(['success'=>'Thành công']);
     }
-
-
-
 
 }

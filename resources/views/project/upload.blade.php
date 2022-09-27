@@ -39,20 +39,20 @@
         text-align: center;
     }
 
-    .img-list {
-         /*height: 500px; */
-        width: 100%;
+    /*.img-list {*/
+    /*     !*height: 500px; *!*/
+    /*    width: 100%;*/
 
-        white-space: nowrap;
-        overflow-x: auto;
-        overflow-y: hidden;
-    }
+    /*    white-space: nowrap;*/
+    /*    overflow-x: auto;*/
+    /*    overflow-y: hidden;*/
+    /*}*/
 
-    .img_class {
-        white-space: nowrap;
-        width: auto;
-        height: 200px;
-    }
+    /*.img_class {*/
+    /*    white-space: nowrap;*/
+    /*    width: auto;*/
+    /*    height: 200px;*/
+    /*}*/
 </style>
 
 @endsection
@@ -144,7 +144,7 @@
 
 <script src="{{ URL::asset('/assets/libs/rwd-table/rwd-table.min.js') }}"></script>
 {{--<script src="{{ URL::asset('/assets/libs/datatables/datatables.min.js') }}"></script>--}}
-<script src="{{ URL::asset('/assets/js/table.init.js') }}"></script>
+
 
 
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
@@ -155,6 +155,7 @@
 <script src="plugins/select2/js/select2.min.js"></script>
 <script src="{{ URL::asset('/assets/libs/magnific-popup/magnific-popup.min.js') }}"></script>
 <script src="{{ URL::asset('/assets/libs/lightgallery/js/lightgallery-all.js') }}"></script>
+<script src="{{ URL::asset('/assets/js/table.init.js') }}"></script>
 
 
 
@@ -169,7 +170,7 @@
 
 
         var table = $('#project_uploadTable').DataTable({
-            displayLength: 50,
+            displayLength: 20,
             bLengthChange: false,
 
             // searching: false,
@@ -180,11 +181,10 @@
             processing: true,
             serverSide: true,
             ajax: {
-
                 url: "{{ route('project.getProjectUpload')}}",
                 type: "post",
-
             },
+            dom: 'lfrtp',
             columns: [
                 {data: 'projectname', name: 'projectname'},
 
@@ -225,10 +225,15 @@
                         '</a></li>';
                     var preview = '';
                     for (var i = 1; i <= 8; i++) {
-                        preview +=
-                            '<a class="img_class" style="margin:5px" href="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/pr' + i + '.jpg" title="preview ' + i + '">' +
-                            '<img  src="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/pr' + i + '.jpg" alt="" height="200">' +
-                            '</a>'
+
+                            preview +=
+                                '<a class="img_class" style="margin:5px" href="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/pr' + i + '.jpg" title="preview ' + i + '">' +
+                                '<div class="img-responsive img-container">' +
+                                '<img  src="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/pr' + i + '.jpg" alt="" height="200">' +
+                                '</div>' +
+                                '</a>'
+
+
                     }
                     tab_content += '<div class="tab-pane p-3 gallery  '+active+'" id="' + value.lang_code + '" role="tabpanel">' +
 
@@ -245,7 +250,6 @@
                         '</tr>'+
                         '<tr>'+
                             '<th>Description</td>'+
-                            // '<td> <input type="button" class="btn  waves-effect copyButton" value="'+value.pivot.description+'" /></td>'+
                             '<td class="copyButton">'+value.pivot.description+'</td>'+
                         '</tr>'+
                         '</tbody></table>' +
@@ -254,7 +258,9 @@
                         + preview +
 
                         '<a class="img_class" style="margin:5px" href="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/bn.jpg" title="preview ' + i + '">' +
+                        '<div class="img-responsive img-container">' +
                         '<img src="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/bn.jpg" alt="" height="200">' +
+                        '</div>' +
                         '</a>' +
 
                         '<video width="320" height="240" controls>'+
@@ -270,11 +276,8 @@
                     categories[value.market_id] = value.value
                 })
 
-
-                console.log(data)
                 $.each(data.markets, function (key, value) {
                     if(value.pivot.package){
-
                         var status_upload = dev_name = download_apk = download_aab = '';
                         switch (value.pivot.status_upload) {
                             case 0 :
@@ -298,6 +301,7 @@
                         if(value.pivot.apk_link){
                             download_apk = '<a href="'+value.pivot.apk_link+'"  target="_blank"><img src="img/icon/apk.png" height="50px"  alt=""></a>';
                         }
+
 
 
                         if(value.pivot.dev_id){
@@ -339,6 +343,7 @@
                     submit.addClass('btn-success disabled');
                     submit.val("Hoàn thành");
                     $.notify(' success ', "success");
+                    table.draw()
                 },
             });
 
