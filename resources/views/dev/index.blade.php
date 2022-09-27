@@ -34,6 +34,7 @@
                                    style="width: 100%;">
                                 <thead>
                                 <tr>
+                                    <th style="display: none">ID</th>
                                     <th style="width: 10%;">Ga name</th>
                                     <th style="width: 20%;">Dev name</th>
                                     <th style="width: 20%;">Gmail </th>
@@ -77,7 +78,6 @@
                 }
             });
 
-
             $('#ga_id').select2({
                 // initialValue:true,
                 placeholder: "Select a customer",
@@ -113,6 +113,151 @@
                     callback(data);
                 }
             });
+            $('#market_id').select2({
+                // initialValue:true,
+                placeholder: "Select a customer",
+                // minimumInputLength: 2,
+                ajax: {
+                    url: '{{route('api.getMarket')}}',
+                    dataType: 'json',
+                    type: "GET",
+                    // quietMillis: 50,
+                    // data: function(params) {
+                    //     return {
+                    //         q: params.term, // search term
+                    //         page: params.page
+                    //     };
+                    // },
+                    processResults: function(data) {
+
+                        // console.log(data)
+                        // return {
+                        //     results: data.items
+                        // };
+                        return {
+                            results: $.map(data, function (item) {
+                                return {
+                                    text: item.name,
+                                    id: item.id
+                                }
+                            })
+                        };
+                    },
+                    cache: false
+                },
+                initSelection : function (element, callback) {
+                    var data = [];
+                    $(element.val()).each(function () {
+                        data.push({id: this, text: this});
+                    });
+                    callback(data);
+                }
+            });
+            $('#mail_id_1').select2({
+                // initialValue:true,
+                placeholder: "Select a customer",
+                minimumInputLength: 2,
+                ajax: {
+                    url: '{{route('api.getGmailDev')}}',
+                    dataType: 'json',
+                    type: "GET",
+                    // quietMillis: 50,
+                    data: function(params) {
+                        return {
+                            q: params.term, // search term
+                            page: params.page
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: $.map(data, function (item) {
+                                return {
+                                    text: item.name,
+                                    id: item.id
+                                }
+                            })
+                        };
+                    },
+                    cache: false
+                },
+                initSelection : function (element, callback) {
+                    var data = [];
+                    $(element.val()).each(function () {
+                        data.push({id: this, text: this});
+                    });
+                    callback(data);
+                }
+            });
+            $('#mail_id_2').select2({
+                // initialValue:true,
+                placeholder: "Select a customer",
+                minimumInputLength: 2,
+                ajax: {
+                    url: '{{route('api.getGmailDev')}}',
+                    dataType: 'json',
+                    type: "GET",
+                    // quietMillis: 50,
+                    data: function(params) {
+                        return {
+                            q: params.term, // search term
+                            page: params.page
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: $.map(data, function (item) {
+                                return {
+                                    text: item.name,
+                                    id: item.id
+                                }
+                            })
+                        };
+                    },
+                    cache: false
+                },
+                initSelection : function (element, callback) {
+                    var data = [];
+                    $(element.val()).each(function () {
+                        data.push({id: this, text: this});
+                    });
+                    callback(data);
+                }
+            });
+            $('#profile_id').select2({
+                // initialValue:true,
+                placeholder: "Select a customer",
+                minimumInputLength: 2,
+                ajax: {
+                    url: '{{route('api.getProfile')}}',
+                    dataType: 'json',
+                    type: "GET",
+                    // quietMillis: 50,
+                    data: function(params) {
+                        return {
+                            q: params.term, // search term
+                            page: params.page
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: $.map(data, function (item) {
+                                return {
+                                    text: item.name + ': ' + item.ho_ten + ' - '+ item.add,
+                                    id: item.id
+                                }
+                            })
+                        };
+                    },
+                    cache: false
+                },
+                initSelection : function (element, callback) {
+                    var data = [];
+                    $(element.val()).each(function () {
+                        data.push({id: this, text: this});
+                    });
+                    callback(data);
+                }
+            });
 
 
             var marketAll = <?php echo \App\Models\Markets::all() ?>;
@@ -124,7 +269,7 @@
                     type: "post"
                 },
                 columns: [
-                    // {data: 'info_logo'},
+                    {data: 'id',visible: false},
                     {data: 'ga_id'},
                     {data: 'dev_name'},
                     {data: 'mail_id_1'},
@@ -134,7 +279,7 @@
                     {data: 'status',orderable: false},
                     {data: 'action', className: "text-center",name: 'action', orderable: false, searchable: false},
                 ],
-                order:[1,'asc'],
+                order:[0,'desc'],
                 initComplete: function () {
                     this.api().columns([5]).every( function () {
                         var column = this;
@@ -191,14 +336,10 @@
             $('#createNewDev').click(function () {
                 $('#saveBtn').val("create");
                 $('#id').val('');
-                $('#devAmazonForm').trigger("reset");
+                $('#devForm').trigger("reset");
                 $('#modelHeading').html("Thêm mới");
                 $('#ajaxModelDev').modal('show');
-                $('#id_ga').select2();
-                $('#gmail_gadev_chinh').select2();
-                $('#gmail_gadev_phu_1').select2();
-                $('#gmail_gadev_phu_2').select2();
-                $('#profile_info').select2();
+
 
             });
             $('#devForm').on('submit',function (event){
@@ -256,76 +397,89 @@
             $(document).on('click','.deleteDev', function (data){
                 var id = $(this).data("id");
 
-                swal({
-                        title: "Bạn có chắc muốn xóa?",
-                        text: "Your will not be able to recover this imaginary file!",
-                        type: "warning",
-                        showCancelButton: true,
-                        confirmButtonClass: "btn-danger",
-                        confirmButtonText: "Xác nhận xóa!",
-                        closeOnConfirm: false
-                    },
-                    function(){
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: "You won't be able to revert this!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#02a499",
+                    cancelButtonColor: "#ec4561",
+                    confirmButtonText: "Yes, delete it!"
+                }).then(function (result) {
+                    if (result.value) {
                         $.ajax({
                             type: "get",
                             url: "{{ asset("dev/delete") }}/" + id,
                             success: function (data) {
                                 table.draw();
+                                $.notify(data.success , "success");
                             },
                             error: function (data) {
                                 console.log('Error:', data);
                             }
                         });
-                        swal("Đã xóa!", "Your imaginary file has been deleted.", "success");
-                    });
+
+                    }
+                });
             });
         });
     </script>
     <script>
         function editDev(id) {
             $.get('{{asset('dev/edit')}}/'+id,function (data) {
+                console.log(data)
+
                 $('#dev_id').val(data.id);
                 $('#store_name').val(data.store_name);
                 $('#dev_name').val(data.dev_name);
-                $('#ma_hoa_don').val(data.ma_hoa_don);
-
-                $('#id_ga').val(data.id_ga);
-                $('#id_ga').select2();
 
 
-                $('#gmail_gadev_chinh').val(data.gmail_gadev_chinh);
-                $('#gmail_gadev_chinh').select2();
 
-                $('#gmail_gadev_phu_1').val(data.gmail_gadev_phu_1);
-                $('#gmail_gadev_phu_1').select2();
+                if(data.ga_id){
+                    $("#ga_id").select2("trigger", "select", {
+                        data: { id: data.ga_id,text: data.ga.ga_name }
+                    });
+                }
+                if(data.market_id){
+                    $("#market_id").select2("trigger", "select", {
+                        data: { id: data.market_id,text: data.markets.market_name }
+                    });
+                }
 
-                $('#gmail_gadev_phu_2').val(data.gmail_gadev_phu_2);
-                $('#gmail_gadev_phu_2').select2();
+                if(data.mail_id_1){
+                    $("#mail_id_1").select2("trigger", "select", {
+                        data: { id: data.mail_id_1,text: data.gmail_dev1.gmail }
+                    });
+                    }
+                if(data.mail_id_2){
+                    $("#mail_id_2").select2("trigger", "select", {
+                        data: { id: data.mail_id_2,text: data.gmail_dev2.gmail }
+                    });
+                }
+                if(data.profile_id){
+                    $("#profile_id").select2("trigger", "select", {
+                        data: { id: data.profile_id,text: data.profile.profile_name + ': ' +data.profile.profile_ho_va_ten + ' - ' +data.profile.profile_add  }
+                    });
+                }
 
-                $('#info_phone').val(data.info_phone);
+
+                $('#mahoadon').val(data.mahoadon);
                 $('#pass').val(data.pass);
-                $('#info_andress').val(data.info_andress);
-                $('#info_company').val(data.info_company);
-                $('#profile_info').val(data.profile_info);
-                $('#profile_info').select2();
-                $('#info_url').val(data.info_url);
-                $('#info_logo').val(data.info_logo);
-                $('#info_banner').val(data.info_banner);
-                $('#info_policydev').val(data.info_policydev);
-                $('#info_fanpage').val(data.info_fanpage);
-                $('#info_web').val(data.info_web);
+                $('#info_logo').val(data.logo);
+                $('#info_banner').val(data.banner);
+                $('#info_policydev').val(data.url_policy);
+                $('#info_fanpage').val(data.url_fanpage);
+                $('#info_phone').val(data.phone);
+
+
+
                 $('#status').val(data.status);
                 $('#note').val(data.note);
 
-                if(data.thuoc_tinh == 1){
-                    $('.thuoc_tinh').show();
-                    $('.info_company').hide();
-                    $("#individual1").prop('checked', true);
+                if(data.company_pers == 1){
+                    $("#company").prop('checked', true);
                 }else{
-                    $('.thuoc_tinh').show();
-                    $('.info_company').show();
-
-                    $("#company1").prop('checked', true);
+                    $("#person").prop('checked', true);
                 }
 
                 $('#modelHeading').html("Edit");
@@ -337,98 +491,7 @@
             })
         }
     </script>
-    <script>
-        $("#addGaDevForm").submit(function (e) {
-            e.preventDefault();
-            let data = new FormData(document.getElementById('addGaDevForm'));
-            $.ajax({
-                url:"{{route('gadev.create')}}",
-                type: "post",
-                data:data,
-                processData: false,
-                contentType: false,
-                dataType: 'json',
-                beForeSend : () => {
 
-                },
-                success:function (data) {
-                    if(data.errors){
-                        for( var count=0 ; count <data.errors.length; count++){
-                            $("#addGaDevForm").notify(
-                                data.errors[count],"error",
-                                { position:"right" }
-                            );
-                        }
-                    }
-                    $.notify(data.success, "success");
-                    $('#addGaDevForm').trigger("reset");
-                    $('#addGaDev').modal('hide');
-                    if(typeof data.allGa_dev == 'undefined'){
-                        data.allGa_dev = {};                    }
-                    if(typeof rebuildMailOption == 'function'){
-                        rebuildMailOption(data.allGa_dev)
-                    }
-                }
-            });
-        });
-        function getit(){
-            var select = $('#profile_info').val();
-            var radio = document.querySelector('input[name="attribute1"]:checked').value;
-            if(radio == 1) {
-                $.get('{{asset('profile/show?ID=')}}'+select,function (data) {
-                    $('#info_company').val('');
-                    $('.info_company').hide();
-                    $('#info_andress').val(data.profile.profile_add);
-                });
-            }else {
-                $.get('{{asset('profile/show?ID=')}}'+select,function (data) {
-                    if(data.profile.company[0]){
-                        $('.info_company').show();
-                        $('#info_company').val(data.profile.company[0].name_en);
-                        $('#info_andress').val(data.profile.company[0].dia_chi);
-                    }
-                });
-            }
-        }
-
-        {{--$('select').on('change', function() {--}}
-        {{--    var radio = document.querySelector('input[name="attribute1"]:checked').value;--}}
-        {{--    $.get('{{asset('profile/show?ID=')}}' + this.value, function (data) {--}}
-        {{--        if(radio != 1){--}}
-        {{--            if (data.profile.company[0]) {--}}
-        {{--                $('.info_company').show();--}}
-        {{--                $('#info_company').val(data.profile.company[0].name_en);--}}
-        {{--                $('#info_andress').val(data.profile.company[0].dia_chi);--}}
-        {{--            } else {--}}
-        {{--                $('.info_company').hide();--}}
-        {{--                $('#info_company').val('');--}}
-        {{--                $('#info_andress').val(data.profile.profile_add);--}}
-        {{--            }--}}
-        {{--        }else {--}}
-        {{--            $('.info_company').hide();--}}
-        {{--            $('#info_company').val('');--}}
-        {{--            $('#info_andress').val(data.profile.profile_add);--}}
-        {{--        }--}}
-        {{--    });--}}
-        {{--});--}}
-
-    </script>
-    <script>
-        function rebuildMailOption(mails){
-            var elementSelect = $("#amazon_email");
-            if(elementSelect.length <= 0){
-                return false;
-            }
-            elementSelect.empty();
-            for(var m of mails){
-                elementSelect.append(
-                    $("<option></option>", {
-                        value : m.id
-                    }).text(m.gmail)
-                );
-            }
-        }
-    </script>
 @endsection
 
 

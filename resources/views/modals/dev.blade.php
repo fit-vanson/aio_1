@@ -13,11 +13,11 @@
                         <div  class="row">
                             <div class="form-group col-lg-6">
                                 <label for="name">Ga Name</label>
-                                <select class="form-control select2js" id="ga_id" name="ga_id"></select>
+                                <select class="form-control" id="ga_id" name="ga_id" required></select>
                             </div>
                             <div class="form-group col-lg-6">
-                                <label for="name">Makert</label>
-                                <select class="form-control select2js" id="market_id" name="market_id"></select>
+                                <label for="name">Market</label>
+                                <select class="form-control " id="market_id" name="market_id" required></select>
                             </div>
 
                             <div class="form-group col-lg-6">
@@ -30,11 +30,11 @@
                             </div>
                             <div class="form-group col-lg-6">
                                 <label for="name">Email 1 <span style="color: red">*</span></label>
-                                <select class="form-control select2js" id="mail_id_1" name="mail_id_1"></select>
+                                <select class="form-control " id="mail_id_1" name="mail_id_1" required></select>
                             </div>
                             <div class="form-group col-lg-6">
-                                <label for="name">Email 2 <span style="color: red">*</span></label>
-                                <select class="form-control select2js" id="mail_id_2" name="mail_id_2"></select>
+                                <label for="name">Email 2 </label>
+                                <select class="form-control " id="mail_id_2" name="mail_id_2"></select>
                             </div>
                             <div class="form-group col-lg-6">
                                 <label for="name">Mã hóa đơn </label>
@@ -80,8 +80,8 @@
                             </div>
 
                             <div class="form-group col-lg-6 ">
-                                <label for="name">Profile Info</label>
-                                <select class="form-control select2js" id="profile_id" name="profile_id"></select>
+                                <label for="name">Profile Info <span style="color: red">*</span></label>
+                                <select class="form-control" id="profile_id" name="profile_id" required></select>
                             </div>
 
 
@@ -89,11 +89,11 @@
                             <div class="form-group col-lg-6">
                                 <label class="form-label mb-3 d-flex">Công ty || Cá nhân</label>
                                 <div class="form-check form-check-inline">
-                                    <input type="radio" id="company" name="attribute" class="form-check-input" value="0">
+                                    <input type="radio" id="company" name="attribute" class="form-check-input" value="1">
                                     <label class="form-check-label" for="company">Công ty</label>
                                 </div>
                                 <div class="form-check form-check-inline">
-                                    <input type="radio" id="person" name="attribute" class="form-check-input" value="1" checked="">
+                                    <input type="radio" id="person" name="attribute" class="form-check-input" value="0" checked="">
                                     <label class="form-check-label" for="person">Cá nhân</label>
                                 </div>
                             </div>

@@ -33,5 +33,8 @@ Route::get('/getTemplate', [ApiController::class, 'getTemplate'])->name('api.get
 Route::get('/getDev', [ApiController::class, 'getDev'])->name('api.getDev');
 Route::get('/getKeystore', [ApiController::class, 'getKeystore'])->name('api.getKeystore');
 Route::get('/getGa', [ApiController::class, 'getGa'])->name('api.getGa');
+Route::get('/getMarket', [ApiController::class, 'getMarket'])->name('api.getMarket');
+Route::get('/getGmailDev', [ApiController::class, 'getGmailDev'])->name('api.getGmailDev');
+Route::get('/getProfile', [ApiController::class, 'getProfile'])->name('api.getProfile');
 
 

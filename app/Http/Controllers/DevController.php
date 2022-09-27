@@ -25,24 +25,15 @@ class DevController extends Controller
 
             'button' => [
                 'Create'            => ['id'=>'createNewDev','style'=>'primary'],
-//                'Build And Check'   => ['id'=>'build_check','style'=>'warning'],
-//                'Status'            => ['id'=>'dev_status','style'=>'info'],
-//                'KeyStore'          => ['id'=>'change_keystore','style'=>'success'],
-//                'SDK'               => ['id'=>'change_sdk','style'=>'danger'],
-//                'Upload Status'     => ['id'=>'change_upload_status','style'=>'secondary'],
             ]
 
         ];
         return view('dev.index')->with(compact('header'));
-//        $ga_name = Ga::orderBy('ga_name','asc')->get();
-//        $ga_dev = Ga_dev::orderBy('gmail','asc')->get();
-//        $profiles = ProfileV2::orderBy('profile_name','asc')->get();
-//        return view('dev.index',compact(['ga_name','ga_dev','profiles']));
+
     }
     public function getIndex(Request $request)
     {
 
-//        dd($request->all());
         $draw = $request->get('draw');
         $start = $request->get("start");
         $rowperpage = $request->get("length"); // total number of rows per page
@@ -147,17 +138,12 @@ class DevController extends Controller
             }
 
 
-
-//            $release = $check = 0;
-//            foreach ($record->project as $ch){
-//                $ch->Chplay_status == 1 ? $release ++ : $check++;
-//            }
             $data_arr[] = array(
-//                "info_logo" => $logo,
+                "id" => $record->id,
                 "ga_id" => $logo.'<br>'.$ga_name.' <br>'.$profile,
                 "dev_name" => $record->dev_name,
                 "mail_id_1"=> @$gmail.@$gmail1,
-                "market_id"=> $record->markets->market_name,
+                "market_id"=> @$record->markets->market_name,
 //                "project_count" => ' <span class="badge badge-secondary">'.count($record->project).'</span> ' .' <span class="badge badge-success"> '.$release.' </span>'. ' <span class="badge badge-danger"> '.$check.' </span>' ,
                 "company_pers" => $company_pers.'<br>'.$record->pass .'<br>'.$record->phone,
                 "info_url"=> $info_url .' '. $info_fanpage.' '. $info_policydev,
@@ -177,12 +163,13 @@ class DevController extends Controller
     public function create(Request  $request)
     {
 
+
 //        'column_1' => 'required|unique:TableName,column_1,' . $this->id . ',id,colum_2,' . $this->column_2
 
         $rules = [
-            'store_name' =>'unique:ngocphandang_dev,store_name',
-            'dev_name' =>'unique:ngocphandang_dev,dev_name',
-            'gmail_gadev_chinh' =>'required|not_in:0',
+            'store_name' =>'unique:market_devs,store_name',
+            'dev_name' =>'unique:market_devs,dev_name',
+
         ];
         $message = [
             'dev_name.unique'=>'Dev name đã tồn tại',
@@ -196,26 +183,22 @@ class DevController extends Controller
         }
         $data = new Dev();
         $data['dev_name'] = $request->dev_name;
-        $data['id_ga'] = $request->id_ga;
+        $data['ga_id'] = $request->ga_id;
+        $data['market_id'] = $request->market_id;
         $data['store_name'] = $request->store_name;
-        $data['ma_hoa_don'] = $request->ma_hoa_don;
-        $data['gmail_gadev_chinh'] = $request->gmail_gadev_chinh;
-        $data['gmail_gadev_phu_1'] = $request->gmail_gadev_phu_1;
-        $data['gmail_gadev_phu_2'] = $request->gmail_gadev_phu_2;
-        $data['info_phone'] = $request->info_phone;
+        $data['mail_id_1'] = $request->mail_id_1;
+        $data['mail_id_2'] = $request->mail_id_2;
+        $data['mahoadon'] = $request->mahoadon;
         $data['pass'] = $request->pass;
-        $data['profile_info'] = $request->profile_info;
-        $data['info_andress'] = $request->info_andress;
-        $data['info_company'] = $request->info_company;
+        $data['logo'] = $request->info_logo;
+        $data['banner'] = $request->info_banner;
+        $data['url_policy'] = $request->info_policydev;
+        $data['url_fanpage'] = $request->info_fanpage;
+        $data['phone'] = $request->info_phone;
+        $data['status'] = $request->status;
+        $data['profile_id'] = $request->profile_id;
+        $data['company_pers'] = $request->attribute;
         $data['note'] = $request->note;
-        $data['info_url'] = $request->info_url;
-        $data['info_logo'] = $request->info_logo;
-        $data['info_banner'] = $request->info_banner;
-        $data['info_policydev'] = $request->info_policydev;
-        $data['info_fanpage'] = $request->info_fanpage;
-        $data['info_web'] = $request->info_web;
-        $data['thuoc_tinh'] = $request->attribute1;
-        $data['status'] = 0;
         $data->save();
         return response()->json([
             'success'=>'Thêm mới thành công',
@@ -224,22 +207,20 @@ class DevController extends Controller
     public function edit($id)
     {
         $dev = Dev::find($id);
-        return Response::json($dev);
+        return Response::json($dev->load('ga','markets','gmail_dev1','gmail_dev2','profile'));
     }
     public function update(Request $request)
     {
+
         $id = $request->dev_id;
         $rules = [
-            'store_name' =>'unique:ngocphandang_dev,store_name,'.$id.',id',
-            'dev_name' =>'unique:ngocphandang_dev,dev_name,'.$id.',id',
-            'id_ga' =>'required|not_in:0',
-            'gmail_gadev_chinh' =>'required|not_in:0',
+            'store_name' =>'unique:market_devs,store_name,'.$id.',id',
+            'dev_name' =>'unique:market_devs,dev_name,'.$id.',id',
+
         ];
         $message = [
             'dev_name.unique'=>'Dev name đã tồn tại',
             'store_name.unique'=>'Store name tồn tại',
-            'id_ga.not_in'=>'Vui lòng chọn Ga Name',
-            'gmail_gadev_chinh.not_in'=>'Vui lòng chọn Email',
 
         ];
 
@@ -248,27 +229,24 @@ class DevController extends Controller
             return response()->json(['errors'=> $error->errors()->all()]);
         }
         $data = Dev::find($id);
-        $data->dev_name = $request->dev_name;
-        $data->id_ga = $request->id_ga;
-        $data->store_name = $request->store_name;
-        $data->ma_hoa_don = $request->ma_hoa_don;
-        $data->gmail_gadev_chinh = $request->gmail_gadev_chinh;
-        $data->gmail_gadev_phu_1 = $request->gmail_gadev_phu_1;
-        $data->gmail_gadev_phu_2 = $request->gmail_gadev_phu_2;
-        $data->info_phone = $request->info_phone;
-        $data->pass = $request->pass;
-        $data->profile_info = $request->profile_info;
-        $data->info_andress=  $request->info_andress ;
-        $data->info_company=  $request->info_company ;
-        $data->note= $request->note;
-        $data->thuoc_tinh= $request->attribute1;
-        $data->info_url = $request->info_url;
-        $data->info_logo = $request->info_logo;
-        $data->info_banner = $request->info_banner;
-        $data->info_policydev = $request->info_policydev;
-        $data->info_fanpage = $request->info_fanpage;
-        $data->info_web = $request->info_web;
-        $data->status = $request->status;
+        $data['dev_name'] = $request->dev_name;
+        $data['ga_id'] = $request->ga_id;
+        $data['market_id'] = $request->market_id;
+        $data['store_name'] = $request->store_name;
+        $data['mail_id_1'] = $request->mail_id_1;
+        $data['mail_id_2'] = $request->mail_id_2;
+        $data['mahoadon'] = $request->mahoadon;
+        $data['pass'] = $request->pass;
+        $data['logo'] = $request->info_logo;
+        $data['banner'] = $request->info_banner;
+        $data['url_policy'] = $request->info_policydev;
+        $data['url_fanpage'] = $request->info_fanpage;
+        $data['phone'] = $request->info_phone;
+        $data['status'] = $request->status;
+        $data['profile_id'] = $request->profile_id;
+        $data['company_pers'] = $request->attribute;
+        $data['note'] = $request->note;
+
         $data->save();
         return response()->json(['success'=>'Cập nhật thành công']);
     }

@@ -4,13 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\DaResource;
 use App\Http\Resources\GaResource;
+use App\Http\Resources\GmailDevResource;
 use App\Http\Resources\KeystoresResource;
 use App\Http\Resources\MarketDevResource;
+use App\Http\Resources\MarketsResource;
+use App\Http\Resources\ProfileResource;
 use App\Http\Resources\TemplateResource;
 use App\Models\Da;
 use App\Models\Ga;
+use App\Models\Ga_dev;
 use App\Models\Keystore;
 use App\Models\Market_dev;
+use App\Models\Markets;
+use App\Models\ProfileV2;
 use App\Models\Template;
 use Illuminate\Http\Request;
 
@@ -66,6 +72,39 @@ class ApiController extends Controller
             ->where('ga_name', 'like', '%' . $searchValue . '%')
             ->get();
         $result = GaResource::collection($dev);
+        return response()->json($result);
+    }
+
+    public function getMarket(){
+        $searchValue = \request()->q;
+
+        $dev = Markets::latest('id')
+            ->where('market_name', 'like', '%' . $searchValue . '%')
+            ->get();
+        $result = MarketsResource::collection($dev);
+        return response()->json($result);
+    }
+
+    public function getGmailDev(){
+        $searchValue = \request()->q;
+
+        $dev = Ga_dev::latest('id')
+            ->where('gmail', 'like', '%' . $searchValue . '%')
+            ->get();
+        $result = GmailDevResource::collection($dev);
+        return response()->json($result);
+    }
+
+    public function getProfile(){
+        $searchValue = \request()->q;
+
+        $dev = ProfileV2::latest('id')
+            ->where('profile_name', 'like', '%' . $searchValue . '%')
+            ->orwhere('profile_ho_va_ten', 'like', '%' . $searchValue . '%')
+            ->orwhere('profile_cccd', 'like', '%' . $searchValue . '%')
+            ->orwhere('profile_add', 'like', '%' . $searchValue . '%')
+            ->get();
+        $result = ProfileResource::collection($dev);
         return response()->json($result);
     }
 

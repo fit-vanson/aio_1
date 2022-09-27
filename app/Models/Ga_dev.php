@@ -10,7 +10,7 @@ class Ga_dev extends Model
 {
     use HasFactory;
     public $timestamps = false;
-    protected $table = 'ngocphandang_gadev';
+    protected $table = 'gmail_gadev';
     protected $fillable = [
         'gmail','mailrecovery','vpn_iplogin'
     ];
