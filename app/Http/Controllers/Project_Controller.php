@@ -191,7 +191,7 @@ class Project_Controller extends Controller
                 "projectname"=>$project.$template.$mada.'<br>'.$record->title_app.'<br>'.$version.'<br>'.$sdk.'<br>'.$keystore,
                 "markets"=>$package,
 //                "status"=>'<div>'.@$download_apk.@$download_aab.$status_app.@$dev.@$ga .'</div>',
-                "status"=>$status_app.'</div>',
+                "status"=>$status_app,
                 "action"=> $btn,
             );
         }
