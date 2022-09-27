@@ -73,6 +73,7 @@ class Project_Controller extends Controller
                 $btn = $btn. ' <br><br>  <a href="javascript:void(0)" onclick="quickEditProject('.$record->projectid.')" class="btn btn-success"><i class="mdi mdi-android-head"></i></a>';
             }
             $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$record->projectid.'" data-original-title="Delete" class="btn btn-danger deleteProject"><i class="ti-trash"></i></a>';
+            $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$record->projectid.'"  class="btn btn-info fakeProject"><i class="ti-info-alt"></i></a>';
 
             $mada =  $template = '';
             if($record->da){
@@ -115,38 +116,38 @@ class Project_Controller extends Controller
                         $download_aab = '<a href="'.$market->pivot->aab_link.'"  target="_blank"><img src="img/icon/aab.png" height="50px"  alt=""></a>';
                     }
                     if($market->pivot->apk_link){
-                        $download_apk = '<a href="'.$market->pivot->apk_link.'"  target="_blank"><img src="img/icon/aab.png" height="50px"  alt=""></a>';
+                        $download_apk = '<a href="'.$market->pivot->apk_link.'"  target="_blank"><img src="img/icon/apk.png" height="50px"  alt=""></a>';
                     }
 
 
                     $status = $market->pivot->status_app;
                     switch ($status){
                         case 0:
-                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-secondary font-16"> Mặc định</p> </div>';
+                            $status_app .=  '<img src="img/icon/'.$market->market_logo.'"> <span class="badge badge-secondary font-16"> Mặc định</span>';
                             break;
                         case 1:
-                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-success font-16"> Publish</p></div>';
+                            $status_app .=  '<img src="img/icon/'.$market->market_logo.'"> <span class="badge badge-success font-16"> Publish</span>';
                             break;
                         case 2:
-                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-warning font-16"> Suppend</p></div>';
+                            $status_app .=  '<img src="img/icon/'.$market->market_logo.'"> <span class="badge badge-warning font-16"> Suppend</span>';
                             break;
                         case 3:
-                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-info font-16"> UnPublish</p></div>';
+                            $status_app .=  '<img src="img/icon/'.$market->market_logo.'"> <span class="badge badge-info font-16"> UnPublish</span>';
                             break;
                         case 4:
-                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-primary font-16"> Remove</p></div>';
+                            $status_app .=  '<img src="img/icon/'.$market->market_logo.'"> <span class="badge badge-primary font-16"> Remove</span>';
                             break;
                         case 5:
-                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-dark font-16"> Reject</p></div>';
+                            $status_app .=  '<img src="img/icon/'.$market->market_logo.'"> <span class="badge badge-dark font-16"> Reject</span>';
                             break;
                         case 6:
-                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-danger font-16"> Check</p></div>';
+                            $status_app .=  '<img src="img/icon/'.$market->market_logo.'"> <span class="badge badge-danger font-16"> Check</span>';
                             break;
                         case 7:
-                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-warning font-16"> Pending</p></div>';
+                            $status_app .=  '<img src="img/icon/'.$market->market_logo.'"> <span class="badge badge-warning font-16"> Pending</span>';
                             break;
                         default:
-                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-secondary font-16"> Mặc định</p></div>';
+                            $status_app .=  '<img src="img/icon/'.$market->market_logo.'"> <span class="badge badge-secondary font-16"> Mặc định</span>';
                             break;
                     }
 
@@ -904,6 +905,26 @@ class Project_Controller extends Controller
         $project->status_upload = 3;
         $project->save();
         return response()->json(['success'=>'Thành công']);
+    }
+
+
+    public function fake($id)
+    {
+        $project = Project::find($id);
+        return response()->json($project);
+    }
+
+    public function getInfofake(Request $request){
+        $result = $request->all();
+        if($request->action == 'dashboard'){
+            return view('fake_dashboard',compact('result'));
+        }
+        if($request->action == 'app'){
+            return view('fake_app',compact('result'));
+        }
+
+
+
     }
 
 }

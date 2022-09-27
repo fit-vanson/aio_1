@@ -391,6 +391,46 @@
                 });
             });
 
+
+            $(document).on('click','.fakeProject', function (data){
+                var project_id = $(this).data("id");
+
+                $('#modelFakeHeading').html("Fake Image Project");
+                $('#saveBtn').val("fake-project");
+                $('#fakeProjectModel').modal('show');
+                $('.modal').on('hidden.bs.modal', function (e) {
+                    $('body').addClass('modal-open');
+                });
+
+                $.ajax({
+                    type: "get",
+                    url: "{{ asset("project/edit") }}/" + project_id,
+                    success: function (data) {
+
+                        $("#avatar_fake").attr("src","../storage/projects/"+data.da.ma_da+"/"+data.projectname+"/lg114.png");
+                        $("#project_id_fake").val(data.projectid);
+                        $("#title_app_fake").val(data.title_app);
+                        $("#buildinfo_vernum_fake").val(data.buildinfo_vernum);
+                        $("#buildinfo_verstr_fake").val(data.buildinfo_verstr);
+
+
+
+                        $("#buildinfo_app_name_x_fake").val(data.markets[0].pivot.app_name_x);
+                        $("#Chplay_package_fake").val(data.markets[0].pivot.package);
+                    },
+                    error: function (data) {
+                        console.log('Error:', data);
+                    }
+                });
+
+            });
+
+            $("a.dashboard").on("click",function(){
+                var  form = $('#fakeprojectForm').serialize();
+                var img = $('#avatar_fake').attr('src');
+                window.open('/fakeimage?action=dashboard&'+form+'&img='+img,'_blank');
+            });
+
             $('#buildcheckForm button').click(function (event){
                 event.preventDefault();
                 var data = $('textarea#buildinfo_vernum').val()

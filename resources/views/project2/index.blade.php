@@ -561,7 +561,7 @@
                     type: "get",
                     url: "{{ asset("project/fake") }}/" + project_id,
                     success: function (data) {
-                        console.log(data)
+
                         $("#avatar_fake").attr("src","/uploads/project/"+data.projectname+"/thumbnail/"+data.logo);
                         $("#project_id_fake").val(data.projectid);
                         $("#title_app_fake").val(data.title_app);
