@@ -58,18 +58,11 @@ class Project_Controller extends Controller
         $records = Project::orderBy($columnName, $columnSortOrder)
             ->with('markets.pivot.dev.ga','ma_template','da')
             ->Where('projectname', 'like', '%' . $searchValue . '%')
-
             ->skip($start)
             ->take($rowperpage)
             ->get();
-
-
         $data_arr = array();
-
-
-
         foreach ($records as $record) {
-
             $btn = ' <a href="javascript:void(0)" onclick="editProject('.$record->projectid.')" class="btn btn-warning"><i class="ti-pencil-alt"></i></a>';
             $btn .= ' <a href="'.route('project.show',['id'=>$record->projectid]).'" target="_blank"  class="btn btn-secondary"><i class="ti-eye"></i></a>';
             if($record->buildinfo_console == 0){
@@ -92,12 +85,12 @@ class Project_Controller extends Controller
             }
 
             $project    = '<span class="h3 font-16 "> '.$record->projectname.' </span>';
-            $template = '<span class="text-muted" style="line-height:0.5"> ('.$template.') </span>';
-            $mada = '<span class="" style="line-height:0.5"> - '.$mada.'</span>';
+            $template   = '<span class="text-muted" style="line-height:0.5"> ('.$template.') </span>';
+            $mada       = '<span class="" style="line-height:0.5"> - '.$mada.'</span>';
 
             $version  = 'Version: <span class="text-muted" style="line-height:0.5"> '.$record->buildinfo_vernum .' | '.$record->buildinfo_verstr.' </span>';
 
-            $package = $status_app =$dev = $ga = $statusaaa=  '';
+            $package = $status_app =$dev = $ga = $result =  '';
             $keystore = 'Key: ';
             $sdk = 'SDK : <span class="badge badge-secondary" style="font-size: 12px">'.$record->buildinfo_keystore.'</span>';
             $badges = [
@@ -109,69 +102,10 @@ class Project_Controller extends Controller
                 'dark',
                 'secondary',
             ];
-
             foreach ($record->markets as $key=>$market){
-
-                $statusaaa .= '<img src="img/icon/'.$market->market_logo.'">';
-
                 if($market->pivot->package){
-                    $download_aab = $download_apk =' <a><i class="ion ion-md-close-circle" style="color: red"></i></a> ';
-
+                    $result .= '<div class="font-16">';
                     $package .= '<p class="card-title-desc font-16"><img src="img/icon/'.$market->market_logo.'"> '.$market->pivot->package.'</p>';
-
-                    if($market->pivot->aab_link){
-                        $download_aab = ' <a href="'.$market->pivot->aab_link.'"  target="_blank"><i class="ion ion-md-checkmark-circle" style="color: green"></i></a> ';
-                    }
-                    if($market->pivot->apk_link){
-                        $download_apk = ' <a href="'.$market->pivot->apk_link.'"  target="_blank"><i class="ion ion-md-checkmark-circle" style="color: green"></i></a> ';
-                    }
-
-                    if($market->pivot->dev_id){
-                        $dev = ' <span class="badge badge-'.$badges[$key].'" style="font-size: 16px">'.$market->pivot->dev->dev_name.'</span> ';
-                        if($market->pivot->dev->ga_id) {
-                            $ga = ' <span class="badge badge-' . $badges[$key] . '" style="font-size: 16px">' . $market->pivot->dev->ga->ga_name . '</span> ';
-                        }
-                    }
-
-
-
-
-
-
-
-                    $status = $market->pivot->status_app;
-                    switch ($status){
-                        case 0:
-                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-secondary font-16"> Mặc định</p>'.$dev.$ga.' </div> ';
-                            break;
-                        case 1:
-                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-success font-16"> Publish</p>'.$dev.$ga.'</div>';
-                            break;
-                        case 2:
-                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-warning font-16"> Suppend</p>'.$dev.$ga.'</div>';
-                            break;
-                        case 3:
-                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-info font-16"> UnPublish</p>'.$dev.$ga.'</div>';
-                            break;
-                        case 4:
-                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-primary font-16"> Remove</p>'.$dev.$ga.'</div>';
-                            break;
-                        case 5:
-                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-dark font-16"> Reject</p>'.$dev.$ga.'</div>';
-                            break;
-                        case 6:
-                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-danger font-16"> Check</p>'.$dev.$ga.'</div>';
-                            break;
-                        case 7:
-                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-warning font-16"> Pending</p>'.$dev.$ga.'</div>';
-                            break;
-                        default:
-                            $status_app .=  '<div><img src="img/icon/'.$market->market_logo.'"> <p class="badge badge-secondary font-16"> Mặc định</p>'.$dev.$ga.'</div>';
-                            break;
-                    }
-
-
-
                     if($market->pivot->sdk){
                         $sdk .= ' <span class="badge badge-'.$badges[$key].'" style="font-size: 12px"> '.strtoupper($market->market_name[0]).': '.$market->pivot->sdk.' </span> ';
                     }
@@ -179,11 +113,52 @@ class Project_Controller extends Controller
                         $keystore .= ' <span class="badge badge-'.$badges[$key].'" style="font-size: 12px"> '.strtoupper($market->market_name[0]).': '.$market->pivot->keystore.' </span> ';
                     }
 
+                    $result .= '<img src="img/icon/'.$market->market_logo.'"> ';
 
-                    $statusaaa .= $status_app;
+                    $result .= $market->pivot->aab_link ? ' <a href="'.$market->pivot->aab_link.'"  target="_blank" class="badge badge-success">AAB</a> ' : ' <a class="badge badge-secondary">AAB</a> ' ;
 
+                    $result .= $market->pivot->apk_link ? ' <a href="'.$market->pivot->apk_link.'"  target="_blank" class="badge badge-success">APK</a> ' : ' <a class="badge badge-secondary">APK</a> ' ;
+                    $status = $market->pivot->status_app;
+                    switch ($status){
+                        case 1:
+                            $result .=  ' <p class="badge badge-success"> Publish</p> ';
+                            break;
+                        case 2:
+                            $result .=  ' <p class="badge badge-warning "> Suppend</p> ';
+                            break;
+                        case 3:
+                            $result .=  ' <p class="badge badge-info"> UnPublish ';
+                            break;
+                        case 4:
+                            $result .=  ' <p class="badge badge-primary"> Remove</p> ';
+                            break;
+                        case 5:
+                            $result .=  ' <p class="badge badge-dark"> Reject</p> ';
+                            break;
+                        case 6:
+                            $result .=  ' <p class="badge badge-danger"> Check</p> ';
+                            break;
+                        case 7:
+                            $result .=  ' <p class="badge badge-warning"> Pending</p> ';
+                            break;
+                        default:
+                            $result .=  ' <p class="badge badge-secondary"> Mặc định</p> ';
+                            break;
+                    }
+                    if($market->pivot->dev_id){
+                        $result .= ' <span class="badge badge-'.$badges[$key].'">'.$market->pivot->dev->dev_name.'</span> ';
+                        if ($market->pivot->dev->ga_id){
+                            $result .= ' <span class="badge badge-'.$badges[$key].'">'.$market->pivot->dev->ga->ga_name.'</span> ';
+                        }
+                    }
+                    $result .= '</div>';
                 }
+
+
             }
+
+
+
 
             $data_arr[] = array(
                 "projectid" => $record->projectid,
@@ -191,7 +166,7 @@ class Project_Controller extends Controller
                 "projectname"=>$project.$template.$mada.'<br>'.$record->title_app.'<br>'.$version.'<br>'.$sdk.'<br>'.$keystore,
                 "markets"=>$package,
 //                "status"=>'<div>'.@$download_apk.@$download_aab.$status_app.@$dev.@$ga .'</div>',
-                "status"=>$status_app,
+                "status"=>@$result,
                 "action"=> $btn,
             );
         }
