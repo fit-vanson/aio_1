@@ -127,7 +127,7 @@ class Project_Controller extends Controller
                             $result .=  ' <p class="badge badge-warning "> Suppend</p> ';
                             break;
                         case 3:
-                            $result .=  ' <p class="badge badge-info"> UnPublish ';
+                            $result .=  ' <p class="badge badge-info"> UnPublish</p> ';
                             break;
                         case 4:
                             $result .=  ' <p class="badge badge-primary"> Remove</p> ';

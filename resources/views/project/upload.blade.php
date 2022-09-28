@@ -214,8 +214,12 @@
                 var active = '';
                 var market = '';
                 $.each(data.lang, function (key, value) {
-                    if(value.lang_code == 'en'){
+
+                    console.log(value)
+                    if(value.id == 2){
                         active = 'active'
+                    }else {
+                        active ='';
                     }
 
                     tablist += '<li class="nav-item ">' +
