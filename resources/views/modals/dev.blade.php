@@ -13,7 +13,7 @@
                         <div  class="row">
                             <div class="form-group col-lg-6">
                                 <label for="name">Ga Name</label>
-                                <select class="form-control" id="ga_id" name="ga_id" required></select>
+                                <select class="form-control" id="ga_id" name="ga_id" ></select>
                             </div>
                             <div class="form-group col-lg-6">
                                 <label for="name">Market</label>
@@ -22,7 +22,7 @@
 
                             <div class="form-group col-lg-6">
                                 <label for="name">Dev Name  <span style="color: red">*</span></label>
-                                <input type="text" id="dev_name" name="dev_name" class="form-control" >
+                                <input type="text" id="dev_name" name="dev_name" class="form-control" required>
                             </div>
                             <div class="form-group col-lg-6">
                                 <label for="name">Store Name  <span style="color: red">*</span></label>
