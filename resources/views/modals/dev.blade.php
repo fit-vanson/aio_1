@@ -22,7 +22,7 @@
 
                             <div class="form-group col-lg-6">
                                 <label for="name">Dev Name  <span style="color: red">*</span></label>
-                                <input type="text" id="dev_name" name="dev_name" class="form-control" required>
+                                <input type="text" id="dev_name" name="dev_name" class="form-control" >
                             </div>
                             <div class="form-group col-lg-6">
                                 <label for="name">Store Name  <span style="color: red">*</span></label>

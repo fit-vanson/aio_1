@@ -174,7 +174,7 @@ class DevController extends Controller
         $message = [
             'dev_name.unique'=>'Dev name đã tồn tại',
             'store_name.unique'=>'Store name tồn tại',
-            'gmail_gadev_chinh.not_in'=>'Vui lòng chọn Email',
+
 
         ];
         $error = Validator::make($request->all(),$rules, $message );
