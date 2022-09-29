@@ -58,126 +58,68 @@ class CronProjectController extends Controller
         }
     }
     public function Chplay(){
-
-//        $appInfo = new GPlayApps();
-//        $gplay = new \Nelexa\GPlay\GPlayApps();
-//        $cache = new \Symfony\Component\Cache\Psr16Cache(
-//            new \Symfony\Component\Cache\Adapter\FilesystemAdapter()
-//        );
-//
-//        $gplay->setCache($cache, \DateInterval::createFromDateString('1 hour'));
-//        $gplay->setCacheTtl(\DateInterval::createFromDateString('1 hour'));
-//
-//        $existApp =  $gplay->existsApp('com.beautifulgirl.koreancelebritywallpapers');
-//        $appInfo = $gplay->getAppInfo('com.mojang.minecraftpe');
-        $gplay = new \Nelexa\GPlay\GPlayApps($defaultLocale = 'fr_CA', $defaultCountry = 'ca');
-        $appInfo = $gplay->getAppInfo('com.google.android.youtube');
-        dd($gplay);
+        $gplay = new \Nelexa\GPlay\GPlayApps();
 
 
+        if(\request()->pakage){
+            $appInfo = $gplay->getAppInfo(\request()->pakage);
+            dd($appInfo);
+        }else{
+            $time =  Setting::first();
+            $timeCron = Carbon::now()->subMinutes($time->time_cron)->setTimezone('Asia/Ho_Chi_Minh')->timestamp;
+            $appsChplay = MarketProject::where('market_id',1)
+                ->where('status_upload',3)
+                ->where('bot_time','<=',$timeCron)
+                ->limit($time->limit_cron)
+                ->get();
+            echo '<br/>' .'=========== Chplay ==============' ;
+            echo '<br/><b>'.'Yêu cầu:';
+            echo '<br/>&emsp;'.'- Project có package Chplay'.'</b><br/><br/>';
 
-        $time =  Setting::first();
-        $timeCron = Carbon::now()->subMinutes($time->time_cron)->setTimezone('Asia/Ho_Chi_Minh')->timestamp;
-        $appsChplay = MarketProject::where('market_id',1)
-           ->where('status_upload',3)
-           ->limit($time->limit_cron)
-           ->get();
+            if($appsChplay){
+                foreach ($appsChplay as $appChplay){
+                    $package = $appChplay->package;
+                    $existApp =  $gplay->existsApp($package);
+                    if($existApp){
+                        try {
+                            $appInfo = $gplay->getAppInfo($package);
+                            $data = [
+                                'installs' => $appInfo->getInstalls(),
+                                'numberVoters' => $appInfo->getNumberVoters(),
+                                'numberReviews' => $appInfo->getNumberReviews(),
+                                'score' => $appInfo->getScore(),
+                                'appVersion' => $appInfo->getAppVersion(),
+                                'privacyPoliceUrl' => $appInfo->getPrivacyPoliceUrl(),
+                                'released' => $appInfo->getReleased()->getTimestamp(),
+                                'updated' => $appInfo->getUpdated()->getTimestamp(),
+                            ];
+                            $appChplay->status_app = 1;
+                            $appChplay->policy_link = $appInfo->getPrivacyPoliceUrl();
+                            $appChplay->app_link = $appInfo->getUrl();
+                            $appChplay->bot = $data;
+                            $appChplay->bot_time = time();
+                            $appChplay->save();
+                        }catch (\Exception $exception) {
+                            Log::error('Message:' . $exception->getMessage() . '--- google appInfo : '.$appChplay->id.'---' . $exception->getLine());
+                        }
 
-
-
-
-
-        echo '<br/>' .'=========== Chplay ==============' ;
-        echo '<br/><b>'.'Yêu cầu:';
-        echo '<br/>&emsp;'.'- Project có package Chplay'.'</b><br/><br/>';
-
-       if($appsChplay){
-           foreach ($appsChplay as $appChplay){
-
-               $package = $appChplay->package;
-//               echo '<br/>'.'Dang chay:  '.  '-'. $appChplay->projectname .' - '. Carbon::now('Asia/Ho_Chi_Minh');
-//               $log_status =$appChplay->Chplay_status;
-//               if($appChplay->Chplay_bot != ''){
-//
-//                   @$log_status = json_decode($appChplay->Chplay_bot,true)['log_status'];
-//                   if(isset($log_status) && $log_status == $appChplay->Chplay_status){
-//                       $log_status = $log_status;
-//                   }else{
-//                       $log_status =  $appChplay->Chplay_status;
-//                   }
-//               }
-
-
-
-               $appInfo = new GPlayApps();
-//               $existApp =  $appInfo->existsApp($package);
-               $existApp =  $gplay->existsApp('com.adobe.reader');
-               dd($existApp);
-
-
-
-//               $existApp =  $appInfo->existsApp('com.hrowallprofr.superherowallpaper');
-               if($existApp){
-
-
-                   $status = 1;
-                   $data = ['log_status' => $appChplay->Chplay_status];
-
-
-
-                   try {
-                       $appInfo = $appInfo->getAppInfo($package);
-                       $data = [
-                           'installs' => $appInfo->getInstalls(),
-                           'numberVoters' => $appInfo->getNumberVoters(),
-                           'numberReviews' => $appInfo->getNumberReviews(),
-                           'score' => $appInfo->getScore(),
-                           'appVersion' => $appInfo->getAppVersion(),
-                           'privacyPoliceUrl' => $appInfo->getPrivacyPoliceUrl(),
-                           'released' => $appInfo->getReleased(),
-                           'updated' => $appInfo->getUpdated(),
-                           'bot_name_dev' => $appInfo->getDeveloper(),
-                           'logo' => $appInfo->getIcon()->getUrl(),
-                           'log_status'=>$log_status,
-                       ];
-                   }catch (\Exception $exception) {
-                       Log::error('Message:' . $exception->getMessage() . '--- google appInfo : '.$appChplay->projectid.'--'.$appChplay->projectname.'--' . $exception->getLine());
-                   }
-
-
-
-                   $data = json_encode($data);
-
-                   ProjectModel::updateOrCreate(
-                       [
-                           "projectid" => $appChplay->projectid,
-                       ],
-                       [
-                           "Chplay_status" => $status,
-                           "Chplay_bot" => $data,
-                           'bot_timecheck' => time(),
-                       ]
-                   );
-               }else{
-                   $status = 6;
-                   ProjectModel::updateOrCreate(
-                       [
-                           "projectid" => $appChplay->projectid,
-                       ],
-                       [
-                           "Chplay_status" => $status,
-                           'bot_timecheck' => time(),
-                       ]
-                   );
-               }
-               echo '<br/>'.'Dang chay:  '.  '-'. $appChplay->projectname .' - '. Carbon::now('Asia/Ho_Chi_Minh') .'----'.$status;
-           }
-       }
-       if(count($appsChplay)==0){
-            echo 'Chưa đến time cron'.PHP_EOL .'<br>';
-            return false;
+                    }else{
+                        $appChplay->status_app = 6;
+                        $appChplay->bot_time = time();
+                        $appChplay->save();
+                    }
+                    echo '<br/>'.'Dang chay:  '.  '-'. $appChplay->id .' - '. Carbon::now('Asia/Ho_Chi_Minh');
+                }
+            }
+            if(count($appsChplay)==0){
+                echo 'Chưa đến time cron'.PHP_EOL .'<br>';
+                return false;
+            }
         }
+
+
     }
+
 
     public function getPackage(Request $request)
     {
