@@ -368,15 +368,15 @@ class Project_Controller extends Controller
             if($value['package']){
                 $inset_market[$key] = [
                     'package' => $value['package'],
-                    'dev_id' => $value['dev_id']   ,
-                    'keystore' => $value['keystore'],
-                    'sdk' => $value['sdk'],
-                    'app_link' => $value['app_link'],
-                    'policy_link' => $value['policy_link'],
-                    'ads' => json_encode($value['ads']),
-                    'app_name_x' => $value['app_name_x'],
-                    'appID' => $value['appID'],
-                    'video_link' => $value['video_link'],
+                    'dev_id' => @$value['dev_id']   ,
+                    'keystore' => @$value['keystore'],
+                    'sdk' => @$value['sdk'],
+                    'app_link' => @$value['app_link'],
+                    'policy_link' => @$value['policy_link'],
+                    'ads' => json_encode(@$value['ads']),
+                    'app_name_x' => @$value['app_name_x'],
+                    'appID' => @$value['appID'],
+                    'video_link' => @$value['video_link'],
                 ];
             }
         }
