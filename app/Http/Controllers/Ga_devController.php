@@ -11,83 +11,77 @@ use Yajra\DataTables\Facades\DataTables;
 
 class Ga_devController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        $ga_dev = Ga_dev::latest('id')->get();
-        if ($request->ajax()) {
-            $data = Ga_dev::latest('id')->get();
-            return Datatables::of($data)
-                ->addIndexColumn()
-                ->addColumn('action', function($row){
-                    $btn = ' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$row->id.'" data-original-title="Edit" class="btn btn-warning btn-sm editGadev"><i class="ti-pencil-alt"></i></a>';
-                    $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$row->id.'" data-original-title="Delete" class="btn btn-danger btn-sm deleteGadev"><i class="ti-trash"></i></a>';
-                    return $btn;
-                })
-                ->addColumn('backup_code', function($row){
-                    if($row['bk_1'] !== Null){
-                        $bk_1 = "<i style='color:green;' class='ti-check-box h5'></i>";
-                    } else {
-                        $bk_1 = "<i style='color:red;' class='ti-close h5'></i>";
-                    }
+        $header = [
+            'title' => 'Quản lý GaDev',
 
-                    if($row['bk_2'] !== Null){
-                        $bk_2 = "<i style='color:green;' class='ti-check-box h5'></i>";
-                    } else {
-                        $bk_2 = "<i style='color:red;' class='ti-close h5'></i>";
-                    }
+            'button' => [
+                'Create'            => ['id'=>'createNewGadev','style'=>'primary'],
+            ]
 
-                    if($row['bk_3'] !== Null){
-                        $bk_3 = "<i style='color:green;' class='ti-check-box h5'></i>";
-                    } else {
-                        $bk_3 = "<i style='color:red;' class='ti-close h5'></i>";
-                    }
-                    if($row['bk_4'] !== Null){
-                        $bk_4 = "<i style='color:green;' class='ti-check-box h5'></i>";
-                    } else {
-                        $bk_4 = "<i style='color:red;' class='ti-close h5'></i>";
-                    }
-                    if($row['bk_5'] !== Null){
-                        $bk_5 = "<i style='color:green;' class='ti-check-box h5'></i>";
-                    } else {
-                        $bk_5 = "<i style='color:red;' class='ti-close h5'></i>";
-                    }
-                    if($row['bk_6'] !== Null){
-                        $bk_6 = "<i style='color:green;' class='ti-check-box h5'></i>";
-                    } else {
-                        $bk_6 = "<i style='color:red;' class='ti-close h5'></i>";
-                    }
-                    if($row['bk_7'] !== Null){
-                        $bk_7 = "<i style='color:green;' class='ti-check-box h5'></i>";
-                    } else {
-                        $bk_7 = "<i style='color:red;' class='ti-close h5'></i>";
-                    }
-                    if($row['bk_8'] !== Null){
-                        $bk_8 = "<i style='color:green;' class='ti-check-box h5'></i>";
-                    } else {
-                        $bk_8 = "<i style='color:red;' class='ti-close h5'></i>";
-                    }
-                    if($row['bk_9'] !== Null){
-                        $bk_9 = "<i style='color:green;' class='ti-check-box h5'></i>";
-                    } else {
-                        $bk_9 = "<i style='color:red;' class='ti-close h5'></i>";
-                    }
-                    if($row['bk_10'] !== Null){
-                        $bk_10 = "<i style='color:green;' class='ti-check-box h5'></i>";
-                    } else {
-                        $bk_10 = "<i style='color:red;' class='ti-close h5'></i>";
-                    }
-                    return $bk_1 .' '. $bk_2.' '. $bk_3.' '. $bk_4.' '. $bk_5.' '. $bk_6.' '. $bk_7.' '. $bk_8.' '. $bk_9.' '. $bk_10 ;
-                })
-                ->editColumn('note', function($data){
-                    if ($data->note !== null){
-                        return "<i style='color:green; ' class='ti-check-box h5'></i>";
-                    }
-                    return "<i style='color:red;' class='ti-close h5'></i>";
-                })
-                ->rawColumns(['action','backup_code','note'])
-                ->make(true);
+        ];
+        return view('gadev.index')->with(compact('header'));
+
+    }
+
+    public function getIndex(Request $request){
+        $draw = $request->get('draw');
+        $start = $request->get("start");
+        $rowperpage = $request->get("length"); // total number of rows per page
+
+        $columnIndex_arr = $request->get('order');
+        $columnName_arr = $request->get('columns');
+        $order_arr = $request->get('order');
+        $search_arr = $request->get('search');
+
+        $columnIndex = $columnIndex_arr[0]['column']; // Column index
+        $columnName = $columnName_arr[$columnIndex]['data']; // Column name
+        $columnSortOrder = $order_arr[0]['dir']; // asc or desc
+        $searchValue = $search_arr['value']; // Search value
+
+        // Total records
+        $totalRecords = Ga_dev::select('count(*) as allcount') ->count();
+        $totalRecordswithFilter = Ga_dev::select('count(*) as allcount')
+            ->Where('gmail','like', '%' .$searchValue. '%')
+            ->orWhere('mailrecovery','like', '%' .$searchValue. '%')
+            ->count();
+
+        // Get records, also we have included search filter as well
+        $records = Ga_dev::orderBy($columnName, $columnSortOrder)
+            ->Where('gmail','like', '%' .$searchValue. '%')
+            ->orWhere('mailrecovery','like', '%' .$searchValue. '%')
+            ->skip($start)
+            ->take($rowperpage)
+            ->get();
+        $data_arr = array();
+        foreach ($records as $record) {
+//            $btn = ' <a href="javascript:void(0)" onclick="editGadev('.$record->id.')" class="btn btn-warning"><i class="ti-pencil-alt"></i></a>';
+            $btn = ' <a href="javascript:void(0)"  data-id="'.$record->id.'"  class="btn btn-warning editGadev"><i class="ti-pencil-alt"></i></a>';
+            $btn = $btn.' <a href="javascript:void(0)"  data-id="'.$record->id.'"  class="btn btn-danger deleteGadev"><i class="ti-trash"></i></a>';
+
+
+
+
+            $data_arr[] = array(
+                "id" => $record->id,
+                "gmail" => $record->gmail,
+                "pass" => $record->pass,
+                "mailrecovery" => $record->mailrecovery,
+                "vpn_iplogin" => $record->vpn_iplogin,
+                "backupcode" => '<div class="truncate">'. $record->backupcode.'</div>',
+                "note" => $record->note,
+                "action"=> $btn,
+            );
         }
-        return view('gadev.index',compact('ga_dev'));
+        $response = array(
+            "draw" => intval($draw),
+            "iTotalRecords" => $totalRecords,
+            "iTotalDisplayRecords" => $totalRecordswithFilter,
+            "aaData" => $data_arr,
+        );
+
+        echo json_encode($response);
     }
 
     /**
@@ -115,6 +109,7 @@ class Ga_devController extends Controller
         $data['pass'] = $request->pass;
         $data['vpn_iplogin'] = $request->vpn_iplogin;
         $data['note'] = $request->note;
+        $data['backupcode'] = $request->backupcode;
         $data->save();
         $allGadev = Ga_dev::latest('id')->get();
         return response()->json([
@@ -186,6 +181,7 @@ class Ga_devController extends Controller
         $data->vpn_iplogin= $request->vpn_iplogin;
         $data->pass = $request->pass;
         $data->note= $request->note;
+        $data->backupcode= $request->backupcode;
         $data->save();
         return response()->json(['success'=>'Cập nhật thành công']);
     }

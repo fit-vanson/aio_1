@@ -2,117 +2,125 @@
 
 @section('css')
 
-    <link href="plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
-    <link href="plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css" />
-    <!-- Responsive datatable examples -->
-    <link href="plugins/datatables/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <!-- datatables css -->
+    <link href="{{ URL::asset('/assets/libs/rwd-table/rwd-table.min.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ URL::asset('/assets/libs/datatables/datatables.min.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ URL::asset('assets/libs/toastr/toastr.min.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ URL::asset('assets/libs/toastr/ext-component-toastr.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ URL::asset('assets/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css"/>
+
+    {{--    <link href="plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />--}}
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
 
+    <style>
+        table, td, th {
+            border: 1px solid #ddd;
+            text-align: left;
+        }
 
-    <!-- Sweet-Alert  -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
 
+        th, td {
+            padding: 15px;
+        }
 
-
+        th>.truncate, td>.truncate{
+            width: auto;
+            min-width: 0;
+            max-width: 200px;
+            display: inline-block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    </style>
 @endsection
 
 @section('breadcrumb')
-    <div class="col-sm-6">
-        <h4 class="page-title">Quản lý GaDev</h4>
-    </div>
-    <div class="col-sm-6">
-        <div class="float-right">
-            <a class="btn btn-success" href="javascript:void(0)" id="createNewGadev"> Create New</a>
-        </div>
-    </div>
-    @include('modals.gadev')
+
 @endsection
 @section('content')
-    <?php
-    $message =Session::get('message');
-    if($message){
-        echo  '<span class="splash-message" style="color:#2a75f3">'.$message.'</span>';
-        Session::put('message',null);
-    }
-    ?>
+
 
     <div class="row">
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
 
-                    <table class="table table-bordered dt-responsive nowrap data-table" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
-                        <thead>
-                        <tr>
-                            <th>STT</th>
-                            <th>Gmail</th>
-                            <th>Gmail Recover</th>
-                            <th>Pass</th>
-                            <th>VPN</th>
-                            <th>Backup Code</th>
-                            <th>Ghi chú</th>
-                            <th>Action</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
+
+                    <div class="table-rep-plugin" >
+                        <div class="table-responsive mb-0" data-pattern="priority-columns">
+                            <table id="gadevTable" class="table table-striped table-bordered dt-responsive data-table"
+                                   style="width: 100%;">
+                                <thead>
+                                <tr>
+                                    <th style="display: none" >ID</th>
+                                    <th style="width: 20%">Gmail</th>
+                                    <th style="width: 10%">Pass (DES Encrypt)</th>
+                                    <th style="width: 20%">Gmail Recover</th>
+                                    <th style="width: 10%">VPN</th>
+                                    <th style="width: 10%"><div class="truncate">Backup Code (DES Encrypt)</div></th>
+                                    <th style="width: 20%">Ghi chú</th>
+                                    <th style="width: 10%">Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div> <!-- end col -->
     </div> <!-- end row -->
+    @include('modals.gadev')
 @endsection
 @section('script')
-    <!-- Required datatable js -->
-    <script src="plugins/datatables/jquery.dataTables.min.js"></script>
-    <script src="plugins/datatables/dataTables.bootstrap4.min.js"></script>
-    <!-- Buttons examples -->
-    <script src="plugins/datatables/dataTables.buttons.min.js"></script>
-    <script src="plugins/datatables/buttons.bootstrap4.min.js"></script>
-    <script src="plugins/datatables/jszip.min.js"></script>
-    <script src="plugins/datatables/pdfmake.min.js"></script>
-    <script src="plugins/datatables/vfs_fonts.js"></script>
-    <script src="plugins/datatables/buttons.html5.min.js"></script>
-    <script src="plugins/datatables/buttons.print.min.js"></script>
-    <script src="plugins/datatables/buttons.colVis.min.js"></script>
-    <!-- Responsive examples -->
-    <script src="plugins/datatables/dataTables.responsive.min.js"></script>
-    <script src="plugins/datatables/responsive.bootstrap4.min.js"></script>
+    <!-- Plugins js -->
+    <script src="{{ URL::asset('/assets/libs/rwd-table/rwd-table.min.js') }}"></script>
+    <script src="{{ URL::asset('/assets/libs/datatables/datatables.min.js') }}"></script>
 
-    <!-- Datatable init js -->
-    <script src="assets/pages/datatables.init.js"></script>
-    <!-- Moment.js: -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
-    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/plug-ins/1.10.20/sorting/datetime-moment.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/plug-ins/1.11.3/pagination/input.js"></script>
+    <script src="{{ URL::asset('/assets/libs/toastr/toastr.min.js') }}"></script>
+    <script src="{{ URL::asset('/assets/libs/sweetalert2/sweetalert2.min.js') }}"></script>
+    <script src="{{ URL::asset('/assets/js/table.init.js') }}"></script>
+
+    {{--    <script src="plugins/select2/js/select2.min.js"></script>--}}
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script type="text/javascript">
         $(function () {
+            $('.table-responsive').responsiveTable({
+                // addDisplayAllBtn: 'btn btn-secondary'
+            });
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-            var table = $('.data-table').DataTable({
+            var table = $('#gadevTable').DataTable({
+                displayLength: 50,
+                lengthMenu: [5, 10, 25, 50, 75, 100],
                 processing: true,
-                pagingType: "input",
                 serverSide: true,
-                ajax: "{{ route('gadev.index') }}",
+                ajax: {
+                    url: "{{ route('gadev.getIndex') }}",
+                    type: "post"
+                },
                 columns: [
-                    { "data": null,"sortable": true,
-                        render: function (data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
-                        }
-                    },
-                    {data: 'gmail'},
-                    {data: 'mailrecovery'},
-                    {data: 'pass'},
-                    {data: 'vpn_iplogin'},
-                    {data: 'backup_code'},
+                    {data: 'id',visible: false},
+                    {data: 'gmail',className: "copyButton"},
+                    {data: 'pass',className: "copyButton"},
+                    {data: 'mailrecovery',className: "copyButton"},
+                    {data: 'vpn_iplogin',className: "copyButton"},
+                    {data: 'backupcode',className: "copyButton truncate"},
                     {data: 'note'},
                     {data: 'action',className: "text-center", name: 'action', orderable: false, searchable: false},
                 ],
-
+                order:[0,'desc'],
 
             });
 
@@ -192,6 +200,7 @@
                         $('#pass').val(data.pass);
                         $('#vpn_iplogin').val(data.vpn_iplogin);
                         $('#note').val(data.note);
+                        $('#backupcode').val(data.backupcode);
                     }
                 });
 
@@ -199,30 +208,45 @@
 
             $(document).on('click','.deleteGadev', function (data){
                 var gadev_id = $(this).data("id");
-
-                swal({
-                        title: "Bạn có chắc muốn xóa?",
-                        text: "Your will not be able to recover this imaginary file!",
-                        type: "warning",
-                        showCancelButton: true,
-                        confirmButtonClass: "btn-danger",
-                        confirmButtonText: "Xác nhận xóa!",
-                        closeOnConfirm: false
-                    },
-                    function(){
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: "You won't be able to revert this!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#02a499",
+                    cancelButtonColor: "#ec4561",
+                    confirmButtonText: "Yes, delete it!"
+                }).then(function (result) {
+                    if (result.value) {
                         $.ajax({
                             type: "get",
                             url: "{{ asset("ga_dev/delete") }}/" + gadev_id,
                             success: function (data) {
                                 table.draw();
+                                $.notify(data.success , "success");
                             },
                             error: function (data) {
                                 console.log('Error:', data);
                             }
                         });
-                        swal("Đã xóa!", "Your imaginary file has been deleted.", "success");
-                    });
+
+                    }
+                });
+
             });
+
+            $(document).on("click", ".copyButton", function(){
+                var $temp = $("<input>");
+                $("body").append($temp);
+                const regexForStripHTML = /<[^>]*>?/gm;
+                const text = $(this).html();
+                const stripContent = text.replaceAll(regexForStripHTML, '');
+                // $temp.val($(this).html()).select();
+                $temp.val(stripContent).select();
+                document.execCommand("copy");
+                $temp.remove();
+                $.notify('Copy success ', "success");
+            })
 
         });
     </script>

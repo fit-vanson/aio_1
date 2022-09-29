@@ -363,6 +363,7 @@ Route::group(['prefix'=>'build-preview','middleware'=>['CheckLogout','2fa']], fu
 
 Route::group(['prefix'=>'ga_dev','middleware'=>['CheckLogout','2fa']], function (){
     Route::get('/',[Ga_devController::class,'index'])->name('gadev.index')->middleware('can:gadev-index');
+    Route::post('/getIndex',[Ga_devController::class,'getIndex'])->name('gadev.getIndex')->middleware('can:gadev-index');
 
     Route::post('/create',[Ga_devController::class,'create'])->name('gadev.create')->middleware('can:gadev-add');
     Route::get('/edit/{id}',[Ga_devController::class,'edit'])->name('gadev.edit')->middleware('can:gadev-edit');

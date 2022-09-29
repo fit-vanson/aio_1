@@ -11,7 +11,8 @@ class Ga_dev extends Model
     use HasFactory;
     public $timestamps = false;
     protected $table = 'gmail_gadev';
-    protected $fillable = [
-        'gmail','mailrecovery','vpn_iplogin'
-    ];
+//    protected $fillable = [
+//        'gmail','mailrecovery','vpn_iplogin'
+//    ];
+    protected $guarded = [];
 }

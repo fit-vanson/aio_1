@@ -55,7 +55,7 @@ $markets = \App\Models\Markets::all();
 
 
                                                 </div>
-                                                <div class="form-group col-lg-4 input_title_app">
+                                                <div class="form-group col-lg-4 ">
                                                     <label for="name">Tiêu đề ứng dụng  </label>
                                                     <input type="text" id="title_app" name="title_app" class="form-control"/>
                                                 </div>

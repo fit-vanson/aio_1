@@ -156,7 +156,7 @@
             var hash = url.substring(url.indexOf('?')+1);
             $.fn.dataTable.ext.errMode = 'none';
             var table = $('#projectTable').DataTable({
-                displayLength: 2,
+                displayLength: 50,
                 lengthMenu: [5, 10, 25, 50, 75, 100],
                 // orderCellsTop: true,
                 // fixedHeader: true,
@@ -395,16 +395,32 @@
 
             $(document).on('click','.deleteProject', function (data){
                 var project_id = $(this).data("id");
-                $.ajax({
-                    type: "get",
-                    url: "{{ asset("project/delete") }}/" + project_id,
-                    success: function (data) {
-                        table.draw();
-                    },
-                    error: function (data) {
-                        console.log('Error:', data);
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: "You won't be able to revert this!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#02a499",
+                    cancelButtonColor: "#ec4561",
+                    confirmButtonText: "Yes, delete it!"
+                }).then(function (result) {
+                    if (result.value) {
+                        $.ajax({
+                            type: "get",
+                            url: "{{ asset("project/delete") }}/" + project_id,
+                            success: function (data) {
+                                table.draw();
+                                $.notify(data.success , "success");
+                            },
+                            error: function (data) {
+                                console.log('Error:', data);
+                            }
+                        });
+
                     }
                 });
+
+
             });
 
             $(document).on('click','.editProject', function (data){
