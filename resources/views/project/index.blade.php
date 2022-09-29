@@ -156,7 +156,7 @@
             var hash = url.substring(url.indexOf('?')+1);
             $.fn.dataTable.ext.errMode = 'none';
             var table = $('#projectTable').DataTable({
-                displayLength: 2,
+                displayLength: 50,
                 lengthMenu: [5, 10, 25, 50, 75, 100],
                 // orderCellsTop: true,
                 // fixedHeader: true,
