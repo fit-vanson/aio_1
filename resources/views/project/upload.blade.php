@@ -214,8 +214,6 @@
                 var active = '';
                 var market = '';
                 $.each(data.lang, function (key, value) {
-
-                    console.log(value)
                     if(value.id == 2){
                         active = 'active'
                     }else {

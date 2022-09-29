@@ -69,6 +69,7 @@
             $('.table-responsive').responsiveTable({
                 // addDisplayAllBtn: 'btn btn-secondary'
             });
+            $('.select2').select2();
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -155,7 +156,7 @@
             var hash = url.substring(url.indexOf('?')+1);
             $.fn.dataTable.ext.errMode = 'none';
             var table = $('#projectTable').DataTable({
-                displayLength: 50,
+                displayLength: 2,
                 lengthMenu: [5, 10, 25, 50, 75, 100],
                 // orderCellsTop: true,
                 // fixedHeader: true,
@@ -187,30 +188,42 @@
                 $('#project_id').val('');
                 $("#avatar").attr("src","img/logo.png");
                 $('#modelHeading').html("Thêm mới Project");
-                $('#ajaxModel').modal('show');
+                $('#ajaxModel').modal({});
+
+
                 $('.modal').on('hidden.bs.modal', function (e) {
                     $('body').addClass('modal-open');
+
                 });
-                $('#projectForm').trigger("reset");
-                $('#tab_home').addClass( 'active' );
-                $('#nav_link_home').addClass( 'active' );
-                $('#nav_link_home').prop('aria-selected', true);
+
+                $('#ajaxModel a').hide();
+                $('#ajaxModel a:first').show();
+                $('#ajaxModel a:first').tab('show');
+                $('#package_ads').hide();
+
+                // $('.tab-content').find('#' + ref).hide()
 
 
-                <?php
-                $markets = \App\Models\Markets::all();
-                foreach ($markets as $market){
-                ?>
-                    $('#nav_{{$market->market_name}}').hide()
-                    $('#package_{{$market->market_name}}').hide()
+                // $('#projectForm').trigger("reset");
+                // $('#tab_home').addClass( 'active' );
+                // $('#nav_link_home').addClass( 'active' );
+                // $('#nav_link_home').prop('aria-selected', true);
 
 
-                    $('#tab_{{$market->market_name}}').removeClass( 'active' );
-                    $('#collapse_{{$market->id}}').removeClass( 'show' );
+{{--                <?php--}}
+{{--                $markets = \App\Models\Markets::all();--}}
+{{--                foreach ($markets as $market){--}}
+{{--                ?>--}}
+{{--                    $('#nav_{{$market->market_name}}').hide()--}}
+{{--                    $('#package_{{$market->market_name}}').hide()--}}
 
-                <?php
-                }
-                ?>
+
+{{--                    $('#tab_{{$market->market_name}}').removeClass( 'active' );--}}
+{{--                    $('#collapse_{{$market->id}}').removeClass( 'show' );--}}
+
+{{--                <?php--}}
+{{--                }--}}
+{{--                ?>--}}
 
                 $('#template').val('');
                 $('#template').trigger('change.select2');
@@ -278,89 +291,119 @@
                 }
             });
 
-            $(document).on('change', '.choose_template', function () {
-                var _id = $(this).select2('data')[0].id;
-                $.get('{{asset('template/edit')}}/'+_id,function (data) {
-                    <?php
-                        $markets = \App\Models\Markets::all();
-                        foreach ($markets as $market){
-                    ?>
-                        if(data.{{ucfirst(strtolower($market->market_name))}}_category){
-                            $('#nav_{{$market->market_name}}').show();
-                            $('#package_{{$market->market_name}}').show();
-                            {{--$('#tab_{{$market->market_name}}').show()--}}
 
-                            $('#tab_{{$market->market_name}}').removeClass( 'active' );
-                            $('#collapse_{{$market->id}}').removeClass( 'show' );
 
-                            $('#{{$market->market_name}}_dev_id').select2(
-                                {
-                                    minimumInputLength: 2,
-                                    ajax: {
-                                        url: '{{route('api.getDev')}}',
-                                        dataType: 'json',
-                                        type: "GET",
-                                        // quietMillis: 50,
-                                        data: function(params) {
+            $(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
+                e.preventDefault();
+                var ref = $(this).attr('href').replace('#', '');
+                var project_id = $('#project_id').val();
+                var market_id = $(this).data('market_id');
+                var market_name = $(this).data('market_name');
+                var tabContent = $('.tab-content');
 
-                                            return {
-                                                q: params.term, // search term
-                                                dev_id: {{$market->id}},
-                                                page: params.page
-                                            };
-                                        },
-                                        processResults: function(data) {
-                                            return {
-                                                results: $.map(data, function (item) {
-                                                    return {
-                                                        text: item.name + ' : ' + item.store,
-                                                        id: item.id
-                                                    }
-                                                })
-                                            };
-                                        },
-                                        // cache: false
-                                    },
-                                }
-                            );
-                        $('#{{$market->market_name}}_keystore').select2(
-                            {
-                                minimumInputLength: 2,
-                                ajax: {
-                                    url: '{{route('api.getKeystore')}}',
-                                    dataType: 'json',
-                                    type: "GET",
-                                    // quietMillis: 50,
-                                    data: function(params) {
+                if (!$('#' + ref).length) {
+                    // Execute the AJAX here to get the tab content
+                    var html =
+                        '<div class="tab-pane p-3" id="' + ref + '" role="tabpanel">'+
+                            '<div  class="row">' +
+                                '<div class="form-group col-lg-6">' +
+                                    '<label for="name">Store Name ('+market_name+') </label>' +
+                                        '<select class="form-control select2" id="'+market_id+'_dev_id"  name="market['+market_id+'][dev_id]"></select>' +
+                                        // '<input class="form-control" id="'+market_name+'_dev_id"  name="market['+market_id+'][dev_id]"></input>' +
+                                '</div>' +
+                                '<div class="form-group col-lg-6">' +
+                                    '<label for="name">Keystore Profile</label>' +
+                                        '<select class="form-control select2" id="'+market_id+'_keystore" name="market['+market_id+'][keystore]"></select>' +
+                                '</div>' +
+                                '<div class="form-group col-lg-6">' +
+                                    '<label for="name">Link App</label>' +
+                                    '<input type="text" id="market_'+market_id+'_app_link" name="market['+market_id+'][app_link]" class="form-control" value="" >' +
+                                '</div>'+
+                                '<div class="form-group col-lg-6">' +
+                                    '<label for="name">Link Policy </label>' +
+                                    '<input type="text" id="market_'+market_id+'_policy_link" name="market['+market_id+'][policy_link]" class="form-control" >' +
+                                '</div>'+
+                                '<div class="form-group col-lg-6">' +
+                                    '<label for="name">AppID</label>' +
+                                    '<input type="text" id="market_'+market_id+'_app_id" name="market['+market_id+'][appID]" class="form-control" >' +
+                                '</div>'+
+                                    '<div class="form-group col-lg-6">' +
+                                    '<label for="name">App Name X</label>' +
+                                '<input type="text" id="market_'+market_id+'_app_name_x" name="market['+market_id+'][app_name_x]" class="form-control" >' +
+                                '</div>'+
+                                '<div class="form-group col-lg-6">' +
+                                    '<label for="name">SDK</label>' +
+                                    '<input type="text" id="market_'+market_id+'_sdk" name="market['+market_id+'][sdk]" class="form-control" >' +
+                                '</div>'+
+                                '<div class="form-group col-lg-6">' +
+                                    '<label for="name">Link Video</label>' +
+                                    '<input type="text" id="market_'+market_id+'_video_link" name="market['+market_id+'][video_link]" class="form-control" >' +
+                                '</div>'+
+                        '</div>';
+                    tabContent.append(html);
+                    getProjectMarket(project_id,market_id)
+
+
+
+
+                    $('#'+market_id+'_dev_id').select2({
+                        minimumInputLength: 2,
+                        ajax: {
+                            url: '{{route('api.getDev')}}',
+                            dataType: 'json',
+                            type: "GET",
+                            // quietMillis: 50,
+                            data: function(params) {
+
+                                return {
+                                    q: params.term, // search term
+                                    dev_id: market_id,
+                                    page: params.page
+                                };
+                            },
+                            processResults: function(data) {
+                                return {
+                                    results: $.map(data, function (item) {
                                         return {
-                                            q: params.term, // search term
-                                            page: params.page
-                                        };
-                                    },
-                                    processResults: function(data) {
+                                            text: item.name + ' : ' + item.store,
+                                            id: item.id
+                                        }
+                                    })
+                                };
+                            },
+                            // cache: false
+                        },
+                    });
+                    $('#'+market_id+'_keystore').select2({
+                        minimumInputLength: 2,
+                        ajax: {
+                            url: '{{route('api.getKeystore')}}',
+                            dataType: 'json',
+                            type: "GET",
+                            // quietMillis: 50,
+                            data: function(params) {
+                                return {
+                                    q: params.term, // search term
+                                    page: params.page
+                                };
+                            },
+                            processResults: function(data) {
+                                return {
+                                    results: $.map(data, function (item) {
                                         return {
-                                            results: $.map(data, function (item) {
-                                                return {
-                                                    text: item.name,
-                                                    id: item.name
-                                                }
-                                            })
-                                        };
-                                    },
-                                    // cache: false
-                                },
-                            }
-                        );
-                        }else {
-                            $('#nav_{{$market->market_name}}').hide()
-                            $('#package_{{$market->market_name}}').hide()
-                        }
-                    <?php
-                        }
-                    ?>
-                })
+                                            text: item.name,
+                                            id: item.name
+                                        }
+                                    })
+                                };
+                            },
 
-            });
+                        },
+                    });
+                }
+                tabContent.find('.tab-pane').hide();
+                tabContent.find('#' + ref).show();
+            })
 
             $(document).on('change', '.choose_da', function () {
                 var _text = $(this).select2('data')[0].text;
@@ -390,6 +433,191 @@
                     }
                 });
             });
+
+            $(document).on('click','.editProject', function (data){
+                var project_id = $(this).data("id");
+                $.get('{{asset('project/edit')}}/'+project_id,function (data) {
+
+                    $('#modelHeading').html("Edit Project " + data.projectname);
+                    $('#saveBtn').val("edit-project");
+                    $('#ajaxModel').modal('show');
+                    $('.modal').on('hidden.bs.modal', function (e) {
+                        $('body').addClass('modal-open');
+                    });
+                    $('#ajaxModel a:first').tab('show');
+                    $('#package_ads').show();
+
+                    $("#ma_da").select2("trigger", "select", {
+                        data: { id: data.ma_da,text: data.da.ma_da }
+                    });
+                    $("#ma_da").select2('enable', false);
+
+                    $("#template").select2("trigger", "select", {
+                        data: {
+                            id: data.template,
+                            text: data.ma_template.template,
+                            project: data.projectid,
+                        }
+                    });
+
+
+                    $('#project_id').val(data.projectid)
+                    $('#projectname').val(data.projectname)
+                    $('#title_app').val(data.title_app)
+                    $('#buildinfo_vernum').val(data.buildinfo_vernum)
+                    $('#buildinfo_verstr').val(data.buildinfo_verstr)
+                    $('#buildinfo_link_fanpage').val(data.buildinfo_link_fanpage)
+                    $('#buildinfo_api_key_x').val(data.buildinfo_api_key_x)
+                    $('#buildinfo_link_website').val(data.buildinfo_link_website)
+
+                    if(data.logo) {
+                        $("#avatar").attr("src","../storage/projects/"+data.da.ma_da+"/"+data.projectname+"/lg114.png");
+                    }else {
+                        $("#avatar").attr("src","img/logo.png");
+                    }
+                    if(data.data_onoff == 1){
+                        $("#data_online").prop('checked', true);
+                    }else if (data.data_onoff == 2){
+                        $("#data_offline").prop('checked', true);
+                    }else if (data.data_onoff == 3){
+                        $("#data_all").prop('checked', true);
+                    }
+
+
+                });
+            });
+
+
+            $('.choose_template').on('select2:selecting', function(e) {
+                var project_id = '';
+                var _id = e.params.args.data.id;
+                if(e.params.args.data.project){
+                    project_id = e.params.args.data.project;
+                }else {
+                    project_id = $('#project_id').val();
+                }
+                $.get('{{asset('template/edit')}}/'+_id,function (data) {
+                    var nav_market = '<li class="nav-item " role="presentation">'+
+                        '<a class="nav-link active" data-toggle="tab" href="#tab_home" role="tab" id="nav_link_home">'+
+                        ' <span class="d-none d-sm-block">Home</span>'+
+                        '</a></li>';
+                    var package_ads ='';
+                    $.each(data.markets, function (k,v){
+                        getProjectMarket(project_id,v.id)
+                        nav_market +=
+                            '<li class="nav-item" role="presentation">'+
+                            '<a class="nav-link " data-toggle="tab" data-market_id="'+v.id+'" data-market_name="'+v.market_name+'" href="#tab_'+v.market_name+'" role="tab" id="nav_'+v.market_name+'">'+
+                            '<span class="d-none d-sm-block">'+v.market_name+'</span>'+
+                            '</a>'+
+                            '</li>';
+
+                        package_ads +=
+                            '<div id="package_'+v.market_name+'">'+
+                            '<div class="form-group col-lg-12">'+
+                            '<h4 class="mt-0 header-title">Package '+v.market_name+'</h4>'+
+                            '<input type="text" id="market_'+v.id+'_package" name="market['+v.id+'][package]" class="form-control" value="" >'+
+                            '</div>'+
+                            '<div class="form-group col-lg-11" style="margin-left: auto;">'+
+                            '<div id="accordion_'+v.id+'">'+
+                            '<div class="card mb-0">'+
+                            '<div class="card-header" id="heading_'+v.id+'">'+
+                            '<a href="#collapse_'+v.id+'" class="text-dark collapsed" data-toggle="collapse" aria-expanded="false" aria-controls="collapse_'+v.id+'">ADS '+v.market_name+'</a>'+
+                            '</div>'+
+                            '<div id="collapse_'+v.id+'" class="collapse" aria-labelledby="heading_'+v.id+'" data-parent="#accordion_'+v.id+'" style="">'+
+                            '<div class="card-body">'+
+                            //sdadasdasdasd
+                            '<div class="row">'+
+
+                            '</div>'+
+                            '</div>'+
+                            '</div>'+
+                            '</div>'+
+                            '</div>'+
+                            '</div>'+
+                            '</div>';
+
+                    });
+
+
+                    $('#nav_tabs_market').html(nav_market);
+                    $('#package_ads').html(package_ads);
+                })
+
+
+
+            });
+
+            {{--$(document).on('click', '.choose_template', function () {--}}
+            {{--    var _id = $(this).select2('data')[0].id;--}}
+            {{--    var project_id = $('#project_id').val();--}}
+            {{--    // var project_id = $(this).data("id");--}}
+            {{--    console.log($(this))--}}
+            {{--    $('#package_ads').show();--}}
+            {{--    $.get('{{asset('template/edit')}}/'+_id+'?project_id='+project_id,function (data) {--}}
+            {{--        var nav_market = '<li class="nav-item " role="presentation">'+--}}
+            {{--            '<a class="nav-link active" data-toggle="tab" href="#tab_home" role="tab" id="nav_link_home">'+--}}
+            {{--            ' <span class="d-none d-sm-block">Home</span>'+--}}
+            {{--            '</a></li>';--}}
+            {{--        var package_ads ='';--}}
+            {{--        var project_markets = [];--}}
+
+            {{--        console.log(data)--}}
+
+
+
+            {{--        if(data.project   ){--}}
+            {{--            var project = data.project[0];--}}
+            {{--            $.each(project.markets ,function( index, value ) {--}}
+            {{--                project_markets[value.id] = value.pivot--}}
+            {{--            });--}}
+            {{--        }--}}
+
+
+            {{--        $.each(data.markets, function (k,v){--}}
+            {{--            var _package =  '';--}}
+            {{--            if(project_markets[v.id]){--}}
+            {{--                _package = project_markets[v.id].package;--}}
+            {{--            }--}}
+            {{--            nav_market +=--}}
+            {{--                '<li class="nav-item" role="presentation">'+--}}
+            {{--                '<a class="nav-link " data-toggle="tab" data-market_id="'+v.id+'" data-market_name="'+v.market_name+'" href="#tab_'+v.market_name+'" role="tab" id="nav_'+v.market_name+'">'+--}}
+            {{--                '<span class="d-none d-sm-block">'+v.market_name+'</span>'+--}}
+            {{--                '</a>'+--}}
+            {{--                '</li>';--}}
+
+            {{--            package_ads +=--}}
+            {{--                '<div id="package_'+v.market_name+'">'+--}}
+            {{--                    '<div class="form-group col-lg-12">'+--}}
+            {{--                        '<h4 class="mt-0 header-title">Package '+v.market_name+'</h4>'+--}}
+            {{--                        '<input type="text" id="market_'+v.id+'_package" name="market['+v.id+'][package]" class="form-control" value="'+_package+'" >'+--}}
+            {{--                    '</div>'+--}}
+            {{--                    '<div class="form-group col-lg-11" style="margin-left: auto;">'+--}}
+            {{--                        '<div id="accordion_'+v.id+'">'+--}}
+            {{--                            '<div class="card mb-0">'+--}}
+            {{--                                '<div class="card-header" id="heading_'+v.id+'">'+--}}
+            {{--                                    '<a href="#collapse_'+v.id+'" class="text-dark collapsed" data-toggle="collapse" aria-expanded="false" aria-controls="collapse_'+v.id+'">ADS '+v.market_name+'</a>'+--}}
+            {{--                                '</div>'+--}}
+            {{--                                '<div id="collapse_'+v.id+'" class="collapse" aria-labelledby="heading_'+v.id+'" data-parent="#accordion_'+v.id+'" style="">'+--}}
+            {{--                                    '<div class="card-body">'+--}}
+            {{--                        //sdadasdasdasd--}}
+            {{--                                        '<div class="row">'+--}}
+
+            {{--                                        '</div>'+--}}
+            {{--                                    '</div>'+--}}
+            {{--                                '</div>'+--}}
+            {{--                            '</div>'+--}}
+            {{--                        '</div>'+--}}
+            {{--                    '</div>'+--}}
+            {{--                '</div>';--}}
+
+            {{--        });--}}
+
+
+            {{--        $('#nav_tabs_market').html(nav_market);--}}
+            {{--        $('#package_ads').html(package_ads);--}}
+            {{--    })--}}
+
+            {{--});--}}
 
 
             $(document).on('click','.fakeProject', function (data){
@@ -561,7 +789,6 @@
                     type: "post",
                     dataType: 'json',
                     success: function (data) {
-                        console.log(data)
                         if(data.errors){
                             $.notify(data.errors, "error");
                         }
@@ -681,209 +908,225 @@
         });
 
 
-        function editProject(id) {
-            $.get('{{asset('project/edit')}}/'+id,function (data) {
+{{--        function editProject(id) {--}}
+{{--            $.get('{{asset('project/edit')}}/'+id,function (data) {--}}
 
-                $('#modelHeading').html("Edit Project " + data.projectname);
-                $('#saveBtn').val("edit-project");
-                $('#ajaxModel').modal('show');
-                $('.modal').on('hidden.bs.modal', function (e) {
-                    $('body').addClass('modal-open');
-                });
-                $("#ma_da").select2("trigger", "select", {
-                    data: { id: data.ma_da,text: data.da.ma_da }
-                });
-                $("#ma_da").select2('enable', false);
-                $("#project_da_name").val(data.da.ma_da);
-                $("#template").select2("trigger", "select", {
-                    data: { id: data.template,text: data.ma_template.template }
-                });
+{{--                $('#modelHeading').html("Edit Project " + data.projectname);--}}
+{{--                $('#saveBtn').val("edit-project");--}}
+{{--                $('#ajaxModel').modal('show');--}}
+{{--                $('.modal').on('hidden.bs.modal', function (e) {--}}
+{{--                    $('body').addClass('modal-open');--}}
+{{--                });--}}
+{{--                $("#ma_da").select2("trigger", "select", {--}}
+{{--                    data: { id: data.ma_da,text: data.da.ma_da }--}}
+{{--                });--}}
+{{--                $("#ma_da").select2('enable', false);--}}
+{{--                $("#project_da_name").val(data.da.ma_da);--}}
+{{--                $("#template").select2("trigger", "select", {--}}
+{{--                    data: { id: data.template,text: data.ma_template.template }--}}
+{{--                });--}}
 
-                $('#project_id').val(data.projectid)
-                $('#projectname').val(data.projectname)
-                $('#title_app').val(data.title_app)
-                $('#buildinfo_vernum').val(data.buildinfo_vernum)
-                $('#buildinfo_verstr').val(data.buildinfo_verstr)
-                $('#buildinfo_link_youtube_x').val(data.buildinfo_link_youtube_x)
-                $('#buildinfo_link_fanpage').val(data.buildinfo_link_fanpage)
-                $('#buildinfo_api_key_x').val(data.buildinfo_api_key_x)
-                $('#buildinfo_link_website').val(data.buildinfo_link_website)
+{{--                $('#project_id').val(data.projectid)--}}
+{{--                $('#projectname').val(data.projectname)--}}
+{{--                $('#title_app').val(data.title_app)--}}
+{{--                $('#buildinfo_vernum').val(data.buildinfo_vernum)--}}
+{{--                $('#buildinfo_verstr').val(data.buildinfo_verstr)--}}
+{{--                $('#buildinfo_link_youtube_x').val(data.buildinfo_link_youtube_x)--}}
+{{--                $('#buildinfo_link_fanpage').val(data.buildinfo_link_fanpage)--}}
+{{--                $('#buildinfo_api_key_x').val(data.buildinfo_api_key_x)--}}
+{{--                $('#buildinfo_link_website').val(data.buildinfo_link_website)--}}
 
-
-                $('#tab_home').addClass( 'active' );
-                $('#nav_link_home').addClass( 'active' );
-                $('#nav_link_home').prop('aria-selected', true);
+{{--                $('#ajaxModel a:first').tab('show');--}}
 
 
 
+{{--                if(data.logo) {--}}
+{{--                    $("#avatar").attr("src","../storage/projects/"+data.da.ma_da+"/"+data.projectname+"/lg114.png");--}}
+{{--                }else {--}}
+{{--                    $("#avatar").attr("src","img/logo.png");--}}
+{{--                }--}}
+{{--                if(data.data_onoff == 1){--}}
+{{--                    $("#data_online").prop('checked', true);--}}
+{{--                }else if (data.data_onoff == 2){--}}
+{{--                    $("#data_offline").prop('checked', true);--}}
+{{--                }else if (data.data_onoff == 3){--}}
+{{--                    $("#data_all").prop('checked', true);--}}
+{{--                }--}}
 
-                if(data.logo) {
-                    $("#avatar").attr("src","../storage/projects/"+data.da.ma_da+"/"+data.projectname+"/lg114.png");
-                }else {
-                    $("#avatar").attr("src","img/logo.png");
-                }
-                if(data.data_onoff == 1){
-                    $("#data_online").prop('checked', true);
-                }else if (data.data_onoff == 2){
-                    $("#data_offline").prop('checked', true);
-                }else if (data.data_onoff == 3){
-                    $("#data_all").prop('checked', true);
-                }
-
-
-
+{{--                $('#market_1_package').val('sssssssssssssssssssssssssssssss')--}}
 
 
 
-                var markets = [];
-                $.each(data.markets ,function( index, value ) {
-                    markets[value.pivot.market_id] = value.pivot;
-                });
+{{--                var markets = [];--}}
+{{--                $.each(data.markets ,function( index, value ) {--}}
 
-
-
-                <?php
-                    $markets = \App\Models\Markets::all();
-                    foreach ($markets as $market){
-                    ?>
-
-                $('#nav_{{$market->market_name}}').hide();
-                $('#package_{{$market->market_name}}').hide();
-
-                $('#tab_{{$market->market_name}}').removeClass( 'active' );
-                $('#nav_{{$market->market_name}}').removeClass( 'active' );
-                $('#collapse_{{$market->id}}').removeClass( 'show' );
+                    // $('#market_'+value.id+'_package').val('sssssssssssssssssssssssssssssss')
+                    // $('#market_'+value.id+'_app_link').val(value.pivot.app_link)
+                    // $('#market_'+value.id+'_policy_link').val(value.pivot.policy_link)
+                    // $('#market_'+value.id+'_app_id').val(value.pivot.appID)
+                    // $('#market_'+value.id+'_app_name_x').val(value.pivot.app_name_x)
+                    // $('#market_'+value.id+'_sdk').val(value.pivot.sdk)
+                    // $('#market_'+value.id+'_video_link').val(value.pivot.video_link)
 
 
 
 
-                {{--if(data.ma_template.{{ucfirst(strtolower($market->market_name))}}_category){--}}
-                {{--    $('#nav_{{$market->market_name}}').show();--}}
-                {{--    $('#package_{{$market->market_name}}').show();--}}
-                {{--    $('#tab_{{$market->market_name}}').removeClass( 'active' );--}}
-                {{--    $('#nav_{{$market->market_name}}').removeClass( 'active' );--}}
-                {{--    --}}{{--$('#tab_{{$market->market_name}}').show()--}}
-
-                    $('#{{$market->market_name}}_dev_id').select2(
-                        {
-                            minimumInputLength: 2,
-                            placeholder: "Search for ...",
-                            ajax: {
-                                url: '{{route('api.getDev')}}',
-                                dataType: 'json',
-                                type: "GET",
-                                // quietMillis: 50,
-                                data: function(params) {
-
-                                    return {
-                                        q: params.term, // search term
-                                        dev_id: {{$market->id}},
-                                        page: params.page
-                                    };
-                                },
-                                processResults: function(data) {
-                                    return {
-                                        results: $.map(data, function (item) {
-                                            return {
-                                                text: item.name + ' : ' + item.store,
-                                                id: item.id
-                                            }
-                                        })
-                                    };
-                                },
-                                // cache: false
-                            },
-                            initSelection : function (element, callback) {
-                                var data = [];
-                                $(element.val()).each(function () {
-                                    data.push({id: this, text: this});
-                                });
-                                callback(data);
-                            }
-                        }
-                    );
-
-                    $('#{{$market->market_name}}_keystore').select2(
-                        {
-                            minimumInputLength: 2,
-                            placeholder: "Search for ...",
-                            {{--placeholder: markets[{{$market->id}}] ? markets[{{$market->id}}].keystore : '',--}}
-                            ajax: {
-                                url: '{{route('api.getKeystore')}}',
-                                dataType: 'json',
-                                type: "GET",
-                                // quietMillis: 50,
-                                data: function(params) {
-                                    return {
-                                        q: params.term, // search term
-                                        page: params.page
-                                    };
-                                },
-                                processResults: function(data) {
-                                    return {
-                                        results: $.map(data, function (item) {
-                                            return {
-                                                text: item.name,
-                                                id: item.name
-                                            }
-                                        })
-                                    };
-                                },
-                                // cache: false
-                            },
-                            initSelection : function (element, callback) {
-                                var data = [];
-                                $(element.val()).each(function () {
-                                    data.push({id: this, text: this});
-                                });
-                                callback(data);
-                            }
-                        }
-                    );
-
-                    {{--$("#{{$market->market_name}}_dev_id").select2("trigger", "select", {--}}
-                    {{--    data: { id: data.ma_da,text: data.da.ma_da }--}}
-                    {{--});--}}
-
-                    $("#{{$market->market_name}}_keystore").select2("trigger", "select", {
-                        data: { id: markets[{{$market->id}}] ? markets[{{$market->id}}].keystore:"",text: markets[{{$market->id}}] ? markets[{{$market->id}}].keystore:"" }
-                    });
+{{--                    --}}{{--$('#_market_'+value.id+'_dev_id').val(markets[{{$market->id}}].dev_id)--}}
+{{--                    --}}{{--$('#_market_'+value.id+'_keystore').val(markets[{{$market->id}}].keystore)--}}
 
 
 
-                    if ((markets[{{$market->id}}])){
-                        $('#market_{{$market->id}}_package').val(markets[{{$market->id}}].package)
-                        $('#market_{{$market->id}}_app_link').val(markets[{{$market->id}}].app_link)
-                        $('#market_{{$market->id}}_policy_link').val(markets[{{$market->id}}].policy_link)
-                        $('#market_{{$market->id}}_app_id').val(markets[{{$market->id}}].appID)
-                        $('#market_{{$market->id}}_app_name_x').val(markets[{{$market->id}}].app_name_x)
-                        $('#market_{{$market->id}}_sdk').val(markets[{{$market->id}}].sdk)
-                        $('#market_{{$market->id}}_video_link').val(markets[{{$market->id}}].video_link)
-                        $('#_market_{{$market->id}}_dev_id').val(markets[{{$market->id}}].dev_id)
-                        $('#_market_{{$market->id}}_keystore').val(markets[{{$market->id}}].keystore)
-
-                        var ads = markets[{{$market->id}}].ads;
-                        var result = JSON.parse(ads)
-
-                        $.each(result ,function( index, value ) {
-                            $('#market_{{$market->id}}_'+index).val(value)
-                        });
-                    }
-                {{--}else {--}}
-                {{--    $('#nav_{{$market->market_name}}').hide()--}}
-                {{--    $('#package_{{$market->market_name}}').hide()--}}
-                {{--}--}}
-                <?php
-                }
-                ?>
+{{--                    // markets[value.pivot.market_id] = value.pivot;--}}
+{{--                });--}}
 
 
-                $.each(data.ma_template.markets ,function( index, value ) {
-                    $('#nav_'+value.market_name).show();
-                    $('#package_'+value.market_name).show();
-                });
-            });
-        }
+
+
+
+
+
+{{--                <?php--}}
+{{--                    $markets = \App\Models\Markets::all();--}}
+{{--                    foreach ($markets as $market){--}}
+{{--                    ?>--}}
+
+{{--                $('#nav_{{$market->market_name}}').hide();--}}
+{{--                $('#package_{{$market->market_name}}').hide();--}}
+
+{{--                $('#tab_{{$market->market_name}}').removeClass( 'active' );--}}
+{{--                $('#nav_{{$market->market_name}}').removeClass( 'active' );--}}
+{{--                $('#collapse_{{$market->id}}').removeClass( 'show' );--}}
+
+
+
+
+{{--                --}}{{----}}{{--if(data.ma_template.{{ucfirst(strtolower($market->market_name))}}_category){--}}
+{{--                --}}{{----}}{{--    $('#nav_{{$market->market_name}}').show();--}}
+{{--                --}}{{----}}{{--    $('#package_{{$market->market_name}}').show();--}}
+{{--                --}}{{----}}{{--    $('#tab_{{$market->market_name}}').removeClass( 'active' );--}}
+{{--                --}}{{----}}{{--    $('#nav_{{$market->market_name}}').removeClass( 'active' );--}}
+{{--                --}}{{----}}{{--    --}}{{----}}{{----}}{{----}}{{--$('#tab_{{$market->market_name}}').show()--}}
+
+{{--                    $('#{{$market->market_name}}_dev_id').select2(--}}
+{{--                        {--}}
+{{--                            minimumInputLength: 2,--}}
+{{--                            placeholder: "Search for ...",--}}
+{{--                            ajax: {--}}
+{{--                                url: '{{route('api.getDev')}}',--}}
+{{--                                dataType: 'json',--}}
+{{--                                type: "GET",--}}
+{{--                                // quietMillis: 50,--}}
+{{--                                data: function(params) {--}}
+
+{{--                                    return {--}}
+{{--                                        q: params.term, // search term--}}
+{{--                                        dev_id: {{$market->id}},--}}
+{{--                                        page: params.page--}}
+{{--                                    };--}}
+{{--                                },--}}
+{{--                                processResults: function(data) {--}}
+{{--                                    return {--}}
+{{--                                        results: $.map(data, function (item) {--}}
+{{--                                            return {--}}
+{{--                                                text: item.name + ' : ' + item.store,--}}
+{{--                                                id: item.id--}}
+{{--                                            }--}}
+{{--                                        })--}}
+{{--                                    };--}}
+{{--                                },--}}
+{{--                                // cache: false--}}
+{{--                            },--}}
+{{--                            initSelection : function (element, callback) {--}}
+{{--                                var data = [];--}}
+{{--                                $(element.val()).each(function () {--}}
+{{--                                    data.push({id: this, text: this});--}}
+{{--                                });--}}
+{{--                                callback(data);--}}
+{{--                            }--}}
+{{--                        }--}}
+{{--                    );--}}
+
+{{--                    $('#{{$market->market_name}}_keystore').select2(--}}
+{{--                        {--}}
+{{--                            minimumInputLength: 2,--}}
+{{--                            placeholder: "Search for ...",--}}
+{{--                            --}}{{----}}{{--placeholder: markets[{{$market->id}}] ? markets[{{$market->id}}].keystore : '',--}}
+{{--                            ajax: {--}}
+{{--                                url: '{{route('api.getKeystore')}}',--}}
+{{--                                dataType: 'json',--}}
+{{--                                type: "GET",--}}
+{{--                                // quietMillis: 50,--}}
+{{--                                data: function(params) {--}}
+{{--                                    return {--}}
+{{--                                        q: params.term, // search term--}}
+{{--                                        page: params.page--}}
+{{--                                    };--}}
+{{--                                },--}}
+{{--                                processResults: function(data) {--}}
+{{--                                    return {--}}
+{{--                                        results: $.map(data, function (item) {--}}
+{{--                                            return {--}}
+{{--                                                text: item.name,--}}
+{{--                                                id: item.name--}}
+{{--                                            }--}}
+{{--                                        })--}}
+{{--                                    };--}}
+{{--                                },--}}
+{{--                                // cache: false--}}
+{{--                            },--}}
+{{--                            initSelection : function (element, callback) {--}}
+{{--                                var data = [];--}}
+{{--                                $(element.val()).each(function () {--}}
+{{--                                    data.push({id: this, text: this});--}}
+{{--                                });--}}
+{{--                                callback(data);--}}
+{{--                            }--}}
+{{--                        }--}}
+{{--                    );--}}
+
+{{--                    --}}{{----}}{{--$("#{{$market->market_name}}_dev_id").select2("trigger", "select", {--}}
+{{--                    --}}{{----}}{{--    data: { id: data.ma_da,text: data.da.ma_da }--}}
+{{--                    --}}{{----}}{{--});--}}
+
+{{--                    $("#{{$market->market_name}}_keystore").select2("trigger", "select", {--}}
+{{--                        data: { id: markets[{{$market->id}}] ? markets[{{$market->id}}].keystore:"",text: markets[{{$market->id}}] ? markets[{{$market->id}}].keystore:"" }--}}
+{{--                    });--}}
+
+
+
+{{--                    if ((markets[{{$market->id}}])){--}}
+{{--                        $('#market_{{$market->id}}_package').val(markets[{{$market->id}}].package)--}}
+{{--                        $('#market_{{$market->id}}_app_link').val(markets[{{$market->id}}].app_link)--}}
+{{--                        $('#market_{{$market->id}}_policy_link').val(markets[{{$market->id}}].policy_link)--}}
+{{--                        $('#market_{{$market->id}}_app_id').val(markets[{{$market->id}}].appID)--}}
+{{--                        $('#market_{{$market->id}}_app_name_x').val(markets[{{$market->id}}].app_name_x)--}}
+{{--                        $('#market_{{$market->id}}_sdk').val(markets[{{$market->id}}].sdk)--}}
+{{--                        $('#market_{{$market->id}}_video_link').val(markets[{{$market->id}}].video_link)--}}
+{{--                        $('#_market_{{$market->id}}_dev_id').val(markets[{{$market->id}}].dev_id)--}}
+{{--                        $('#_market_{{$market->id}}_keystore').val(markets[{{$market->id}}].keystore)--}}
+
+{{--                        var ads = markets[{{$market->id}}].ads;--}}
+{{--                        var result = JSON.parse(ads)--}}
+
+{{--                        $.each(result ,function( index, value ) {--}}
+{{--                            $('#market_{{$market->id}}_'+index).val(value)--}}
+{{--                        });--}}
+{{--                    }--}}
+{{--                --}}{{----}}{{--}else {--}}
+{{--                --}}{{----}}{{--    $('#nav_{{$market->market_name}}').hide()--}}
+{{--                --}}{{----}}{{--    $('#package_{{$market->market_name}}').hide()--}}
+{{--                --}}{{----}}{{--}--}}
+{{--                <?php--}}
+{{--                }--}}
+{{--                ?>--}}
+
+
+                // $.each(data.ma_template.markets ,function( index, value ) {
+                //     $('#nav_'+value.market_name).show();
+                //     $('#package_'+value.market_name).show();
+                // });
+{{--            });--}}
+{{--        }--}}
 
         function getIndex(item){
             let index = $(item).val();
@@ -901,6 +1144,36 @@
                         text += element.projectname + " | " + element.buildinfo_vernum + " | " + element.buildinfo_verstr +"\n";
                     });
                     $("textarea#buildinfo_vernum").html(text)
+                },
+            });
+        }
+
+
+        function getProjectMarket(projectID,marketID){
+            $.ajax({
+                type: 'get',
+                url: '{{asset('api/getProject')}}?projectID='+projectID+'&marketID='+marketID,
+                success: function (data) {
+                    $('#market_'+marketID+'_package').val(data.package)
+                    $('#market_'+marketID+'_app_link').val(data.app_link)
+                    $('#market_'+marketID+'_policy_link').val(data.policy_link)
+                    $('#market_'+marketID+'_app_id').val(data.appID)
+                    $('#market_'+marketID+'_app_name_x').val(data.app_name_x)
+                    $('#market_'+marketID+'_sdk').val(data.sdk)
+                    $('#market_'+marketID+'_video_link').val(data.video_link)
+
+                    $('#'+marketID+'_dev_id').select2("trigger", "select", {
+                        data: {
+                            id: data.dev_id,
+                            text: data.dev_id ? data.dev.dev_name + ': ' + data.dev.store_name : ''
+                        }
+                    });
+                    $('#'+marketID+'_keystore').select2("trigger", "select", {
+                        data: {
+                            id: data.keystore,
+                            text: data.keystore
+                        }
+                    });
                 },
             });
         }

@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Validator;
 use Intervention\Image\Facades\Image;
 use ZipArchive;
 use File;
+use function React\Promise\all;
 
 class Project_Controller extends Controller
 {
@@ -63,7 +64,8 @@ class Project_Controller extends Controller
             ->get();
         $data_arr = array();
         foreach ($records as $record) {
-            $btn = ' <a href="javascript:void(0)" onclick="editProject('.$record->projectid.')" class="btn btn-warning"><i class="ti-pencil-alt"></i></a>';
+//            $btn = ' <a href="javascript:void(0)" onclick="editProject('.$record->projectid.')" class="btn btn-warning"><i class="ti-pencil-alt"></i></a>';
+            $btn = ' <a href="javascript:void(0)" data-id="'.$record->projectid.'" class="btn btn-warning editProject"><i class="ti-pencil-alt"></i></a>';
             $btn .= ' <a href="'.route('project.show',['id'=>$record->projectid]).'" target="_blank"  class="btn btn-secondary"><i class="ti-eye"></i></a>';
             if($record->buildinfo_console == 0){
                 $btn = $btn. ' <br><br>  <a href="javascript:void(0)" onclick="quickEditProject('.$record->projectid.')" class="btn btn-success"><i class="mdi mdi-android-head"></i></a>';
@@ -283,7 +285,6 @@ class Project_Controller extends Controller
     }
 
     public function update(Request $request){
-
         $id = $request->project_id;
         $rules = [
             'projectname' =>'unique:ngocphandang_project,projectname,'.$id.',projectid',
@@ -431,6 +432,7 @@ class Project_Controller extends Controller
     public function updateConsole(Request $request){
         $console = $request->buildinfo_console;
 
+
         switch ($console){
             case '0':
                 $project = Project::findorFail($request->projectID)->update([
@@ -467,7 +469,6 @@ class Project_Controller extends Controller
     public function updateMultiple(Request $request){
 
         $data = explode("\r\n",$request->changeMultiple);
-
         $markets = Markets::all()->pluck('id')->toArray();
         $action = $request->action;
 
@@ -477,22 +478,15 @@ class Project_Controller extends Controller
                 MarketProject::whereIN('project_id',$projects)
                     ->whereIn('market_id',$request->market_upload)
                     ->get();
-
             foreach ($projects_market as $project){
                 $status = $project->status_upload;
                 switch ($status){
                     case 0:
                         $status = 1;
                         break;
-//                    case 1:
-//                        $status_change = 1;
-//                        break;
                     case 2:
                         $status = 2;
                         break;
-//                    case 3:
-//                        $status_change = 2;
-//                        break;
                 }
                 $project->status_upload = $status;
                 $project->save();
@@ -500,63 +494,32 @@ class Project_Controller extends Controller
 
         }else{
             foreach ($data as $item){
-
                 try {
-
+                    [$ID_Project, $Key_C, $Key_A, $Key_S, $Key_X, $Key_O, $Key_V, $Key_H ] = explode("|",$item);
+                    $keystore = [
+                        $Key_C, $Key_A, $Key_S, $Key_X, $Key_O, $Key_V, $Key_H
+                    ];
+                    $markets_keystore = array_combine($markets, $keystore);
+                    $project = Project::where('projectname',trim($ID_Project))->firstorfail();
                     switch ($action){
                         case 'keystore':
-                            [$ID_Project, $Key_C, $Key_A, $Key_S, $Key_X, $Key_O, $Key_V, $Key_H ] = explode("|",$item);
-                            $store = [
-                                $Key_C, $Key_A, $Key_S, $Key_X, $Key_O, $Key_V, $Key_H
-                            ];
-                            $insert = [];
-                            $project = Project::where('projectname',trim($ID_Project))->firstorfail()->load('markets');
-                            foreach ($markets as $key=>$market){
-                                $insert[$market] = ['keystore'=>$store[$key]];
+                            foreach ($markets_keystore as $key=>$market_keystore){
+                                MarketProject::where('project_id',$project->projectid)
+                                    ->where('market_id',$key)
+                                    ->update(['keystore'=>trim($market_keystore)]);
+                                Keystore::updateorcreate([
+                                    'name_keystore' => trim($market_keystore)
+                                ]);
                             }
-
-                            $project->markets()->sync($insert);
-
-                            Keystore::updateorcreate([
-                                'name_keystore' => $Key_C
-                            ]);
-                            Keystore::updateorcreate([
-                                'name_keystore' => $Key_A
-                            ]);
-                            Keystore::updateorcreate([
-                                'name_keystore' => $Key_S
-                            ]);
-                            Keystore::updateorcreate([
-                                'name_keystore' => $Key_X
-                            ]);
-                            Keystore::updateorcreate([
-                                'name_keystore' => $Key_O
-                            ]);
-                            Keystore::updateorcreate([
-                                'name_keystore' => $Key_V
-                            ]);
-                            Keystore::updateorcreate([
-                                'name_keystore' => $Key_H
-                            ]);
                             break;
                         case 'sdk':
-                            [$ID_Project, $Key_C, $Key_A, $Key_S, $Key_X, $Key_O, $Key_V, $Key_H ] = explode("|",$item);
-                            $store = [
-                                $Key_C, $Key_A, $Key_S, $Key_X, $Key_O, $Key_V, $Key_H
-                            ];
-                            $insert = [];
-                            $project = Project::where('projectname',trim($ID_Project))->firstorfail()->load('markets');
-                            foreach ($markets as $key=>$market){
-                                $insert[$market] = ['sdk'=>$store[$key]];
+                            foreach ($markets_keystore as $key=>$market_keystore){
+                                MarketProject::where('project_id',$project->projectid)
+                                    ->where('market_id',$key)
+                                    ->update(['sdk'=>trim($market_keystore)]);
                             }
-                            $project->markets()->sync($insert);
                             break;
-                        case 'upload_status':
-
-                            $project = Project::where('projectname',trim($item))->firstorfail()->load('markets');
-                            dd($project);
                     }
-
 
                 }catch (\Exception $exception) {
                     \Illuminate\Support\Facades\Log::error('Message:' . $exception->getMessage() . '--- chang key : ' . $exception->getLine());
@@ -570,30 +533,20 @@ class Project_Controller extends Controller
 
     public function updateDevStatus(Request $request){
         $data = explode("\r\n",$request->project_data);
-        $project = Project::whereIN('projectname',$data)->get();
-        foreach ($project as $item){
-
-            $data_item = [];
-            foreach ($item->markets as $target) {
-                $data_item[$target->pivot->market_id] =
-                    [
-                        'dev_id'=>$target->pivot->dev_id,
-                        'status_app'=>$target->pivot->status_app
-                    ];
+        $markets = $request->market;
+        $projects = Project::whereIN('projectname',$data)->get();
+        foreach ($projects as $project){
+            foreach ($markets as $key=>$market){
+                $market_project =  MarketProject::where('project_id',$project->projectid)
+                    ->where('market_id',$key)->first();
+                if($market_project){
+                    $market_project->dev_id = $market['dev_id'] == 0 ? $market_project->dev_id : $market['dev_id'];
+                    $market_project->status_app = $market['status_app'] == 0 ? $market_project->status_app : $market['status_app'];
+                    $market_project->save();
+                }
             }
-            $inset_market = [];
-
-            foreach ($data_item as $key=>$value){
-                $inset_market[$key] = [
-                    'dev_id' => $request->market[$key]['dev_id'] == 0  ? $value['dev_id']  :   $request->market[$key]['dev_id'] ,
-                    'status_app' => $request->market[$key]['status_app'] == 0 ? $value['status_app'] : $request->market[$key]['status_app'],
-                ];
-            }
-
-            $item->markets()->sync($inset_market);
         }
         return response()->json(['success'=>'Cập nhật thành công ']);
-
     }
 
     public function process()

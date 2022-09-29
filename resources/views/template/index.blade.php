@@ -239,6 +239,7 @@
 <script>
     function editTemplate(id) {
         $.get('{{asset('template/edit')}}/'+id,function (data) {
+            console.log(data)
 
 
 
@@ -360,8 +361,8 @@
             $('#package').val(data.package);
             $('#convert_aab').val(data.convert_aab);
             $('#startus').val(data.startus);
-            $.each(data.markets, function (k,v){
-                $('#category_'+v.id).val(v.pivot.value);
+            $.each(data.category, function (k,v){
+                $('#category_'+v.market_id).val(v.value);
             });
 
             $('#modelHeading').html("Edit");

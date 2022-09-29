@@ -15,13 +15,31 @@ use App\Models\Ga;
 use App\Models\Ga_dev;
 use App\Models\Keystore;
 use App\Models\Market_dev;
+use App\Models\MarketProject;
 use App\Models\Markets;
 use App\Models\ProfileV2;
+use App\Models\Project;
 use App\Models\Template;
 use Illuminate\Http\Request;
 
 class ApiController extends Controller
 {
+
+
+    public function getProject(){
+        if(\request()->projectID){
+            if (\request()->marketID){
+                $project = MarketProject::with('dev')->where('project_id',\request()->projectID)->where('market_id',\request()->marketID)->first();
+            }else{
+                $project = Project::with('markets')->find(\request()->projectID);
+            }
+            return response()->json($project);
+        }else{
+            return response()->json('msg:error');
+        }
+    }
+
+
     public function getDa(){
         $searchValue = \request()->q;
         $project = Da::latest()

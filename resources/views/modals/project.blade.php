@@ -15,23 +15,24 @@ $markets = \App\Models\Markets::all();
                         <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-body">
+
                                     <!-- Nav tabs -->
-                                    <ul class="nav nav-tabs nav-tabs-custom" role="tablist">
-                                        <li class="nav-item">
+                                    <ul class="nav nav-tabs nav-tabs-custom" role="tablist" id="nav_tabs_market" >
+                                        <li class="nav-item " role="presentation">
                                             <a class="nav-link active" data-toggle="tab" href="#tab_home" role="tab" id="nav_link_home">
                                                 <span class="d-none d-sm-block">Home</span>
                                             </a>
                                         </li>
 
-                                        <li class="nav_market">
-                                            @foreach($markets as $market)
-                                                <li class="nav-item">
-                                                    <a class="nav-link"  data-toggle="tab" href="#tab_{{$market->market_name}}" role="tab" id="nav_{{$market->market_name}}">
-                                                        <span class="d-none d-sm-block">{{$market->market_name}}</span>
-                                                    </a>
-                                                </li>
-                                            @endforeach
-                                        </li>
+{{--                                        <li class="nav_market">--}}
+{{--                                            @foreach($markets as $market)--}}
+{{--                                                <li class="nav-item">--}}
+{{--                                                    <a class="nav-link"  data-toggle="tab" href="#tab_{{$market->market_name}}" role="tab" id="nav_{{$market->market_name}}">--}}
+{{--                                                        <span class="d-none d-sm-block">{{$market->market_name}}</span>--}}
+{{--                                                    </a>--}}
+{{--                                                </li>--}}
+{{--                                            @endforeach--}}
+{{--                                        </li>--}}
 
 
                                     </ul>
@@ -112,144 +113,145 @@ $markets = \App\Models\Markets::all();
                                                 <div class="progress-bar"  role="progressbar" style="background-color: #0b0b0b;width: 100%;"></div>
                                             </div>
 
-                                            <div class="package_ads">
-                                                @foreach($markets as $market)
-                                                    <div id="package_{{$market->market_name}}">
-                                                        <div class="form-group col-lg-12">
-                                                            <h4 class="mt-0 header-title">Package {{$market->market_name}}</h4>
-                                                            <input type="text" id="market_{{$market->id}}_package" name="market[{{$market->id}}][package]" class="form-control">
-                                                        </div>
-                                                        <div class="form-group col-lg-11" style="margin-left: auto;">
-                                                            <div id="accordion_{{$market->id}}">
-                                                                <div class="card mb-0">
-                                                                    <div class="card-header" id="heading_{{$market->id}}">
-                                                                        <a href="#collapse_{{$market->id}}" class="text-dark collapsed" data-toggle="collapse" aria-expanded="false" aria-controls="collapse_{{$market->id}}">
-                                                                            ADS {{$market->market_name}}
-                                                                        </a>
-                                                                    </div>
-                                                                    <div id="collapse_{{$market->id}}" class="collapse" aria-labelledby="heading_{{$market->id}}" data-parent="#accordion_{{$market->id}}" style="">
-                                                                        <div class="card-body">
-                                                                            <div class="divider">
-                                                                                <div class="divider-text"><b>Admod</b></div>
-                                                                            </div>
-                                                                            <div class="row">
-                                                                                <div class="form-group col-sm-4">
-                                                                                    <input type="text" id="market_{{$market->id}}_ads_id" name="market[{{$market->id}}][ads][ads_id]" placeholder="id"  class="form-control"/>
-                                                                                </div>
+                                            <div class="package_ads" id="package_ads">
+{{--                                                @foreach($markets as $market)--}}
+{{--                                                    <div id="package_{{$market->market_name}}">--}}
+{{--                                                        <div class="form-group col-lg-12">--}}
+{{--                                                            <h4 class="mt-0 header-title">Package {{$market->market_name}}</h4>--}}
+{{--                                                            <input type="text" id="market_{{$market->id}}_package" name="market[{{$market->id}}][package]" class="form-control">--}}
+{{--                                                        </div>--}}
+{{--                                                        <div class="form-group col-lg-11" style="margin-left: auto;">--}}
+{{--                                                            <div id="accordion_{{$market->id}}">--}}
+{{--                                                                <div class="card mb-0">--}}
+{{--                                                                    <div class="card-header" id="heading_{{$market->id}}">--}}
+{{--                                                                        <a href="#collapse_{{$market->id}}" class="text-dark collapsed" data-toggle="collapse" aria-expanded="false" aria-controls="collapse_{{$market->id}}">--}}
+{{--                                                                            ADS {{$market->market_name}}--}}
+{{--                                                                        </a>--}}
+{{--                                                                    </div>--}}
+{{--                                                                    <div id="collapse_{{$market->id}}" class="collapse" aria-labelledby="heading_{{$market->id}}" data-parent="#accordion_{{$market->id}}" style="">--}}
+{{--                                                                        <div class="card-body">--}}
+{{--                                                                            <div class="divider">--}}
+{{--                                                                                <div class="divider-text"><b>Admod</b></div>--}}
+{{--                                                                            </div>--}}
+{{--                                                                            <div class="row">--}}
+{{--                                                                                <div class="form-group col-sm-4">--}}
+{{--                                                                                    <input type="text" id="market_{{$market->id}}_ads_id" name="market[{{$market->id}}][ads][ads_id]" placeholder="id"  class="form-control"/>--}}
+{{--                                                                                </div>--}}
 
-                                                                                <div class="form-group col-sm-4">
-                                                                                    <input type="text" id="market_{{$market->id}}_ads_banner" name="market[{{$market->id}}][ads][ads_banner]" placeholder="banner"   class="form-control"/>
-                                                                                </div>
+{{--                                                                                <div class="form-group col-sm-4">--}}
+{{--                                                                                    <input type="text" id="market_{{$market->id}}_ads_banner" name="market[{{$market->id}}][ads][ads_banner]" placeholder="banner"   class="form-control"/>--}}
+{{--                                                                                </div>--}}
 
-                                                                                <div class="form-group col-sm-4">
-                                                                                    <input type="text" id="market_{{$market->id}}_ads_inter" name="market[{{$market->id}}][ads][ads_inter]" placeholder="inter"   class="form-control">
-                                                                                </div>
+{{--                                                                                <div class="form-group col-sm-4">--}}
+{{--                                                                                    <input type="text" id="market_{{$market->id}}_ads_inter" name="market[{{$market->id}}][ads][ads_inter]" placeholder="inter"   class="form-control">--}}
+{{--                                                                                </div>--}}
 
-                                                                                <div class="form-group col-sm-4">
-                                                                                    <input type="text" id="market_{{$market->id}}_ads_reward" name="market[{{$market->id}}][ads][ads_reward]" placeholder="reward"   class="form-control"/>
-                                                                                </div>
+{{--                                                                                <div class="form-group col-sm-4">--}}
+{{--                                                                                    <input type="text" id="market_{{$market->id}}_ads_reward" name="market[{{$market->id}}][ads][ads_reward]" placeholder="reward"   class="form-control"/>--}}
+{{--                                                                                </div>--}}
 
-                                                                                <div class="form-group col-sm-4">
-                                                                                    <input type="text" id="market_{{$market->id}}_ads_native" name="market[{{$market->id}}][ads][ads_native]" placeholder="native"   class="form-control"/>
-                                                                                </div>
+{{--                                                                                <div class="form-group col-sm-4">--}}
+{{--                                                                                    <input type="text" id="market_{{$market->id}}_ads_native" name="market[{{$market->id}}][ads][ads_native]" placeholder="native"   class="form-control"/>--}}
+{{--                                                                                </div>--}}
 
-                                                                                <div class="form-group col-sm-4">
-                                                                                    <input type="text" id="market_{{$market->id}}_ads_open" name="market[{{$market->id}}][ads][ads_open]" placeholder="open"   class="form-control"/>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="divider">
-                                                                                <div class="divider-text"><b>Start.io</b></div>
-                                                                            </div>
-                                                                            <div class="row" >
-                                                                                <div class="col-sm">
-                                                                                    <input type="text" id="market_{{$market->id}}_ads_start" name="market[{{$market->id}}][ads][ads_start]" placeholder="start"  class="form-control" />
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="divider">
-                                                                                <div class="divider-text"><b>Huawei</b></div>
-                                                                            </div>
-                                                                            <div class="row" >
-                                                                                <div class="form-group col-sm-4">
-                                                                                    <input type="text" id="market_{{$market->id}}_ads_banner_huawei" name="market[{{$market->id}}][ads][ads_banner_huawei]" placeholder="banner"   class="form-control"/>
-                                                                                </div>
+{{--                                                                                <div class="form-group col-sm-4">--}}
+{{--                                                                                    <input type="text" id="market_{{$market->id}}_ads_open" name="market[{{$market->id}}][ads][ads_open]" placeholder="open"   class="form-control"/>--}}
+{{--                                                                                </div>--}}
+{{--                                                                            </div>--}}
+{{--                                                                            <div class="divider">--}}
+{{--                                                                                <div class="divider-text"><b>Start.io</b></div>--}}
+{{--                                                                            </div>--}}
+{{--                                                                            <div class="row" >--}}
+{{--                                                                                <div class="col-sm">--}}
+{{--                                                                                    <input type="text" id="market_{{$market->id}}_ads_start" name="market[{{$market->id}}][ads][ads_start]" placeholder="start"  class="form-control" />--}}
+{{--                                                                                </div>--}}
+{{--                                                                            </div>--}}
+{{--                                                                            <div class="divider">--}}
+{{--                                                                                <div class="divider-text"><b>Huawei</b></div>--}}
+{{--                                                                            </div>--}}
+{{--                                                                            <div class="row" >--}}
+{{--                                                                                <div class="form-group col-sm-4">--}}
+{{--                                                                                    <input type="text" id="market_{{$market->id}}_ads_banner_huawei" name="market[{{$market->id}}][ads][ads_banner_huawei]" placeholder="banner"   class="form-control"/>--}}
+{{--                                                                                </div>--}}
 
-                                                                                <div class="form-group col-sm-4">
-                                                                                    <input type="text" id="market_{{$market->id}}_ads_inter_huawei" name="market[{{$market->id}}][ads][ads_inter_huawei]" placeholder="inter"   class="form-control"/>
-                                                                                </div>
+{{--                                                                                <div class="form-group col-sm-4">--}}
+{{--                                                                                    <input type="text" id="market_{{$market->id}}_ads_inter_huawei" name="market[{{$market->id}}][ads][ads_inter_huawei]" placeholder="inter"   class="form-control"/>--}}
+{{--                                                                                </div>--}}
 
-                                                                                <div class="form-group col-sm-4">
-                                                                                    <input type="text" id="market_{{$market->id}}_ads_reward_huawei" name="market[{{$market->id}}][ads][ads_reward_huawei]" placeholder="reward"   class="form-control" />
-                                                                                </div>
+{{--                                                                                <div class="form-group col-sm-4">--}}
+{{--                                                                                    <input type="text" id="market_{{$market->id}}_ads_reward_huawei" name="market[{{$market->id}}][ads][ads_reward_huawei]" placeholder="reward"   class="form-control" />--}}
+{{--                                                                                </div>--}}
 
-                                                                                <div class="form-group col-sm-4">
-                                                                                    <input type="text" id="market_{{$market->id}}_ads_native_huawei" name="market[{{$market->id}}][ads][ads_native_huawei]" placeholder="native"   class="form-control"/>
-                                                                                </div>
+{{--                                                                                <div class="form-group col-sm-4">--}}
+{{--                                                                                    <input type="text" id="market_{{$market->id}}_ads_native_huawei" name="market[{{$market->id}}][ads][ads_native_huawei]" placeholder="native"   class="form-control"/>--}}
+{{--                                                                                </div>--}}
 
-                                                                                <div class="form-group col-sm-4">
-                                                                                    <input type="text" id="market_{{$market->id}}_ads_splash_huawei" name="market[{{$market->id}}][ads][ads_splash_huawei]" placeholder="splash"   class="form-control" />
-                                                                                </div>
-                                                                                <div class="form-group col-sm-4">
-                                                                                    <input type="text" id="market_{{$market->id}}_ads_roll_huawei" name="market[{{$market->id}}][ads][ads_roll_huawei]" placeholder="roll"   class="form-control"/>
-                                                                                </div>
-                                                                            </div>
+{{--                                                                                <div class="form-group col-sm-4">--}}
+{{--                                                                                    <input type="text" id="market_{{$market->id}}_ads_splash_huawei" name="market[{{$market->id}}][ads][ads_splash_huawei]" placeholder="splash"   class="form-control" />--}}
+{{--                                                                                </div>--}}
+{{--                                                                                <div class="form-group col-sm-4">--}}
+{{--                                                                                    <input type="text" id="market_{{$market->id}}_ads_roll_huawei" name="market[{{$market->id}}][ads][ads_roll_huawei]" placeholder="roll"   class="form-control"/>--}}
+{{--                                                                                </div>--}}
+{{--                                                                            </div>--}}
 
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div >
-                                                @endforeach
-
-
+{{--                                                                        </div>--}}
+{{--                                                                    </div>--}}
+{{--                                                                </div>--}}
+{{--                                                            </div>--}}
+{{--                                                        </div>--}}
+{{--                                                    </div >--}}
+{{--                                                @endforeach--}}
                                             </div>
                                         </div>
 {{--                                        <div class="tab_market">--}}
-                                            @foreach($markets as $market)
-                                                <div class="tab-pane p-3" id="tab_{{$market->market_name}}" role="tabpanel">
-                                                    <div  class="row">
-                                                        <div class="form-group col-lg-6">
-                                                            <label for="name">Store Name ({{$market->market_name}}) </label>
-                                                            <input type="hidden" name="market[{{$market->id}}][dev_id]" id="_market_{{$market->id}}_dev_id" >
-                                                            <select class="form-control select2" id="{{$market->market_name}}_dev_id"  name="market[{{$market->id}}][dev_id]">
-                                                            </select>
-                                                        </div>
-                                                        <div class="form-group col-lg-6">
-                                                            <label for="name">Keystore Profile</label>
-                                                            <input type="hidden" name="market[{{$market->id}}][keystore]" id="_market_{{$market->id}}_keystore" >
-                                                            <select class="form-control select2" id="{{$market->market_name}}_keystore" name="market[{{$market->id}}][keystore]"></select>
-                                                        </div>
-                                                        <div class="form-group col-lg-6">
-                                                            <label for="name">Link App</label>
-                                                            <input type="text" id="market_{{$market->id}}_app_link" name="market[{{$market->id}}][app_link]" class="form-control" >
-                                                        </div>
-                                                        <div class="form-group col-lg-6 ">
-                                                            <label for="name">Link Policy</label>
-                                                            <input type="text" id="market_{{$market->id}}_policy_link" name="market[{{$market->id}}][policy_link]" class="form-control" >
-                                                        </div>
 
-                                                        <div class="form-group col-lg-6">
-                                                            <label for="name">AppID</label>
-                                                            <input type="text" id="market_{{$market->id}}_app_id" name="market[{{$market->id}}][appID]" class="form-control" >
-                                                        </div>
+{{--                                    @foreach($markets as $market)--}}
+{{--                                        <div class="tab-pane p-3" id="tab_{{$market->market_name}}" role="tabpanel">--}}
+{{--                                            <div  class="row">--}}
+{{--                                                <div class="form-group col-lg-6">--}}
+{{--                                                    <label for="name">Store Name ({{$market->market_name}}) </label>--}}
+{{--                                                    <input type="hidden" name="market[{{$market->id}}][dev_id]" id="_market_{{$market->id}}_dev_id" >--}}
+{{--                                                    <select class="form-control select2" id="{{$market->market_name}}_dev_id"  name="market[{{$market->id}}][dev_id]">--}}
+{{--                                                    </select>--}}
+{{--                                                </div>--}}
+{{--                                                <div class="form-group col-lg-6">--}}
+{{--                                                    <label for="name">Keystore Profile</label>--}}
+{{--                                                    <input type="hidden" name="market[{{$market->id}}][keystore]" id="_market_{{$market->id}}_keystore" >--}}
+{{--                                                    <select class="form-control select2" id="{{$market->market_name}}_keystore" name="market[{{$market->id}}][keystore]"></select>--}}
+{{--                                                </div>--}}
+{{--                                                <div class="form-group col-lg-6">--}}
+{{--                                                    <label for="name">Link App</label>--}}
+{{--                                                    <input type="text" id="market_{{$market->id}}_app_link" name="market[{{$market->id}}][app_link]" class="form-control" >--}}
+{{--                                                </div>--}}
+{{--                                                <div class="form-group col-lg-6 ">--}}
+{{--                                                    <label for="name">Link Policy</label>--}}
+{{--                                                    <input type="text" id="market_{{$market->id}}_policy_link" name="market[{{$market->id}}][policy_link]" class="form-control" >--}}
+{{--                                                </div>--}}
 
-                                                        <div class="form-group col-lg-6">
-                                                            <label for="name">App Name X</label>
-                                                            <input type="text" id="market_{{$market->id}}_app_name_x" name="market[{{$market->id}}][app_name_x]" class="form-control" >
-                                                        </div>
+{{--                                                <div class="form-group col-lg-6">--}}
+{{--                                                    <label for="name">AppID</label>--}}
+{{--                                                    <input type="text" id="market_{{$market->id}}_app_id" name="market[{{$market->id}}][appID]" class="form-control" >--}}
+{{--                                                </div>--}}
 
-                                                        <div class="form-group col-lg-6 ">
-                                                            <label for="name">SDK</label>
-                                                            <input type="text" id="market_{{$market->id}}_sdk" name="market[{{$market->id}}][sdk]" class="form-control" >
-                                                        </div>
-                                                        <div class="form-group col-lg-6 ">
-                                                            <label for="name">Link Video</label>
-                                                            <input type="text" id="market_{{$market->id}}_video_link" name="market[{{$market->id}}][video_link]" class="form-control" >
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            @endforeach
+{{--                                                <div class="form-group col-lg-6">--}}
+{{--                                                    <label for="name">App Name X</label>--}}
+{{--                                                    <input type="text" id="market_{{$market->id}}_app_name_x" name="market[{{$market->id}}][app_name_x]" class="form-control" >--}}
+{{--                                                </div>--}}
+
+{{--                                                <div class="form-group col-lg-6 ">--}}
+{{--                                                    <label for="name">SDK</label>--}}
+{{--                                                    <input type="text" id="market_{{$market->id}}_sdk" name="market[{{$market->id}}][sdk]" class="form-control" >--}}
+{{--                                                </div>--}}
+{{--                                                <div class="form-group col-lg-6 ">--}}
+{{--                                                    <label for="name">Link Video</label>--}}
+{{--                                                    <input type="text" id="market_{{$market->id}}_video_link" name="market[{{$market->id}}][video_link]" class="form-control" >--}}
+{{--                                                </div>--}}
+{{--                                            </div>--}}
 {{--                                        </div>--}}
+{{--                                    @endforeach--}}
+
+{{--                                        </div>--}}
+
 
 
                                     </div>

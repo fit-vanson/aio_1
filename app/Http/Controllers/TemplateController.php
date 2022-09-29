@@ -379,8 +379,17 @@ class TemplateController extends Controller
      */
     public function edit($id)
     {
-        $temp = Template::find($id);
+
+        if(isset(\request()->project_id)){
+            $temp = Template::with(["project" => function($q){
+                $q->with('markets')->where('projectid',\request()->project_id)->first();
+            }])
+                ->find($id);
+        }else{
+            $temp = Template::find($id);
+        }
         return response()->json($temp->load('markets'));
+
     }
 
     /**

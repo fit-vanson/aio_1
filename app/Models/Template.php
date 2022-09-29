@@ -28,7 +28,7 @@ class Template extends Model
     }
 
     public function project(){
-        return $this->hasMany(ProjectModel::class,'template');
+        return $this->hasMany(Project::class,'template');
     }
 
 }

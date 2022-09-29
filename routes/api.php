@@ -28,6 +28,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::get('/project-aio/{id}', [ProjectController::class, 'getProject']);
 
+Route::get('/getProject', [ApiController::class, 'getProject'])->name('api.getProject');
 Route::get('/getDa', [ApiController::class, 'getDa'])->name('api.getDa');
 Route::get('/getTemplate', [ApiController::class, 'getTemplate'])->name('api.getTemplate');
 Route::get('/getDev', [ApiController::class, 'getDev'])->name('api.getDev');
