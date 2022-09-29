@@ -156,7 +156,7 @@
             var hash = url.substring(url.indexOf('?')+1);
             $.fn.dataTable.ext.errMode = 'none';
             var table = $('#projectTable').DataTable({
-                displayLength: 50,
+                displayLength: 2,
                 lengthMenu: [5, 10, 25, 50, 75, 100],
                 // orderCellsTop: true,
                 // fixedHeader: true,
@@ -319,10 +319,6 @@
                         '</div>';
                     tabContent.append(html);
                     getProjectMarket(project_id,market_id)
-
-
-
-
                     $('#'+market_id+'_dev_id').select2({
                         minimumInputLength: 2,
                         ajax: {
@@ -491,29 +487,80 @@
 
                         package_ads +=
                             '<div id="package_'+v.market_name+'">'+
-                            '<div class="form-group col-lg-12">'+
-                            '<h4 class="mt-0 header-title">Package '+v.market_name+'</h4>'+
-                            '<input type="text" id="market_'+v.id+'_package" name="market['+v.id+'][package]" class="form-control" value="" >'+
-                            '</div>'+
-                            '<div class="form-group col-lg-11" style="margin-left: auto;">'+
-                            '<div id="accordion_'+v.id+'">'+
-                            '<div class="card mb-0">'+
-                            '<div class="card-header" id="heading_'+v.id+'">'+
-                            '<a href="#collapse_'+v.id+'" class="text-dark collapsed" data-toggle="collapse" aria-expanded="false" aria-controls="collapse_'+v.id+'">ADS '+v.market_name+'</a>'+
-                            '</div>'+
-                            '<div id="collapse_'+v.id+'" class="collapse" aria-labelledby="heading_'+v.id+'" data-parent="#accordion_'+v.id+'" style="">'+
-                            '<div class="card-body">'+
-                            //sdadasdasdasd
-                            '<div class="row">'+
+                                '<div class="form-group col-lg-12">'+
+                                '<h4 class="mt-0 header-title">Package '+v.market_name+'</h4>'+
+                                '<input type="text" id="market_'+v.id+'_package" name="market['+v.id+'][package]" class="form-control" value="" >'+
+                                '</div>'+
+                                '<div class="form-group col-lg-11" style="margin-left: auto;">'+
+                                    '<div id="accordion_'+v.id+'">'+
+                                        '<div class="card mb-0">'+
+                                            '<div class="card-header" id="heading_'+v.id+'">'+
+                                            '<a href="#collapse_'+v.id+'" class="text-dark collapsed" data-toggle="collapse" aria-expanded="false" aria-controls="collapse_'+v.id+'">ADS '+v.market_name+'</a>'+
+                                            '</div>'+
+                                            '<div id="collapse_'+v.id+'" class="collapse" aria-labelledby="heading_'+v.id+'" data-parent="#accordion_'+v.id+'" style="">'+
+                                                '<div class="card-body">' +
+                                                    '<div class="divider">' +
+                                                    '<div class="divider-text"><b>Admod</b></div>' +
+                                                    '</div>'+
 
-                            '</div>'+
-                            '</div>'+
-                            '</div>'+
-                            '</div>'+
-                            '</div>'+
-                            '</div>'+
+                                                    '<div class="row">' +
+                                                        '<div class="form-group col-sm-4">' +
+                                                            '<input type="text" id="market_'+v.id+'_ads_id" name="market['+v.id+'][ads][ads_id]" placeholder="ads_id"  class="form-control"/>' +
+                                                        '</div>'+
+                                                        '<div class="form-group col-sm-4">' +
+                                                        '<input type="text" id="market_'+v.id+'_ads_banner" name="market['+v.id+'][ads][ads_banner]" placeholder="ads_banner"  class="form-control"/>' +
+                                                        '</div>'+
+                                                        '<div class="form-group col-sm-4">' +
+                                                        '<input type="text" id="market_'+v.id+'_ads_inter" name="market['+v.id+'][ads][ads_inter]" placeholder="ads_inter"  class="form-control"/>' +
+                                                        '</div>'+
+                                                        '<div class="form-group col-sm-4">' +
+                                                        '<input type="text" id="market_'+v.id+'_ads_reward" name="market['+v.id+'][ads][ads_reward]" placeholder="ads_reward"  class="form-control"/>' +
+                                                        '</div>'+
+                                                        '<div class="form-group col-sm-4">' +
+                                                        '<input type="text" id="market_'+v.id+'_ads_native" name="market['+v.id+'][ads][ads_native]" placeholder="ads_native"  class="form-control"/>' +
+                                                        '</div>'+
+                                                        '<div class="form-group col-sm-4">' +
+                                                        '<input type="text" id="market_'+v.id+'_ads_open" name="market['+v.id+'][ads][ads_open]" placeholder="ads_open"  class="form-control"/>' +
+                                                        '</div>'+
+                                                    '</div>'+
+                                                    '<div class="divider">' +
+                                                    '<div class="divider-text"><b>Start.io</b></div>' +
+                                                    '</div>'+
+                                                    '<div class="row">' +
+                                                        '<div class="form-group col-sm-4">' +
+                                                        '<input type="text" id="market_'+v.id+'_ads_start" name="market['+v.id+'][ads][ads_start]" placeholder="ads_start"  class="form-control"/>' +
+                                                        '</div>'+
+                                                    '</div>'+
+                                                    '<div class="divider">' +
+                                                    '<div class="divider-text"><b>Huawei</b></div>' +
+                                                    '</div>'+
+                                                    '<div class="row">' +
+                                                        '<div class="form-group col-sm-4">' +
+                                                            '<input type="text" id="market_'+v.id+'_ads_banner_huawei" name="market['+v.id+'][ads][ads_banner_huawei]" placeholder="ads_banner_huawei"  class="form-control"/>' +
+                                                        '</div>'+
+                                                        '<div class="form-group col-sm-4">' +
+                                                            '<input type="text" id="market_'+v.id+'_ads_inter_huawei" name="market['+v.id+'][ads][ads_inter_huawei]" placeholder="ads_inter_huawei"  class="form-control"/>' +
+                                                        '</div>'+
+                                                        '<div class="form-group col-sm-4">' +
+                                                            '<input type="text" id="market_'+v.id+'_ads_reward_huawei" name="market['+v.id+'][ads][ads_reward_huawei]" placeholder="ads_reward_huawei"  class="form-control"/>' +
+                                                        '</div>'+
+                                                        '<div class="form-group col-sm-4">' +
+                                                            '<input type="text" id="market_'+v.id+'_ads_native_huawei" name="market['+v.id+'][ads][ads_native_huawei]" placeholder="ads_native_huawei"  class="form-control"/>' +
+                                                        '</div>'+
+                                                        '<div class="form-group col-sm-4">' +
+                                                            '<input type="text" id="market_'+v.id+'_ads_splash_huawei" name="market['+v.id+'][ads][ads_splash_huawei]" placeholder="ads_splash_huawei"  class="form-control"/>' +
+                                                        '</div>'+
+                                                        '<div class="form-group col-sm-4">' +
+                                                            '<input type="text" id="market_'+v.id+'_ads_roll_huawei" name="market['+v.id+'][ads][ads_roll_huawei]" placeholder="ads_roll_huawei"  class="form-control"/>' +
+                                                        '</div>'+
+
+                                                    '</div>'+
+                                                '</div>'+
+                                            '</div>'+
+                                        '</div>'+
+                                    '</div>'+
+                                '</div>'+
                             '</div>';
-
                     });
 
 
@@ -842,6 +889,7 @@
                 type: 'get',
                 url: '{{asset('api/getProject')}}?projectID='+projectID+'&marketID='+marketID,
                 success: function (data) {
+                    console.log(data)
                     $('#market_'+marketID+'_package').val(data.package)
                     $('#market_'+marketID+'_app_link').val(data.app_link)
                     $('#market_'+marketID+'_policy_link').val(data.policy_link)
@@ -849,6 +897,11 @@
                     $('#market_'+marketID+'_app_name_x').val(data.app_name_x)
                     $('#market_'+marketID+'_sdk').val(data.sdk)
                     $('#market_'+marketID+'_video_link').val(data.video_link)
+                    var ads = JSON.parse(data.ads);
+                    $.each(ads, function (k,v){
+                        $('#market_'+marketID+'_'+k).val(v)
+                    })
+
 
                     $('#'+marketID+'_dev_id').select2("trigger", "select", {
                         data: {
