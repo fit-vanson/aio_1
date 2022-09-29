@@ -70,7 +70,7 @@ class Ga_devController extends Controller
                 "mailrecovery" => $record->mailrecovery,
                 "vpn_iplogin" => $record->vpn_iplogin,
                 "backupcode" => '<div class="truncate">'. $record->backupcode.'</div>',
-                "note" => $record->note,
+                "note" => '<div class="truncate">'. $record->note.'</div>',
                 "action"=> $btn,
             );
         }

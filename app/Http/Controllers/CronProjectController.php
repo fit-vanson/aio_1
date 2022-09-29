@@ -61,8 +61,8 @@ class CronProjectController extends Controller
         $gplay = new \Nelexa\GPlay\GPlayApps();
 
 
-        if(\request()->pakage){
-            $appInfo = $gplay->getAppInfo(\request()->pakage);
+        if(\request()->package){
+            $appInfo = $gplay->getAppInfo(\request()->package);
             dd($appInfo);
         }else{
             $time =  Setting::first();

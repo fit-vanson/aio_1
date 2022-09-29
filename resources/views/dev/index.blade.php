@@ -272,7 +272,7 @@
                     {data: 'dev_name'},
                     {data: 'mail_id_1'},
                     {data: 'company_pers',className: "text-center"},
-                    {data: 'info_url'},
+                    {data: 'info_url',orderable: false},
                     {data: 'market_id',orderable: false},
                     {data: 'status',orderable: false},
                     {data: 'action', className: "text-center",name: 'action', orderable: false, searchable: false},
