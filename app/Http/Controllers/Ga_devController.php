@@ -92,7 +92,7 @@ class Ga_devController extends Controller
     public function create(Request  $request)
     {
         $rules = [
-            'gmail' =>'unique:ngocphandang_gadev,gmail'
+            'gmail' =>'unique:gmail_gadev,gmail'
         ];
         $message = [
             'gmail.unique'=>'Gmail đã tồn tại',
@@ -164,7 +164,7 @@ class Ga_devController extends Controller
     {
         $id = $request->gadev_id;
         $rules = [
-            'gmail' =>'unique:ngocphandang_gadev,gmail,'.$id.',id',
+            'gmail' =>'unique:gmail_gadev,gmail,'.$id.',id',
         ];
         $message = [
             'gmail.unique'=>'Tên Gmail đã tồn tại',
