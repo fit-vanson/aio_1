@@ -25,7 +25,7 @@
         "laravel/scout": "^9.4",
         "laravel/tinker": "^2.0",
         "mavinoo/laravel-batch": "^2.3",
-        "nelexa/google-play-scraper": "0.4.0.3",
+        "nelexa/google-play-scraper": "0.4.0.6",
         "pbmedia/laravel-ffmpeg": "*",
         "phpgangsta/googleauthenticator": "dev-master",
         "pragmarx/google2fa": "^8.0",
