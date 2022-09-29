@@ -298,9 +298,7 @@ class Project_Controller extends Controller
         $message = [
             'projectname.unique'=>'Tên Project đã tồn tại',
             'projectname.required'=>'Tên Project không để trống',
-//            'ma_da.required'=>'Mã dự án không để trống',
             'template.required'=>'Mã template không để trống',
-//            'title_app.required'=>'Tiêu đề ứng không để trống',
             'buildinfo_vernum.required'=>'Version Number không để trống',
             'buildinfo_verstr.required'=>'Version String không để trống',
             'project_file.mimes'=>'*.zip',
