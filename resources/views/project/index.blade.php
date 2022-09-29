@@ -889,7 +889,6 @@
                 type: 'get',
                 url: '{{asset('api/getProject')}}?projectID='+projectID+'&marketID='+marketID,
                 success: function (data) {
-                    console.log(data)
                     $('#market_'+marketID+'_package').val(data.package)
                     $('#market_'+marketID+'_app_link').val(data.app_link)
                     $('#market_'+marketID+'_policy_link').val(data.policy_link)
@@ -901,8 +900,6 @@
                     $.each(ads, function (k,v){
                         $('#market_'+marketID+'_'+k).val(v)
                     })
-
-
                     $('#'+marketID+'_dev_id').select2("trigger", "select", {
                         data: {
                             id: data.dev_id,
