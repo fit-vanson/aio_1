@@ -332,9 +332,9 @@
                             '<td><div class="truncate copyButton">'+sha1+'</div></td>'+
                             '<td><div class="truncate copyButton">'+sha256+'</div></td>'+
                             '<td>'+categories[value.id]+'</td>'+
-                            '<td class="copyButton">'+value.pivot.app_name_x +'</td>'+
-                            '<td class="copyButton">'+value.pivot.package +'</td>'+
-                            '<td style="width: 10%">'+download_apk+download_aab+'</td>'+
+                            '<td><div class="truncate copyButton">'+value.pivot.app_name_x +'</div></td>'+
+                            '<td><div class="truncate copyButton">'+value.pivot.package +'</div></td>'+
+                            '<td>'+download_apk+download_aab+'</td>'+
                             '<td>'+status_upload+'</td>'+
                             '</tr>';
                     }
