@@ -12,6 +12,7 @@ class Keystore extends Model
     use HasFactory;
     protected $table= 'ngocphandang_keystores';
     protected $guarded = [];
+    public $timestamps = false;
 
 //    public function project(){
 //        return $this->hasMany(ProjectModel::class,'buildinfo_keystore','name_keystore');
