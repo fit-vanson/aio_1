@@ -500,7 +500,7 @@
                             html +=  'dark"> Reject';
                             break;
                         case 6:
-                            html +=  'danger"> Ch111111111111111eck ';
+                            html +=  'danger"> Check ';
                             break;
                         case 7:
                             html +=  'warning"> Pending';
