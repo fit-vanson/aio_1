@@ -101,7 +101,20 @@
                         </div>
                         <div class="form-group col-lg-9">
                             <table class="table table-bordered table-striped mb-0">
-                                <tbody id="market_upload" >
+                                <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>DEV name</th>
+                                    <th>SHA 1</th>
+                                    <th>SHA 256</th>
+                                    <th>Category</th>
+                                    <th>App name X</th>
+                                    <th>Package</th>
+                                    <th>APK AAB</th>
+                                    <th>Action</th>
+                                </tr>
+                                </thead>
+                                <tbody id="market_upload">
 
                                 </tbody>
                             </table>
@@ -241,7 +254,7 @@
 
                         '<div class="card-body d-flex justify-content-center"><div class="row"><div class="form-group col-lg-9">'+
                         '<table class="table table-bordered table-striped mb-0">'+
-                        '<tbody id="market_upload" >'+
+                        '<tbody id="lang_upload" >'+
                         '<tr>'+
                             '<th>Title</td>'+
                             '<td class="copyButton">'+value.pivot.title+'</button></td>'+
@@ -316,8 +329,8 @@
                         market += '<tr>'+
                             '<th>'+value.market_name+'</th>'+
                             '<td>'+dev_name+'</td>'+
-                            '<td>'+sha1+'</td>'+
-                            '<td>'+sha256+'</td>'+
+                            '<td><div class="truncate copyButton">'+sha1+'</div></td>'+
+                            '<td><div class="truncate copyButton">'+sha256+'</div></td>'+
                             '<td>'+categories[value.id]+'</td>'+
                             '<td class="copyButton">'+value.pivot.app_name_x +'</td>'+
                             '<td class="copyButton">'+value.pivot.package +'</td>'+
