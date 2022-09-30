@@ -939,7 +939,7 @@ class Project_Controller extends Controller
 //            ->Where('projectname', 'like', '%' . $searchValue . '%')
 //            ->whereIn('buildinfo_console',$status_console)
 
-//            ->wherePivot ('bot','<>',null)
+            ->where('status_app','like', '%' .$columnName_arr[6]['search']['value']. '%')
             ->skip($start)
             ->take($rowperpage)
             ->get();
@@ -1094,6 +1094,7 @@ class Project_Controller extends Controller
                 "bot->appVersion" => @$bot['appVersion'],
                 "status_app" =>'Console: '.$buildinfo_console.'<br> Ứng dụng: '.$Chplay_status.'<br>'.@$version. '<br> Time check: '.date('H:i:s   d-m-Y',$record->pivot->bot_time),
 
+                "buildinfo_console"=> $record->buildinfo_console,
                 "action"=> $btn
             );
 

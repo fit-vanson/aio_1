@@ -90,12 +90,6 @@
                     {{--url: "{{ route('project.getManage')}}?"+hash,--}}
                     url: "{{ route('project.getManage')}}"+search,
                     type: "post",
-                    // data: function (d){
-                    //     return $.extend({},d,{
-                    //         "console_status": $('.Process_button').val(),
-                    //         "remove_status": $('#RemoveA').val(),
-                    //     })
-                    // }
                 },
                 columns: [
                     {data: 'logo', name: 'logo',orderable: false},
@@ -104,21 +98,78 @@
                     {data: 'bot->numberReviews', name: 'bot->numberReviews'},
                     {data: 'bot->numberVoters', name: 'bot->numberVoters'},
                     {data: 'bot->score', name: 'bot->score'},
-                    {data: 'status_app', name: 'status_app'},
+                    {data: 'status_app', name: 'status_app',searchable: false},
                     {data: 'action', name: 'action',className: "text-center", orderable: false, searchable: false},
                 ],
+                initComplete: function (nRow,aData) {
+                    this.api().columns([6]).every( function () {
+                        var column = this;
+                        var select = $('<select class="form-control"><option value="">Status</option></select>')
+                            .appendTo( $(column.header()).empty() )
+                            .on( 'change', function () {
+                                var val = $.fn.dataTable.util.escapeRegex(
+                                    $(this).val()
+                                );
+                                column
+                                    .search( val ? val : '', true, false )
+                                    .draw();
+                            } );
+
+                        $.each([0,1,2,3,4,5,6,7], function ( d, j ) {
+                            var status ='';
+                            switch (j){
+                                case 0:
+                                    status ='Mặc định' ;
+                                    break;
+                                case 1:
+                                    status = 'Public';
+                                    break;
+                                case 2:
+                                    status = 'Suppend';
+                                    break;
+                                case 3:
+                                    status = 'UnPublish';
+                                    break;
+                                case 4:
+                                    status = 'UnPublish';
+                                    break;
+                                case 5:
+                                    status = 'Reject';
+                                    break;
+                                case 6:
+                                    status = 'Check';
+                                    break;
+                                case 7:
+                                    status = 'Pending';
+                                    break;
+                            }
+                            select.append( '<option value="'+j+'">'+status+'</option>' )
+                        } );
+                    } );
+                },
+
+
+
                 fnRowCallback: function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-                    if (aData.buildinfo_console == 3) {
-                        $('td', nRow).css('background-color', 'rgb(19 164 2 / 47%)');
-                    }
-                    if (aData.buildinfo_console == 6) {
-                        $('td', nRow).css('background-color', '#38a4f84f');
-                    }
-                    if (aData.buildinfo_console == 7) {
-                        $('td', nRow).css('background-color', 'rgb(255 0 0 / 46%)');
-                    }
-                    if (aData.buildinfo_console == 8) {
-                        $('td', nRow).css('background-color', 'rgb(255 0 0 / 21%)');
+
+
+                    switch (aData.buildinfo_console){
+                        case 3:
+                            $('td', nRow).css('background-color', 'rgb(19 164 2 / 47%)');
+                            break;
+                        case 6:
+                            $('td', nRow).css('background-color', '#38a4f84f');
+                            break;
+                        case 7:
+                            $('td', nRow).css('background-color', 'rgb(255 0 0 / 46%)');
+                            break;
+                        case 8:
+                            $('td', nRow).css('background-color', 'rgb(255 0 0 / 21%)');
+                            break;
+                        // default:
+                        //     $('td', nRow).css('background-color', 'rgb(255 0 0 / 21%)');
+                        //     break;
+
                     }
                 },
                 order: [[ 0, 'desc' ]],
@@ -153,64 +204,64 @@
                 }
             }
 
-            table.on('click', 'td:nth-child(4)', e=> {
-                e.preventDefault();
-                const row = table.row(e.target.closest('tr'));
-                const rowData = row.data();
-
-                $('#modelHeadingPolicy').html(rowData.name_projectname);
-                $('#showMess').modal('show');
-                $('.message-full').html(rowData.full_mess);
-
-            });
+            // table.on('click', 'td:nth-child(4)', e=> {
+            //     e.preventDefault();
+            //     const row = table.row(e.target.closest('tr'));
+            //     const rowData = row.data();
+            //
+            //     $('#modelHeadingPolicy').html(rowData.name_projectname);
+            //     $('#showMess').modal('show');
+            //     $('.message-full').html(rowData.full_mess);
+            //
+            // });
             // setInterval( function () {
             //     table.ajax.reload();
             // }, 5000 );
 
+            //
+            // $('#all').on('click', function () {
+            //     $('.Process_button').val(null);
+            //     $('#RemoveA').val('');
+            //     $('#RemoveA').hide();
+            //     table.draw();
+            // });
+            // $('#WaitProcessing').on('click', function () {
+            //     $('.Process_button').val('1%4');
+            //     $('#RemoveA').val('');
+            //     $('#RemoveA').hide();
+            //     table.draw();
+            // });
+            // $('#Processing').on('click', function () {
+            //     $('.Process_button').val('2%5');
+            //     $('#RemoveA').val('');
+            //     $('#RemoveA').hide();
+            //     table.draw();
+            // });
+            // $('#End').on('click', function () {
+            //     $('.Process_button').val('3%6%7%8');
+            //     $('#RemoveA').val('');
+            //     $('#RemoveA').show();
+            //     table.draw();
+            // });
+            // $('#RemoveA').on('click', function () {
+            //     $('#RemoveA').val('3%6%7%8');
+            //     table.ajax.reload();
+            // });
 
-            $('#all').on('click', function () {
-                $('.Process_button').val(null);
-                $('#RemoveA').val('');
-                $('#RemoveA').hide();
-                table.draw();
-            });
-            $('#WaitProcessing').on('click', function () {
-                $('.Process_button').val('1%4');
-                $('#RemoveA').val('');
-                $('#RemoveA').hide();
-                table.draw();
-            });
-            $('#Processing').on('click', function () {
-                $('.Process_button').val('2%5');
-                $('#RemoveA').val('');
-                $('#RemoveA').hide();
-                table.draw();
-            });
-            $('#End').on('click', function () {
-                $('.Process_button').val('3%6%7%8');
-                $('#RemoveA').val('');
-                $('#RemoveA').show();
-                table.draw();
-            });
-            $('#RemoveA').on('click', function () {
-                $('#RemoveA').val('3%6%7%8');
-                table.ajax.reload();
-            });
 
-
-            $(document).on('click','.removeProject', function (data){
-                var project_id = $(this).data("id");
-                $.ajax({
-                    type: "post",
-                    url: "{{ route('project.updateConsole')}}?buildinfo_console=0&projectID="+project_id,
-                    success: function (data) {
-                        table.draw();
-                    },
-                    error: function (data) {
-                        console.log('Error:', data);
-                    }
-                });
-            });
+            {{--$(document).on('click','.removeProject', function (data){--}}
+            {{--    var project_id = $(this).data("id");--}}
+            {{--    $.ajax({--}}
+            {{--        type: "post",--}}
+            {{--        url: "{{ route('project.updateConsole')}}?buildinfo_console=0&projectID="+project_id,--}}
+            {{--        success: function (data) {--}}
+            {{--            table.draw();--}}
+            {{--        },--}}
+            {{--        error: function (data) {--}}
+            {{--            console.log('Error:', data);--}}
+            {{--        }--}}
+            {{--    });--}}
+            {{--});--}}
         });
     </script>
 
