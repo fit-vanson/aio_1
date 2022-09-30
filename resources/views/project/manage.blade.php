@@ -98,7 +98,7 @@
                     {data: 'bot->numberReviews', name: 'bot->numberReviews'},
                     {data: 'bot->numberVoters', name: 'bot->numberVoters'},
                     {data: 'bot->score', name: 'bot->score'},
-                    {data: 'status_app', name: 'status_app',searchable: false},
+                    {data: 'status_app', name: 'status_app',searchable: false, orderable: false},
                     {data: 'action', name: 'action',className: "text-center", orderable: false, searchable: false},
                 ],
                 initComplete: function (nRow,aData) {
