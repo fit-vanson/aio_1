@@ -309,7 +309,7 @@
                         if(value.pivot.dev_id){
                             dev_name = value.pivot.dev.dev_name;
                         }
-                        if(value.pivot.keystore){
+                        if(value.pivot.keystores){
                             sha1 = value.pivot.keystores.SHA_1_keystore;
                             sha256 = value.pivot.keystores.SHA_256_keystore;
                         }
