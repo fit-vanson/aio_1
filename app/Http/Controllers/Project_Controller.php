@@ -922,7 +922,8 @@ class Project_Controller extends Controller
         $totalRecords = Markets::where('market_name',$_GET['market'])
             ->first()
             ->projects()
-            ->select('count(*) as allcount')
+//            ->select('count(*) as allcount')
+//            ->where('status_app','like', '%' .$columnName_arr[6]['search']['value']. '%')
 //            ->where('buildinfo_console','<>',0)
             ->count();
 
@@ -930,16 +931,21 @@ class Project_Controller extends Controller
             ->first()
             ->projects()
             ->select('count(*) as allcount')
+            ->where('status_app','like', '%' .$columnName_arr[6]['search']['value']. '%')
+            ->where(function($q) use ($searchValue) {
+                $q->Where('projectname', 'like', '%' . $searchValue . '%');
+            })
+            ->orWherePivot('package', 'like', '%' . $searchValue . '%')
             ->count();
         $records = Markets::where('market_name',$_GET['market'])
             ->first()
             ->projects()
             ->orderBy($columnName, $columnSortOrder)
-//            ->with('markets','ma_template','da')
-//            ->Where('projectname', 'like', '%' . $searchValue . '%')
-//            ->whereIn('buildinfo_console',$status_console)
-
             ->where('status_app','like', '%' .$columnName_arr[6]['search']['value']. '%')
+            ->where(function($q) use ($searchValue) {
+                $q->Where('projectname', 'like', '%' . $searchValue . '%');
+            })
+            ->orWherePivot('package', 'like', '%' . $searchValue . '%')
             ->skip($start)
             ->take($rowperpage)
             ->get();
