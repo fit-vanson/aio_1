@@ -37,6 +37,20 @@
         $('#avatar_fake').click(function(){
             $('#logo_fake').click();
         });
+
+
+        $(document).on("click", ".copyButton", function(){
+            var $temp = $("<input>");
+            $("body").append($temp);
+            const regexForStripHTML = /<[^>]*>?/gm;
+            const text = $(this).html();
+            const stripContent = text.replaceAll(regexForStripHTML, '');
+            // $temp.val($(this).html()).select();
+            $temp.val(stripContent).select();
+            document.execCommand("copy");
+            $temp.remove();
+            $.notify('Copy success ', "success");
+        })
     });
 </script>
 

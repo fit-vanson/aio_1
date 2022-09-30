@@ -48,13 +48,14 @@
                         <tr>
 
                             <th>ID</th>
-                            <th>Tên Keystore</th>
-                            <th>Pass Keystore</th>
-                            <th>Aliases</th>
-                            <th>Pass Aliases</th>
-                            <th>SHA_256 Keystore</th>
-                            <th>File</th>
-                            <th>Action</th>
+                            <th style="width: 10%">Tên Keystore</th>
+                            <th style="width: 10%">Pass Keystore</th>
+                            <th style="width: 10%">Aliases</th>
+                            <th style="width: 10%">Pass Aliases</th>
+                            <th style="width: 20%">SHA_256 Keystore</th>
+                            <th style="width: 20%">SHA_1 Keystore</th>
+                            <th style="width: 10%">File</th>
+                            <th style="width: 10%">Action</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -109,10 +110,11 @@
             columns: [
                 {data: 'id',visible: false},
                 {data: 'name_keystore'},
-                {data: 'pass_keystore'},
-                {data: 'aliases_keystore'},
-                {data: 'pass_aliases'},
-                {data: 'SHA_256_keystore'},
+                {data: 'pass_keystore',className: "copyButton"},
+                {data: 'aliases_keystore',className: "copyButton"},
+                {data: 'pass_aliases',className: "copyButton"},
+                {data: 'SHA_256_keystore',className: "copyButton truncate"},
+                {data: 'SHA_1_keystore',className: "copyButton truncate"},
                 {data: 'file'},
                 {data: 'action',className: "text-center", name: 'action', orderable: false, searchable: false},
             ],

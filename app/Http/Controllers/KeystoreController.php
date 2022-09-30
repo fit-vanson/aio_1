@@ -42,6 +42,7 @@ class KeystoreController extends Controller
             ->orWhere('aliases_keystore', 'like', '%' . $searchValue . '%')
             ->orWhere('pass_aliases', 'like', '%' . $searchValue . '%')
             ->orWhere('SHA_256_keystore', 'like', '%' . $searchValue . '%')
+            ->orWhere('SHA_1_keystore', 'like', '%' . $searchValue . '%')
             ->orWhere('note', 'like', '%' . $searchValue . '%')
             ->count();
 
@@ -51,6 +52,7 @@ class KeystoreController extends Controller
             ->orwhere('pass_keystore', 'like', '%' . $searchValue . '%')
             ->orWhere('aliases_keystore', 'like', '%' . $searchValue . '%')
             ->orWhere('pass_aliases', 'like', '%' . $searchValue . '%')
+            ->orWhere('SHA_1_keystore', 'like', '%' . $searchValue . '%')
             ->orWhere('SHA_256_keystore', 'like', '%' . $searchValue . '%')
             ->orWhere('note', 'like', '%' . $searchValue . '%')
             ->with('market_project')
@@ -72,7 +74,8 @@ class KeystoreController extends Controller
                 "id" => $record['id'],
                 "pass_keystore" => $record['pass_keystore'],
                 "aliases_keystore" => $record['aliases_keystore'],
-                "SHA_256_keystore" => $record['SHA_256_keystore'],
+                "SHA_256_keystore" => '<div class="truncate">'.$record['SHA_256_keystore'].'</div>',
+                "SHA_1_keystore" => '<div class="truncate">'.$record['SHA_1_keystore'].'</div>',
                 "pass_aliases" => $record['pass_aliases'],
                 "file" => '<a href="'.$html.'">'.$record['file'].'</a>',
                 "note"=> $record['note'],

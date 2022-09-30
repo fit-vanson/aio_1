@@ -13,31 +13,6 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
 
-    <style>
-        table, td, th {
-            border: 1px solid #ddd;
-            text-align: left;
-        }
-
-        table {
-            border-collapse: collapse;
-            width: 100%;
-        }
-
-        th, td {
-            padding: 15px;
-        }
-
-        th>.truncate, td>.truncate{
-            width: auto;
-            min-width: 0;
-            max-width: 200px;
-            display: inline-block;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-    </style>
 @endsection
 
 @section('breadcrumb')
@@ -235,18 +210,6 @@
 
             });
 
-            $(document).on("click", ".copyButton", function(){
-                var $temp = $("<input>");
-                $("body").append($temp);
-                const regexForStripHTML = /<[^>]*>?/gm;
-                const text = $(this).html();
-                const stripContent = text.replaceAll(regexForStripHTML, '');
-                // $temp.val($(this).html()).select();
-                $temp.val(stripContent).select();
-                document.execCommand("copy");
-                $temp.remove();
-                $.notify('Copy success ', "success");
-            })
 
         });
     </script>

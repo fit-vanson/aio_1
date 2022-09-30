@@ -480,7 +480,6 @@
                 var _id = $(this).data("package");
                 var btn = $(this);
                 $.get('{{asset('cronProject/chplay?projectID=')}}'+_id+'&return=true',function (data) {
-
                     var status = data.status_app;
                     var html = '<p data-package="'+_id+'" class="check_Status_CHPLAY badge badge-'
                     switch (status){
