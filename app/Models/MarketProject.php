@@ -33,4 +33,8 @@ class MarketProject extends  \Illuminate\Database\Eloquent\Relations\Pivot
     {
         return $this->belongsTo(Market_dev::class,'dev_id');
     }
+    public function keystores()
+    {
+        return $this->belongsTo(Keystore::class,'keystore','name_keystore');
+    }
 }

@@ -65,12 +65,12 @@ class Ga_devController extends Controller
 
             $data_arr[] = array(
                 "id" => $record->id,
-                "gmail" => $record->gmail,
-                "pass" => $record->pass,
-                "mailrecovery" => $record->mailrecovery,
-                "vpn_iplogin" => $record->vpn_iplogin,
-                "backupcode" => '<div class="truncate">'. $record->backupcode.'</div>',
-                "note" => '<div class="truncate">'. $record->note.'</div>',
+                "gmail" => '<div class="copyButton">'.$record->gmail.'</div>',
+                "pass" => '<div class="copyButton">'.$record->pass.'</div>',
+                "mailrecovery" => '<div class="copyButton">'.$record->mailrecovery.'</div>',
+                "vpn_iplogin" => '<div class="copyButton">'.$record->vpn_iplogin.'</div>',
+                "backupcode" => '<div class="truncate copyButton">'. $record->backupcode.'</div>',
+                "note" => '<div class="truncate copyButton">'. $record->note.'</div>',
                 "action"=> $btn,
             );
         }

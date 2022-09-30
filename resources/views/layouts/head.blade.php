@@ -1,8 +1,5 @@
 <!-- App favicon -->
 <link rel="shortcut icon" href="assets/images/favicon.png">
-
-@yield('css')
-
 <style>
     table, td, th {
         border: 1px solid #ddd;
@@ -28,6 +25,9 @@
         white-space: nowrap;
     }
 </style>
+@yield('css')
+
+
 
  <!-- App css -->
 <link href="assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />

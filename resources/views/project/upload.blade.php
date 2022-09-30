@@ -280,7 +280,7 @@
 
                 $.each(data.markets, function (key, value) {
                     if(value.pivot.package){
-                        var status_upload = dev_name = download_apk = download_aab = '';
+                        var status_upload = dev_name = download_apk = download_aab =  sha1 = sha256 ='';
                         switch (value.pivot.status_upload) {
                             case 0 :
                                 status_upload = '<input class="btn btn-secondary disabled" data-value="'+value.pivot.id +'"   type="button" value="Mặc định"/>';
@@ -309,10 +309,16 @@
                         if(value.pivot.dev_id){
                             dev_name = value.pivot.dev.dev_name;
                         }
+                        if(value.pivot.keystore){
+                            sha1 = value.pivot.keystores.SHA_1_keystore;
+                            sha256 = value.pivot.keystores.SHA_256_keystore;
+                        }
                         market += '<tr>'+
-                            '<th style="width: 10%">'+value.market_name+'</th>'+
-                            '<td style="width: 10%">'+dev_name+'</td>'+
-                            '<td style="width: 20%">'+categories[value.id]+'</td>'+
+                            '<th>'+value.market_name+'</th>'+
+                            '<td>'+dev_name+'</td>'+
+                            '<td>'+sha1+'</td>'+
+                            '<td>'+sha256+'</td>'+
+                            '<td>'+categories[value.id]+'</td>'+
                             '<td class="copyButton">'+value.pivot.app_name_x +'</td>'+
                             '<td class="copyButton">'+value.pivot.package +'</td>'+
                             '<td style="width: 10%">'+download_apk+download_aab+'</td>'+
