@@ -60,62 +60,68 @@ class CronProjectController extends Controller
     public function Chplay(){
         $gplay = new \Nelexa\GPlay\GPlayApps();
 
-
-        if(\request()->package){
-            $appInfo = $gplay->getAppInfo(\request()->package);
-            dd($appInfo);
-        }else{
-            $time =  Setting::first();
+        if(isset(\request()->package)){
+            $appsChplay = MarketProject::where('package',\request()->package)
+                ->where('market_id',1)
+                ->get();
+        }else {
+            $time = Setting::first();
             $timeCron = Carbon::now()->subMinutes($time->time_cron)->setTimezone('Asia/Ho_Chi_Minh')->timestamp;
-            $appsChplay = MarketProject::where('market_id',1)
-                ->where('status_upload',3)
-                ->where('bot_time','<=',$timeCron)
+            $appsChplay = MarketProject::where('market_id', 1)
+                ->where('status_upload', 3)
+                ->where(function ($q) use ($timeCron) {
+                    $q->where('bot_time', '<=', $timeCron)
+                        ->orWhere('bot_time', null);
+                })
                 ->limit($time->limit_cron)
                 ->get();
-            echo '<br/>' .'=========== Chplay ==============' ;
-            echo '<br/><b>'.'Yêu cầu:';
-            echo '<br/>&emsp;'.'- Project có package Chplay'.'</b><br/><br/>';
+        }
 
-            if($appsChplay){
-                foreach ($appsChplay as $appChplay){
-                    $package = $appChplay->package;
-                    $existApp =  $gplay->existsApp($package);
-                    if($existApp){
-                        try {
-                            $appInfo = $gplay->getAppInfo($package);
-                            $data = [
-                                'installs' => $appInfo->getInstalls(),
-                                'numberVoters' => $appInfo->getNumberVoters(),
-                                'numberReviews' => $appInfo->getNumberReviews(),
-                                'score' => $appInfo->getScore(),
-                                'appVersion' => $appInfo->getAppVersion(),
-                                'privacyPoliceUrl' => $appInfo->getPrivacyPoliceUrl(),
-                                'released' => $appInfo->getReleased()->getTimestamp(),
-                                'updated' => $appInfo->getUpdated()->getTimestamp(),
-                            ];
-                            $appChplay->status_app = 1;
-                            $appChplay->policy_link = $appInfo->getPrivacyPoliceUrl();
-                            $appChplay->app_link = $appInfo->getUrl();
-                            $appChplay->bot = $data;
-                            $appChplay->bot_time = time();
-                            $appChplay->save();
-                        }catch (\Exception $exception) {
-                            Log::error('Message:' . $exception->getMessage() . '--- google appInfo : '.$appChplay->id.'---' . $exception->getLine());
-                        }
+        echo '<br/>' .'=========== Chplay ==============' ;
+        echo '<br/><b>'.'Yêu cầu:';
+        echo '<br/>&emsp;'.'- Project có package Chplay'.'</b><br/><br/>';
 
-                    }else{
-                        $appChplay->status_app = 6;
+        if($appsChplay){
+
+            foreach ($appsChplay as $appChplay){
+                $package = $appChplay->package;
+                $existApp =  $gplay->existsApp($package);
+                if($existApp){
+//                        try {
+                        $appInfo = $gplay->getAppInfo($package);
+                        $data = [
+                            'installs' => $appInfo->getInstalls(),
+                            'numberVoters' => $appInfo->getNumberVoters(),
+                            'numberReviews' => $appInfo->getNumberReviews(),
+                            'score' => $appInfo->getScore(),
+                            'appVersion' => $appInfo->getAppVersion(),
+                            'privacyPoliceUrl' => $appInfo->getPrivacyPoliceUrl(),
+                            'released' => $appInfo->getReleased()->getTimestamp(),
+                            'updated' => $appInfo->getUpdated()->getTimestamp(),
+                        ];
+                        $appChplay->status_app = 1;
+                        $appChplay->policy_link = $appInfo->getPrivacyPoliceUrl();
+                        $appChplay->app_link = $appInfo->getUrl();
+                        $appChplay->bot = $data;
                         $appChplay->bot_time = time();
                         $appChplay->save();
-                    }
-                    echo '<br/>'.'Dang chay:  '.  '-'. $appChplay->id .' - '. Carbon::now('Asia/Ho_Chi_Minh');
+//                        }catch (\Exception $exception) {
+//                            Log::error('Message:' . $exception->getMessage() . '--- google appInfo : '.$appChplay->id.'---' . $exception->getLine());
+//                        }
+
+                }else{
+                    $appChplay->status_app = 6;
+                    $appChplay->bot_time = time();
+                    $appChplay->save();
                 }
-            }
-            if(count($appsChplay)==0){
-                echo 'Chưa đến time cron'.PHP_EOL .'<br>';
-                return false;
+                echo '<br/>'.'Dang chay:  '.  '-'. $appChplay->id .'--'.$appChplay->status_app.' - '. Carbon::now('Asia/Ho_Chi_Minh');
             }
         }
+        if(count($appsChplay)==0){
+            echo 'Chưa đến time cron'.PHP_EOL .'<br>';
+            return false;
+        }
+
 
 
     }
