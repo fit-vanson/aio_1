@@ -577,6 +577,7 @@ class Project_Controller extends Controller
         return view('project.process')->with(compact('header'));
     }
 
+
     public function getProcess(Request $request){
 
         $status_console = '1%4%2%5%3%6%7%8';
@@ -738,7 +739,6 @@ class Project_Controller extends Controller
         return view('project.show')->with(compact('project'));
     }
 
-
     public function upload()
     {
         $header = [
@@ -828,9 +828,6 @@ class Project_Controller extends Controller
 
     }
 
-
-
-
     public function download($id)
     {
         Artisan::call('optimize:clear');
@@ -865,14 +862,12 @@ class Project_Controller extends Controller
         }
     }
 
-
     public function update_upload_status($id){
         $project = MarketProject::find($id);
         $project->status_upload = 3;
         $project->save();
         return response()->json(['success'=>'Thành công']);
     }
-
 
     public function fake($id)
     {
@@ -890,6 +885,152 @@ class Project_Controller extends Controller
         }
 
 
+
+    }
+
+    public function manage ()
+    {
+        $header = [
+            'title' => 'Quản lý app '.$_GET['market'],
+            'button' => [
+//                'All'       => ['id'=>'all','style'=>'primary'],
+//                'Chờ xử lý' => ['id'=>'WaitProcessing','style'=>'warning'],
+//                'Đang xử lý'=> ['id'=>'Processing','style'=>'info'],
+//                'Kết thúc'  => ['id'=>'End','style'=>'success'],
+//                'Remove'    => ['id'=>'RemoveA','style'=>'danger'],
+            ]
+        ];
+        return view('project.manage')->with(compact('header'));
+    }
+
+    public function getManage(Request $request){
+
+        $draw = $request->get('draw');
+        $start = $request->get("start");
+        $rowperpage = $request->get("length"); // total number of rows per page
+
+        $columnIndex_arr = $request->get('order');
+        $columnName_arr = $request->get('columns');
+        $order_arr = $request->get('order');
+        $search_arr = $request->get('search');
+
+        $columnIndex = $columnIndex_arr[0]['column']; // Column index
+        $columnName = $columnName_arr[$columnIndex]['data']; // Column name
+        $columnSortOrder = $order_arr[0]['dir']; // asc or desc
+        $searchValue = $search_arr['value']; // Search value
+
+        $totalRecords = Markets::where('market_name',$_GET['market'])->first()->projects()->select('count(*) as allcount')
+//            ->where('buildinfo_console','<>',0)
+            ->count();
+
+        $totalRecordswithFilter = Markets::where('market_name',$_GET['market'])
+            ->first()
+            ->projects()
+            ->select('count(*) as allcount')
+            ->count();
+        $records = Markets::where('market_name',$_GET['market'])
+            ->first()
+            ->projects()
+            ->orderBy($columnName, $columnSortOrder)
+//            ->with('markets','ma_template','da')
+//            ->Where('projectname', 'like', '%' . $searchValue . '%')
+//            ->whereIn('buildinfo_console',$status_console)
+
+            ->wherePivot ('bot','<>',null)
+            ->skip($start)
+            ->take($rowperpage)
+            ->get();
+        $data_arr = array();
+        foreach ($records as $record) {
+
+
+            $btn = ' <a href="javascript:void(0)"data-id="'.$record->projectid.'" class="btn btn-warning removeProject"><i class="mdi mdi-file-move"></i></a>';
+
+            $mada =  $template = '';
+            if($record->da){
+                $mada = $record->da->ma_da;
+            }
+            if($record->ma_template){
+                $template = $record->ma_template->template;
+            }
+
+            if(isset($record->logo)){
+                $logo = '<img class="rounded mx-auto d-block"  width="100px"  height="100px"  src="'.url('storage/projects/'.$mada.'/'.$record->projectname.'/lg114.png').'">';
+            }else{
+                $logo = '<img class="rounded mx-auto d-block" width="100px" height="100px" src="assets\images\logo-sm.png">';
+            }
+
+            $project    = '<span class="h3 font-16 "> '.$record->projectname.' </span>';
+            $template = '<span class="text-muted" style="line-height:0.5"> ('.$template.') </span>';
+            $mada = '<span class="" style="line-height:0.5"> - '.$mada.'</span>';
+
+            $version  = 'Version: <span class="text-muted" style="line-height:0.5"> '.$record->buildinfo_vernum .' | '.$record->buildinfo_verstr.' </span>';
+
+            $package = $status_app =$dev =  '';
+            $keystore = 'Key: ';
+            $sdk = 'SDK : <span class="badge badge-secondary" style="font-size: 12px">'.$record->buildinfo_keystore.'</span>';
+            $badges = [
+                'primary',
+                'success',
+                'info',
+                'warning',
+                'danger',
+                'dark',
+                'secondary',
+            ];
+
+
+            if(isset($record->pivot->bot)){
+                $bot = json_decode($record->pivot->bot,true);
+                $data_arr[] = array(
+
+                    "logo" => $logo,
+                    "projectname"=>$project.$template.$mada.'<br>'.$record->title_app.'<br>'.$version.'<br>'.$sdk.'<br>'.$keystore,
+                    "bot->installs" => $bot['installs'],
+                    "bot->numberVoters" => $bot['numberVoters'],
+                    "bot->numberReviews" =>$bot['numberReviews'],
+                    "bot->score" => $bot['score'],
+                    "bot->appVersion" => $bot['appVersion'],
+                    "action"=> $btn
+                );
+            }
+
+
+//            $mess_info = '';
+//            $full_mess ='null';
+//            if ($record->buildinfo_mess){
+//                $buildinfo_mess = $record->buildinfo_mess;
+//                $full_mess =  (str_replace('|','<br>',$buildinfo_mess));
+//                $buildinfo_mess =  (explode('|',$buildinfo_mess));
+//                $buildinfo_mess = array_reverse($buildinfo_mess);
+//                for($i = 0 ; $i < 6 ; $i++){
+//                    if(isset($buildinfo_mess[$i])){
+//                        $mess_info .=  $buildinfo_mess[$i].'<br>';
+//                    }
+//                }
+//            }
+
+
+//            $data_arr[] = array(
+//                "projectid" => $record->projectid,
+//                "logo" => $logo,
+//                "projectname"=>$project.$template.$mada.'<br>'.$record->title_app.'<br>'.$version.'<br>'.$sdk.'<br>'.$keystore,
+//                "markets"=>$package,
+//
+//                "buildinfo_mess" => $mess_info,
+//                "full_mess" => $full_mess,
+//                "buildinfo_console" =>$record->buildinfo_console,
+//                "action"=> $btn,
+//            );
+        }
+        $response = array(
+            "draw" => intval($draw),
+            "iTotalRecords" => $totalRecords,
+            "iTotalDisplayRecords" => $totalRecordswithFilter,
+            "aaData" => $data_arr,
+        );
+
+        echo json_encode($response);
 
     }
 

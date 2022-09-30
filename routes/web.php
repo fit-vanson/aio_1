@@ -270,6 +270,8 @@ Route::group(['prefix'=>'project','middleware'=>['CheckLogout','2fa']], function
     Route::get('/update_upload_status/{id}',[Project_Controller::class,'update_upload_status'])->name('project.update_upload_status')->middleware('can:project-update');
 
     Route::get('/fake/{id}',[Project_Controller::class,'fake'])->name('project.fake')->middleware('can:project-index');
+    Route::get('/manage',[Project_Controller::class,'manage'])->name('project.manage')->middleware('can:project-index');
+    Route::post('/getManage',[Project_Controller::class,'getManage'])->name('project.getManage')->middleware('can:project-index');
 
 });
 
