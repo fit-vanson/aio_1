@@ -919,7 +919,10 @@ class Project_Controller extends Controller
         $columnSortOrder = $order_arr[0]['dir']; // asc or desc
         $searchValue = $search_arr['value']; // Search value
 
-        $totalRecords = Markets::where('market_name',$_GET['market'])->first()->projects()->select('count(*) as allcount')
+        $totalRecords = Markets::where('market_name',$_GET['market'])
+            ->first()
+            ->projects()
+            ->select('count(*) as allcount')
 //            ->where('buildinfo_console','<>',0)
             ->count();
 
@@ -936,7 +939,7 @@ class Project_Controller extends Controller
 //            ->Where('projectname', 'like', '%' . $searchValue . '%')
 //            ->whereIn('buildinfo_console',$status_console)
 
-            ->wherePivot ('bot','<>',null)
+//            ->wherePivot ('bot','<>',null)
             ->skip($start)
             ->take($rowperpage)
             ->get();
@@ -964,36 +967,135 @@ class Project_Controller extends Controller
             $template = '<span class="text-muted" style="line-height:0.5"> ('.$template.') </span>';
             $mada = '<span class="" style="line-height:0.5"> - '.$mada.'</span>';
 
-            $version  = 'Version: <span class="text-muted" style="line-height:0.5"> '.$record->buildinfo_vernum .' | '.$record->buildinfo_verstr.' </span>';
+            $package = 'Package: <span class="text-muted" style="line-height:0.5"> '.$record->pivot->package.' </span>';
+            $keystore = 'Key:<span class="text-muted" style="line-height:0.5"> '.$record->pivot->sdk.' </span>';
+            $sdk = 'SDK : <span class="text-muted" style="line-height:0.5"> '.$record->pivot->keytore.' </span>';
 
-            $package = $status_app =$dev =  '';
-            $keystore = 'Key: ';
-            $sdk = 'SDK : <span class="badge badge-secondary" style="font-size: 12px">'.$record->buildinfo_keystore.'</span>';
-            $badges = [
-                'primary',
-                'success',
-                'info',
-                'warning',
-                'danger',
-                'dark',
-                'secondary',
-            ];
+
+            $status = $record->pivot->status_app;
+            $console = $record->buildinfo_console;
+
+            switch ($status){
+                case 1:
+                    $Chplay_status = '<span class="badge badge-dark">Public</span>';
+                    break;
+                case 2:
+                    $Chplay_status =  '<span class="badge badge-warning">Suppend</span>';
+                    break;
+                case 3:
+                    $Chplay_status =  '<span class="badge badge-info">UnPublish</span>';
+                    break;
+                case 4:
+                    $Chplay_status =  '<span class="badge badge-primary">Remove</span>';
+                    break;
+                case 5:
+                    $Chplay_status =  '<span class="badge badge-success">Reject</span>';
+                    break;
+                case 6:
+                    $Chplay_status =  '<span class="badge badge-danger">Check</span>';
+                    break;
+                case 7:
+                    $Chplay_status =  '<span class="badge badge-warning">Pending</span>';
+                    break;
+                default:
+                    $Chplay_status =  ' <span class="badge badge-secondary"> Mặc định</span> ';
+                    break;
+            }
+
+            switch ($console){
+                case 1:
+                    $buildinfo_console = '<span class="badge badge-dark">Build App</span>';
+                    break;
+                case 2:
+                    $buildinfo_console =  '<span class="badge badge-warning">Đang xử lý Build App</span>';
+                    break;
+                case 3:
+                    $buildinfo_console =  '<span class="badge badge-info">Kết thúc Build App</span>';
+                    break;
+                case 4:
+                    $buildinfo_console =  '<span class="badge badge-primary">Check Data Project</span>';
+                    break;
+                case 5:
+                    $buildinfo_console =  '<span class="badge badge-success">Đang xử lý check dữ liệu của Project</span>';
+                    break;
+                case 6:
+                    $buildinfo_console =  '<span class="badge badge-danger">Kết thúc Check</span>';
+                    break;
+                case 7:
+                    $buildinfo_console =  '<span class="badge badge-danger">Build App (Thất bại)</span>';
+                    break;
+                case 8:
+                    $buildinfo_console =  '<span class="badge badge-danger">Kết thúc (Dự liệu thiếu) </span>';
+                    break;
+                default:
+                    $buildinfo_console =  ' <span class="badge badge-secondary">Trạng thái tĩnh</span> ';
+                    break;
+            }
+
+
+            if ($record->pivot->status_app ==0  ) {
+                $Chplay_status = 'Chưa Publish';
+            }
+            elseif($record['Chplay_status']== 1){
+                $Chplay_status = '<span class="badge badge-dark">Public</span>';
+            }
+            elseif($record['Chplay_status']==2){
+                $Chplay_status =  '<span class="badge badge-warning">Suppend</span>';
+            }
+            elseif($record['Chplay_status']==3){
+                $Chplay_status =  '<span class="badge badge-info">UnPublish</span>';
+            }
+            elseif($record['Chplay_status']==4){
+                $Chplay_status =  '<span class="badge badge-primary">Remove</span>';
+            }
+            elseif($record['Chplay_status']==5){
+                $Chplay_status =  '<span class="badge badge-success">Reject</span>';
+            }
+            elseif($record['Chplay_status']==6){
+                $Chplay_status =  '<span class="badge badge-danger">Check</span>';
+            }
+            elseif($record['Chplay_status']==7){
+                $Chplay_status =  '<span class="badge badge-warning">Pending</span>';
+            }
 
 
             if(isset($record->pivot->bot)){
                 $bot = json_decode($record->pivot->bot,true);
-                $data_arr[] = array(
 
-                    "logo" => $logo,
-                    "projectname"=>$project.$template.$mada.'<br>'.$record->title_app.'<br>'.$version.'<br>'.$sdk.'<br>'.$keystore,
-                    "bot->installs" => $bot['installs'],
-                    "bot->numberVoters" => $bot['numberVoters'],
-                    "bot->numberReviews" =>$bot['numberReviews'],
-                    "bot->score" => $bot['score'],
-                    "bot->appVersion" => $bot['appVersion'],
-                    "action"=> $btn
-                );
+                $version_bot    = $bot['appVersion'];
+                $version_build  = $record->buildinfo_verstr;
+                if($version_bot == $version_build ){
+                    $version = 'Version: <span class="badge badge-success">'.$version_bot.'</span>';
+                }else{
+                    $version = 'Version Bot:  <span class="badge badge-danger">'.$version_bot.'</span> ' .  ' <br> Version Build:   <span class="badge badge-secondary">'.$version_build.'</span> ';
+                }
+
+//                $data_arr[] = array(
+//                    "logo" => $logo,
+//                    "projectname"=>$project.$template.$mada.'<br>'.$record->title_app.'<br>'.$package.'<br>'.$sdk.'<br>'.$keystore,
+//                    "bot->installs" => $bot['installs'],
+//                    "bot->numberVoters" => $bot['numberVoters'],
+//                    "bot->numberReviews" =>$bot['numberReviews'],
+//                    "bot->score" => $bot['score'],
+//                    "bot->appVersion" => $bot['appVersion'],
+//                    "status_app" =>'Console: '.$buildinfo_console.'<br> Ứng dụng: '.$Chplay_status.'<br>'.$version. '<br> Time check: '.date('H:i:s   d-m-Y',$record->bot_timecheck),
+//
+//                    "action"=> $btn
+//                );
             }
+
+            $data_arr[] = array(
+                "logo" => $logo,
+                "projectname"=>$project.$template.$mada.'<br>'.$record->title_app.'<br>'.$package.'<br>'.$sdk.'<br>'.$keystore,
+                "bot->installs" => @$bot['installs'],
+                "bot->numberVoters" => @$bot['numberVoters'],
+                "bot->numberReviews" =>@$bot['numberReviews'],
+                "bot->score" => @$bot['score'],
+                "bot->appVersion" => @$bot['appVersion'],
+                "status_app" =>'Console: '.$buildinfo_console.'<br> Ứng dụng: '.$Chplay_status.'<br>'.@$version. '<br> Time check: '.date('H:i:s   d-m-Y',$record->pivot->bot_time),
+
+                "action"=> $btn
+            );
 
 
 //            $mess_info = '';
