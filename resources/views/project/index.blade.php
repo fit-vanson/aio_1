@@ -156,7 +156,7 @@
             var hash = url.substring(url.indexOf('?')+1);
             $.fn.dataTable.ext.errMode = 'none';
             var table = $('#projectTable').DataTable({
-                displayLength: 50,
+                displayLength: 1,
                 lengthMenu: [5, 10, 25, 50, 75, 100],
                 // orderCellsTop: true,
                 // fixedHeader: true,
@@ -475,6 +475,46 @@
 
                 });
             });
+
+            $(document).on('click','.check_Status_CHPLAY', function (data){
+                var _id = $(this).data("package");
+                var btn = $(this);
+                $.get('{{asset('cronProject/chplay?projectID=')}}'+_id+'&return=true',function (data) {
+
+                    var status = data.status_app;
+                    var html = '<p data-package="'+_id+'" class="check_Status_CHPLAY badge badge-'
+                    switch (status){
+                        case 1:
+                            html +=  'success "> Publish';
+                            break;
+                        case 2:
+                            html +=  'warning "> Suppend';
+                            break;
+                        case 3:
+                            html += 'info"> UnPublish';
+                            break;
+                        case 4:
+                            html +=  'primary"> Remove';
+                            break;
+                        case 5:
+                            html +=  'dark"> Reject';
+                            break;
+                        case 6:
+                            html +=  'danger"> Ch111111111111111eck ';
+                            break;
+                        case 7:
+                            html +=  'warning"> Pending';
+                            break;
+                        default:
+                            html += 'secondary"> Mặc định';
+                            break;
+                    }
+                    html += '</p>';
+                    btn.replaceWith(html);
+                    $.notify(data.package, "success");
+                });
+            });
+
 
 
             $('.choose_template').on('select2:selecting', function(e) {

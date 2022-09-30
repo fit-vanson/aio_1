@@ -121,32 +121,42 @@ class Project_Controller extends Controller
 
                     $result .= $market->pivot->apk_link ? ' <a href="'.$market->pivot->apk_link.'"  target="_blank" class="badge badge-success">APK</a> ' : ' <a class="badge badge-secondary">APK</a> ' ;
                     $status = $market->pivot->status_app;
+                    $result .=  '<p data-package="'.$market->pivot->id.'" class="check_Status_'.$market->market_name.' badge badge-';
                     switch ($status){
                         case 1:
-                            $result .=  ' <p class="badge badge-success"> Publish</p> ';
+//                            $result .=  ' <p class="badge badge-success "> Publish</p> ';
+                            $result .=  'success "> Publish';
                             break;
                         case 2:
-                            $result .=  ' <p class="badge badge-warning "> Suppend</p> ';
+//                            $result .=  ' <p class="badge badge-warning "> Suppend</p> ';
+                            $result .=  'warning "> Suppend';
                             break;
                         case 3:
-                            $result .=  ' <p class="badge badge-info"> UnPublish</p> ';
+//                            $result .=  ' <p class="badge badge-info"> UnPublish</p> ';
+                            $result .=  'info"> UnPublish';
                             break;
                         case 4:
-                            $result .=  ' <p class="badge badge-primary"> Remove</p> ';
+//                            $result .=  ' <p class="badge badge-primary"> Remove</p> ';
+                            $result .=  'primary"> Remove';
                             break;
                         case 5:
-                            $result .=  ' <p class="badge badge-dark"> Reject</p> ';
+//                            $result .=  ' <p class="badge badge-dark"> Reject</p> ';
+                            $result .=  'dark"> Reject';
                             break;
                         case 6:
-                            $result .=  ' <p class="badge badge-danger"> Check</p> ';
+//                            $result .=  ' <p class="badge badge-danger "> Check</p> ';
+                            $result .=  'danger"> Check ';
                             break;
                         case 7:
-                            $result .=  ' <p class="badge badge-warning"> Pending</p> ';
+//                            $result .=  ' <p class="badge badge-warning"> Pending</p> ';
+                            $result .=  'warning"> Pending';
                             break;
                         default:
-                            $result .=  ' <p class="badge badge-secondary"> Mặc định</p> ';
+//                            $result .=  ' <p class="badge badge-secondary"> Mặc định</p> ';
+                            $result .=  'secondary"> Mặc định';
                             break;
                     }
+                    $result .=  '</p>';
                     if($market->pivot->dev_id){
                         $result .= ' <span class="badge badge-'.$badges[$key].'">'.$market->pivot->dev->dev_name.'</span> ';
                         if ($market->pivot->dev->ga_id){
@@ -358,32 +368,37 @@ class Project_Controller extends Controller
                 rename($dir.$data->projectname, $dir.$request->projectname);
                 $this->deleteDirectory($dir . $data->projectname);
             }catch (\Exception $exception) {
-                Log::error('Message:' . $exception->getMessage() . '--' . $exception->getLine());
+                Log::error('Message: rename folder Project' . $exception->getMessage() . '--' . $exception->getLine());
             }
 
         }
 
-        $inset_market = [];
-        foreach ($request->market as $key=>$value){
-            if($value['package']){
-                $inset_market[$key] = [
-                    'package' => $value['package'],
-                    'dev_id' => @$value['dev_id']   ,
-                    'keystore' => @$value['keystore'],
-                    'sdk' => @$value['sdk'],
-                    'app_link' => @$value['app_link'],
-                    'policy_link' => @$value['policy_link'],
-                    'ads' => json_encode(@$value['ads']),
-                    'app_name_x' => @$value['app_name_x'],
-                    'appID' => @$value['appID'],
-                    'video_link' => @$value['video_link'],
-                ];
-            }
-        }
+
 
         $data->projectname = $request->projectname;
         $data->save();
-        $data->markets()->sync($inset_market);
+        try {
+            $inset_market = [];
+            foreach ($request->market as $key=>$value){
+                if($value['package']){
+                    $inset_market[$key] = [
+                        'package' => $value['package'],
+                        'dev_id' => @$value['dev_id']   ,
+                        'keystore' => @$value['keystore'],
+                        'sdk' => @$value['sdk'],
+                        'app_link' => @$value['app_link'],
+                        'policy_link' => @$value['policy_link'],
+                        'ads' => json_encode(@$value['ads']),
+                        'app_name_x' => @$value['app_name_x'],
+                        'appID' => @$value['appID'],
+                        'video_link' => @$value['video_link'],
+                    ];
+                }
+            }
+            $data->markets()->sync($inset_market);
+        }catch (\Exception $exception) {
+            Log::error('Message: Inset_market' . $exception->getMessage() . '--' . $exception->getLine());
+        }
         return response()->json(['success'=>'Thành công']);
 
     }

@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\URL;
+use Mavinoo\Batch\Batch;
 use Nelexa\GPlay\GPlayApps;
 use Telegram\Bot\Laravel\Facades\Telegram;
 
@@ -64,25 +65,28 @@ class CronProjectController extends Controller
             $appsChplay = MarketProject::where('package',\request()->package)
                 ->where('market_id',1)
                 ->get();
-        }else {
+        }elseif(isset(\request()->projectID)){
+            $appsChplay = MarketProject::where('id',\request()->projectID)
+                ->where('market_id',1)
+                ->get();
+        }
+        else {
             $time = Setting::first();
             $timeCron = Carbon::now()->subMinutes($time->time_cron)->setTimezone('Asia/Ho_Chi_Minh')->timestamp;
             $appsChplay = MarketProject::where('market_id', 1)
-                ->where('status_upload', 3)
-                ->where(function ($q) use ($timeCron) {
-                    $q->where('bot_time', '<=', $timeCron)
-                        ->orWhere('bot_time', null);
-                })
-                ->limit($time->limit_cron)
+//                ->where('status_upload', 3)
+//                ->where(function ($q) use ($timeCron) {
+//                    $q->where('bot_time', '<=', $timeCron)
+//                        ->orWhere('bot_time', null);
+//                })
+//                ->limit($time->limit_cron)
+                ->limit(5)
                 ->get();
+
         }
 
-        echo '<br/>' .'=========== Chplay ==============' ;
-        echo '<br/><b>'.'Yêu cầu:';
-        echo '<br/>&emsp;'.'- Project có package Chplay'.'</b><br/><br/>';
-
         if($appsChplay){
-
+            $ch= '';
             foreach ($appsChplay as $appChplay){
                 $package = $appChplay->package;
                 $existApp =  $gplay->existsApp($package);
@@ -114,15 +118,23 @@ class CronProjectController extends Controller
                     $appChplay->bot_time = time();
                     $appChplay->save();
                 }
-                echo '<br/>'.'Dang chay:  '.  '-'. $appChplay->id .'--'.$appChplay->status_app.' - '. Carbon::now('Asia/Ho_Chi_Minh');
+                $ch .= '<br/>'.'Dang chay:  '.  '-'. $appChplay->id .'--'.$appChplay->status_app.' - '. Carbon::now('Asia/Ho_Chi_Minh');
+
+            }
+            if(\request()->return){
+                return response()->json($appChplay);
+            }else{
+
+                echo '<br/>' .'=========== Chplay ==============' ;
+                echo '<br/><b>'.'Yêu cầu:';
+                echo '<br/>&emsp;'.'- Project có package Chplay'.'</b><br/><br/>';
+                echo $ch;
             }
         }
         if(count($appsChplay)==0){
             echo 'Chưa đến time cron'.PHP_EOL .'<br>';
             return false;
         }
-
-
 
     }
 
