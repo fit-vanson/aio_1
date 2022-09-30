@@ -349,7 +349,7 @@
                     submit.addClass('btn-success disabled');
                     submit.val("Hoàn thành");
                     $.notify(' success ', "success");
-                    table.draw()
+                    // table.draw()
                 },
             });
         })
