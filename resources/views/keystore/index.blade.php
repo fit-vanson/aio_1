@@ -46,6 +46,8 @@
                      <table class="table table-bordered dt-responsive nowrap data-table" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                         <thead>
                         <tr>
+
+                            <th>ID</th>
                             <th>Tên Keystore</th>
                             <th>Pass Keystore</th>
                             <th>Aliases</th>
@@ -105,6 +107,7 @@
                 type: "post"
             },
             columns: [
+                {data: 'id',visible: false},
                 {data: 'name_keystore'},
                 {data: 'pass_keystore'},
                 {data: 'aliases_keystore'},
@@ -113,10 +116,10 @@
                 {data: 'file'},
                 {data: 'action',className: "text-center", name: 'action', orderable: false, searchable: false},
             ],
-            "columnDefs": [
-                { "orderable": false, "targets": [0,2,3] }
-            ],
-            order:[1,'asc']
+            // "columnDefs": [
+            //     { "orderable": false, "targets": [0,2,3] }
+            // ],
+            order:[0,'desc']
 
         });
 

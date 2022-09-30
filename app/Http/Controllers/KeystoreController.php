@@ -69,6 +69,7 @@ class KeystoreController extends Controller
 //                "name_keystore" => '<a href="/project?q=key_store&id='.$record['name_keystore'].'"> <span>'.$record['name_keystore'].' - ('.$record->market_project_count.')</span></a>',
 //                "name_keystore" => '<span>'.$record['name_keystore'].' - ('.$record->market_project_count.')</span>',
                 "name_keystore" => '<span>'.$record['name_keystore'].' - ('.count($record->market_project).')</span>',
+                "id" => $record['id'],
                 "pass_keystore" => $record['pass_keystore'],
                 "aliases_keystore" => $record['aliases_keystore'],
                 "SHA_256_keystore" => $record['SHA_256_keystore'],
