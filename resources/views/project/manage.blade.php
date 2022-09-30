@@ -28,12 +28,13 @@
                                 <thead>
                                 <tr>
                                     <th style="width:10%">Logo</th>
-                                    <th style="width:25%">Mã Project</th>
-                                    <th style="width:30%">Install</th>
-                                    <th style="width:20%">Review</th>
-                                    <th style="width:10%">Vote</th>
-                                    <th style="width:10%">Score</th>
-                                    <th style="width:5%">Action</th>
+                                    <th style="width:20%">Mã Project</th>
+                                    <th style="width:5%">Install</th>
+                                    <th style="width:5%">Review</th>
+                                    <th style="width:5%">Vote</th>
+                                    <th style="width:5%">Score</th>
+                                    <th style="width:30%">Status app</th>
+                                    <th style="width:10%">Action</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -103,6 +104,7 @@
                     {data: 'bot->numberReviews', name: 'bot->numberReviews'},
                     {data: 'bot->numberVoters', name: 'bot->numberVoters'},
                     {data: 'bot->score', name: 'bot->score'},
+                    {data: 'status_app', name: 'status_app'},
                     {data: 'action', name: 'action',className: "text-center", orderable: false, searchable: false},
                 ],
                 fnRowCallback: function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
