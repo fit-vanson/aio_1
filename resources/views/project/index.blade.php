@@ -60,6 +60,8 @@
     <script src="{{ URL::asset('/assets/libs/toastr/toastr.min.js') }}"></script>
     <script src="{{ URL::asset('/assets/libs/sweetalert2/sweetalert2.min.js') }}"></script>
     <script src="{{ URL::asset('/assets/js/table.init.js') }}"></script>
+    <script src="{{ URL::asset('/assets/js/customs.js') }}"></script>
+
 
 {{--    <script src="plugins/select2/js/select2.min.js"></script>--}}
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
@@ -75,7 +77,6 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-
 
             $('#template').select2({
                 // initialValue:true,
@@ -113,6 +114,7 @@
                     callback(data);
                 }
             });
+
             $('#ma_da').select2({
                 // initialValue:true,
                 placeholder: "Select a customer",
@@ -150,13 +152,11 @@
                 }
             });
 
-
-
             var url = window.location.href;
             var hash = url.substring(url.indexOf('?')+1);
             $.fn.dataTable.ext.errMode = 'none';
             var table = $('#projectTable').DataTable({
-                displayLength: 50,
+                displayLength: 2,
                 lengthMenu: [5, 10, 25, 50, 75, 100],
                 // orderCellsTop: true,
                 // fixedHeader: true,
@@ -267,8 +267,6 @@
                     });
                 }
             });
-
-
 
             $(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
                 e.preventDefault();
@@ -476,45 +474,43 @@
                 });
             });
 
-            $(document).on('click','.check_Status_CHPLAY', function (data){
-                var _id = $(this).data("package");
-                var btn = $(this);
-                $.get('{{asset('cronProject/chplay?projectID=')}}'+_id+'&return=true',function (data) {
-                    var status = data.status_app;
-                    var html = '<p data-package="'+_id+'" class="check_Status_CHPLAY badge badge-'
-                    switch (status){
-                        case 1:
-                            html +=  'success "> Publish';
-                            break;
-                        case 2:
-                            html +=  'warning "> Suppend';
-                            break;
-                        case 3:
-                            html += 'info"> UnPublish';
-                            break;
-                        case 4:
-                            html +=  'primary"> Remove';
-                            break;
-                        case 5:
-                            html +=  'dark"> Reject';
-                            break;
-                        case 6:
-                            html +=  'danger"> Check ';
-                            break;
-                        case 7:
-                            html +=  'warning"> Pending';
-                            break;
-                        default:
-                            html += 'secondary"> Mặc định';
-                            break;
-                    }
-                    html += '</p>';
-                    btn.replaceWith(html);
-                    $.notify(data.package, "success");
-                });
-            });
-
-
+            {{--$(document).on('click','.check_Status_CHPLAY', function (data){--}}
+            {{--    var _id = $(this).data("package");--}}
+            {{--    var btn = $(this);--}}
+            {{--    $.get('{{asset('cronProject/chplay?projectID=')}}'+_id+'&return=true',function (data) {--}}
+            //         var status = data.status_app;
+            //         var html = '<p data-package="'+_id+'" class="check_Status_CHPLAY badge badge-'
+            //         switch (status){
+            //             case 1:
+            //                 html +=  'success "> Publish';
+            //                 break;
+            //             case 2:
+            //                 html +=  'warning "> Suppend';
+            //                 break;
+            //             case 3:
+            //                 html += 'info"> UnPublish';
+            //                 break;
+            //             case 4:
+            //                 html +=  'primary"> Remove';
+            //                 break;
+            //             case 5:
+            //                 html +=  'dark"> Reject';
+            //                 break;
+            //             case 6:
+            //                 html +=  'danger"> Check ';
+            //                 break;
+            //             case 7:
+            //                 html +=  'warning"> Pending';
+            //                 break;
+            //             default:
+            //                 html += 'secondary"> Mặc định';
+            //                 break;
+            //         }
+            //         html += '</p>';
+            //         btn.replaceWith(html);
+            //         $.notify(data.package, "success");
+            {{--    });--}}
+            {{--});--}}
 
             $('.choose_template').on('select2:selecting', function(e) {
                 var project_id = '';
@@ -626,9 +622,6 @@
 
 
             });
-
-
-
 
             $(document).on('click','.fakeProject', function (data){
                 var project_id = $(this).data("id");
@@ -917,7 +910,6 @@
 
         });
 
-
         function getIndex(item){
             let index = $(item).val();
             let myArray = index.split("\n");
@@ -937,7 +929,6 @@
                 },
             });
         }
-
 
         function getProjectMarket(projectID,marketID){
             $.ajax({

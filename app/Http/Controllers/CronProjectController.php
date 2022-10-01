@@ -94,18 +94,19 @@ class CronProjectController extends Controller
 //                        try {
                         $appInfo = $gplay->getAppInfo($package);
                         $data = [
-                            'installs' => $appInfo->getInstalls(),
-                            'numberVoters' => $appInfo->getNumberVoters(),
-                            'numberReviews' => $appInfo->getNumberReviews(),
-                            'score' => $appInfo->getScore(),
-                            'appVersion' => $appInfo->getAppVersion(),
-                            'privacyPoliceUrl' => $appInfo->getPrivacyPoliceUrl(),
                             'released' => $appInfo->getReleased()->getTimestamp(),
                             'updated' => $appInfo->getUpdated()->getTimestamp(),
                         ];
                         $appChplay->status_app = 1;
                         $appChplay->policy_link = $appInfo->getPrivacyPoliceUrl();
                         $appChplay->app_link = $appInfo->getUrl();
+                        $appChplay->app_link = $appInfo->getUrl();
+
+                        $appChplay->bot_installs = $appInfo->getInstalls();
+                        $appChplay->bot_numberVoters = $appInfo->getNumberVoters();
+                        $appChplay->bot_numberReviews = $appInfo->getNumberReviews();
+                        $appChplay->bot_score = $appInfo->getScore();
+                        $appChplay->bot_appVersion = $appInfo->getAppVersion();
                         $appChplay->bot = $data;
                         $appChplay->bot_time = time();
                         $appChplay->save();

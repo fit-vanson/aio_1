@@ -59,7 +59,6 @@ class Project_Controller extends Controller
             ->orwhereHas('markets', function ($query) use ($searchValue) {
                 $query->where('package', 'like', '%' . $searchValue . '%');
             })
-//            ->orwhere('package', 'like', '%' . $searchValue . '%')
             ->count();
         $records = Project::orderBy($columnName, $columnSortOrder)
             ->with('markets.pivot.dev.ga','ma_template','da')
@@ -73,14 +72,13 @@ class Project_Controller extends Controller
             ->get();
         $data_arr = array();
         foreach ($records as $record) {
-//            $btn = ' <a href="javascript:void(0)" onclick="editProject('.$record->projectid.')" class="btn btn-warning"><i class="ti-pencil-alt"></i></a>';
             $btn = ' <a href="javascript:void(0)" data-id="'.$record->projectid.'" class="btn btn-warning editProject"><i class="ti-pencil-alt"></i></a>';
             $btn .= ' <a href="'.route('project.show',['id'=>$record->projectid]).'" target="_blank"  class="btn btn-secondary"><i class="ti-eye"></i></a>';
             if($record->buildinfo_console == 0){
                 $btn = $btn. ' <br><br>  <a href="javascript:void(0)" onclick="quickEditProject('.$record->projectid.')" class="btn btn-success"><i class="mdi mdi-android-head"></i></a>';
             }
-            $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$record->projectid.'" data-original-title="Delete" class="btn btn-danger deleteProject"><i class="ti-trash"></i></a>';
-            $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$record->projectid.'"  class="btn btn-info fakeProject"><i class="ti-info-alt"></i></a>';
+            $btn = $btn.' <a href="javascript:void(0)" data-id="'.$record->projectid.'" data-original-title="Delete" class="btn btn-danger deleteProject"><i class="ti-trash"></i></a>';
+            $btn = $btn.' <a href="javascript:void(0)" data-id="'.$record->projectid.'"  class="btn btn-info fakeProject"><i class="ti-info-alt"></i></a>';
 
             $mada =  $template = '';
             if($record->da){
@@ -130,42 +128,34 @@ class Project_Controller extends Controller
 
                     $result .= $market->pivot->apk_link ? ' <a href="'.$market->pivot->apk_link.'"  target="_blank" class="badge badge-success">APK</a> ' : ' <a class="badge badge-secondary">APK</a> ' ;
                     $status = $market->pivot->status_app;
-                    $result .=  '<p data-package="'.$market->pivot->id.'" class="check_Status_'.$market->market_name.' badge badge-';
+                    $result .=  '<span data-package="'.$market->pivot->id.'" class="check_Status_'.$market->market_name.' badge badge-';
                     switch ($status){
                         case 1:
-//                            $result .=  ' <p class="badge badge-success "> Publish</p> ';
                             $result .=  'success "> Publish';
                             break;
                         case 2:
-//                            $result .=  ' <p class="badge badge-warning "> Suppend</p> ';
                             $result .=  'warning "> Suppend';
                             break;
                         case 3:
-//                            $result .=  ' <p class="badge badge-info"> UnPublish</p> ';
                             $result .=  'info"> UnPublish';
                             break;
                         case 4:
-//                            $result .=  ' <p class="badge badge-primary"> Remove</p> ';
                             $result .=  'primary"> Remove';
                             break;
                         case 5:
-//                            $result .=  ' <p class="badge badge-dark"> Reject</p> ';
                             $result .=  'dark"> Reject';
                             break;
                         case 6:
-//                            $result .=  ' <p class="badge badge-danger "> Check</p> ';
                             $result .=  'danger"> Check ';
                             break;
                         case 7:
-//                            $result .=  ' <p class="badge badge-warning"> Pending</p> ';
                             $result .=  'warning"> Pending';
                             break;
                         default:
-//                            $result .=  ' <p class="badge badge-secondary"> Mặc định</p> ';
                             $result .=  'secondary"> Mặc định';
                             break;
                     }
-                    $result .=  '</p>';
+                    $result .=  '</span>';
                     if($market->pivot->dev_id){
                         $result .= ' <span class="badge badge-'.$badges[$key].'">'.$market->pivot->dev->dev_name.'</span> ';
                         if ($market->pivot->dev->ga_id){
@@ -174,19 +164,13 @@ class Project_Controller extends Controller
                     }
                     $result .= '</div>';
                 }
-
-
             }
-
-
-
 
             $data_arr[] = array(
                 "projectid" => $record->projectid,
                 "logo" => $logo,
                 "projectname"=>$project.$template.$mada.'<br>'.$record->title_app.'<br>'.$version.'<br>'.$sdk.'<br>'.$keystore,
                 "markets"=>$package,
-//                "status"=>'<div>'.@$download_apk.@$download_aab.$status_app.@$dev.@$ga .'</div>',
                 "status"=>@$result,
                 "action"=> $btn,
             );
@@ -988,32 +972,39 @@ class Project_Controller extends Controller
             $status = $record->pivot->status_app;
             $console = $record->buildinfo_console;
 
+//            dd($record->pivot->pivotParent->market_name);
+
+            $Chplay_status =  '<span data-package="'.$record->pivot->id.'" class="check_Status_'.$record->pivot->pivotParent->market_name.' badge badge-';
             switch ($status){
                 case 1:
-                    $Chplay_status = '<span class="badge badge-dark">Public</span>';
+                    $Chplay_status .=  'success "> Publish';
                     break;
                 case 2:
-                    $Chplay_status =  '<span class="badge badge-warning">Suppend</span>';
+                    $Chplay_status .=  'warning "> Suppend';
                     break;
                 case 3:
-                    $Chplay_status =  '<span class="badge badge-info">UnPublish</span>';
+                    $Chplay_status .=  'info"> UnPublish';
                     break;
                 case 4:
-                    $Chplay_status =  '<span class="badge badge-primary">Remove</span>';
+                    $Chplay_status .=  'primary"> Remove';
                     break;
                 case 5:
-                    $Chplay_status =  '<span class="badge badge-success">Reject</span>';
+                    $Chplay_status .=  'dark"> Reject';
                     break;
                 case 6:
-                    $Chplay_status =  '<span class="badge badge-danger">Check</span>';
+                    $Chplay_status .=  'danger"> Check ';
                     break;
                 case 7:
-                    $Chplay_status =  '<span class="badge badge-warning">Pending</span>';
+                    $Chplay_status .=  'warning"> Pending';
                     break;
                 default:
-                    $Chplay_status =  ' <span class="badge badge-secondary"> Mặc định</span> ';
+                    $Chplay_status .=  'secondary"> Mặc định';
                     break;
             }
+            $Chplay_status .=  '</span>';
+
+
+
 
             switch ($console){
                 case 1:
@@ -1045,67 +1036,23 @@ class Project_Controller extends Controller
                     break;
             }
 
-
-            if ($record->pivot->status_app ==0  ) {
-                $Chplay_status = 'Chưa Publish';
-            }
-            elseif($record['Chplay_status']== 1){
-                $Chplay_status = '<span class="badge badge-dark">Public</span>';
-            }
-            elseif($record['Chplay_status']==2){
-                $Chplay_status =  '<span class="badge badge-warning">Suppend</span>';
-            }
-            elseif($record['Chplay_status']==3){
-                $Chplay_status =  '<span class="badge badge-info">UnPublish</span>';
-            }
-            elseif($record['Chplay_status']==4){
-                $Chplay_status =  '<span class="badge badge-primary">Remove</span>';
-            }
-            elseif($record['Chplay_status']==5){
-                $Chplay_status =  '<span class="badge badge-success">Reject</span>';
-            }
-            elseif($record['Chplay_status']==6){
-                $Chplay_status =  '<span class="badge badge-danger">Check</span>';
-            }
-            elseif($record['Chplay_status']==7){
-                $Chplay_status =  '<span class="badge badge-warning">Pending</span>';
+            $version_bot    = $record->pivot->bot_appVersion;
+            $version_build  = $record->buildinfo_verstr;
+            if($version_bot == $version_build ){
+                $version = 'Version: <span class="badge badge-success">'.$version_bot.'</span>';
+            }else{
+                $version = 'Version Bot:  <span class="badge badge-danger">'.$version_bot.'</span> ' .  ' <br> Version Build:   <span class="badge badge-secondary">'.$version_build.'</span> ';
             }
 
-
-            if(isset($record->pivot->bot)){
-                $bot = json_decode($record->pivot->bot,true);
-
-                $version_bot    = $bot['appVersion'];
-                $version_build  = $record->buildinfo_verstr;
-                if($version_bot == $version_build ){
-                    $version = 'Version: <span class="badge badge-success">'.$version_bot.'</span>';
-                }else{
-                    $version = 'Version Bot:  <span class="badge badge-danger">'.$version_bot.'</span> ' .  ' <br> Version Build:   <span class="badge badge-secondary">'.$version_build.'</span> ';
-                }
-
-//                $data_arr[] = array(
-//                    "logo" => $logo,
-//                    "projectname"=>$project.$template.$mada.'<br>'.$record->title_app.'<br>'.$package.'<br>'.$sdk.'<br>'.$keystore,
-//                    "bot->installs" => $bot['installs'],
-//                    "bot->numberVoters" => $bot['numberVoters'],
-//                    "bot->numberReviews" =>$bot['numberReviews'],
-//                    "bot->score" => $bot['score'],
-//                    "bot->appVersion" => $bot['appVersion'],
-//                    "status_app" =>'Console: '.$buildinfo_console.'<br> Ứng dụng: '.$Chplay_status.'<br>'.$version. '<br> Time check: '.date('H:i:s   d-m-Y',$record->bot_timecheck),
-//
-//                    "action"=> $btn
-//                );
-            }
             $data_arr[] = array(
                 "logo" => $logo,
                 "projectname"=>$project.$template.$mada.'<br>'.$record->title_app.'<br>'.$package.'<br>'.$sdk.'<br>'.$keystore,
-                "bot->installs" => @$bot['installs'],
-                "bot->numberVoters" => @$bot['numberVoters'],
-                "bot->numberReviews" =>@$bot['numberReviews'],
-                "bot->score" => @$bot['score'],
-                "bot->appVersion" => @$bot['appVersion'],
+                "bot_installs" => $record->pivot->bot_appVersion,
+                "bot_numberVoters" => $record->pivot->bot_numberVoters,
+                "bot_numberReviews" =>$record->pivot->bot_numberReviews,
+                "bot_score" => $record->pivot->bot_score,
+                "bot_appVersion" => $record->pivot->bot_appVersion,
                 "status_app" =>'Console: '.$buildinfo_console.'<br> Ứng dụng: '.$Chplay_status.'<br>'.@$version. '<br> Time check: '.date('H:i:s   d-m-Y',$record->pivot->bot_time),
-
                 "buildinfo_console"=> $record->buildinfo_console,
                 "action"=> $btn
             );

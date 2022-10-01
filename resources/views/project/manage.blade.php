@@ -58,6 +58,8 @@
     <script src="{{ URL::asset('/assets/libs/toastr/toastr.min.js') }}"></script>
     <script src="{{ URL::asset('/assets/libs/sweetalert2/sweetalert2.min.js') }}"></script>
     <script src="{{ URL::asset('/assets/js/table.init.js') }}"></script>
+    <script src="{{ URL::asset('/assets/js/customs.js') }}"></script>
+
 
     {{--    <script src="plugins/select2/js/select2.min.js"></script>--}}
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
@@ -74,10 +76,7 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-            var url = window.location.href;
             var search = window.location.search;
-            var hash = url.substring(url.indexOf('?')+1);
-            console.log(hash)
             $.fn.dataTable.ext.errMode = 'none';
             var table = $('#manageTable').DataTable({
                 displayLength: 2,
@@ -85,19 +84,17 @@
 
                 processing: true,
                 serverSide: true,
-
                 ajax: {
-                    {{--url: "{{ route('project.getManage')}}?"+hash,--}}
                     url: "{{ route('project.getManage')}}"+search,
                     type: "post",
                 },
                 columns: [
                     {data: 'logo', name: 'logo',orderable: false},
                     {data: 'projectname', name: 'projectname'},
-                    {data: 'bot->installs', name: 'bot->installs'},
-                    {data: 'bot->numberReviews', name: 'bot->numberReviews'},
-                    {data: 'bot->numberVoters', name: 'bot->numberVoters'},
-                    {data: 'bot->score', name: 'bot->score'},
+                    {data: 'bot_installs', name: 'bot_installs'},
+                    {data: 'bot_numberReviews', name: 'bot_numberReviews'},
+                    {data: 'bot_numberVoters', name: 'bot_numberVoters'},
+                    {data: 'bot_score', name: 'bot_score'},
                     {data: 'status_app', name: 'status_app',searchable: false, orderable: false},
                     {data: 'action', name: 'action',className: "text-center", orderable: false, searchable: false},
                 ],
@@ -147,9 +144,6 @@
                         } );
                     } );
                 },
-
-
-
                 fnRowCallback: function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
 
 
