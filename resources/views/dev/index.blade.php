@@ -392,6 +392,7 @@
                 }
 
             });
+
             $(document).on('click','.deleteDev', function (data){
                 var id = $(this).data("id");
 
@@ -431,8 +432,6 @@
                 $('#store_name').val(data.store_name);
                 $('#dev_name').val(data.dev_name);
 
-
-
                 if(data.ga_id){
                     $("#ga_id").select2("trigger", "select", {
                         data: { id: data.ga_id,text: data.ga.ga_name }
@@ -468,6 +467,11 @@
                 $('#info_policydev').val(data.url_policy);
                 $('#info_fanpage').val(data.url_fanpage);
                 $('#info_phone').val(data.phone);
+                $('#api_dev_id').val(data.dev_id);
+                $('#api_client_id').val(data.api_client_id);
+                $('#api_client_secret').val(data.api_client_secret);
+                $('#api_token').val(data.api_token);
+                $('#api_access_key').val(data.api_access_key);
 
 
 

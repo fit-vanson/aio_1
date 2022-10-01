@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Dev_Huawei;
 use App\Models\Dev_Vivo;
+use App\Models\Market_dev;
 use App\Models\MarketProject;
 use App\Models\ProjectModel;
 use App\Models\Setting;
@@ -20,7 +21,7 @@ use Telegram\Bot\Laravel\Facades\Telegram;
 class CronProjectController extends Controller
 
 {
-    private  $domain = 'https://connect-api.cloud.huawei.com';
+    private  $domainHuawei = 'https://connect-api.cloud.huawei.com';
 
     // Vivo
     private $SIGN_METHOD_HMAC = "hmac-sha256";
@@ -60,7 +61,6 @@ class CronProjectController extends Controller
     }
     public function Chplay($status_upload = null){
         $gplay = new \Nelexa\GPlay\GPlayApps();
-
         if(isset(\request()->package)){
             $appsChplay = MarketProject::where('package',\request()->package)
                 ->where('market_id',1)
@@ -89,8 +89,6 @@ class CronProjectController extends Controller
             foreach ($appsChplay as $appChplay){
                 $package = $appChplay->package;
                 $existApp =  $gplay->existsApp($package);
-//                $appInfo = $gplay->getAppInfo($package);
-//                dd($appInfo);
                 if($existApp){
                     try {
                         $appInfo = $gplay->getAppInfo($package);
@@ -178,7 +176,7 @@ class CronProjectController extends Controller
                 return;
             }
         }
-        return URL::current().'?id=xyz';
+        return '<br><b> CHplay </b>: '.URL::current().'?id=com.xxx.xxx'.'<br><br> <b>Huawei</b> : '.URL::current().'?id=Cxxx';
     }
 
     function array_search_id($search_value, $array, $id_path) {
@@ -211,31 +209,194 @@ class CronProjectController extends Controller
         return null;
     }
 
-    public function Huawei(){
+    public function Huawei($status_upload = null){
+        $status_upload = isset($_GET['status_upload']) ? $_GET['status_upload'] : $status_upload;
         $time =  Setting::first();
         $timeCron = Carbon::now()->subMinutes($time->time_cron)->setTimezone('Asia/Ho_Chi_Minh');
-        $dev_huawei = Dev_Huawei::where('huawei_dev_client_id','<>',null)
-            ->where('huawei_dev_client_secret','<>',null)
-            ->get();
-        foreach ($dev_huawei as $dev){
-            Dev_Huawei::updateorCreate(
-                [
-                    'id' =>$dev->id
-                ],
-                [
-                    'token' => $this->getTokenHuawei($this->domain,$dev->huawei_dev_client_id, $dev->huawei_dev_client_secret)
-                ]
-            );
-        }
-        $appsHuawei = ProjectModel::with('dev_huawei')
-            ->whereHas('dev_huawei', function ($q)  {
-                $q->where('huawei_dev_client_id','<>',null);
+        $dev_huawei = Market_dev::where('market_id', 7)
+            ->with('projects',function($q) use ($time, $timeCron) {
+                $q->where('market_id',7)
+                    ->where(function ($q) use ($timeCron) {
+                        $q->where('bot_time', '<=', $timeCron)
+                            ->orWhere('bot_time', null);
+                    })
+                    ->limit($time->limit_cron);
             })
-            ->where('Huawei_bot->time_bot','<=',$timeCron)
-            ->where('Huawei_package','<>',null)
-//            ->where('projectname','DA148-02')
-            ->limit($time->limit_cron)
+            ->where('api_client_id','<>',null)
+            ->where('api_client_secret','<>',null)
             ->get();
+
+        foreach ($dev_huawei as $dev){
+            $dev->api_token  = $this->getTokenHuawei($this->domainHuawei,$dev->api_client_id, $dev->api_client_secret);
+            $dev->save();
+            $appsHuawei = $dev->projects;
+            if($appsHuawei){
+                foreach ($appsHuawei as $appHuawei){
+                    echo '<br/>'.'Dang chay:  '.  '- '. $appHuawei->id .' - '. Carbon::now('Asia/Ho_Chi_Minh');
+                    $monthCron = Carbon::now()->format('Ym');
+                    $dataArr = [];
+                    $appIDs = [];
+                    $appInfo = [];
+                    try {
+                        $appIDs = $this->AppInfoPackageHuawei($this->domainHuawei,$dev->api_token,$dev->api_client_id,$appHuawei->package);
+                        if($appIDs){
+                            $appInfo    = $this->AppInfoHuawei($this->domainHuawei,$dev->api_token,$dev->api_client_id,$appIDs[0]->value);
+                            if($appInfo){
+                                $reportApp  = $this->reportAppHuawei($this->domainHuawei,$dev->api_token,$dev->api_client_id,$appIDs[0]->value);
+                                if($reportApp){
+                                    $file = $this->readCSV($reportApp['fileURL'],array('delimiter' => ','));
+                                    $dataArr =[
+                                        'Month' => $monthCron,
+                                        'Impressions' => $file ? $file['Impressions'] : 0,
+                                        'Details_page_views' => $file ? $file['Details page views'] : 0,
+                                        'Total_downloads' => $file ? $file['Total downloads'] : 0 ,
+                                        'Uninstalls' => $file ? $file['Uninstalls (installed from AppGallery)'] : 0,
+                                        'updateTime' =>  $appInfo['appInfo']['updateTime'],
+                                        'message' =>  $appInfo['auditInfo']['auditOpinion'],
+                                    ];
+                                }
+                                $dataBot = $appHuawei->bot;
+
+                                if($dataBot){
+                                    $checkMonth = $this->searchForMonth($monthCron,$dataBot);
+                                    if($checkMonth){
+                                        $temp = array_diff_key($dataBot, array_flip($checkMonth));//
+                                        $data =  array_merge($temp,[$dataArr]);
+                                    }else{
+                                        $data =  array_merge($dataBot,[$dataArr]);
+                                    }
+                                }else{
+                                    $data = $dataArr;
+                                }
+
+                                $status = $appInfo['appInfo']['releaseState'];
+                                switch ($status){
+                                    case 0:
+                                        $status_app = 1;
+                                        break;
+                                    case 1 || 11:
+                                        $status_app = 4;
+                                        break;
+                                    case 2 || 6 || 8 || 9:
+                                        $status_app = 3;
+                                        break;
+                                    case 3 || 4 || 5:
+                                        $status_app = 6;
+                                        break;
+                                    case 7:
+                                        $status_app = 0;
+                                        break;
+                                    case 10:
+                                        $status_app = 2;
+                                        break;
+                                }
+
+                                array_multisort($data);
+                                $data['status'] = $status;
+
+                                $appHuawei->bot_appVersion =   array_key_exists('versionNumber',$appInfo['appInfo']) ? $appInfo['appInfo']['versionNumber'] : null;
+                                $appHuawei->policy_link =  array_key_exists('privacyPolicy',$appInfo['appInfo']) ? $appInfo['appInfo']['privacyPolicy'] : null;
+                                $appHuawei->appID = $appIDs[0]->value ;
+                                $appHuawei->status_app = $status_app;
+                                $appHuawei->bot =$data;
+                                $appHuawei->bot_time = time();
+                                $appHuawei->save();
+                            }
+                        }
+
+
+
+
+
+
+
+//                        $appInfo = $appIDs ? $this->AppInfoHuawei($this->domainHuawei,$dev->api_token,$dev->api_client_id,$appIDs[0]->value) : false;
+//                        $reportApp = $appIDs ? $this->reportAppHuawei($this->domainHuawei,$dev->api_token,$dev->api_client_id,$appIDs[0]->value) : false;
+//                        $file = $reportApp ? $this->readCSV($reportApp['fileURL'],array('delimiter' => ',')) : false;
+//
+//                        $dataArr =[
+//                            'Month' => $monthCron,
+//                            'Impressions' => $file ? $file['Impressions'] : 0,
+//                            'Details_page_views' => $file ? $file['Details page views'] : 0,
+//                            'Total_downloads' => $file ? $file['Total downloads'] : 0 ,
+//                            'Uninstalls' => $file ? $file['Uninstalls (installed from AppGallery)'] : 0,
+//                            'updateTime' =>  $appInfo ? $appInfo['appInfo']['updateTime'] : 0,
+//                        ];
+//                        $dataBot = $appHuawei->bot;
+//                        if($dataBot){
+//                            $checkMonth = $this->searchForMonth($monthCron,$dataBot);
+//                            if($checkMonth){
+//                                $temp = array_diff_key($dataBot, array_flip($checkMonth));//
+//                                $data =  array_merge($temp,[$dataArr]);
+//                            }else{
+//                                $data =  array_merge($dataBot,[$dataArr]);
+//                            }
+//                        }else{
+//                            $data = $dataArr;
+//                        }
+
+
+//                        array_multisort($data);
+//                        $data['message'] = $appInfo ? $appInfo['auditInfo']['auditOpinion']: 'Error';
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//                        dd($appIDs,$appInfo,$appHuawei);
+//
+//
+//                        $data['versionNumber'] = $appInfo ? ( array_key_exists('versionNumber',$appInfo['appInfo']) ? $appInfo['appInfo']['versionNumber'] : 'N/A'):  "N/A" ;
+//                        $data['message'] = $appInfo ? $appInfo['auditInfo']['auditOpinion']: 'Error';
+//                        $status = $appInfo ? $appInfo['appInfo']['releaseState']: 100;
+//                        $huawei = ProjectModel::updateOrCreate(
+//                            [
+//                                'projectid'=> $appHuawei->projectid
+//                            ],
+//                            [
+//                                'Huawei_status' => $status,
+//                                'Huawei_appId' => !$appIDs ? null : $appIDs[0]->value,
+//                                'Huawei_bot' => json_encode(array_filter($data)),
+//                            ]
+//                        );
+
+//                        if($status !== 0 ){
+//                            $text = " <pre>Project Error (Huawei)</pre> \n"
+//                                . "<b>Project name: </b>\n"
+//                                . "<code>$huawei->projectname</code>\n"
+//                                . "<b>Data Version: </b>\n"
+//                                . "<pre>". $data['versionNumber']."</pre>\n"
+//                                . "<b>Message: </b>\n"
+//                                . $data['message']. "\n"
+//                            ;
+//
+//
+//                            $url = "https://api.telegram.org/bot" . env('TELEGRAM_BOT_TOKEN', '') . "/sendMessage?parse_mode=html&chat_id=" . env('TELEGRAM_CHANNEL_ID', '');
+////                        $url = "https://api.telegram.org/bot" . env('TELEGRAM_BOT_TOKEN', '') . "/sendMessage?parse_mode=html&chat_id=-723495641";
+//                            $url = $url . "&text=" . urlencode($text);
+//                            file_get_contents($url);
+////                        Telegram::sendMessage([
+////                            'chat_id' => env('TELEGRAM_CHANNEL_ID', ''),
+////                            'parse_mode' => 'HTML',
+////                            'text' => $text
+////                        ]);
+//                        }
+                    }catch (\Exception $exception) {
+                        Log::error('Message:' . $exception->getMessage() . '--- cronHuawei: '.$appHuawei->projectname.'---' . $exception->getLine());
+                    }
+                }
+                return true;
+            }if(count($appsHuawei)==0){
+                echo 'Chưa đến time cron'.PHP_EOL .'<br>';
+                return false;
+            }
+        }
+
+
 
 
         echo '<br/><br/>';
@@ -360,11 +521,9 @@ class CronProjectController extends Controller
         $dataArr = [
             'Authorization'=> 'Bearer ' . $token,
             'client_id'=>$clientID,
-//            'client_id'=> '879505161293155008',
             'Content-Type'=>'application/json',
         ];
         $endpoint = "/api/publish/v2/app-info?appid=".$appID;
-//        $endpoint = "/api/publish/v2/app-info?appid=105992825";
         try {
             $response = Http::withHeaders($dataArr)->get($domain . $endpoint);
             if ($response->successful()){
@@ -393,7 +552,7 @@ class CronProjectController extends Controller
                 $data =  $data->appids;
             }
         }catch (\Exception $exception) {
-            Log::error('Message:' . $exception->getMessage() . '--- AppInfo: ' . $exception->getLine());
+            Log::error('Message: AppInfoPackageHuawei:---' . $exception->getMessage() . '---' . $exception->getLine());
         }
         return $data;
     }
@@ -401,7 +560,9 @@ class CronProjectController extends Controller
     public function reportAppHuawei($domain,$token,$clientID,$appID){
         $data = '';
         $startTime  =  Carbon::now()->startOfMonth()->format('Ymd');
+        $startTime  =  '20220901';
         $endTime    =  Carbon::now()->format('Ymd');
+        $endTime    =  '20220930';
         $lang='en-US';
         $endpoint = '/api/report/distribution-operation-quality/v1/appDownloadExport/'.$appID.'?language='.$lang.'&startTime='.$startTime.'&endTime='.$endTime.'&groupBy=businessType';
         $dataArr = [
@@ -415,11 +576,10 @@ class CronProjectController extends Controller
                 $data = $response->json();
             }
         }catch (\Exception $exception) {
-            Log::error('Message:' . $exception->getMessage() . '--- reportApp: ' . $exception->getLine());
+            Log::error('Message: reportAppHuawei:---' . $exception->getMessage() . '---' . $exception->getLine());
         }
         return $data;
     }
-
 
     public function getReviewsHuawei($domain,$token,$clientID,$appID){
         $data = '';
@@ -444,34 +604,38 @@ class CronProjectController extends Controller
         return $data;
     }
 
-
     public function readCSV($csvFile, $array){
-        $file_handle = fopen($csvFile, 'r');
-        while (!feof($file_handle)) {
-            $line_of_text[] = fgetcsv($file_handle, 0, $array['delimiter']);
-        }
-        fclose($file_handle);
-        $header = array_shift($line_of_text);
-        $rows = array_filter($line_of_text);
-        $data = [];
-        foreach ($rows as $row){
-            $data = array_combine($header, $row) ;
+        try {
+            $file_handle = fopen($csvFile, 'r');
+            while (!feof($file_handle)) {
+                $line_of_text[] = fgetcsv($file_handle, 0, $array['delimiter']);
+            }
+            fclose($file_handle);
+            $header = array_shift($line_of_text);
+            $rows = array_filter($line_of_text);
+            $data = [];
+            foreach ($rows as $row){
+                $data = array_combine($header, $row) ;
+            }
+        }catch (\Exception $exception) {
+            Log::error('Message: readCSV:---' . $exception->getMessage() . '---' . $exception->getLine());
         }
         return $data;
     }
+
     public function searchForMonth($id, $array) {
         $a = [];
-        foreach ($array as $key => $val) {
-            if(isset($val['Month'])){
-                if ($val['Month'] === $id) {
-                    $a[] = $key;
+        if($array){
+            foreach ($array as $key => $val) {
+                if(isset($val['Month'])){
+                    if ($val['Month'] === $id) {
+                        $a[] = $key;
+                    }
                 }
             }
         }
         return $a;
     }
-
-
 
     public function Vivo(){
         $time =  Setting::first();
@@ -553,6 +717,7 @@ class CronProjectController extends Controller
         return false;
 
     }
+
     public function sign_Vivo($paramsMap,$accessSecret,$signMethod){
         $params = $this->getUrlParamsFromMap_Vivo($paramsMap);
         if ($this->SIGN_METHOD_HMAC == $signMethod) {
@@ -561,6 +726,7 @@ class CronProjectController extends Controller
         return null;
 
     }
+
     public function getUrlParamsFromMap_Vivo($paramsMap){
         ksort($paramsMap);
         $paramsMap = implode('&', array_map(
@@ -569,11 +735,11 @@ class CronProjectController extends Controller
             array_keys($paramsMap)));
         return $paramsMap;
     }
+
     public function hmacSHA256_Vivo($data, $key){
         $hash = hash_hmac('SHA256', $data, $key);
         return $hash;
     }
-
 
     public function updatedActivity()
     {

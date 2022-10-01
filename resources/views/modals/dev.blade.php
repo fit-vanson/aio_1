@@ -76,15 +76,12 @@
                                     <option value="2">Đóng</option>
                                     <option value="3">Suspend</option>
                                 </select>
-
                             </div>
 
                             <div class="form-group col-lg-6 ">
                                 <label for="name">Profile Info <span style="color: red">*</span></label>
                                 <select class="form-control" id="profile_id" name="profile_id" required></select>
                             </div>
-
-
 
                             <div class="form-group col-lg-6">
                                 <label class="form-label mb-3 d-flex">Công ty || Cá nhân</label>
@@ -98,28 +95,31 @@
                                 </div>
                             </div>
 
-{{--                            <div class="form-group col-lg-6">--}}
+                            <div class="form-group col-lg-6 ">
+                                <label for="name">DEV ID</label>
+                                <input type="text" id="api_dev_id" name="api_dev_id" class="form-control">
+                            </div>
 
-{{--                                <label for="name">Profile Info</label>--}}
-{{--                                <div class="custom-control custom-radio custom-control-inline">--}}
-{{--                                    <input type="radio" id="company1" name="attribute1" class="custom-control-input" onchange="getit();" value="0">--}}
-{{--                                    <label class="custom-control-label" for="company1">Công ty</label>--}}
-{{--                                </div>--}}
-{{--                                <div class="custom-control custom-radio custom-control-inline">--}}
-{{--                                    <input type="radio" id="individual1" name="attribute1" class="custom-control-input" onchange="getit();" value="1" checked="">--}}
-{{--                                    <label class="custom-control-label" for="individual1">Cá nhân</label>--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
+                            <div class="form-group col-lg-6 ">
+                                <label for="name">API Client ID</label>
+                                <input type="text" id="api_client_id" name="api_client_id" class="form-control">
+                            </div>
 
-{{--                            <div class="form-group col-lg-8 info_company">--}}
-{{--                                <label for="name">Công ty đăng ký</label>--}}
-{{--                                <input id="info_company" name="info_company" class="form-control"/>--}}
-{{--                            </div>--}}
+                            <div class="form-group col-lg-6 ">
+                                <label for="name">API Client Secret</label>
+                                <input type="text" id="api_client_secret" name="api_client_secret" class="form-control">
+                            </div>
 
-{{--                            <div class="form-group col-lg-6 dia_chi">--}}
-{{--                                <label for="name">Địa chỉ</label>--}}
-{{--                                <textarea id="info_andress" name="info_andress" class="form-control" rows="4" ></textarea>--}}
-{{--                            </div>--}}
+                            <div class="form-group col-lg-6 ">
+                                <label for="name">API Token</label>
+                                <input type="text" id="api_token" name="api_token" class="form-control">
+                            </div>
+
+                            <div class="form-group col-lg-6 ">
+                                <label for="name">API Access Key</label>
+                                <input type="text" id="api_access_key" name="api_access_key" class="form-control">
+                            </div>
+
                             <div class="form-group col-lg-6 ">
                                 <label for="name">Ghi chú</label>
                                 <textarea id="note" name="note" class="form-control" rows="4" ></textarea>

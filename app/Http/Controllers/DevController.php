@@ -33,7 +33,6 @@ class DevController extends Controller
     }
     public function getIndex(Request $request)
     {
-
         $draw = $request->get('draw');
         $start = $request->get("start");
         $rowperpage = $request->get("length"); // total number of rows per page
@@ -198,6 +197,11 @@ class DevController extends Controller
         $data['status'] = $request->status;
         $data['profile_id'] = $request->profile_id;
         $data['company_pers'] = $request->attribute;
+        $data['dev_id'] = $request->api_dev_id;
+        $data['api_client_id'] = $request->api_client_id;
+        $data['api_client_secret'] = $request->api_client_secret;
+        $data['api_token'] = $request->api_token;
+        $data['api_access_key'] = $request->api_access_key;
         $data['note'] = $request->note;
         $data->save();
         return response()->json([
@@ -211,7 +215,6 @@ class DevController extends Controller
     }
     public function update(Request $request)
     {
-
         $id = $request->dev_id;
         $rules = [
             'store_name' =>'unique:market_devs,store_name,'.$id.',id',
@@ -245,6 +248,11 @@ class DevController extends Controller
         $data['status'] = $request->status;
         $data['profile_id'] = $request->profile_id;
         $data['company_pers'] = $request->attribute;
+        $data['dev_id'] = $request->api_dev_id;
+        $data['api_client_id'] = $request->api_client_id;
+        $data['api_client_secret'] = $request->api_client_secret;
+        $data['api_token'] = $request->api_token;
+        $data['api_access_key'] = $request->api_access_key;
         $data['note'] = $request->note;
 
         $data->save();
