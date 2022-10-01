@@ -39,7 +39,7 @@ class CronProjectController extends Controller
         Artisan::call('optimize:clear');
         $chplay = $huawei = $vivo = '';
         try {
-            $chplay = $this->Chplay();
+            $chplay = $this->Chplay(3);
         }catch (\Exception $exception) {
             Log::error('Message:' . $exception->getMessage() . '--- Cron Project CHplay : ' . $exception->getLine());
         }
@@ -58,7 +58,7 @@ class CronProjectController extends Controller
             echo '<META http-equiv="refresh" content="5;URL=' . url("cronProject") . '">';
         }
     }
-    public function Chplay(){
+    public function Chplay($status_upload = null){
         $gplay = new \Nelexa\GPlay\GPlayApps();
 
         if(isset(\request()->package)){
@@ -73,16 +73,15 @@ class CronProjectController extends Controller
         else {
             $time = Setting::first();
             $timeCron = Carbon::now()->subMinutes($time->time_cron)->setTimezone('Asia/Ho_Chi_Minh')->timestamp;
+            $status_upload = isset($_GET['status_upload']) ? $_GET['status_upload'] : $status_upload;
             $appsChplay = MarketProject::where('market_id', 1)
-//                ->where('status_upload', 3)
-//                ->where(function ($q) use ($timeCron) {
-//                    $q->where('bot_time', '<=', $timeCron)
-//                        ->orWhere('bot_time', null);
-//                })
-//                ->limit($time->limit_cron)
-                ->limit(5)
+                ->where('status_upload','like','%'. $status_upload.'%')
+                ->where(function ($q) use ($timeCron) {
+                    $q->where('bot_time', '<=', $timeCron)
+                        ->orWhere('bot_time', null);
+                })
+                ->limit($time->limit_cron)
                 ->get();
-
         }
 
         if($appsChplay){
@@ -90,8 +89,10 @@ class CronProjectController extends Controller
             foreach ($appsChplay as $appChplay){
                 $package = $appChplay->package;
                 $existApp =  $gplay->existsApp($package);
+//                $appInfo = $gplay->getAppInfo($package);
+//                dd($appInfo);
                 if($existApp){
-//                        try {
+                    try {
                         $appInfo = $gplay->getAppInfo($package);
                         $data = [
                             'released' => $appInfo->getReleased()->getTimestamp(),
@@ -110,9 +111,9 @@ class CronProjectController extends Controller
                         $appChplay->bot = $data;
                         $appChplay->bot_time = time();
                         $appChplay->save();
-//                        }catch (\Exception $exception) {
-//                            Log::error('Message:' . $exception->getMessage() . '--- google appInfo : '.$appChplay->id.'---' . $exception->getLine());
-//                        }
+                    }catch (\Exception $exception) {
+                        Log::error('Message:' . $exception->getMessage() . '--- google appInfo : '.$appChplay->id.'---' . $exception->getLine());
+                    }
 
                 }else{
                     $appChplay->status_app = 6;
