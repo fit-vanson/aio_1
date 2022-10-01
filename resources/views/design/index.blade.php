@@ -236,7 +236,7 @@
                 },
                 paramName: dropParamName,
                 // maxFiles: maxfile,
-                maxFilesize: 200,
+                maxFilesize: 20000,
                 parallelUploads: 10,
                 uploadMultiple: true,
                 acceptedFiles: extfile,
