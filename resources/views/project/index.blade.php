@@ -69,7 +69,6 @@
     <script>
         $(function () {
             $('.table-responsive').responsiveTable({
-                // addDisplayAllBtn: 'btn btn-secondary'
             });
             $('.select2').select2();
             $.ajaxSetup({
