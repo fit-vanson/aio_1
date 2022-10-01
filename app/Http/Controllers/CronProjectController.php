@@ -253,7 +253,7 @@ class CronProjectController extends Controller
                                 if($reportApp){
                                     $file = $this->readCSV($reportApp['fileURL'],array('delimiter' => ','));
                                     $dataArr =[
-                                        'Month' => '202209',
+                                        'Month' => $monthCron,
                                         'Impressions' => $file ? $file['Impressions'] : 0,
                                         'Details_page_views' => $file ? $file['Details page views'] : 0,
                                         'Total_downloads' => $file ? $file['Total downloads'] : 0 ,
@@ -489,9 +489,9 @@ class CronProjectController extends Controller
     public function reportAppHuawei($domain,$token,$clientID,$appID){
         $data = '';
         $startTime  =  Carbon::now()->startOfMonth()->format('Ymd');
-        $startTime  =  '20220901';
+//        $startTime  =  '20220901';
         $endTime    =  Carbon::now()->format('Ymd');
-        $endTime    =  '20220930';
+//        $endTime    =  '20220930';
         $lang='en-US';
         $endpoint = '/api/report/distribution-operation-quality/v1/appDownloadExport/'.$appID.'?language='.$lang.'&startTime='.$startTime.'&endTime='.$endTime.'&groupBy=businessType';
         $dataArr = [
