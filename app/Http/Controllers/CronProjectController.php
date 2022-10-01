@@ -389,7 +389,7 @@ class CronProjectController extends Controller
                         Log::error('Message:' . $exception->getMessage() . '--- cronHuawei: '.$appHuawei->projectname.'---' . $exception->getLine());
                     }
                 }
-                return true;
+                return ;
             }if(count($appsHuawei)==0){
                 echo 'Chưa đến time cron'.PHP_EOL .'<br>';
                 return false;
