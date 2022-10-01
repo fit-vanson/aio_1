@@ -81,7 +81,7 @@
             $('#template').select2({
                 // initialValue:true,
                 placeholder: "Select a customer",
-                minimumInputLength: 2,
+                minimumInputLength: 50,
                 ajax: {
                     url: '{{route('api.getTemplate')}}',
                     dataType: 'json',

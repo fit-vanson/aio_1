@@ -79,7 +79,7 @@
             var search = window.location.search;
             $.fn.dataTable.ext.errMode = 'none';
             var table = $('#manageTable').DataTable({
-                displayLength: 2,
+                displayLength: 50,
                 lengthMenu: [5, 10, 25, 50, 75, 100],
 
                 processing: true,
