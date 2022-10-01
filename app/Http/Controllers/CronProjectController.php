@@ -217,26 +217,33 @@ class CronProjectController extends Controller
             ->with('projects',function($q) use ($time, $timeCron) {
                 $q->where('market_id',7)
                     ->where(function ($q) use ($timeCron) {
-                        $q->where('bot_time', '<=', $timeCron)
+                        $q
+                            ->where('bot_time', '<=', $timeCron)
                             ->orWhere('bot_time', null);
                     })
+//                    ->where('id', 1071)
                     ->limit($time->limit_cron);
             })
             ->where('api_client_id','<>',null)
             ->where('api_client_secret','<>',null)
             ->get();
 
+
+
+
         foreach ($dev_huawei as $dev){
             $dev->api_token  = $this->getTokenHuawei($this->domainHuawei,$dev->api_client_id, $dev->api_client_secret);
             $dev->save();
             $appsHuawei = $dev->projects;
+
             if($appsHuawei){
                 foreach ($appsHuawei as $appHuawei){
-                    echo '<br/>'.'Dang chay:  '.  '- '. $appHuawei->id .' - '. Carbon::now('Asia/Ho_Chi_Minh');
+                    $ch =  '<br/>'.'Dang chay:  '.  '- '. $appHuawei->id .' - '. Carbon::now('Asia/Ho_Chi_Minh');
                     $monthCron = Carbon::now()->format('Ym');
                     $dataArr = [];
                     $appIDs = [];
                     $appInfo = [];
+
                     try {
                         $appIDs = $this->AppInfoPackageHuawei($this->domainHuawei,$dev->api_token,$dev->api_client_id,$appHuawei->package);
                         if($appIDs){
@@ -246,7 +253,7 @@ class CronProjectController extends Controller
                                 if($reportApp){
                                     $file = $this->readCSV($reportApp['fileURL'],array('delimiter' => ','));
                                     $dataArr =[
-                                        'Month' => $monthCron,
+                                        'Month' => '202209',
                                         'Impressions' => $file ? $file['Impressions'] : 0,
                                         'Details_page_views' => $file ? $file['Details page views'] : 0,
                                         'Total_downloads' => $file ? $file['Total downloads'] : 0 ,
@@ -306,88 +313,10 @@ class CronProjectController extends Controller
 
 
 
-
-
-
-
-//                        $appInfo = $appIDs ? $this->AppInfoHuawei($this->domainHuawei,$dev->api_token,$dev->api_client_id,$appIDs[0]->value) : false;
-//                        $reportApp = $appIDs ? $this->reportAppHuawei($this->domainHuawei,$dev->api_token,$dev->api_client_id,$appIDs[0]->value) : false;
-//                        $file = $reportApp ? $this->readCSV($reportApp['fileURL'],array('delimiter' => ',')) : false;
-//
-//                        $dataArr =[
-//                            'Month' => $monthCron,
-//                            'Impressions' => $file ? $file['Impressions'] : 0,
-//                            'Details_page_views' => $file ? $file['Details page views'] : 0,
-//                            'Total_downloads' => $file ? $file['Total downloads'] : 0 ,
-//                            'Uninstalls' => $file ? $file['Uninstalls (installed from AppGallery)'] : 0,
-//                            'updateTime' =>  $appInfo ? $appInfo['appInfo']['updateTime'] : 0,
-//                        ];
-//                        $dataBot = $appHuawei->bot;
-//                        if($dataBot){
-//                            $checkMonth = $this->searchForMonth($monthCron,$dataBot);
-//                            if($checkMonth){
-//                                $temp = array_diff_key($dataBot, array_flip($checkMonth));//
-//                                $data =  array_merge($temp,[$dataArr]);
-//                            }else{
-//                                $data =  array_merge($dataBot,[$dataArr]);
-//                            }
-//                        }else{
-//                            $data = $dataArr;
-//                        }
-
-
-//                        array_multisort($data);
-//                        $data['message'] = $appInfo ? $appInfo['auditInfo']['auditOpinion']: 'Error';
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//                        dd($appIDs,$appInfo,$appHuawei);
-//
-//
-//                        $data['versionNumber'] = $appInfo ? ( array_key_exists('versionNumber',$appInfo['appInfo']) ? $appInfo['appInfo']['versionNumber'] : 'N/A'):  "N/A" ;
-//                        $data['message'] = $appInfo ? $appInfo['auditInfo']['auditOpinion']: 'Error';
-//                        $status = $appInfo ? $appInfo['appInfo']['releaseState']: 100;
-//                        $huawei = ProjectModel::updateOrCreate(
-//                            [
-//                                'projectid'=> $appHuawei->projectid
-//                            ],
-//                            [
-//                                'Huawei_status' => $status,
-//                                'Huawei_appId' => !$appIDs ? null : $appIDs[0]->value,
-//                                'Huawei_bot' => json_encode(array_filter($data)),
-//                            ]
-//                        );
-
-//                        if($status !== 0 ){
-//                            $text = " <pre>Project Error (Huawei)</pre> \n"
-//                                . "<b>Project name: </b>\n"
-//                                . "<code>$huawei->projectname</code>\n"
-//                                . "<b>Data Version: </b>\n"
-//                                . "<pre>". $data['versionNumber']."</pre>\n"
-//                                . "<b>Message: </b>\n"
-//                                . $data['message']. "\n"
-//                            ;
-//
-//
-//                            $url = "https://api.telegram.org/bot" . env('TELEGRAM_BOT_TOKEN', '') . "/sendMessage?parse_mode=html&chat_id=" . env('TELEGRAM_CHANNEL_ID', '');
-////                        $url = "https://api.telegram.org/bot" . env('TELEGRAM_BOT_TOKEN', '') . "/sendMessage?parse_mode=html&chat_id=-723495641";
-//                            $url = $url . "&text=" . urlencode($text);
-//                            file_get_contents($url);
-////                        Telegram::sendMessage([
-////                            'chat_id' => env('TELEGRAM_CHANNEL_ID', ''),
-////                            'parse_mode' => 'HTML',
-////                            'text' => $text
-////                        ]);
-//                        }
                     }catch (\Exception $exception) {
-                        Log::error('Message:' . $exception->getMessage() . '--- cronHuawei: '.$appHuawei->projectname.'---' . $exception->getLine());
+                        Log::error('Message:' . $exception->getMessage() . '--- cronHuawei: '.$appHuawei->id.'---' . $exception->getLine());
                     }
+                    echo $ch .= '--'. @$status;
                 }
                 return ;
             }if(count($appsHuawei)==0){
