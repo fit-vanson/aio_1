@@ -54,11 +54,20 @@ class Project_Controller extends Controller
 
         $totalRecords = Project::select('count(*) as allcount')->count();
         $totalRecordswithFilter = Project::select('count(*) as allcount')
-            ->Where('projectname', 'like', '%' . $searchValue . '%')
+            ->where('projectname', 'like', '%' . $searchValue . '%')
+            ->orwhere('title_app', 'like', '%' . $searchValue . '%')
+            ->orwhereHas('markets', function ($query) use ($searchValue) {
+                $query->where('package', 'like', '%' . $searchValue . '%');
+            })
+//            ->orwhere('package', 'like', '%' . $searchValue . '%')
             ->count();
         $records = Project::orderBy($columnName, $columnSortOrder)
             ->with('markets.pivot.dev.ga','ma_template','da')
-            ->Where('projectname', 'like', '%' . $searchValue . '%')
+            ->where('projectname', 'like', '%' . $searchValue . '%')
+            ->orwhere('title_app', 'like', '%' . $searchValue . '%')
+            ->orwhereHas('markets', function ($query) use ($searchValue) {
+                $query->where('package', 'like', '%' . $searchValue . '%');
+            })
             ->skip($start)
             ->take($rowperpage)
             ->get();
@@ -919,13 +928,9 @@ class Project_Controller extends Controller
         $columnSortOrder = $order_arr[0]['dir']; // asc or desc
         $searchValue = $search_arr['value']; // Search value
 
-        $totalRecords = Markets::where('market_name',$_GET['market'])
-            ->first()
-            ->projects()
-//            ->select('count(*) as allcount')
-//            ->where('status_app','like', '%' .$columnName_arr[6]['search']['value']. '%')
-//            ->where('buildinfo_console','<>',0)
-            ->count();
+        $totalRecords = Markets::withCount('projects')
+            ->where('market_name',$_GET['market'])
+            ->first();
 
         $totalRecordswithFilter = Markets::where('market_name',$_GET['market'])
             ->first()
@@ -933,9 +938,10 @@ class Project_Controller extends Controller
             ->select('count(*) as allcount')
             ->where('status_app','like', '%' .$columnName_arr[6]['search']['value']. '%')
             ->where(function($q) use ($searchValue) {
-                $q->Where('projectname', 'like', '%' . $searchValue . '%');
+                $q->Where('projectname', 'like', '%' . $searchValue . '%')
+                    ->orWhere('package', 'like', '%' . $searchValue . '%')
+                    ->orWhere('title_app', 'like', '%' . $searchValue . '%');
             })
-            ->orWherePivot('package', 'like', '%' . $searchValue . '%')
             ->count();
         $records = Markets::where('market_name',$_GET['market'])
             ->first()
@@ -943,16 +949,17 @@ class Project_Controller extends Controller
             ->orderBy($columnName, $columnSortOrder)
             ->where('status_app','like', '%' .$columnName_arr[6]['search']['value']. '%')
             ->where(function($q) use ($searchValue) {
-                $q->Where('projectname', 'like', '%' . $searchValue . '%');
+                $q->Where('projectname', 'like', '%' . $searchValue . '%')
+                    ->orWhere('package', 'like', '%' . $searchValue . '%')
+                    ->orWhere('title_app', 'like', '%' . $searchValue . '%');
             })
-            ->orWherePivot('package', 'like', '%' . $searchValue . '%')
             ->skip($start)
             ->take($rowperpage)
             ->get();
+
+
         $data_arr = array();
         foreach ($records as $record) {
-
-
             $btn = ' <a href="javascript:void(0)"data-id="'.$record->projectid.'" class="btn btn-warning removeProject"><i class="mdi mdi-file-move"></i></a>';
 
             $mada =  $template = '';
@@ -1089,7 +1096,6 @@ class Project_Controller extends Controller
 //                    "action"=> $btn
 //                );
             }
-
             $data_arr[] = array(
                 "logo" => $logo,
                 "projectname"=>$project.$template.$mada.'<br>'.$record->title_app.'<br>'.$package.'<br>'.$sdk.'<br>'.$keystore,
@@ -1134,7 +1140,7 @@ class Project_Controller extends Controller
         }
         $response = array(
             "draw" => intval($draw),
-            "iTotalRecords" => $totalRecords,
+            "iTotalRecords" => $totalRecords->projects_count,
             "iTotalDisplayRecords" => $totalRecordswithFilter,
             "aaData" => $data_arr,
         );

@@ -80,7 +80,7 @@
             console.log(hash)
             $.fn.dataTable.ext.errMode = 'none';
             var table = $('#manageTable').DataTable({
-                displayLength: 50,
+                displayLength: 2,
                 lengthMenu: [5, 10, 25, 50, 75, 100],
 
                 processing: true,
