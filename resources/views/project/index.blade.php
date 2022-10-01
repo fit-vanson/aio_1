@@ -69,6 +69,7 @@
     <script>
         $(function () {
             $('.table-responsive').responsiveTable({
+                // addDisplayAllBtn: 'btn btn-secondary'
             });
             $('.select2').select2();
             $.ajaxSetup({
@@ -80,7 +81,7 @@
             $('#template').select2({
                 // initialValue:true,
                 placeholder: "Select a customer",
-                minimumInputLength: 50,
+                minimumInputLength: 2,
                 ajax: {
                     url: '{{route('api.getTemplate')}}',
                     dataType: 'json',
@@ -155,7 +156,7 @@
             var hash = url.substring(url.indexOf('?')+1);
             $.fn.dataTable.ext.errMode = 'none';
             var table = $('#projectTable').DataTable({
-                displayLength: 2,
+                displayLength: 50,
                 lengthMenu: [5, 10, 25, 50, 75, 100],
                 // orderCellsTop: true,
                 // fixedHeader: true,
