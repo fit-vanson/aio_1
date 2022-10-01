@@ -69,8 +69,6 @@
             $('.table-responsive').responsiveTable({
                 // addDisplayAllBtn: 'btn btn-secondary'
             });
-
-
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
