@@ -115,12 +115,12 @@
                 {data: 'pass_aliases'},
                 {data: 'SHA_256_keystore'},
                 {data: 'SHA_1_keystore'},
-                {data: 'dev', orderable: false, className: "dt-wrap"},
+                {data: 'dev', orderable: false},
                 {data: 'action',className: "text-center", name: 'action', orderable: false, searchable: false},
             ],
-            // "columnDefs": [
-            //     { "orderable": false, "targets": [0,2,3] }
-            // ],
+            columnDefs: [
+                { className: "dt-wrap", "targets": [ 7 ] }
+            ],
             order:[0,'desc']
 
         });
