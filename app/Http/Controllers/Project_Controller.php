@@ -476,10 +476,6 @@ class Project_Controller extends Controller
         $action = $request->action;
         $data = explode("\r\n",$request->changeMultiple);
         $markets = $request->market_upload;
-
-
-
-
         $array = array();
         try {
             foreach (array_filter($data) as $item)
@@ -497,21 +493,41 @@ class Project_Controller extends Controller
                     return response()->json(['errors'=>trim($path[0]).' sai định dạng.']);
                 }
             }
+
+            $MarketProjectInstance = new MarketProject();
+            $valueInsert = $valueKey = [];
+
+
+
             switch ($action){
                 case 'keystore':
                     foreach ($array as $key=>$value){
                         $project = Project::where('projectname',$key)->pluck('projectid');
-                        $projects_market =
-                            MarketProject::whereIN('project_id',$project)->get();
+                        $projects_market = MarketProject::whereIN('project_id',$project)->get();
                         foreach ($projects_market as $project_market){
-                            $project_market->keystore = @trim($value[$project_market->market_id]);
-                            $project_market->save();
+                            $valueInsert[] = [
+                                'id' =>$project_market->id,
+                                'keystore' =>@trim($value[$project_market->market_id])
+                            ];
                             Keystore::updateorcreate([
                                 'name_keystore' => @trim($value[$project_market->market_id])
                             ]);
                         }
 
                     }
+//                    foreach ($array as $key=>$value){
+//                        $project = Project::where('projectname',$key)->pluck('projectid');
+//                        $projects_market =
+//                            MarketProject::whereIN('project_id',$project)->get();
+//                        foreach ($projects_market as $project_market){
+//                            $project_market->keystore = @trim($value[$project_market->market_id]);
+//                            $project_market->save();
+//                            Keystore::updateorcreate([
+//                                'name_keystore' => @trim($value[$project_market->market_id])
+//                            ]);
+//                        }
+//
+//                    }
                     break;
                 case 'upload_status':
                     foreach ($array as $key=>$value){
@@ -528,27 +544,34 @@ class Project_Controller extends Controller
                                     $status = 2;
                                     break;
                             }
-                            $project_market->status_upload = $status;
-                            $project_market->save();
+                            $valueInsert[] = [
+                                'id' =>$project_market->id,
+                                'status_upload' => $status
+                            ];
                         }
                     }
                     break;
                 case 'sdk':
                     foreach ($array as $key=>$value){
                         $project = Project::where('projectname',$key)->pluck('projectid');
-                        $projects_market =
-                            MarketProject::whereIN('project_id',$project)->get();
+                        $projects_market = MarketProject::whereIN('project_id',$project)->get();
                         foreach ($projects_market as $project_market){
-                            $project_market->sdk = @trim($value[$project_market->market_id]);
-                            $project_market->save();
+                            $valueInsert[] = [
+                                'id' =>$project_market->id,
+                                'sdk' =>@trim($value[$project_market->market_id])
+                            ];
                         }
                     }
                     break;
             }
+            $index = 'id';
+            $result = batch()->update($MarketProjectInstance, $valueInsert, $index);
+
+
+
         }catch (\Exception $exception) {
             Log::error('Message:updateMultiple---' . $exception->getMessage() . '--' . $exception->getLine());
         }
-
 
         return response()->json(['success'=>'Cập nhật thành công ']);
 
