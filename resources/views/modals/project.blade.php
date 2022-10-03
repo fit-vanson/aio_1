@@ -875,7 +875,7 @@ $markets = \App\Models\Markets::all();
 
                                             @foreach($markets as $market)
                                             <div class="divider">
-                                                <div class="divider-text"><img src="img/icon/{{$market->market_logo}}"></div>
+                                                <div class="divider-text"><img src="img/icon/{{$market->market_logo}}" width="24"></div>
                                             </div>
                                             <div class="row">
                                                 <div class="form-group col-lg-6 ">
