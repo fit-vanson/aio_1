@@ -52,9 +52,9 @@
                             <th style="width: 10%">Pass Keystore</th>
                             <th style="width: 10%">Aliases</th>
                             <th style="width: 10%">Pass Aliases</th>
-                            <th style="width: 20%">SHA_256 Keystore</th>
-                            <th style="width: 20%">SHA_1 Keystore</th>
-                            <th style="width: 10%">File</th>
+                            <th style="width: 10%">SHA_256 Keystore</th>
+                            <th style="width: 10%">SHA_1 Keystore</th>
+                            <th style="width: 30%">DEV</th>
                             <th style="width: 10%">Action</th>
                         </tr>
                         </thead>
@@ -115,7 +115,7 @@
                 {data: 'pass_aliases'},
                 {data: 'SHA_256_keystore'},
                 {data: 'SHA_1_keystore'},
-                {data: 'file'},
+                {data: 'dev', orderable: false},
                 {data: 'action',className: "text-center", name: 'action', orderable: false, searchable: false},
             ],
             // "columnDefs": [
@@ -260,10 +260,10 @@
             $('#aliases_keystore').val(data.aliases_keystore);
             $('#pass_aliases').val(data.pass_aliases);
             $('#SHA_256_keystore').val(data.SHA_256_keystore);
-            // $('#keystore_file').val(data.file);
+            $('#SHA_1_keystore').val(data.SHA_1_keystore);
+            $('#keystore_file').val(data.file);
             $("#keystore_file").attr("src","img/logo.png");
             $('#note').val(data.note);
-
             $('#modelHeading').html("Edit");
             $('#saveBtn').val("edit-keystore");
             $('#ajaxModel').modal('show');
@@ -272,14 +272,7 @@
             });
         })
     }
-
-
-
-
 </script>
-
-
-
 @endsection
 
 

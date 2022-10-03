@@ -8,15 +8,15 @@
             </div>
             <div class="modal-body">
                 <form id="keystoreForm" name="keystoreForm" class="form-horizontal">
-                    <div data-repeater-item="" class="row">
-                        <div class="form-group col-lg-6 ">
-                            <div class="fallback">
-                                <input name="keystore_file" id="keystore_file" type="file"   multiple="multiple">
-                            </div>
-                        </div>
-                    </div>
+{{--                    <div data-repeater-item="" class="row">--}}
+{{--                        <div class="form-group col-lg-6 ">--}}
+{{--                            <div class="fallback">--}}
+{{--                                <input name="keystore_file" id="keystore_file" type="file"   multiple="multiple">--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
 
-                    <div data-repeater-item="" class="row">
+                    <div class="row">
                         <div class="form-group col-lg-6 ">
                             <label for="name">Tên Keystore</label>
                             <input type="hidden" name="keystore_id" id="keystore_id">
@@ -26,9 +26,7 @@
                             <label for="name">Pass Keystore</label>
                             <input type="text" id="pass_keystore" name="pass_keystore" class="form-control" >
                         </div>
-                    </div>
 
-                    <div data-repeater-item="" class="row">
                         <div class="form-group col-lg-6 ">
                             <label for="name">Aliases Keystore</label>
                             <input type="text" id="aliases_keystore" name="aliases_keystore" class="form-control" >
@@ -37,11 +35,18 @@
                             <label for="name">Pass Alias</label>
                             <input type="text" id="pass_aliases" name="pass_aliases" class="form-control" >
                         </div>
-                    </div>
-                    <div data-repeater-item="" class="row">
+
                         <div class="form-group col-lg-6">
                             <label for="name">SHA_256 Keystore</label>
                             <textarea id="SHA_256_keystore" name="SHA_256_keystore" class="form-control" rows="4" ></textarea>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label for="name">SHA_1 Keystore</label>
+                            <textarea id="SHA_1_keystore" name="SHA_1_keystore" class="form-control" rows="4" ></textarea>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label for="name">File</label>
+                            <textarea id="keystore_file" name="keystore_file" class="form-control" rows="4" ></textarea>
                         </div>
                         <div class="form-group col-lg-6 ">
                             <label for="name">Ghi chú</label>

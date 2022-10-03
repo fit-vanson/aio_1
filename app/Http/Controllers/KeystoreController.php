@@ -48,6 +48,7 @@ class KeystoreController extends Controller
 
         // Get records, also we have included search filter as well
         $records = Keystore::orderBy($columnName, $columnSortOrder)
+//            ->where('name_keystore', 'k15026')
             ->where('name_keystore', 'like', '%' . $searchValue . '%')
             ->orwhere('pass_keystore', 'like', '%' . $searchValue . '%')
             ->orWhere('aliases_keystore', 'like', '%' . $searchValue . '%')
@@ -55,29 +56,47 @@ class KeystoreController extends Controller
             ->orWhere('SHA_1_keystore', 'like', '%' . $searchValue . '%')
             ->orWhere('SHA_256_keystore', 'like', '%' . $searchValue . '%')
             ->orWhere('note', 'like', '%' . $searchValue . '%')
-            ->with('market_project')
+            ->with('market_project.dev')
             ->skip($start)
             ->take($rowperpage)
             ->get();
 
+
+
         $data_arr = array();
         foreach ($records as $record) {
 
-            $btn = ' <a href="javascript:void(0)" onclick="editKeytore('.$record['id'].')" class="btn btn-warning"><i class="ti-pencil-alt"></i></a>';
-            $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$record['id'].'" data-original-title="Delete" class="btn btn-danger deleteKeystore"><i class="ti-trash"></i></a>';
+//            dd($record);
 
-            $html = '../uploads/keystore/'.$record['file'];
+            $btn = ' <a href="javascript:void(0)" onclick="editKeytore('.$record['id'].')" class="btn btn-warning"><i class="ti-pencil-alt"></i></a>';
+            $btn = $btn.' <a href="javascript:void(0)" data-id="'.$record['id'].'" class="btn btn-danger deleteKeystore"><i class="ti-trash"></i></a>';
+
+            if($record['file']){
+                $file = '<span class="ml-lg-2"><i class="mdi mdi-check-circle" style="color: green"></i></<span>';
+            }else{
+                $file = '<span class="ml-lg-2"><i class="mdi mdi-close-circle " style="color: red"></i></span>';
+            }
+
+
+            $devs = [];
+            foreach ($record->market_project as $dev_project){
+//
+                $devs[$dev_project->dev_id] = @$dev_project->dev->dev_name;
+            }
+            $dev ='';
+            foreach ($devs as $key=>$value){
+                $dev .= ' <span class="badge badge-success">'.@$value.'</span> ';
+            }
+
             $data_arr[] = array(
-//                "name_keystore" => '<a href="/project?q=key_store&id='.$record['name_keystore'].'"> <span>'.$record['name_keystore'].' - ('.$record->market_project_count.')</span></a>',
-//                "name_keystore" => '<span>'.$record['name_keystore'].' - ('.$record->market_project_count.')</span>',
-                "name_keystore" => '<span>'.$record['name_keystore'].' - ('.count($record->market_project).')</span>',
+                "name_keystore" => '<div>'.$record['name_keystore'].' - ('.count($record->market_project).')'.$file.'</div>',
                 "id" => $record['id'],
                 "pass_keystore" => '<div class="truncate copyButton">'.$record['pass_keystore'].'</div>',
                 "aliases_keystore" => '<div class="truncate copyButton">'.$record['aliases_keystore'].'</div>',
                 "SHA_256_keystore" => '<div class="truncate copyButton">'.$record['SHA_256_keystore'].'</div>',
                 "SHA_1_keystore" => '<div class="truncate copyButton">'.$record['SHA_1_keystore'].'</div>',
                 "pass_aliases" => '<div class="truncate copyButton">'.$record['pass_aliases'].'</div>',
-                "file" => '<a href="'.$html.'">'.$record['file'].'</a>',
+                "dev" => $dev,
                 "note"=> $record['note'],
                 "action"=> $btn,
             );
@@ -99,11 +118,11 @@ class KeystoreController extends Controller
 
         $rules = [
             'name_keystore' =>'unique:ngocphandang_keystores,name_keystore',
-            'keystore_file' => 'mimes:zip,jks'
+//            'keystore_file' => 'mimes:zip,jks'
         ];
         $message = [
             'name_keystore.unique'=>'Tên Keystore đã tồn tại',
-            'keystore_file.mimes'=>'Định dạng File: *.zip, *.jks',
+//            'keystore_file.mimes'=>'Định dạng File: *.zip, *.jks',
         ];
 
         $error = Validator::make($request->all(),$rules, $message );
@@ -117,18 +136,20 @@ class KeystoreController extends Controller
         $data['aliases_keystore'] = $request->aliases_keystore;
         $data['pass_aliases'] = $request->pass_aliases;
         $data['SHA_256_keystore'] = $request->SHA_256_keystore;
+        $data['SHA_1_keystore'] = $request->SHA_1_keystore;
+        $data['file'] = $request->keystore_file;
         $data['note'] = $request->note;
 
-        $destinationPath = public_path('uploads/keystore/');
-        if (!file_exists($destinationPath)) {
-            mkdir($destinationPath, 0777, true);
-        }
-        if(isset($request->keystore_file)){
-            $file = $request->file('keystore_file');
-            $extension = $file->getClientOriginalExtension();
-            $data['file'] = $request->name_keystore.'_'.time().'.'.$extension;
-            $file->move($destinationPath, $data['file']);
-        }
+//        $destinationPath = public_path('uploads/keystore/');
+//        if (!file_exists($destinationPath)) {
+//            mkdir($destinationPath, 0777, true);
+//        }
+//        if(isset($request->keystore_file)){
+//            $file = $request->file('keystore_file');
+//            $extension = $file->getClientOriginalExtension();
+//            $data['file'] = $request->name_keystore.'_'.time().'.'.$extension;
+//            $file->move($destinationPath, $data['file']);
+//        }
 
         $data->save();
         $allKeys  = Keystore::latest('id')->get();
@@ -187,11 +208,11 @@ class KeystoreController extends Controller
         $id = $request->keystore_id;
         $rules = [
             'name_keystore' =>'unique:ngocphandang_keystores,name_keystore,'.$id.',id',
-            'keystore_file' => 'mimes:zip,jks'
+//            'keystore_file' => 'mimes:zip,jks'
         ];
         $message = [
             'name_keystore.unique'=>'Tên Keystore đã tồn tại',
-            'keystore_file.mimes'=>'Định dạng File: *.zip, *.jks',
+//            'keystore_file.mimes'=>'Định dạng File: *.zip, *.jks',
         ];
         $error = Validator::make($request->all(),$rules, $message );
         if($error->fails()){
@@ -203,29 +224,14 @@ class KeystoreController extends Controller
 //            $dir = (public_path('uploads/keystore/'));
 //            rename($dir.$data->file, $dir.$request->name_keystore);
 //        }
-        if(isset($request->keystore_file)){
-            if (isset($data->file)){
-                $path_Remove =   public_path('uploads/keystore/').$data->file;
-                if(file_exists($path_Remove)){
-                    unlink($path_Remove);
-                }
-            }
 
-
-            $file = $request->file('keystore_file');
-            $extension = $file->getClientOriginalExtension();
-            $data['file'] = $request->name_keystore.'_'.time().'.'.$extension;
-            $destinationPath = public_path('uploads/keystore/');
-            if (!file_exists($destinationPath)) {
-                mkdir($destinationPath, 0777, true);
-            }
-            $file->move($destinationPath, $data['file']);
-        }
         $data->name_keystore = $request->name_keystore;
         $data->pass_keystore = $request->pass_keystore;
         $data->aliases_keystore= $request->aliases_keystore;
         $data->pass_aliases= $request->pass_aliases;
         $data->SHA_256_keystore = $request->SHA_256_keystore;
+        $data->SHA_1_keystore = $request->SHA_1_keystore;
+        $data->file = $request->keystore_file;
         $data->note = $request->note;
         $data->save();
         return response()->json(['success'=>'Cập nhật thành công']);
@@ -240,12 +246,12 @@ class KeystoreController extends Controller
     public function delete($id)
     {
         $keystore = Keystore::find($id);
-        if($keystore->file){
-            $path    =   public_path('uploads/keystore/').$keystore->file;
-            if(file_exists($path)){
-                unlink($path);
-            }
-        }
+//        if($keystore->file){
+//            $path    =   public_path('uploads/keystore/').$keystore->file;
+//            if(file_exists($path)){
+//                unlink($path);
+//            }
+//        }
         $keystore->delete();
         return response()->json(['success'=>'Xóa thành công.']);
     }

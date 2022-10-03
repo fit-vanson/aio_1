@@ -54,17 +54,6 @@
     });
 </script>
 
-<script>
-    function copy1() {
-        let textarea1 = document.getElementById("policy1");
-        textarea1.select();
-        document.execCommand("copy");
-    }
-    function copy2() {
-        let textarea2 = document.getElementById("policy2");
-        textarea2.select();
-        console.log(textarea2)
-        document.execCommand("copy");
-    }
-</script>
+
+
 
