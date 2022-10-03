@@ -118,9 +118,7 @@
                 {data: 'dev', orderable: false},
                 {data: 'action',className: "text-center", name: 'action', orderable: false, searchable: false},
             ],
-            columnDefs: [
-                { className: "zxcv", "targets": [ 7 ] }
-            ],
+
             order:[0,'desc']
 
         });

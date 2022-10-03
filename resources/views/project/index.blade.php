@@ -819,6 +819,8 @@
         $('#change_upload_status').on('click', function () {
             $('#changeMultiple').modal('show');
             $('#market_upload').show();
+            $('#Check_all').prop('checked',true);
+            $('.cb-element').prop('checked',true);
             $('#changeMultipleTitle').html('Upload Project');
             // $('#changeMultipleName').html('ID Project');
             $('#changeMultipleBtn').val('change_upload_status');
