@@ -25,7 +25,7 @@ class Ga extends Model
     }
 
     public function dev(){
-        return $this->hasMany(Dev::class,'id_ga');
+        return $this->hasMany(Dev::class,'ga_id');
     }
     public function dev_amazon(){
         return $this->hasMany(Dev_Amazon::class,'amazon_ga_name');

@@ -14,7 +14,7 @@ class GaController extends Controller
     public function index(Request $request)
     {
         $ga= DB::table('ngocphandang_ga')
-            ->rightJoin('ngocphandang_gadev','ngocphandang_gadev.id','=','ngocphandang_ga.gmail_gadev_chinh')
+            ->rightJoin('gmail_gadev','gmail_gadev.id','=','ngocphandang_ga.gmail_gadev_chinh')
             ->get();
         if ($request->ajax()) {
             $data = Ga::latest('id')->get();;
@@ -29,16 +29,16 @@ class GaController extends Controller
                 })
                 ->editColumn('gmail_gadev_chinh', function($data){
                     $gmail = DB::table('ngocphandang_ga')
-                        ->join('ngocphandang_gadev','ngocphandang_gadev.id','=','ngocphandang_ga.gmail_gadev_chinh')
-                        ->where('ngocphandang_gadev.id',$data->gmail_gadev_chinh)
+                        ->join('gmail_gadev','gmail_gadev.id','=','ngocphandang_ga.gmail_gadev_chinh')
+                        ->where('gmail_gadev.id',$data->gmail_gadev_chinh)
                         ->first();
                     $gmail1 = DB::table('ngocphandang_ga')
-                        ->join('ngocphandang_gadev','ngocphandang_gadev.id','=','ngocphandang_ga.gmail_gadev_phu_1')
-                        ->where('ngocphandang_gadev.id',$data->gmail_gadev_phu_1)
+                        ->join('gmail_gadev','gmail_gadev.id','=','ngocphandang_ga.gmail_gadev_phu_1')
+                        ->where('gmail_gadev.id',$data->gmail_gadev_phu_1)
                         ->first();
                     $gmail2 = DB::table('ngocphandang_ga')
-                        ->join('ngocphandang_gadev','ngocphandang_gadev.id','=','ngocphandang_ga.gmail_gadev_phu_2')
-                        ->where('ngocphandang_gadev.id',$data->gmail_gadev_phu_2)
+                        ->join('gmail_gadev','gmail_gadev.id','=','ngocphandang_ga.gmail_gadev_phu_2')
+                        ->where('gmail_gadev.id',$data->gmail_gadev_phu_2)
                         ->first();
                     if($gmail != null){
                         $gmail = '<span>'.$gmail->gmail.' - <span style="font-style: italic"> '.$gmail->vpn_iplogin.'</span></span>';
@@ -144,21 +144,25 @@ class GaController extends Controller
     }
     public function showDev($id){
         $dev = DB::table('ngocphandang_ga')
-            ->join('ngocphandang_dev','ngocphandang_ga.id','=','ngocphandang_dev.id_ga')
-            ->where('ngocphandang_dev.id_ga',$id)
+            ->join('ngocphandang_dev','ngocphandang_ga.id','=','ngocphandang_dev.ga_id')
+            ->where('ngocphandang_dev.ga_id',$id)
             ->get();
         return response()->json($dev);
     }
 
     public function show(Request $request){
 
+
         if (isset($request->id)){
-            $ga_detail = Ga::with(
-                'gadev','gadev1','gadev2',
-                'dev.gadev','dev_amazon.gadev','dev_samsung.gadev','dev_xiaomi.gadev','dev_oppo.gadev','dev_vivo.ga_dev','dev_huawei.gadev',
-                'dev.project','dev_amazon.project','dev_samsung.project','dev_xiaomi.project','dev_oppo.project','dev_vivo.project','dev_huawei.project',
-                'dev.project','dev_amazon.project','dev_samsung.project','dev_xiaomi.project','dev_oppo.project','dev_vivo.project','dev_huawei.project'
-            )->find($request->id);
+            $ga_detail = Ga::
+            with(
+                'gadev','gadev1','gadev2'
+//                'dev.gadev','dev_amazon.gadev','dev_samsung.gadev','dev_xiaomi.gadev','dev_oppo.gadev','dev_vivo.ga_dev','dev_huawei.gadev',
+//                'dev.project','dev_amazon.project','dev_samsung.project','dev_xiaomi.project','dev_oppo.project','dev_vivo.project','dev_huawei.project',
+//                'dev.project','dev_amazon.project','dev_samsung.project','dev_xiaomi.project','dev_oppo.project','dev_vivo.project','dev_huawei.project'
+            )->
+            find($request->id);
+            dd($ga_detail);
         }
 //        dd($ga_detail);
         return view('ga.show',compact('ga_detail'));

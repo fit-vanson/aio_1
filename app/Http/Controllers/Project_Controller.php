@@ -473,65 +473,81 @@ class Project_Controller extends Controller
     }
 
     public function updateMultiple(Request $request){
-
-        $data = explode("\r\n",$request->changeMultiple);
-        $markets = Markets::all()->pluck('id')->toArray();
         $action = $request->action;
+        $data = explode("\r\n",$request->changeMultiple);
+        $markets = $request->market_upload;
+        $array = array();
+        try {
+            foreach (array_filter($data) as $item)
+            {
+                $path  = preg_split("/[|]+/",$item,2);
+                if(isset($path[1])){
+                    $array1 = @explode('|', $path[1]);
 
-        if ($action == 'upload_status'){
-            $projects = Project::whereIN('projectname',array_map('trim', $data))->pluck('projectid');
-            $projects_market =
-                MarketProject::whereIN('project_id',$projects)
-                    ->whereIn('market_id',$request->market_upload)
-                    ->get();
-            foreach ($projects_market as $project){
-                $status = $project->status_upload;
-                switch ($status){
-                    case 0:
-                        $status = 1;
-                        break;
-                    case 2:
-                        $status = 2;
-                        break;
+                }else{
+                    $array1 = $markets;
                 }
-                $project->status_upload = $status;
-                $project->save();
-            }
 
-        }else{
-            foreach ($data as $item){
-                try {
-                    [$ID_Project, $Key_C, $Key_A, $Key_S, $Key_X, $Key_O, $Key_V, $Key_H ] = explode("|",$item);
-                    $keystore = [
-                        $Key_C, $Key_A, $Key_S, $Key_X, $Key_O, $Key_V, $Key_H
-                    ];
-                    $markets_keystore = array_combine($markets, $keystore);
-                    $project = Project::where('projectname',trim($ID_Project))->firstorfail();
-                    switch ($action){
-                        case 'keystore':
-                            foreach ($markets_keystore as $key=>$market_keystore){
-                                MarketProject::where('project_id',$project->projectid)
-                                    ->where('market_id',$key)
-                                    ->update(['keystore'=>trim($market_keystore)]);
-                                Keystore::updateorcreate([
-                                    'name_keystore' => trim($market_keystore)
-                                ]);
-                            }
-                            break;
-                        case 'sdk':
-                            foreach ($markets_keystore as $key=>$market_keystore){
-                                MarketProject::where('project_id',$project->projectid)
-                                    ->where('market_id',$key)
-                                    ->update(['sdk'=>trim($market_keystore)]);
-                            }
-                            break;
+                if(count($array1) == count($markets)){
+                    $array[trim($path[0])] =  array_combine( $markets, $array1 );
+                }else{
+                    Log::error('Message:array_combine---'.$path[0].': $array1= '.count($array1).'----- $markets: '.count($markets));
+                }
+
+
+            }
+            switch ($action){
+                case 'keystore':
+                    foreach ($array as $key=>$value){
+                        $project = Project::where('projectname',$key)->pluck('projectid');
+                        $projects_market =
+                            MarketProject::whereIN('project_id',$project)->get();
+                        foreach ($projects_market as $project_market){
+                            $project_market->keystore = @trim($value[$project_market->market_id]);
+                            $project_market->save();
+                            Keystore::updateorcreate([
+                                'name_keystore' => @trim($value[$project_market->market_id])
+                            ]);
+                        }
+
                     }
-
-                }catch (\Exception $exception) {
-                    \Illuminate\Support\Facades\Log::error('Message:' . $exception->getMessage() . '--- chang key : ' . $exception->getLine());
-                }
+                    break;
+                case 'upload_status':
+                    foreach ($array as $key=>$value){
+                        $project = Project::where('projectname',$key)->pluck('projectid');
+                        $projects_market =
+                            MarketProject::whereIN('project_id',$project)->get();
+                        foreach ($projects_market as $project_market){
+                            $status = $project_market->status_upload;
+                            switch ($status){
+                                case 0:
+                                    $status = 1;
+                                    break;
+                                case 2:
+                                    $status = 2;
+                                    break;
+                            }
+                            $project_market->status_upload = $status;
+                            $project_market->save();
+                        }
+                    }
+                    break;
+                case 'sdk':
+                    foreach ($array as $key=>$value){
+                        $project = Project::where('projectname',$key)->pluck('projectid');
+                        $projects_market =
+                            MarketProject::whereIN('project_id',$project)->get();
+                        foreach ($projects_market as $project_market){
+                            $project_market->sdk = @trim($value[$project_market->market_id]);
+                            $project_market->save();
+                        }
+                    }
+                    break;
             }
+        }catch (\Exception $exception) {
+            Log::error('Message:updateMultiple---' . $exception->getMessage() . '--' . $exception->getLine());
         }
+
 
         return response()->json(['success'=>'Cập nhật thành công ']);
 
