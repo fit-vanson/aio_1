@@ -476,6 +476,10 @@ class Project_Controller extends Controller
         $action = $request->action;
         $data = explode("\r\n",$request->changeMultiple);
         $markets = $request->market_upload;
+
+
+
+
         $array = array();
         try {
             foreach (array_filter($data) as $item)
@@ -487,14 +491,11 @@ class Project_Controller extends Controller
                 }else{
                     $array1 = $markets;
                 }
-
                 if(count($array1) == count($markets)){
                     $array[trim($path[0])] =  array_combine( $markets, $array1 );
                 }else{
-                    Log::error('Message:array_combine---'.$path[0].': $array1= '.count($array1).'----- $markets: '.count($markets));
+                    return response()->json(['errors'=>trim($path[0]).' sai định dạng.']);
                 }
-
-
             }
             switch ($action){
                 case 'keystore':
