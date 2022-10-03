@@ -939,7 +939,7 @@ $markets = \App\Models\Markets::all();
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-lg-12">
-                                            <p for="name"> ID Project @foreach($markets as $market) | {{$market->market_name}}  @endforeach</p>
+                                            <p for="name"><code> ID Project @foreach($markets as $market) |   {{$market->market_name}}   @endforeach </code></p>
                                             <textarea id="changeMultiple" name="changeMultiple" rows="20" style="width: 100%"></textarea>
                                         </div>
                                     </div>
