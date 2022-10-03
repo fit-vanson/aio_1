@@ -24,6 +24,16 @@
         text-overflow: ellipsis;
         white-space: nowrap;
     }
+
+    .text-wrap{
+        white-space:normal;
+    }
+    .width-400{
+        width:400px;
+    }
+
+
+
 </style>
 @yield('css')
 

@@ -48,14 +48,14 @@ class KeystoreController extends Controller
 
         // Get records, also we have included search filter as well
         $records = Keystore::orderBy($columnName, $columnSortOrder)
-//            ->where('name_keystore', 'k15026')
+//            ->where('name_keystore', 'k16006')
             ->where('name_keystore', 'like', '%' . $searchValue . '%')
-            ->orwhere('pass_keystore', 'like', '%' . $searchValue . '%')
-            ->orWhere('aliases_keystore', 'like', '%' . $searchValue . '%')
-            ->orWhere('pass_aliases', 'like', '%' . $searchValue . '%')
-            ->orWhere('SHA_1_keystore', 'like', '%' . $searchValue . '%')
-            ->orWhere('SHA_256_keystore', 'like', '%' . $searchValue . '%')
-            ->orWhere('note', 'like', '%' . $searchValue . '%')
+//            ->orwhere('pass_keystore', 'like', '%' . $searchValue . '%')
+//            ->orWhere('aliases_keystore', 'like', '%' . $searchValue . '%')
+//            ->orWhere('pass_aliases', 'like', '%' . $searchValue . '%')
+//            ->orWhere('SHA_1_keystore', 'like', '%' . $searchValue . '%')
+//            ->orWhere('SHA_256_keystore', 'like', '%' . $searchValue . '%')
+//            ->orWhere('note', 'like', '%' . $searchValue . '%')
             ->with('market_project.dev')
             ->skip($start)
             ->take($rowperpage)
@@ -96,7 +96,7 @@ class KeystoreController extends Controller
                 "SHA_256_keystore" => '<div class="truncate copyButton">'.$record['SHA_256_keystore'].'</div>',
                 "SHA_1_keystore" => '<div class="truncate copyButton">'.$record['SHA_1_keystore'].'</div>',
                 "pass_aliases" => '<div class="truncate copyButton">'.$record['pass_aliases'].'</div>',
-                "dev" => $dev,
+                "dev" => '<div class="text-wrap width-400">'.$dev.'</div>',
                 "note"=> $record['note'],
                 "action"=> $btn,
             );

@@ -119,7 +119,7 @@
                 {data: 'action',className: "text-center", name: 'action', orderable: false, searchable: false},
             ],
             columnDefs: [
-                { className: "dt-wrap", "targets": [ 7 ] }
+                { className: "zxcv", "targets": [ 7 ] }
             ],
             order:[0,'desc']
 
