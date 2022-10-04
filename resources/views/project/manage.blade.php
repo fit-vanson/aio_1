@@ -109,7 +109,7 @@
                                     .draw();
                             } );
 
-                        $.each([0,1,2,3,4,5,6,7], function ( d, j ) {
+                        $.each([0,1,2,3,4,5,6], function ( d, j ) {
                             var status ='';
                             switch (j){
                                 case 0:
@@ -119,22 +119,19 @@
                                     status = 'Public';
                                     break;
                                 case 2:
-                                    status = 'Suppend';
+                                    status = 'UnPublish';
                                     break;
                                 case 3:
-                                    status = 'UnPublish';
+                                    status = 'Remove';
                                     break;
                                 case 4:
-                                    status = 'UnPublish';
+                                    status = 'Reject';
                                     break;
                                 case 5:
-                                    status = 'Reject';
+                                    status = 'Suppend';
                                     break;
                                 case 6:
                                     status = 'Check';
-                                    break;
-                                case 7:
-                                    status = 'Pending';
                                     break;
                             }
                             select.append( '<option value="'+j+'">'+status+'</option>' )
