@@ -55,6 +55,7 @@ class Project_Controller extends Controller
         $totalRecords = Project::select('count(*) as allcount')->count();
         $totalRecordswithFilter = Project::select('count(*) as allcount')
             ->where('projectname', 'like', '%' . $searchValue . '%')
+            ->orwhere('projectid', 'like', '%' . $searchValue . '%')
             ->orwhere('title_app', 'like', '%' . $searchValue . '%')
             ->orwhereHas('markets', function ($query) use ($searchValue) {
                 $query
@@ -65,6 +66,7 @@ class Project_Controller extends Controller
         $records = Project::orderBy($columnName, $columnSortOrder)
             ->with('markets.pivot.dev.ga','ma_template','da')
             ->where('projectname', 'like', '%' . $searchValue . '%')
+            ->orwhere('projectid', 'like', '%' . $searchValue . '%')
             ->orwhere('title_app', 'like', '%' . $searchValue . '%')
             ->orwhereHas('markets', function ($query) use ($searchValue) {
                 $query
