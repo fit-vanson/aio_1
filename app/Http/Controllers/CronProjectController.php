@@ -296,14 +296,15 @@ class CronProjectController extends Controller
                             $appHuawei->bot = $data;
                             $appHuawei->bot_score = $scoreApp['ret']['rtnCode'] == 0 ? $scoreApp['data']['score']['averageScore'] : 0 ;
                             $appHuawei->bot_installs = array_sum(array_column($data, 'Total_downloads'));;
-                            $appHuawei->bot_time = time();
-                            $appHuawei->save();
+
                         }
                     }
                 }catch (\Exception $exception) {
                     Log::error('Message:' . $exception->getMessage() . '--- cronHuawei: '.$appHuawei->id.'---' . $exception->getLine());
                 }
-                $ch .= '--'. @$status;
+                $appHuawei->bot_time = time();
+                $appHuawei->save();
+                $ch .= '--'. $appHuawei->status;
             }
             echo '<br/><br/>';
             echo '<br/>' .'=========== Huawei ==============' ;
