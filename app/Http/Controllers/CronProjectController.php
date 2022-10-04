@@ -525,18 +525,37 @@ class CronProjectController extends Controller
         return $a;
     }
 
-    public function Vivo(){
+    public function Vivo($status_upload = null){
+
         $time =  Setting::first();
         $timeCron = Carbon::now()->subMinutes($time->time_cron)->setTimezone('Asia/Ho_Chi_Minh')->timestamp;
-        $dev_vivo = ProjectModel::with(['dev_vivo'])
-            ->whereHas('dev_vivo',function ($q){
-                $q->where('vivo_dev_access_key', '<>', null)
-                    ->where('vivo_dev_client_secret', '<>', null);
+        $status_upload = isset($_GET['status_upload']) ? $_GET['status_upload'] : $status_upload;
+
+        $appsVivo = MarketProject::where('market_id', 6)
+            ->where('status_upload','like','%'. $status_upload.'%')
+            ->whereHas('dev', function ($query) {
+                return $query
+                    ->whereNotNull('api_client_id')
+                    ->where('api_client_id','<>','');
             })
-            ->where('Vivo_package','<>', null)
-            ->where('Vivo_bot->time_bot','<=',$timeCron)
-            ->limit($time->limit_cron)
-            ->get();
+            ->where(function ($q) use ($timeCron) {
+                $q->where('bot_time', '<=', $timeCron)
+                    ->orWhere('bot_time', null);
+            })
+            ->paginate($time->limit_cron);
+
+        dd($appsVivo);
+
+
+//        $dev_vivo = ProjectModel::with(['dev_vivo'])
+//            ->whereHas('dev_vivo',function ($q){
+//                $q->where('vivo_dev_access_key', '<>', null)
+//                    ->where('vivo_dev_client_secret', '<>', null);
+//            })
+//            ->where('Vivo_package','<>', null)
+//            ->where('Vivo_bot->time_bot','<=',$timeCron)
+//            ->limit($time->limit_cron)
+//            ->get();
 
         echo '<br/><br/>';
         echo '<br/>' .'=========== Vivo ==============' ;
@@ -544,9 +563,10 @@ class CronProjectController extends Controller
         echo '<br/>&emsp;'.'- Project có Package của Vivo.';
         echo '<br/>&emsp;'.'- Dev Vivo có Client ID và Client Secret'.'</b><br/><br/>';
 
-        if($dev_vivo){
-            foreach ($dev_vivo as $dev){
-                echo '<br/>'.'Dang chay:  '.  '-'. $dev->projectname .' - '. Carbon::now('Asia/Ho_Chi_Minh');
+        if($appsVivo){
+            foreach ($appsVivo->load('dev') as $appVivo){
+//                dd($appsVivo);
+                echo '<br/>'.'Dang chay:  '.  '-'. $appsVivo->id .' - '. Carbon::now('Asia/Ho_Chi_Minh');
 
                 try{
                     $data = $this->get_Vivo($dev->dev_vivo->vivo_dev_access_key,$dev->dev_vivo->vivo_dev_client_secret,$dev->Vivo_package);
