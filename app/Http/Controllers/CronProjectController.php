@@ -228,8 +228,20 @@ class CronProjectController extends Controller
             })
             ->limit($time->limit_cron)
             ->get();
-        if($appsHuawei){
 
+
+
+        echo '<br/><br/>';
+        echo '<br/>' .'=========== Huawei ==============' ;
+        echo '<br/><b>'.'Yêu cầu:';
+        echo '<br/>&emsp;'.'- Project có package Huawei.';
+        echo '<br/>&emsp;'.'- Dev Huawei có Client ID và Client Secret'.'</b><br/><br/>';
+
+        if(count($appsHuawei)==0){
+            echo 'Chưa đến time cron'.PHP_EOL .'<br>';
+            return false;
+        }
+        if($appsHuawei){
             $ch = '';
             foreach ($appsHuawei->load('dev') as $appHuawei){
                 $ch .=  '<br/>'.'Dang chay:  '.  '- '. $appHuawei->id .' - '. Carbon::now('Asia/Ho_Chi_Minh');
@@ -243,8 +255,6 @@ class CronProjectController extends Controller
                         if($appInfo){
                             $reportApp  = $this->reportAppHuawei($this->domainHuawei,$appHuawei->dev->api_token,$appHuawei->dev->api_client_id,$appIDs[0]->value);
                             $scoreApp  = $this->getScoreHuawei($this->domainHuawei,$appHuawei->dev->api_token,$appHuawei->dev->api_client_id,$appIDs[0]->value);
-
-
                             if($reportApp){
                                 $file = $this->readCSV($reportApp['fileURL'],array('delimiter' => ','));
                                 if($file){
@@ -304,18 +314,10 @@ class CronProjectController extends Controller
                 }
                 $appHuawei->bot_time = time();
                 $appHuawei->save();
-                $ch .= '--'. $appHuawei->status;
+                $ch .= '--'. $appHuawei->status_app;
             }
-            echo '<br/><br/>';
-            echo '<br/>' .'=========== Huawei ==============' ;
-            echo '<br/><b>'.'Yêu cầu:';
-            echo '<br/>&emsp;'.'- Project có package Huawei.';
-            echo '<br/>&emsp;'.'- Dev Huawei có Client ID và Client Secret'.'</b><br/><br/>';
             echo $ch;
-            return ;
-        }if(count($appsHuawei)==0){
-            echo 'Chưa đến time cron'.PHP_EOL .'<br>';
-            return false;
+            return true;
         }
     }
 
