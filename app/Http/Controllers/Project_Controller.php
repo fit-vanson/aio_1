@@ -59,7 +59,7 @@ class Project_Controller extends Controller
             ->orwhere('title_app', 'like', '%' . $searchValue . '%')
             ->orwhereHas('markets', function ($query) use ($searchValue) {
                 $query
-                    ->where('id', 'like', '%' . $searchValue . '%')
+//                    ->where('id', 'like', '%' . $searchValue . '%')
                     ->orwhere('keystore', 'like', '%' . $searchValue . '%')
                     ->orwhere('package', 'like', '%' . $searchValue . '%');
             })
@@ -71,7 +71,7 @@ class Project_Controller extends Controller
             ->orwhere('title_app', 'like', '%' . $searchValue . '%')
             ->orwhereHas('markets', function ($query) use ($searchValue) {
                 $query
-                    ->where('id', 'like', '%' . $searchValue . '%')
+//                    ->where('id', 'like', '%' . $searchValue . '%')
                     ->orwhere('keystore', 'like', '%' . $searchValue . '%')
                     ->orwhere('package', 'like', '%' . $searchValue . '%');
             })
@@ -985,6 +985,8 @@ class Project_Controller extends Controller
             ->skip($start)
             ->take($rowperpage)
             ->get();
+
+
 
 
         $data_arr = array();
