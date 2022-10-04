@@ -545,6 +545,9 @@ class CronProjectController extends Controller
             ->paginate($time->limit_cron);
 
 
+
+
+
         echo '<br/><br/>';
         echo '<br/>' .'=========== Vivo ==============' ;
         echo '<br/><b>'.'Yêu cầu:';
@@ -578,20 +581,17 @@ class CronProjectController extends Controller
                                 $status_app = 1;
                                 break;
                         }
-
                         $appVivo->bot_appVersion = $data->versionName;
-                        $appVivo->policy_link = $data->privacyStatement;
+                        $appVivo->policy_link = $data->privacyStatement ? $data->privacyStatement : null ;
                         $appVivo->status_app = $status_app;
-
-
-
                     }
-                    $appVivo->bot_time = time();
-                    $appVivo->save();
-                    $ch .= '-'.$appVivo->status_app;
+
                 }catch (\Exception $exception) {
                     Log::error('Message:' . $exception->getMessage() . '--- appsVivo: ' . $exception->getLine());
                 }
+                $appVivo->bot_time = time();
+                $appVivo->save();
+                $ch .= '-'.$appVivo->status_app;
                 echo $ch;
             }
             return  true;
