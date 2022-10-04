@@ -36,6 +36,7 @@ $(document).ready(function() {
                 }
                 html += '</span>';
                 btn.replaceWith(html);
+                $('#app_link_'+_id).attr("href",data.app_link);
                 $.notify(data.package, "success");
             },
             error: function (data) {

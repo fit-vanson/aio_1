@@ -114,7 +114,7 @@ class Project_Controller extends Controller
             foreach ($record->markets as $key=>$market){
                 if($market->pivot->package){
                     $result .= '<div class="font-16">';
-                    $package .= '<p class="card-title-desc font-16"><img src="img/icon/'.$market->market_logo.'"> '.$market->pivot->package.'</p>';
+                    $package .= '<p class="card-title-desc font-16"><img src="img/icon/'.$market->market_logo.'"><a id="app_link_'.$market->pivot->id.'" href="'.$market->pivot->app_link.'"  target="_blank"> '.$market->pivot->package.'</a></p>';
                     if($market->pivot->sdk){
                         $sdk .= ' <span class="badge badge-'.$badges[$key].'" style="font-size: 12px"> '.strtoupper($market->market_name[0]).': '.$market->pivot->sdk.' </span> ';
                     }
