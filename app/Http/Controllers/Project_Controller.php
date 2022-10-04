@@ -142,22 +142,19 @@ class Project_Controller extends Controller
                             $result .=  'success "> Publish';
                             break;
                         case 2:
-                            $result .=  'warning "> Suppend';
+                            $result .=  'warning "> UnPublish';
                             break;
                         case 3:
-                            $result .=  'info"> UnPublish';
+                            $result .=  'info"> Remove';
                             break;
                         case 4:
-                            $result .=  'primary"> Remove';
+                            $result .=  'primary"> Reject';
                             break;
                         case 5:
-                            $result .=  'dark"> Reject';
+                            $result .=  'dark"> Suppend';
                             break;
                         case 6:
                             $result .=  'danger"> Check ';
-                            break;
-                        case 7:
-                            $result .=  'warning"> Pending';
                             break;
                         default:
                             $result .=  'secondary"> Mặc định';
