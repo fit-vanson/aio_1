@@ -222,11 +222,11 @@ class CronProjectController extends Controller
                     ->whereNotNull('api_client_id')
                     ->where('api_client_id','<>','');
             })
-//            ->where(function ($q) use ($timeCron) {
-//                $q->where('bot_time', '<=', $timeCron)
-//                    ->orWhere('bot_time', null);
-//            })
-//            ->limit($time->limit_cron)
+            ->where(function ($q) use ($timeCron) {
+                $q->where('bot_time', '<=', $timeCron)
+                    ->orWhere('bot_time', null);
+            })
+            ->limit($time->limit_cron)
             ->get();
 
 
@@ -303,8 +303,7 @@ class CronProjectController extends Controller
                             $appHuawei->policy_link =  array_key_exists('privacyPolicy',$appInfo['appInfo']) ? $appInfo['appInfo']['privacyPolicy'] : null;
                             $appHuawei->appID = $appIDs[0]->value ;
                             $appHuawei->status_app = $status_app;
-//                            $appHuawei->bot = $data;
-                            $appHuawei->bot = null;
+                            $appHuawei->bot = $data;
                             $appHuawei->bot_score = $scoreApp['ret']['rtnCode'] == 0 ? $scoreApp['data']['score']['averageScore'] : 0 ;
                             $appHuawei->bot_installs = array_sum(array_column($data, 'Total_downloads'));;
 
