@@ -57,7 +57,9 @@ class Project_Controller extends Controller
             ->where('projectname', 'like', '%' . $searchValue . '%')
             ->orwhere('title_app', 'like', '%' . $searchValue . '%')
             ->orwhereHas('markets', function ($query) use ($searchValue) {
-                $query->where('package', 'like', '%' . $searchValue . '%');
+                $query
+                    ->where('keystore', 'like', '%' . $searchValue . '%')
+                    ->orwhere('package', 'like', '%' . $searchValue . '%');
             })
             ->count();
         $records = Project::orderBy($columnName, $columnSortOrder)
@@ -65,7 +67,9 @@ class Project_Controller extends Controller
             ->where('projectname', 'like', '%' . $searchValue . '%')
             ->orwhere('title_app', 'like', '%' . $searchValue . '%')
             ->orwhereHas('markets', function ($query) use ($searchValue) {
-                $query->where('package', 'like', '%' . $searchValue . '%');
+                $query
+                    ->where('keystore', 'like', '%' . $searchValue . '%')
+                    ->orwhere('package', 'like', '%' . $searchValue . '%');
             })
             ->skip($start)
             ->take($rowperpage)

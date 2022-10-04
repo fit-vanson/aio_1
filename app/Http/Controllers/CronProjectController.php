@@ -542,12 +542,8 @@ class CronProjectController extends Controller
                 $q->where('bot_time', '<=', $timeCron)
                     ->orWhere('bot_time', null);
             })
+//            ->get();
             ->paginate($time->limit_cron);
-
-
-
-
-
         echo '<br/><br/>';
         echo '<br/>' .'=========== Vivo ==============' ;
         echo '<br/><b>'.'Yêu cầu:';
