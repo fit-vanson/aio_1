@@ -55,7 +55,7 @@ class CronProjectController extends Controller
             Log::error('Message:' . $exception->getMessage() . '--- Cron Project Vivo : ' . $exception->getLine());
         }
 
-        if($chplay !== false   || $huawei !== false  ){
+        if($chplay !== false   || $huawei !== false || $vivo !== false  ){
             echo '<META http-equiv="refresh" content="5;URL=' . url("cronProject") . '">';
         }
     }
@@ -535,8 +535,8 @@ class CronProjectController extends Controller
             ->where('status_upload','like','%'. $status_upload.'%')
             ->whereHas('dev', function ($query) {
                 return $query
-                    ->whereNotNull('api_client_id')
-                    ->where('api_client_id','<>','');
+                    ->whereNotNull('api_access_key')
+                    ->where('api_access_key','<>','');
             })
             ->where(function ($q) use ($timeCron) {
                 $q->where('bot_time', '<=', $timeCron)
@@ -544,18 +544,6 @@ class CronProjectController extends Controller
             })
             ->paginate($time->limit_cron);
 
-        dd($appsVivo);
-
-
-//        $dev_vivo = ProjectModel::with(['dev_vivo'])
-//            ->whereHas('dev_vivo',function ($q){
-//                $q->where('vivo_dev_access_key', '<>', null)
-//                    ->where('vivo_dev_client_secret', '<>', null);
-//            })
-//            ->where('Vivo_package','<>', null)
-//            ->where('Vivo_bot->time_bot','<=',$timeCron)
-//            ->limit($time->limit_cron)
-//            ->get();
 
         echo '<br/><br/>';
         echo '<br/>' .'=========== Vivo ==============' ;
@@ -563,34 +551,50 @@ class CronProjectController extends Controller
         echo '<br/>&emsp;'.'- Project có Package của Vivo.';
         echo '<br/>&emsp;'.'- Dev Vivo có Client ID và Client Secret'.'</b><br/><br/>';
 
+
+        if(count($appsVivo)==0){
+            echo 'Chưa đến time cron'.PHP_EOL .'<br>';
+            return false;
+        }
+
         if($appsVivo){
             foreach ($appsVivo->load('dev') as $appVivo){
-//                dd($appsVivo);
-                echo '<br/>'.'Dang chay:  '.  '-'. $appsVivo->id .' - '. Carbon::now('Asia/Ho_Chi_Minh');
-
+                $ch =  '<br/>'.'Dang chay: '. '-'. $appVivo->id .' - '. Carbon::now('Asia/Ho_Chi_Minh');
                 try{
-                    $data = $this->get_Vivo($dev->dev_vivo->vivo_dev_access_key,$dev->dev_vivo->vivo_dev_client_secret,$dev->Vivo_package);
-                    $dataArr =[
-                        'time_bot' => time(),
-                        'versionName' => $data ? $data->versionName : 0 ,
-                    ];
-                    ProjectModel::updateOrCreate(
-                        [
-                            'projectid'=> $dev->projectid
-                        ],
-                        [
-                            'Vivo_status' => $data ? $data->onlineStatus : 100,
-                            'Vivo_bot' => json_encode($dataArr)
-                        ]
-                    );
+                    $data = $this->get_Vivo($appVivo->dev->api_access_key,$appVivo->dev->api_client_secret,$appVivo->package);
+                    if($data){
+                        $status = $data->onlineStatus;
+                        switch ($status){
+                            case 0:
+                                $status_app = 2;
+                                break;
+                            case 1 :
+                                $status_app = 1;
+                                break;
+                            case 2:
+                                $status_app = 3;
+                                break;
+                            case 3 :
+                                $status_app = 1;
+                                break;
+                        }
+
+                        $appVivo->bot_appVersion = $data->versionName;
+                        $appVivo->policy_link = $data->privacyStatement;
+                        $appVivo->status_app = $status_app;
+
+
+
+                    }
+                    $appVivo->bot_time = time();
+                    $appVivo->save();
+                    $ch .= '-'.$appVivo->status_app;
                 }catch (\Exception $exception) {
                     Log::error('Message:' . $exception->getMessage() . '--- appsVivo: ' . $exception->getLine());
                 }
-
+                echo $ch;
             }
-        }if(count($dev_vivo)==0){
-            echo 'Chưa đến time cron'.PHP_EOL .'<br>';
-            return false;
+            return  true;
         }
     }
 
