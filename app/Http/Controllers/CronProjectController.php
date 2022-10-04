@@ -55,7 +55,7 @@ class CronProjectController extends Controller
             Log::error('Message:' . $exception->getMessage() . '--- Cron Project Vivo : ' . $exception->getLine());
         }
 
-        if($chplay !== false  || $vivo  !== false  || $huawei !== false  ){
+        if($chplay !== false   || $huawei !== false  ){
             echo '<META http-equiv="refresh" content="5;URL=' . url("cronProject") . '">';
         }
     }
