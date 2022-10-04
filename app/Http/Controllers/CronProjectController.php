@@ -222,10 +222,10 @@ class CronProjectController extends Controller
                     ->whereNotNull('api_client_id')
                     ->where('api_client_id','<>','');
             })
-//            ->where(function ($q) use ($timeCron) {
-//                $q->where('bot_time', '<=', $timeCron)
-//                    ->orWhere('bot_time', null);
-//            })
+            ->where(function ($q) use ($timeCron) {
+                $q->where('bot_time', '<=', $timeCron)
+                    ->orWhere('bot_time', null);
+            })
             ->limit($time->limit_cron)
             ->get();
         if($appsHuawei){
