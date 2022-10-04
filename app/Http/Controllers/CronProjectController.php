@@ -80,8 +80,7 @@ class CronProjectController extends Controller
                     $q->where('bot_time', '<=', $timeCron)
                         ->orWhere('bot_time', null);
                 })
-                ->limit($time->limit_cron)
-                ->get();
+                ->paginate($time->limit_cron);
         }
 
         if($appsChplay){
@@ -226,8 +225,10 @@ class CronProjectController extends Controller
                 $q->where('bot_time', '<=', $timeCron)
                     ->orWhere('bot_time', null);
             })
-            ->limit($time->limit_cron)
-            ->get();
+            ->paginate($time->limit_cron);
+
+
+
 
 
 
@@ -244,6 +245,7 @@ class CronProjectController extends Controller
         if($appsHuawei){
             $ch = '';
             foreach ($appsHuawei->load('dev') as $appHuawei){
+
                 $ch .=  '<br/>'.'Dang chay:  '.  '- '. $appHuawei->id .' - '. Carbon::now('Asia/Ho_Chi_Minh');
                 $monthCron = isset($_GET['submonth']) ? Carbon::now()->subMonth($_GET['submonth'])->format('Ym') :  Carbon::now()->format('Ym');
                 $dataArr = [];
