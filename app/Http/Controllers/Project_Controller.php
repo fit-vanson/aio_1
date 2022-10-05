@@ -1094,7 +1094,7 @@ class Project_Controller extends Controller
             $data_arr[] = array(
                 "logo" => $logo,
                 "projectname"=>$project.$template.$mada.'<br>'.$record->title_app.'<br>'.$package.'<br>'.$sdk.'<br>'.$keystore,
-                "bot_installs" => $record->pivot->bot_appVersion,
+                "bot_installs" => $record->pivot->bot_installs,
                 "bot_numberVoters" => $record->pivot->bot_numberVoters,
                 "bot_numberReviews" =>$record->pivot->bot_numberReviews,
                 "bot_score" => $record->pivot->bot_score,

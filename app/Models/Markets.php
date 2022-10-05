@@ -34,9 +34,17 @@ class Markets extends Model
                 'keystore',
                 'status_app',
                 'status_upload',
+                'use_id_upload',
                 'time_upload',
                 'bot',
-                'bot_time'
+                'bot_time',
+                'apk_link',
+                'aab_link',
+                'bot_installs',
+                'bot_numberReviews',
+                'bot_numberVoters',
+                'bot_score',
+                'bot_appVersion'
             );
     }
 

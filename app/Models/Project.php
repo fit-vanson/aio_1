@@ -18,22 +18,31 @@ class Project extends Model
 
     public function markets(){
         return $this->belongsToMany(Markets::class,MarketProject::class,'project_id','market_id')
-            ->withPivot('id',
+            ->withPivot(
+                'id',
                 'dev_id',
                 'appID',
                 'app_name_x',
-                'package','ads',
+                'package',
+                'ads',
                 'app_link',
                 'policy_link',
                 'video_link',
-                'apk_link','aab_link',
                 'sdk',
                 'keystore',
                 'status_app',
                 'status_upload',
+                'use_id_upload',
                 'time_upload',
                 'bot',
-                'bot_time'
+                'bot_time',
+                'apk_link',
+                'aab_link',
+                'bot_installs',
+                'bot_numberReviews',
+                'bot_numberVoters',
+                'bot_score',
+                'bot_appVersion'
             );
     }
 
