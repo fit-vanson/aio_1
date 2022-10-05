@@ -1020,6 +1020,7 @@ class Project_Controller extends Controller
 
 //            dd($record->pivot->pivotParent->market_name);
 
+
             $Chplay_status =  '<span data-package="'.$record->pivot->id.'" class="check_Status_'.$record->pivot->pivotParent->market_name.' badge badge-';
             switch ($status){
                 case 1:

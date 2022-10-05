@@ -21,6 +21,7 @@ class Markets extends Model
     public function projects(){
         return $this->belongsToMany(Project::class,MarketProject::class,'market_id','project_id')
             ->withPivot(
+                'id',
                 'dev_id',
                 'appID',
                 'app_name_x',

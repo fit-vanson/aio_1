@@ -88,6 +88,7 @@ class CronProjectController extends Controller
             foreach ($appsChplay as $appChplay){
                 $package = $appChplay->package;
                 $existApp =  $gplay->existsApp($package);
+
                 if($existApp){
                     try {
                         $appInfo = $gplay->getAppInfo($package);
