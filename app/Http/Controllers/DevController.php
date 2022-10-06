@@ -56,6 +56,9 @@ class DevController extends Controller
             })
             ->Where('market_id','like', '%' .$columnName_arr[5]['search']['value']. '%')
             ->Where('status','like', '%' .$columnName_arr[6]['search']['value']. '%')
+            ->orwhereHas('gmail_dev1', function ($query) use ($searchValue) {
+                return $query->Where('gmail', 'like', '%' . $searchValue . '%');
+            })
             ->count();
 
         // Get records, also we have included search filter as well
