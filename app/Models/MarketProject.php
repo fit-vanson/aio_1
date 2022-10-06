@@ -10,21 +10,23 @@ class MarketProject extends  \Illuminate\Database\Eloquent\Relations\Pivot
 {
     use HasFactory;
     use EagerLoadPivotTrait;
-    protected $fillable = [
-        'market_id',
-        'project_id',
-        'dev_id',
-        'app_name_x',
-        'appID',
-        'package',
-        'ads',
-        'app_link',
-        'policy_link',
-        'sdk',
-        'keystore',
-        'status_app',
-        'status_app',
-    ];
+//    protected $fillable = [
+//        'market_id',
+//        'project_id',
+//        'dev_id',
+//        'app_name_x',
+//        'appID',
+//        'package',
+//        'ads',
+//        'app_link',
+//        'policy_link',
+//        'sdk',
+//        'keystore',
+//        'status_app',
+//        'status_app',
+//    ];
+
+    protected $guarded = [];
     public $timestamps= false;
 
     protected $table = 'market_projects';

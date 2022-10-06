@@ -20,23 +20,22 @@
 
 <nav class="navbar-custom">
     <ul class="navbar-right d-flex list-inline float-right mb-0">
-{{--        <li class="dropdown notification-list d-none d-md-block">--}}
-{{--            <form role="search" class="app-search">--}}
-{{--                <div class="form-group mb-0">--}}
-{{--                    <input type="text" class="form-control" placeholder="Search..">--}}
-{{--                    <button type="submit"><i class="fa fa-search"></i></button>--}}
-{{--                </div>--}}
-{{--            </form>--}}
-{{--        </li>--}}
-
-        <!-- full screen -->
-{{--        <li class="dropdown notification-list d-none d-md-block">--}}
-{{--            <a class="nav-link waves-effect" href="#" id="btn-fullscreen">--}}
-{{--                <i class="mdi mdi-fullscreen noti-icon"></i>--}}
-{{--            </a>--}}
-{{--        </li>--}}
-
         <!-- notification -->
+
+
+        <li class="dropdown notification-list list-inline-item d-none d-md-inline-block">
+            <div  class="app-search">
+                <div class="form-group mb-0 ">
+                    @if(isset($header))
+                            @if(isset($header['badge']))
+                                @foreach($header['badge'] as $key=>$value)
+                                    <span class=" badge badge-{{$value['style']}}">{{$key}}</span>
+                                @endforeach
+                            @endif
+                    @endif
+                </div>
+            </div>
+        </li>
 
         <li class="dropdown notification-list">
             <div class="dropdown notification-list nav-pro-img">
@@ -76,22 +75,9 @@
             @endif
 
         </li>
+
         <li class="d-none d-sm-block">
-
-
             <div class="pt-3 d-inline-block">
-
-{{--                <a class="btn btn-light dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">--}}
-{{--                    Create--}}
-{{--                </a>--}}
-
-{{--                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">--}}
-{{--                    <a class="dropdown-item" href="#">Action</a>--}}
-{{--                    <a class="dropdown-item" href="#">Another action</a>--}}
-{{--                    <a class="dropdown-item" href="#">Something else here</a>--}}
-{{--                    <div class="dropdown-divider"></div>--}}
-{{--                    <a class="dropdown-item" href="#">Separated link</a>--}}
-{{--                </div>--}}
             </div>
         </li>
     </ul>

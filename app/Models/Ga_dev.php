@@ -15,4 +15,9 @@ class Ga_dev extends Model
 //        'gmail','mailrecovery','vpn_iplogin'
 //    ];
     protected $guarded = [];
+
+    public function devs()
+    {
+        return $this->hasMany(Dev::class,'mail_id_1');
+    }
 }

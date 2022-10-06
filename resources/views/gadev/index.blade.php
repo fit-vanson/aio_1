@@ -25,9 +25,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-
-
-                    <div class="table-rep-plugin" >
+                    <div class="table-rep-plugin table_1" >
                         <div class="table-responsive mb-0" data-pattern="priority-columns">
                             <table id="gadevTable" class="table table-striped table-bordered dt-responsive data-table"
                                    style="width: 100%;">
@@ -41,6 +39,24 @@
                                     <th style="width: 10%"><div class="truncate">Backup Code (DES Encrypt)</div></th>
                                     <th style="width: 20%">Ghi chú</th>
                                     <th style="width: 10%">Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="table-rep-plugin table_2" >
+                        <div class="table-responsive mb-0" data-pattern="priority-columns">
+                            <table id="gadevTableV2" class="table table-striped table-bordered dt-responsive data-table"
+                                   style="width: 100%;" >
+                                <thead>
+                                <tr>
+                                    <th style="display: none" >ID</th>
+                                    <th style="width: 20%">Gmail</th>
+                                    @foreach(\App\Models\Markets::all() as $market)
+                                        <th style="width: 10%">{{$market->market_name}}</th>
+                                    @endforeach
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -76,6 +92,34 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
+            $('.table_2').hide()
+
+            $(document).on('click','#viewGa_dev', function (data){
+                $('.table_1').hide()
+                $('.table_2').show()
+
+                var table2 = $('#gadevTableV2').DataTable({
+                    displayLength: 50,
+                    lengthMenu: [5, 10, 25, 50, 75, 100],
+                    processing: true,
+                    serverSide: true,
+                    ajax: {
+                        url: "{{ route('gadev.getIndexV2') }}",
+                        type: "post",
+                    },
+                    columns: [
+                        {data: 'id',visible: false},
+                        {data: 'gmail'},
+                        @foreach(\App\Models\Markets::all() as $market)
+                        {data: '{{$market->market_name}}', orderable: false, searchable: false},
+                        @endforeach
+                    ],
+                    order:[0,'desc'],
+
+                });
+
+            });
+
             var table = $('#gadevTable').DataTable({
                 displayLength: 50,
                 lengthMenu: [5, 10, 25, 50, 75, 100],
@@ -83,7 +127,7 @@
                 serverSide: true,
                 ajax: {
                     url: "{{ route('gadev.getIndex') }}",
-                    type: "post"
+                    type: "post",
                 },
                 columns: [
                     {data: 'id',visible: false},
@@ -106,6 +150,7 @@
                 $('#modelHeading').html("Thêm mới");
                 $('#ajaxModel').modal('show');
             });
+
             $('#gadevForm').on('submit',function (event){
                 event.preventDefault();
                 if($('#saveBtn').val() == 'create-gedev'){
@@ -158,6 +203,7 @@
                 }
 
             });
+
             $(document).on('click','.editGadev', function (data){
                 var gadev_id = $(this).data('id');
                 $('#modelHeading').html("Edit");
