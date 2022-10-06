@@ -54,24 +54,22 @@ class DevController extends Controller
                 $q->Where('store_name', 'like', '%' . $searchValue . '%')
                     ->orWhere('dev_name', 'like', '%' . $searchValue . '%');
             })
-            ->Where('market_id','like', '%' .$columnName_arr[5]['search']['value']. '%')
-            ->Where('status','like', '%' .$columnName_arr[6]['search']['value']. '%')
-            ->orwhereHas('gmail_dev1', function ($query) use ($searchValue) {
-                return $query->Where('gmail', 'like', '%' . $searchValue . '%');
-            })
+            ->Where('market_id','like', '%' .$columnName_arr[6]['search']['value']. '%')
+            ->Where('status','like', '%' .$columnName_arr[7]['search']['value']. '%')
             ->count();
 
         // Get records, also we have included search filter as well
         $records = Dev::orderBy($columnName, $columnSortOrder)
             ->where(function($q) use ($searchValue) {
                 $q->Where('store_name', 'like', '%' . $searchValue . '%')
-                    ->orWhere('dev_name', 'like', '%' . $searchValue . '%');
+                    ->orWhere('dev_name', 'like', '%' . $searchValue . '%')
+                    ->orwhereHas('gmail_dev1', function ($query) use ($searchValue) {
+                        return $query->Where('gmail', 'like', '%' . $searchValue . '%');
+                    });
             })
-            ->Where('market_id','like', '%' .$columnName_arr[5]['search']['value']. '%')
-            ->Where('status','like', '%' .$columnName_arr[6]['search']['value']. '%')
-            ->orwhereHas('gmail_dev1', function ($query) use ($searchValue) {
-                return $query->Where('gmail', 'like', '%' . $searchValue . '%');
-            })
+            ->Where('market_id','like', '%' .$columnName_arr[6]['search']['value']. '%')
+            ->Where('status','like', '%' .$columnName_arr[7]['search']['value']. '%')
+
             ->skip($start)
             ->take($rowperpage)
             ->get();

@@ -279,7 +279,7 @@
                 ],
                 order:[0,'desc'],
                 initComplete: function () {
-                    this.api().columns([5]).every( function () {
+                    this.api().columns([6]).every( function () {
                         var column = this;
                         var select = $('<select class="form-control"><option value="">Market</option></select>')
                             .appendTo( $(column.header()).empty() )
@@ -297,7 +297,7 @@
                             select.append( '<option value="'+j.id+'">'+j.market_name+'</option>' )
                         } );
                     } );
-                    this.api().columns([6]).every( function () {
+                    this.api().columns([7]).every( function () {
                         var column = this;
                         var select = $('<select class="form-control"><option value="">Status</option></select>')
                             .appendTo( $(column.header()).empty() )

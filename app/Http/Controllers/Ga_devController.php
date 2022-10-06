@@ -129,9 +129,11 @@ class Ga_devController extends Controller
         $records = Ga_dev::orderBy($columnName, $columnSortOrder)
             ->with('devs')
             ->Where('gmail','like', '%' .$searchValue. '%')
+//            ->Where('gmail','elinaebertsakq27@gmail.com')
             ->skip($start)
             ->take($rowperpage)
             ->get();
+
 
         $markets = Markets::all();
         $data_arr = array();
@@ -164,9 +166,9 @@ class Ga_devController extends Controller
                         $dev_name =  '<span class="badge badge-dark">'.$dev_market->dev_name.'</span>';
                         break;
                 }
-                $dev = [
+                $dev += [
                     $dev_market->markets->market_name => $dev_name,
-                    'status' =>$dev_market->status
+
                 ];
             }
             $data =  array_replace($arr, $dev);
