@@ -52,7 +52,10 @@ class DevController extends Controller
         $totalRecordswithFilter = Dev::select('count(*) as allcount')
             ->where(function($q) use ($searchValue) {
                 $q->Where('store_name', 'like', '%' . $searchValue . '%')
-                    ->orWhere('dev_name', 'like', '%' . $searchValue . '%');
+                    ->orWhere('dev_name', 'like', '%' . $searchValue . '%')
+                    ->orwhereHas('gmail_dev1', function ($query) use ($searchValue) {
+                        return $query->Where('gmail', 'like', '%' . $searchValue . '%');
+                    });
             })
             ->Where('market_id','like', '%' .$columnName_arr[6]['search']['value']. '%')
             ->Where('status','like', '%' .$columnName_arr[7]['search']['value']. '%')
