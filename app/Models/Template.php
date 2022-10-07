@@ -12,10 +12,8 @@ class Template extends Model
     public $timestamps = false;
     protected $table = 'ngocphandang_template';
 
-    protected $fillable = [ 'template',
-        'ver_build', 'script_img','script_svg2xml',
-        'time_create', 'time_update','time_get','note','link_chplay','category'
-    ];
+
+    protected $guarded = [];
 
     protected $casts = [
         'category' => 'json',

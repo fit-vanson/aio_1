@@ -53,6 +53,7 @@ class ApiController extends Controller
         $searchValue = \request()->q;
         $project = Template::latest('id')
             ->where('template', 'like', '%' . $searchValue . '%')
+            ->where('status', 0)
             ->get();
         $result = TemplateResource::collection($project);
         return response()->json($result);

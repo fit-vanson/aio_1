@@ -162,10 +162,10 @@ class TemplateController extends Controller
                 $convert_aab = '<br>'. "<span style='color:red;'> Aab</span>";
             }
 
-            if($record->startus == 0){
-                $startus = '<br>'. "<span style='color:green;'> Status</span>";
+            if($record->status == 0){
+                $status = '<br>'. "Trạng thái: <span style='color:green;'> Mở</span>";
             }else{
-                $startus = '<br>'. "<span style='color:red;'> Status</span>";
+                $status = '<br>'. "Trạng thái: <span style='color:red;'> Đóng</span>";
             }
 
             if($record->time_create == 0 ){
@@ -191,7 +191,6 @@ class TemplateController extends Controller
             foreach ($record->markets as $category){
                 $categories .= '<p class="card-title-desc font-16"><img src="img/icon/'.$category->market_logo.'"> '.$category->pivot->value.'</p>';
             }
-
             if ($record->link_chplay !== null){
                 $link= "<a  target= _blank href='$record->link_chplay'>Link</a>";
             }
@@ -200,18 +199,13 @@ class TemplateController extends Controller
             }
 
             if(isset($record->template_logo)){
-                if (isset($record->link_store_vietmmo)){
-                    $logo = "<a href='".$record->link_store_vietmmo."' target='_blank'>  <img class='rounded mx-auto d-block'  width='100px'  height='100px'  src='../uploads/template/$record->template/thumbnail/$record->template_logo'></a>";
-                }else{
-                    $logo = "<img class='rounded mx-auto d-block'  width='100px'  height='100px'  src='../uploads/template/$record->template/thumbnail/$record->template_logo'>";
-                }
+                $logo = "<img class='rounded mx-auto d-block'  width='100px'  height='100px'  src='../storage/template/$record->template/$record->template_logo'>";
+
             }else{
                 $logo = '<img class="rounded mx-auto d-block" width="100px" height="100px" src="assets\images\logo-sm.png">';
             }
-
-            $template_apk   = $record->template_apk ?  '<a href="/file-manager/download?disk=File%20Manager&path=TemplateApk%2F/'.$record->template_apk.'" class="badge badge-success" style="font-size: 12px">APK</a>' : '<span  class="badge badge-danger" style="font-size: 12px">APK</span>';
-            $template_data  = $record->template_data ? '<a href="/file-manager/TemplateData/'.$record->template_data.'" class="badge badge-success" style="font-size: 12px">Data</a>' : '<span  class="badge badge-danger" style="font-size: 12px">Data</span>';
-
+            $template_apk   = $record->template_apk ?  '<a href="/storage/template/'.$record->template.'/'.$record->template_apk.'" class="badge badge-success" style="font-size: 12px">APK</a>' : '<span  class="badge badge-danger" style="font-size: 12px">APK</span>';
+            $template_data  = $record->template_data ? '<a href="/storage/template/'.$record->template.'/'.$record->template_data.'" class="badge badge-success" style="font-size: 12px">Data</a>' : '<span  class="badge badge-danger" style="font-size: 12px">Data</span>';
 
             $type = $record->template_type;
             switch ($type){
@@ -236,7 +230,7 @@ class TemplateController extends Controller
                 "template" => $template. '<br>'.$link.$template_apk.'  ' .$template_data ,
                 "category"=>$categories,
 //                "category"=>$Chplay_category.'<br>'.$Amazon_category.'<br>'.$Samsung_category.'<br>'.$Xiaomi_category.'<br>'.$Oppo_category.'<br>'.$Vivo_category.'<br>'.$Huawei_category,
-                "script" => '<div class="text-wrap width-400">'.$script.$value_ads.$convert_aab.$startus.'<br>Package: '.$record->package.'</div>',
+                "script" => '<div class="text-wrap width-400">'.$script.$value_ads.$convert_aab.$status.'<br>Package: '.$record->package.'</div>',
                 "time_create"=> $time_create,
                 "time_update"=> $time_update,
                 "time_get"=> $time_get,
@@ -262,23 +256,17 @@ class TemplateController extends Controller
             'template' =>'unique:ngocphandang_template,template',
             'template_data' => 'mimes:zip',
             'template_apk' => 'mimes:zip,apk'
-
         ];
         $message = [
             'template.unique'=>'Tên Template đã tồn tại',
             'template_data.mimes'=>'Template Data: *.zip',
             'template_apk.mimes'=>' Template APK: *.apk',
         ];
-
-
         $error = Validator::make($request->all(),$rules, $message );
 
         if($error->fails()){
             return response()->json(['errors'=> $error->errors()->all()]);
         }
-
-
-
         $ads = [
             'ads_id' => $request->Check_ads_id,
             'ads_banner' => $request->Check_ads_banner,
@@ -295,11 +283,7 @@ class TemplateController extends Controller
             'ads_roll_huawei' => $request->Check_ads_roll_huawei,
 
         ];
-
-
-//
         $categories = [];
-
         foreach (array_filter($request->category)  as $key=>$value){
             $categories[] = [
                 'market_id' =>$key,
@@ -327,45 +311,38 @@ class TemplateController extends Controller
         $data['package'] = $request->package;
         $data['link'] = $request->link;
         $data['convert_aab'] = $request->convert_aab;
-        $data['startus'] = $request->startus;
+        $data['status'] = $request->status;
 
         $data['category'] =  $categories;
+
+        $path = storage_path('app/public/template/'.$request->template.'/');
+        if (!file_exists($path)) {
+            mkdir($path, 777, true);
+        }
+
+
+
         if(isset($request->logo)){
             $image = $request->file('logo');
-            $data['template_logo'] = 'logo_'.time().'.'.$image->extension();
-            $destinationPath = public_path('uploads/template/'.$request->template.'/thumbnail/');
             $img = Image::make($image->path());
-            if (!file_exists($destinationPath)) {
-                mkdir($destinationPath, 777, true);
-            }
-            $img->resize(100, 100, function ($constraint) {
-                $constraint->aspectRatio();
-            })->save($destinationPath.$data['template_logo']);
-            $destinationPath = public_path('uploads/template/'.$request->template);
-            $image->move($destinationPath, $data['template_logo']);
+            $img->resize(100, 100)
+                ->save($path.$data['template_logo'],85);
+            $data['template_logo'] = 'logo.'.$image->extension();
         }
 
         if($request->template_apk){
-            $destinationPath = public_path('file-manager/TemplateApk/');
-            if (!file_exists($destinationPath)) {
-                mkdir($destinationPath, 0777, true);
-            }
             $file = $request->template_apk;
             $extension = $file->getClientOriginalExtension();
-            $file_name_apk = $request->template.'.'.$extension;
+            $file_name_apk = $request->ver_build.'.'.$extension;
             $data['template_apk'] = $file_name_apk;
-            $file->move($destinationPath, $file_name_apk);
+            $file->move($path, $file_name_apk);
         }
         if($request->template_data){
-            $destinationPath = public_path('file-manager/TemplateData/');
-            if (!file_exists($destinationPath)) {
-                mkdir($destinationPath, 0777, true);
-            }
             $file = $request->template_data;
             $extension = $file->getClientOriginalExtension();
-            $file_name_data = $request->template.'.'.$extension;
+            $file_name_data = $request->ver_build.'.'.$extension;
             $data['template_data'] = $file_name_data;
-            $file->move($destinationPath, $file_name_data);
+            $file->move($path, $file_name_data);
         }
         $data->save();
         $allTemp  = Template::latest('id')->get();
@@ -487,79 +464,38 @@ class TemplateController extends Controller
         $data->package = $request->package;
         $data->link = $request->link;
         $data->convert_aab = $request->convert_aab;
-        $data->startus = $request->startus;
+        $data->status = $request->status;
         $data->category = $categories ;
 
-
-        if($data->template_logo){
-            if($data->template <> $request->template){
-                $dir = (public_path('uploads/template/'));
-                rename($dir.$data->template, $dir.$request->template);
-            }
+        $path = storage_path('app/public/template/'.$data->template.'/');
+        if (!file_exists($path)) {
+            mkdir($path, 777, true);
         }
         if($request->logo){
             $image = $request->file('logo');
-            $data['template_logo'] = 'logo_'.time().'.'.$image->extension();
-            $destinationPath = public_path('uploads/template/'.$request->template.'/thumbnail/');
+            $data['template_logo'] = 'logo.'.$image->extension();
             $img = Image::make($image->path());
-            if (!file_exists($destinationPath)) {
-                mkdir($destinationPath, 777, true);
-            }
-            $img->resize(100, 100, function ($constraint) {
-                $constraint->aspectRatio();
-            })->save($destinationPath.$data['template_logo']);
-            $destinationPath = public_path('uploads/template/'.$request->template);
-            $image->move($destinationPath, $data['template_logo']);
+            $img->resize(100, 100)
+                ->save($path.$data['template_logo'],85);
+            $data['template_logo'] = 'logo.'.$image->extension();
+
         }
 
-//        if($data->template_apk){
-////            dd($data->template_apk.$request->template);
-//            $dir_file = public_path('file-manager/TemplateApk/');
-//            @rename($dir_file.$data->template_apk, $dir_file.$request->template.'.apk');
-//            $data['template_apk'] = $request->template.'.apk';
-//        }
         if($request->template_apk){
-            if($data->template_apk){
-                $path_Remove =  public_path('file-manager/TemplateApk/').$data->template_apk;
-                if(file_exists($path_Remove)){
-                    unlink($path_Remove);
-                }
-            }
-            $destinationPath = public_path('file-manager/TemplateApk/');
-            if (!file_exists($destinationPath)) {
-                mkdir($destinationPath, 0777, true);
-            }
             $file = $request->template_apk;
             $extension = $file->getClientOriginalExtension();
-            $file_name_apk = $request->template.'.'.$extension;
+            $file_name_apk = $request->ver_build.'.'.$extension;
             $data->template_apk = $file_name_apk;
-            $file->move($destinationPath, $file_name_apk);
+            $file->move($path, $file_name_apk);
         }
-
-//        if($data->template_data){
-//            $dir_file = public_path('file-manager/TemplateData/');
-//            rename($dir_file.$data->template_data, $dir_file.$request->template.'.zip');
-//            $data['template_data'] = $request->template.'.zip';
-//        }
         if($request->template_data){
-            if($data->template_data){
-                $path_Remove =  public_path('file-manager/TemplateData/').$data->template_data;
-                if(file_exists($path_Remove)){
-                    unlink($path_Remove);
-                }
-            }
-            $destinationPath = public_path('file-manager/TemplateData/');
-            if (!file_exists($destinationPath)) {
-                mkdir($destinationPath, 0777, true);
-            }
             $file = $request->template_data;
             $extension = $file->getClientOriginalExtension();
-            $file_name_data = $request->template.'.'.$extension;
+            $file_name_data = $request->ver_build.'.'.$extension;
             $data->template_data = $file_name_data;
-            $file->move($destinationPath, $file_name_data);
+            $file->move($path, $file_name_data);
         }
-
-        $data->template = $request->template;
+//        $data->template = $request->template;
         $data->template_name = $request->template_name;
 
         $data->save();
@@ -574,8 +510,20 @@ class TemplateController extends Controller
      */
     public function delete($id)
     {
-        Template::find($id)->delete();
-        return response()->json(['success'=>'Xóa thành công.']);
+        $template = Template::find($id);
+        if($template->status == 0 ){
+            return response()->json(['error'=>'Template đang mở, không thể xoá.']);
+        }
+        elseif(count($template->project) > 0  ){
+            return response()->json(['error'=>'Đang có Project sử dụng, không thể xoá.']);
+        }else{
+            $template->delete();
+            return response()->json(['success'=>'Xóa thành công.']);
+        }
+
+
+//        ->delete();
+
     }
 
     public function callAction($method, $parameters)
@@ -594,9 +542,6 @@ class TemplateController extends Controller
 
     public function convert(){
         $templates = Template::select('id','Chplay_category','Amazon_category','Samsung_category','Xiaomi_category','Oppo_category','Vivo_category','Huawei_category')->get();
-
-
-
         $insert = [];
         foreach ($templates as $template){
             $insert = [

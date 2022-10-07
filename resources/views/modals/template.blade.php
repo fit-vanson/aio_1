@@ -52,7 +52,7 @@
                             <div class="form-group col-lg-3">
                                 <label for="name">Trạng thái</label>
                                 <div>
-                                    <select class="form-control" id="startus" name="startus">
+                                    <select class="form-control" id="status" name="status">
                                         <option value="0">Mở</option>
                                         <option value="1">Tắt</option>
                                     </select>

@@ -97,7 +97,7 @@
                         return {
                             results: $.map(data, function (item) {
                                 return {
-                                    text: item.name,
+                                    text: item.name + ': ' + item.text,
                                     id: item.id
                                 }
                             })
@@ -442,7 +442,7 @@
                     $("#template").select2("trigger", "select", {
                         data: {
                             id: data.template,
-                            text: data.ma_template.template,
+                            text: data.ma_template.template + ': ' + data.ma_template.template_name,
                             project: data.projectid,
                         }
                     });

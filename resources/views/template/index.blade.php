@@ -10,8 +10,12 @@
 
 
 <!-- Sweet-Alert  -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+
+
+<link href="{{ URL::asset('assets/libs/toastr/toastr.min.css') }}" rel="stylesheet" type="text/css"/>
+<link href="{{ URL::asset('assets/libs/toastr/ext-component-toastr.css') }}" rel="stylesheet" type="text/css"/>
+<link href="{{ URL::asset('assets/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css"/>
+
 
     <style>
         /*table {*/
@@ -97,6 +101,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/plug-ins/1.10.20/sorting/datetime-moment.js"></script>
 
+<script src="{{ URL::asset('/assets/libs/toastr/toastr.min.js') }}"></script>
+<script src="{{ URL::asset('/assets/libs/sweetalert2/sweetalert2.min.js') }}"></script>
+
 <script type="text/javascript">
     $(function () {
         $.ajaxSetup({
@@ -127,15 +134,24 @@
 
         });
 
+        $(document).on('change', '#template', function () {
+            var _text = $(this).val();
+            console.log(_text)
+            $('#ver_build').val(_text+'_V');
+        })
+
         $('#createNewTemplate').click(function () {
             $('#saveBtn').val("create-template");
             $('#template_id').val('');
             $('#templateForm').trigger("reset");
             $('#modelHeading').html("Thêm mới Template");
             $('#ajaxModel').modal('show');
-            $('.input_buildinfo_console').hide();
-            $('.input_api').hide();
+
+            $('#template').prop( "disabled", false );
+            // $('.input_buildinfo_console').hide();
+            // $('.input_api').hide();
         });
+
         $('#templateForm').on('submit',function (event){
             event.preventDefault();
             var formData = new FormData($("#templateForm")[0]);
@@ -198,28 +214,64 @@
 
         $(document).on('click','.deleteTemplate', function (data){
             var template_id = $(this).data("id");
-            swal({
-                    title: "Bạn có chắc muốn xóa?",
-                    text: "Your will not be able to recover this imaginary file!",
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonClass: "btn-danger",
-                    confirmButtonText: "Xác nhận xóa!",
-                    closeOnConfirm: false
-                },
-                function(){
+
+
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#02a499",
+                cancelButtonColor: "#ec4561",
+                confirmButtonText: "Yes, delete it!"
+            }).then(function (result) {
+                if (result.value) {
                     $.ajax({
                         type: "get",
                         url: "{{ asset("template/delete") }}/" + template_id,
                         success: function (data) {
-                            table.draw();
+                            if(data.error){
+                                $.notify(data.error , "error");
+                            }
+                            if(data.success){
+                                $.notify(data.success , "success");
+                                table.draw();
+                            }
                         },
                         error: function (data) {
                             console.log('Error:', data);
                         }
                     });
-                    swal("Đã xóa!", "Your imaginary file has been deleted.", "success");
-                });
+
+                }
+            });
+
+
+        {{--    swal({--}}
+        {{--            title: "Bạn có chắc muốn xóa?",--}}
+        {{--            text: "Your will not be able to recover this imaginary file!",--}}
+        {{--            type: "warning",--}}
+        {{--            showCancelButton: true,--}}
+        {{--            confirmButtonClass: "btn-danger",--}}
+        {{--            confirmButtonText: "Xác nhận xóa!",--}}
+        {{--            closeOnConfirm: false--}}
+        {{--        },--}}
+        {{--        function(){--}}
+        {{--            $.ajax({--}}
+        {{--                type: "get",--}}
+        {{--                url: "{{ asset("template/delete") }}/" + template_id,--}}
+        {{--                success: function (data) {--}}
+        {{--                    if(data.error){--}}
+        {{--                        $.notify(data.error , "error");--}}
+        {{--                    }--}}
+        {{--                    // table.draw();--}}
+        {{--                },--}}
+        {{--                error: function (data) {--}}
+        {{--                    console.log('Error:', data);--}}
+        {{--                }--}}
+        {{--            });--}}
+        {{--            // swal("Đã xóa!", "Your imaginary file has been deleted.", "success");--}}
+        {{--        });--}}
         });
 
         $(document).on('click','.checkDataTemplate', function (data){
@@ -253,9 +305,7 @@
 <script>
     function editTemplate(id) {
         $.get('{{asset('template/edit')}}/'+id,function (data) {
-            console.log(data)
-
-
+            $('#template').prop( "disabled", true );
 
             if(data.ads != null){
                 var ads = jQuery.parseJSON(data.ads);
@@ -374,7 +424,7 @@
             $('#link').val(data.link);
             $('#package').val(data.package);
             $('#convert_aab').val(data.convert_aab);
-            $('#startus').val(data.startus);
+            $('#status').val(data.status);
             $.each(data.category, function (k,v){
                 $('#category_'+v.market_id).val(v.value);
             });
