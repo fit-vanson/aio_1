@@ -99,6 +99,7 @@
                 $('.table_2').show()
 
                 var table2 = $('#gadevTableV2').DataTable({
+                    destroy: true,
                     displayLength: 50,
                     lengthMenu: [5, 10, 25, 50, 75, 100],
                     processing: true,

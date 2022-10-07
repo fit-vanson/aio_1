@@ -13,6 +13,18 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
 
+    <style>
+        /*table {*/
+        /*    width: 100%;*/
+        /*    border-collapse: collapse;*/
+        /*    table-layout: fixed;*/
+        /*}*/
+
+        .cell-breakWord {
+            width: 20%;
+            word-wrap: break-word;
+        }
+    </style>
 
 
 
@@ -46,11 +58,12 @@
                      <table class="table table-bordered dt-responsive nowrap data-table" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                         <thead>
                         <tr>
-                            <th style="width: 10%">Logo</th>
-                            <th style="width: 20%">Tên Template</th>
-                            <th style="width: 20%">Phân loại</th>
-                            <th style="width: 20%">Thông tin Template</th>
-                            <th style="width: 10%">Action</th>
+                            <th>Logo</th>
+                            <th>Tên Template</th>
+                            <th>Phân loại</th>
+                            <th>Thông tin Template</th>
+                            <th>Type</th>
+                            <th>Action</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -104,6 +117,7 @@
                 {data: 'template'},
                 {data: 'category'},
                 {data: 'script'},
+                {data: 'template_type'},
                 {data: 'action',className: "text-center", name: 'action', orderable: false, searchable: false},
             ],
             "columnDefs": [

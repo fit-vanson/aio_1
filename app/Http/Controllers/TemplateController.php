@@ -52,8 +52,6 @@ class TemplateController extends Controller
 
         // Get records, also we have included search filter as well
         $records = Template::orderBy($columnName, $columnSortOrder)
-
-
             ->where('template', 'like', '%' . $searchValue . '%')
             ->orwhere('template_name', 'like', '%' . $searchValue . '%')
             ->orWhere('ver_build', 'like', '%' . $searchValue . '%')
@@ -103,48 +101,59 @@ class TemplateController extends Controller
 
             $ads = json_decode($record->ads,true);
 
-            if(isset($ads['ads_id'])){
-                $ads_id = "<span style='color:green;'> Id</span> - ";
-            }else{
-                $ads_id = "<span style='color:red;'> Id</span> - ";
+            $value_ads = '<br>';
+            foreach ($ads as $key=> $value){
+                if ($value ==1){
+                    $value_ads .= '<span style="color:green;">'.$key.'</span> - ';
+                }else{
+                    $value_ads .= ' <span style="color:red;">'.$key.'</span> - ';
+                }
             }
 
-            if(isset($ads['ads_banner'])){
-                $ads_banner = "<span style='color:green;'> Banner</span> - ";
-            }else{
-                $ads_banner = "<span style='color:red;'> Banner</span> - ";
-            }
 
-            if(isset($ads['ads_inter'])){
-                $ads_inter = "<span style='color:green;'> Inter</span> - ";
-            }else{
-                $ads_inter = "<span style='color:red;'> Inter</span> - ";
-            }
 
-            if(isset($ads['ads_reward'])){
-                $ads_reward = "<span style='color:green;'> Reward</span> - ";
-            }else{
-                $ads_reward = "<span style='color:red;'> Reward</span> - ";
-            }
-
-            if(isset($ads['ads_native'])){
-                $ads_native = "<span style='color:green;'> Native</span> - ";
-            }else{
-                $ads_native = "<span style='color:red;'> Native</span> - ";
-            }
-
-            if(isset($ads['ads_open'])){
-                $ads_open = "<span style='color:green;'> Open</span> - ";
-            }else{
-                $ads_open = "<span style='color:red;'> Open</span> - ";
-            }
-
-            if(isset($ads['ads_start'])){
-                $ads_start = "<span style='color:green;'> Start</span>";
-            }else{
-                $ads_start = "<span style='color:red;'> Start</span>";
-            }
-            $ads ='<br>'.$ads_id.$ads_banner.$ads_inter.$ads_reward.$ads_native.$ads_open.$ads_start;
+//            if(isset($ads['ads_id'])){
+//                $ads_id = "<span style='color:green;'> Id</span> - ";
+//            }else{
+//                $ads_id = "<span style='color:red;'> Id</span> - ";
+//            }
+//
+//            if(isset($ads['ads_banner'])){
+//                $ads_banner = "<span style='color:green;'> Banner</span> - ";
+//            }else{
+//                $ads_banner = "<span style='color:red;'> Banner</span> - ";
+//            }
+//
+//            if(isset($ads['ads_inter'])){
+//                $ads_inter = "<span style='color:green;'> Inter</span> - ";
+//            }else{
+//                $ads_inter = "<span style='color:red;'> Inter</span> - ";
+//            }
+//
+//            if(isset($ads['ads_reward'])){
+//                $ads_reward = "<span style='color:green;'> Reward</span> - ";
+//            }else{
+//                $ads_reward = "<span style='color:red;'> Reward</span> - ";
+//            }
+//
+//            if(isset($ads['ads_native'])){
+//                $ads_native = "<span style='color:green;'> Native</span> - ";
+//            }else{
+//                $ads_native = "<span style='color:red;'> Native</span> - ";
+//            }
+//
+//            if(isset($ads['ads_open'])){
+//                $ads_open = "<span style='color:green;'> Open</span> - ";
+//            }else{
+//                $ads_open = "<span style='color:red;'> Open</span> - ";
+//            }
+//
+//            if(isset($ads['ads_start'])){
+//                $ads_start = "<span style='color:green;'> Start</span>";
+//            }else{
+//                $ads_start = "<span style='color:red;'> Start</span>";
+//            }
+//            $ads ='<br>'.$ads_id.$ads_banner.$ads_inter.$ads_reward.$ads_native.$ads_open.$ads_start;
 
 
             if($record->convert_aab != 0){
@@ -204,16 +213,34 @@ class TemplateController extends Controller
             $template_data  = $record->template_data ? '<a href="/file-manager/TemplateData/'.$record->template_data.'" class="badge badge-success" style="font-size: 12px">Data</a>' : '<span  class="badge badge-danger" style="font-size: 12px">Data</span>';
 
 
+            $type = $record->template_type;
+            switch ($type){
+                case 0:
+                    $type = '<span class="badge badge-secondary" style="font-size: 12px">Chưa phân loại</span>';
+                    break;
+                case 1:
+                    $type = '<span class="badge badge-primary" style="font-size: 12px">App</span>';
+                    break;
+                case 2:
+                    $type = '<span class="badge badge-info" style="font-size: 12px">Game</span>';
+                    break;
+                case 3:
+                    $type = '<span class="badge badge-warning" style="font-size: 12px">Laucher & Theme	</span>';
+                    break;
+            }
+
+
 
             $data_arr[] = array(
                 "logo" => $logo,
                 "template" => $template. '<br>'.$link.$template_apk.'  ' .$template_data ,
                 "category"=>$categories,
 //                "category"=>$Chplay_category.'<br>'.$Amazon_category.'<br>'.$Samsung_category.'<br>'.$Xiaomi_category.'<br>'.$Oppo_category.'<br>'.$Vivo_category.'<br>'.$Huawei_category,
-                "script" => $script.$ads.$convert_aab.$startus.'<br>Package: '.$record->package,
+                "script" => '<div class="text-wrap width-400">'.$script.$value_ads.$convert_aab.$startus.'<br>Package: '.$record->package.'</div>',
                 "time_create"=> $time_create,
                 "time_update"=> $time_update,
                 "time_get"=> $time_get,
+                "template_type"=> $type,
                 "action"=> $btn,
             );
         }
