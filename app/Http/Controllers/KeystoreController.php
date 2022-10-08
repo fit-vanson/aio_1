@@ -71,11 +71,11 @@ class KeystoreController extends Controller
             $btn = ' <a href="javascript:void(0)" onclick="editKeytore('.$record['id'].')" class="btn btn-warning"><i class="ti-pencil-alt"></i></a>';
             $btn = $btn.' <a href="javascript:void(0)" data-id="'.$record['id'].'" class="btn btn-danger deleteKeystore"><i class="ti-trash"></i></a>';
 
-            if($record['file']){
-                $file = '<span class="ml-lg-2"><i class="mdi mdi-check-circle" style="color: green"></i></<span>';
-            }else{
-                $file = '<span class="ml-lg-2"><i class="mdi mdi-close-circle " style="color: red"></i></span>';
-            }
+//            if($record['file']){
+//                $file = '<span class="ml-lg-2"><i class="mdi mdi-check-circle" style="color: green"></i></<span>';
+//            }else{
+//                $file = '<span class="ml-lg-2"><i class="mdi mdi-close-circle " style="color: red"></i></span>';
+//            }
 
 
             $devs = [];
@@ -89,7 +89,7 @@ class KeystoreController extends Controller
             }
 
             $data_arr[] = array(
-                "name_keystore" => '<div>'.$record['name_keystore'].' - ('.count($record->market_project).')'.$file.'</div>',
+                "name_keystore" => '<div>'.$record['name_keystore'].' - ('.count($record->market_project).')</div>',
                 "id" => $record['id'],
                 "pass_keystore" => '<div class="truncate copyButton">'.$record['pass_keystore'].'</div>',
                 "aliases_keystore" => '<div class="truncate copyButton">'.$record['aliases_keystore'].'</div>',
