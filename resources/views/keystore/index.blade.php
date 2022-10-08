@@ -108,7 +108,7 @@
             columns: [
                 {data: 'id',visible: false},
                 {data: 'name_keystore'},
-                {data: 'market_project_count'},
+                {data: 'market_project_count',orderSequence: ['desc', 'asc', 'asc']},
                 {data: 'pass_keystore',orderable: false},
                 {data: 'SHA_1_keystore',orderable: false,},
                 {data: 'dev', orderable: false},
