@@ -40,7 +40,7 @@ class CronProjectController extends Controller
         Artisan::call('optimize:clear');
         $chplay = $huawei = $vivo = '';
         try {
-            $chplay = $this->Chplay(3);
+            $chplay = $this->Chplay();
         }catch (\Exception $exception) {
             Log::error('Message:' . $exception->getMessage() . '--- Cron Project CHplay : ' . $exception->getLine());
         }
@@ -50,7 +50,7 @@ class CronProjectController extends Controller
             Log::error('Message:' . $exception->getMessage() . '--- Cron Project Huawei : ' . $exception->getLine());
         }
         try {
-            $vivo   = $this->Vivo(3);
+            $vivo   = $this->Vivo();
         }catch (\Exception $exception) {
             Log::error('Message:' . $exception->getMessage() . '--- Cron Project Vivo : ' . $exception->getLine());
         }

@@ -39,4 +39,9 @@ class MarketProject extends  \Illuminate\Database\Eloquent\Relations\Pivot
     {
         return $this->belongsTo(Keystore::class,'keystore','name_keystore');
     }
+
+    public function project()
+    {
+        return $this->belongsTo(Project::class,'project_id','projectid');
+    }
 }
