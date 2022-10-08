@@ -26,8 +26,8 @@ class CronProjectController extends Controller
     // Vivo
     private $SIGN_METHOD_HMAC = "hmac-sha256";
     private $domainVivo = 'https://developer-api.vivo.com/router/rest';
-    private $access_key =  '0987226aea07435e9b8a0fabcd38e7cd';
-    private $accessSecret = '1bcc877c4e6a41a18a4ecc1419d07cbc';
+//    private $access_key =  '0987226aea07435e9b8a0fabcd38e7cd';
+//    private $accessSecret = '1bcc877c4e6a41a18a4ecc1419d07cbc';
 
     public function __construct()
     {
@@ -45,12 +45,12 @@ class CronProjectController extends Controller
             Log::error('Message:' . $exception->getMessage() . '--- Cron Project CHplay : ' . $exception->getLine());
         }
         try {
-            $huawei = $this->Huawei();
+            $huawei = $this->Huawei(3);
         }catch (\Exception $exception) {
             Log::error('Message:' . $exception->getMessage() . '--- Cron Project Huawei : ' . $exception->getLine());
         }
         try {
-            $vivo   = $this->Vivo();
+            $vivo   = $this->Vivo(3);
         }catch (\Exception $exception) {
             Log::error('Message:' . $exception->getMessage() . '--- Cron Project Vivo : ' . $exception->getLine());
         }
@@ -84,7 +84,8 @@ class CronProjectController extends Controller
         }
 
         if($appsChplay){
-            $ch= '';
+            $ch =  '';
+            $sms = '';
             foreach ($appsChplay as $appChplay){
                 $package = $appChplay->package;
                 $existApp =  $gplay->existsApp($package);
@@ -117,10 +118,15 @@ class CronProjectController extends Controller
                     $appChplay->status_app = 6;
                     $appChplay->bot_time = time();
                     $appChplay->save();
+                    $sms .= "\n<b>Project name: </b>"
+                        . '<code>'.$appChplay->project->projectname.'</code> - '
+                        . "<code>Check</code>";
                 }
-                $ch .= '<br/>'.'Dang chay:  '.  '-'. $appChplay->id .'--'.$appChplay->status_app.' - '. Carbon::now('Asia/Ho_Chi_Minh');
+                $ch .= '<br/>'.'Dang chay:  '.  '-'. $appChplay->project->projectname .'--'.$appChplay->status_app.' - '. Carbon::now('Asia/Ho_Chi_Minh');
 
             }
+            $this->sendMessTelegram('Chplay',$sms);
+
             if(\request()->return){
                 return response()->json($appChplay);
             }else{
@@ -217,6 +223,7 @@ class CronProjectController extends Controller
 
         $appsHuawei = MarketProject::where('market_id', 7)
             ->where('status_upload','like','%'. $status_upload.'%')
+//            ->where('id','<>',42028)
             ->whereHas('dev', function ($query) {
                 return $query
                     ->whereNotNull('api_client_id')
@@ -227,12 +234,6 @@ class CronProjectController extends Controller
                     ->orWhere('bot_time', null);
             })
             ->paginate($time->limit_cron);
-
-
-
-
-
-
         echo '<br/><br/>';
         echo '<br/>' .'=========== Huawei ==============' ;
         echo '<br/><b>'.'Yêu cầu:';
@@ -246,7 +247,6 @@ class CronProjectController extends Controller
         if($appsHuawei){
             $ch = '';
             foreach ($appsHuawei->load('dev') as $appHuawei){
-
                 $ch .=  '<br/>'.'Dang chay:  '.  '- '. $appHuawei->id .' - '. Carbon::now('Asia/Ho_Chi_Minh');
                 $monthCron = isset($_GET['submonth']) ? Carbon::now()->subMonth($_GET['submonth'])->format('Ym') :  Carbon::now()->format('Ym');
                 $dataArr = [];
@@ -309,6 +309,7 @@ class CronProjectController extends Controller
                             $appHuawei->bot = $data;
                             $appHuawei->bot_score = $scoreApp['ret']['rtnCode'] == 0 ? $scoreApp['data']['score']['averageScore'] : 0 ;
                             $appHuawei->bot_installs = array_sum(array_column($data, 'Total_downloads'));;
+
 
                         }
                     }
@@ -532,12 +533,14 @@ class CronProjectController extends Controller
         $timeCron = Carbon::now()->subMinutes($time->time_cron)->setTimezone('Asia/Ho_Chi_Minh')->timestamp;
         $status_upload = isset($_GET['status_upload']) ? $_GET['status_upload'] : $status_upload;
 
-        $appsVivo = MarketProject::where('market_id', 6)
+        $appsVivo = MarketProject::with('dev')
+            ->where('market_id', 6)
             ->where('status_upload','like','%'. $status_upload.'%')
             ->whereHas('dev', function ($query) {
                 return $query
                     ->whereNotNull('api_access_key')
                     ->where('api_access_key','<>','');
+//                    ->where('dev_name','DEV V1');
             })
             ->where(function ($q) use ($timeCron) {
                 $q->where('bot_time', '<=', $timeCron)
@@ -545,6 +548,7 @@ class CronProjectController extends Controller
             })
 //            ->get();
             ->paginate($time->limit_cron);
+
         echo '<br/><br/>';
         echo '<br/>' .'=========== Vivo ==============' ;
         echo '<br/><b>'.'Yêu cầu:';
@@ -558,21 +562,30 @@ class CronProjectController extends Controller
         }
 
         if($appsVivo){
-            foreach ($appsVivo->load('dev') as $appVivo){
-                $ch =  '<br/>'.'Dang chay: '. '-'. $appVivo->id .' - '. Carbon::now('Asia/Ho_Chi_Minh');
+            $sms =  '';
+            foreach ($appsVivo as $appVivo){
+                $ch =  '<br/>'.'Dang chay: '. '-'. $appVivo->id .' - '.$appVivo->project->projectname.'---'. Carbon::now('Asia/Ho_Chi_Minh');
+
                 try{
                     $data = $this->get_Vivo($appVivo->dev->api_access_key,$appVivo->dev->api_client_secret,$appVivo->package);
+
                     if($data){
                         $status = $data->onlineStatus;
                         switch ($status){
                             case 0:
                                 $status_app = 2;
+                                $sms .= "\n<b>Project name: </b>"
+                                    . '<code>'.$appVivo->project->projectname.'</code> - '
+                                    . "<code>Unpublished </code>";
                                 break;
                             case 1 :
                                 $status_app = 1;
                                 break;
                             case 2:
                                 $status_app = 3;
+                                $sms .= "\n<b>Project name: </b>"
+                                    . '<code>'.$appVivo->project->projectname.'</code> - '
+                                    . "<code>Removed  </code>";
                                 break;
                             case 3 :
                                 $status_app = 1;
@@ -586,16 +599,18 @@ class CronProjectController extends Controller
                         $appVivo->bot_appVersion = $data->versionName;
                         $appVivo->policy_link = $data->privacyStatement ? $data->privacyStatement : null ;
                         $appVivo->status_app = $status_app;
+
                     }
 
                 }catch (\Exception $exception) {
-                    Log::error('Message:' . $exception->getMessage() . '--- appsVivo: ' . $exception->getLine());
+                    Log::error('Message:' . $exception->getMessage(). '--- appsVivo: '.$appVivo->id.':--' . $exception->getLine());
                 }
                 $appVivo->bot_time = time();
                 $appVivo->save();
                 $ch .= '-'.$appVivo->status_app;
                 echo $ch;
             }
+            $this->sendMessTelegram('Vivo',$sms);
             return  true;
         }
     }
@@ -655,47 +670,60 @@ class CronProjectController extends Controller
         return $hash;
     }
 
-    public function updatedActivity()
-    {
+//    public function updatedActivity()
+//    {
+//        $activity = Telegram::getUpdates();
+////        dd($activity);
+//
+//
+////        Telegram::sendMessage([
+//////            'chat_id' => env('TELEGRAM_CHANNEL_ID', ''),
+//////            -692917665
+////            'chat_id' => '-692917665',
+////            'parse_mode' => 'HTML',
+////            'text' => 'gjdfkgjdlf'
+////        ]);
+//
+////        dd($activity);
+//        $getParams =  end($activity);
+//        $textRequest = $getParams['message']['text'];
+//
+//        if (strpos($textRequest, '/getInfo') !== false) {
+//            [$key, $projectname] = explode(' ',$textRequest);
+//            $project = ProjectModel::with('da','matemplate')->where('projectname',$projectname)->first();
+////            echo 'true';
+////            dd($project);
+//
+//            $text = "<b>Project name: </b>\n"
+//                . "<code>$project->projectname</code>\n"
+//                . "<b>Template: </b>\n"
+//                . "<pre>". $project->matemplate->template."</pre>\n"
+//                . "<b>DA: </b>\n"
+//                . "<pre>". $project->da->ma_da."</pre>\n"
+//                . "<b>Title: </b>\n"
+//                . "<pre>". $project->title_app."</pre>\n"
+//            ;
+//
+////            dd($text);
+//            Telegram::sendMessage([
+//                'chat_id' => env('TELEGRAM_GROUP_ID', ''),
+//                'parse_mode' => 'HTML',
+//                'text' => $text
+//            ]);
+//        }
+//    }
+
+
+    public function sendMessTelegram($market,$sms){
         $activity = Telegram::getUpdates();
-//        dd($activity);
-
-
-//        Telegram::sendMessage([
-////            'chat_id' => env('TELEGRAM_CHANNEL_ID', ''),
-////            -692917665
-//            'chat_id' => '-692917665',
-//            'parse_mode' => 'HTML',
-//            'text' => 'gjdfkgjdlf'
-//        ]);
-
-//        dd($activity);
-        $getParams =  end($activity);
-        $textRequest = $getParams['message']['text'];
-
-        if (strpos($textRequest, '/getInfo') !== false) {
-            [$key, $projectname] = explode(' ',$textRequest);
-            $project = ProjectModel::with('da','matemplate')->where('projectname',$projectname)->first();
-//            echo 'true';
-//            dd($project);
-
-            $text = "<b>Project name: </b>\n"
-                . "<code>$project->projectname</code>\n"
-                . "<b>Template: </b>\n"
-                . "<pre>". $project->matemplate->template."</pre>\n"
-                . "<b>DA: </b>\n"
-                . "<pre>". $project->da->ma_da."</pre>\n"
-                . "<b>Title: </b>\n"
-                . "<pre>". $project->title_app."</pre>\n"
-            ;
-
-//            dd($text);
+        if($sms){
             Telegram::sendMessage([
-                'chat_id' => env('TELEGRAM_GROUP_ID', ''),
+                'chat_id' => env('TELEGRAM_CHANNEL_ID', ''),
                 'parse_mode' => 'HTML',
-                'text' => $text
+                'text' => $market.$sms,
             ]);
         }
+
     }
 
 
