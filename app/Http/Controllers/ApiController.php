@@ -76,7 +76,7 @@ class ApiController extends Controller
     public function getKeystore(){
         $searchValue = \request()->q;
 
-        $dev = Keystore::latest('id')
+        $dev = Keystore::select('id','name_keystore')->latest('id')
             ->where('name_keystore', 'like', '%' . $searchValue . '%')
             ->get();
         $result = KeystoresResource::collection($dev);

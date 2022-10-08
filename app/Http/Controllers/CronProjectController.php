@@ -597,7 +597,7 @@ class CronProjectController extends Controller
 
                         $appVivo->bot = $dataArr;
                         $appVivo->bot_appVersion = $data->versionName;
-                        $appVivo->policy_link = $data->privacyStatement ? $data->privacyStatement : null ;
+                        $appVivo->policy_link = isset($data->privacyStatement) ? $data->privacyStatement : null ;
                         $appVivo->status_app = $status_app;
 
                     }
