@@ -18,7 +18,7 @@ use function React\Promise\all;
 
 class Project_Controller extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
         $header = [
             'title' => 'Project',

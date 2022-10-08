@@ -1,20 +1,13 @@
 @extends('layouts.master')
 
 @section('css')
+    <!-- datatables css -->
+    <link href="{{ URL::asset('/assets/libs/rwd-table/rwd-table.min.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ URL::asset('/assets/libs/datatables/datatables.min.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ URL::asset('assets/libs/toastr/toastr.min.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ URL::asset('assets/libs/toastr/ext-component-toastr.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ URL::asset('assets/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css"/>
 
-<link href="plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
-<link href="plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css" />
-<!-- Responsive datatable examples -->
-<link href="plugins/datatables/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" />
-
-
-
-<!-- Sweet-Alert  -->
-
-
-<link href="{{ URL::asset('assets/libs/toastr/toastr.min.css') }}" rel="stylesheet" type="text/css"/>
-<link href="{{ URL::asset('assets/libs/toastr/ext-component-toastr.css') }}" rel="stylesheet" type="text/css"/>
-<link href="{{ URL::asset('assets/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css"/>
 
 
     <style>
@@ -34,45 +27,31 @@
 
 @endsection
 
-@section('breadcrumb')
-<div class="col-sm-6">
-    <h4 class="page-title">Quản lý Template</h4>
-</div>
-<div class="col-sm-6">
-    <div class="float-right">
-        <a class="btn btn-success" href="javascript:void(0)" id="createNewTemplate"> Create New Template</a>
-    </div>
-</div>
-@include('modals.template')
-@endsection
 @section('content')
-    <?php
-    $message =Session::get('message');
-    if($message){
-        echo  '<span class="splash-message" style="color:#2a75f3">'.$message.'</span>';
-        Session::put('message',null);
-    }
-    ?>
-
+    @include('modals.template')
     <div class="row">
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-{{--                    <table class="table table-bordered data-table">--}}
-                     <table class="table table-bordered dt-responsive nowrap data-table" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                    <div class="table-rep-plugin" >
+                        <div class="table-responsive mb-0" data-pattern="priority-columns">
+                            <table id="TemplateTable" class="table table-striped table-bordered dt-responsive data-table"
+                                   style="width: 100%;">
                         <thead>
                         <tr>
-                            <th>Logo</th>
-                            <th>Tên Template</th>
-                            <th>Phân loại</th>
-                            <th>Thông tin Template</th>
-                            <th>Type</th>
-                            <th>Action</th>
+                            <th style="width: 10%">Logo</th>
+                            <th style="width: 30%">Tên Template</th>
+                            <th style="width: 20%">Phân loại</th>
+                            <th style="width: 25%">Thông tin Template</th>
+                            <th style="width: 5%">Type</th>
+                            <th style="width: 10%">Action</th>
                         </tr>
                         </thead>
                         <tbody>
                         </tbody>
                     </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div> <!-- end col -->
@@ -80,38 +59,27 @@
 @endsection
 @section('script')
 <!-- Required datatable js -->
-<script src="plugins/datatables/jquery.dataTables.min.js"></script>
-<script src="plugins/datatables/dataTables.bootstrap4.min.js"></script>
-<!-- Buttons examples -->
-<script src="plugins/datatables/dataTables.buttons.min.js"></script>
-<script src="plugins/datatables/buttons.bootstrap4.min.js"></script>
-<script src="plugins/datatables/jszip.min.js"></script>
-<script src="plugins/datatables/pdfmake.min.js"></script>
-<script src="plugins/datatables/vfs_fonts.js"></script>
-<script src="plugins/datatables/buttons.html5.min.js"></script>
-<script src="plugins/datatables/buttons.print.min.js"></script>
-<script src="plugins/datatables/buttons.colVis.min.js"></script>
-<!-- Responsive examples -->
-<script src="plugins/datatables/dataTables.responsive.min.js"></script>
-<script src="plugins/datatables/responsive.bootstrap4.min.js"></script>
-
-<!-- Datatable init js -->
-<script src="assets/pages/datatables.init.js"></script>
-<!-- Moment.js: -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
-<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/plug-ins/1.10.20/sorting/datetime-moment.js"></script>
+<!-- Plugins js -->
+<script src="{{ URL::asset('/assets/libs/rwd-table/rwd-table.min.js') }}"></script>
+<script src="{{ URL::asset('/assets/libs/datatables/datatables.min.js') }}"></script>
 
 <script src="{{ URL::asset('/assets/libs/toastr/toastr.min.js') }}"></script>
 <script src="{{ URL::asset('/assets/libs/sweetalert2/sweetalert2.min.js') }}"></script>
+<script src="{{ URL::asset('/assets/js/table.init.js') }}"></script>
+<script src="{{ URL::asset('/assets/js/customs.js') }}"></script>
+
 
 <script type="text/javascript">
     $(function () {
+        $('.table-responsive').responsiveTable({
+            // addDisplayAllBtn: 'btn btn-secondary'
+        });
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-        var table = $('.data-table').DataTable({
+        var table = $('#TemplateTable').DataTable({
             processing: true,
             serverSide: true,
             displayLength: 50,
@@ -136,8 +104,7 @@
 
         $(document).on('change', '#template', function () {
             var _text = $(this).val();
-            console.log(_text)
-            $('#ver_build').val(_text+'_V');
+            $('#template_ver').text(_text+'_');
         })
 
         $('#createNewTemplate').click(function () {
@@ -148,6 +115,8 @@
             $('#ajaxModel').modal('show');
 
             $('#template').prop( "disabled", false );
+            $('#ver_build').val(1);
+            $('#template_ver').text('');
             // $('.input_buildinfo_console').hide();
             // $('.input_api').hide();
         });
@@ -307,112 +276,40 @@
         $.get('{{asset('template/edit')}}/'+id,function (data) {
             $('#template').prop( "disabled", true );
 
+
+
+            // $.each(data.ads, function (k,v){
+            //     console.log(k)
+            //     console.log(v)
+            // })
+
             if(data.ads != null){
                 var ads = jQuery.parseJSON(data.ads);
-                if(ads.ads_id !=null){
-                    $("#Check_ads_id").prop('checked', true);
-                }else{
-                    $("#Check_ads_id").prop('checked', false);
-                }
-
-                if(ads.ads_banner !=null){
-                    $("#Check_ads_banner").prop('checked', true);
-                }else{
-                    $("#Check_ads_banner").prop('checked', false);
-                }
-
-                if(ads.ads_inter!=null){
-                    $("#Check_ads_inter").prop('checked', true);
-                }else{
-                    $("#Check_ads_inter").prop('checked', false);
-                }
-
-                if(ads.ads_reward !=null){
-                    $("#Check_ads_reward").prop('checked', true);
-                }else{
-                    $("#Check_ads_reward").prop('checked', false);
-                }
-
-                if(ads.ads_native !=null){
-                    $("#Check_ads_native").prop('checked', true);
-                }else{
-                    $("#Check_ads_native").prop('checked', false);
-                }
-
-                if(ads.ads_open !=null){
-                    $("#Check_ads_open").prop('checked', true);
-                }else{
-                    $("#Check_ads_open").prop('checked', false);
-                }
-
-                if(ads.ads_start !=null){
-                    $("#Check_ads_start").prop('checked', true);
-                }else{
-                    $("#Check_ads_start").prop('checked', false);
-                }
-
-                if(ads.ads_banner_huawei !=null){
-                    $("#Check_ads_banner_huawei").prop('checked', true);
-                }else{
-                    $("#Check_ads_banner_huawei").prop('checked', false);
-                }
-
-                if(ads.ads_native_huawei !=null){
-                    $("#Check_ads_native_huawei").prop('checked', true);
-                }else{
-                    $("#Check_ads_native_huawei").prop('checked', false);
-                }
-
-                if(ads.ads_reward_huawei !=null){
-                    $("#Check_ads_reward_huawei").prop('checked', true);
-                }else{
-                    $("#Check_ads_reward_huawei").prop('checked', false);
-                }
-
-                if(ads.ads_inter_huawei !=null){
-                    $("#Check_ads_inter_huawei").prop('checked', true);
-                }else{
-                    $("#Check_ads_inter_huawei").prop('checked', false);
-                }
-
-                if(ads.ads_splash_huawei !=null){
-                    $("#Check_ads_splash_huawei").prop('checked', true);
-                }else{
-                    $("#Check_ads_splash_huawei").prop('checked', false);
-                }
-
-                if(ads.ads_roll_huawei !=null){
-                    $("#Check_ads_roll_huawei").prop('checked', true);
-                }else{
-                    $("#Check_ads_roll_huawei").prop('checked', false);
-                }
-
-            } else {
-                $("#Check_ads_id").prop('checked', false);
-                $("#Check_ads_banner").prop('checked', false);
-                $("#Check_ads_inter").prop('checked', false);
-                $("#Check_ads_reward").prop('checked', false);
-                $("#Check_ads_native").prop('checked', false);
-                $("#Check_ads_open").prop('checked', false);
-                $("#Check_ads_start").prop('checked', false);
-
-                $("#Check_ads_roll_huawei").prop('checked', false);
-                $("#Check_ads_banner_huawei").prop('checked', false);
-                $("#Check_ads_inter_huawei").prop('checked', false);
-                $("#Check_ads_reward_huawei").prop('checked', false);
-                $("#Check_ads_native_huawei").prop('checked', false);
-                $("#Check_ads_splash_huawei").prop('checked', false);
+                $.each(ads, function (k,v){
+                    if(v!= null){
+                        $("#Check_"+k).prop('checked', true);
+                    }else {
+                        $("#Check_"+k).prop('checked', false);
+                    }
+                })
             }
+
             if(data.logo) {
                 $("#avatar").attr("src","../uploads/template/"+data.template+"/thumbnail/"+data.logo);
             }else {
                 $("#avatar").attr("src","img/logo.png");
             }
 
+
             $('#template_id').val(data.id);
             $('#template').val(data.template);
             $('#template_name').val(data.template_name);
-            $('#ver_build').val(data.ver_build);
+
+            var template_ver =  $('#template_ver').text(data.template+'_');
+            var a = data.ver_build ? data.ver_build.substring(template_ver.text().length) : '1';
+
+            $('#ver_build').val(a);
+
             $('#script_copy').val(data.script_copy);
             $('#script_img').val(data.script_img);
             $('#script_svg2xml').val(data.script_svg2xml);

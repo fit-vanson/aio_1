@@ -18,7 +18,16 @@ use Yajra\DataTables\Facades\DataTables;
 class TemplateController extends Controller
 {
     public function index(){
-        return view('template.index');
+        $header = [
+            'title' => 'Template',
+
+            'button' => [
+                'Create'            => ['id'=>'createNewTemplate','style'=>'primary'],
+            ]
+
+        ];
+        return view('template.index')->with(compact('header'));
+
     }
 
     public function getIndex(Request $request)
@@ -291,11 +300,13 @@ class TemplateController extends Controller
             ];
         }
 
+
+
         $ads =  json_encode($ads);
         $data = new Template();
         $data['template'] = $request->template;
         $data['template_name'] = $request->template_name;
-        $data['ver_build'] = $request->ver_build;
+        $data['ver_build'] = $request->template.'_'.$request->ver_build;
         $data['script_copy'] = $request->script_copy;
         $data['script_img'] = $request->script_img;
         $data['script_svg2xml'] = $request->script_svg2xml;
@@ -344,6 +355,7 @@ class TemplateController extends Controller
             $data['template_data'] = $file_name_data;
             $file->move($path, $file_name_data);
         }
+
         $data->save();
         $allTemp  = Template::latest('id')->get();
         return response()->json([
@@ -449,8 +461,7 @@ class TemplateController extends Controller
 
         $ads =  json_encode($ads);
         $data = Template::find($id);
-
-        $data->ver_build = $request->ver_build;
+        $data->ver_build = $data->template.'_'.$request->ver_build;
         $data->script_copy = $request->script_copy;
         $data->script_img= $request->script_img;
         $data->script_svg2xml = $request->script_svg2xml;
@@ -495,7 +506,6 @@ class TemplateController extends Controller
             $data->template_data = $file_name_data;
             $file->move($path, $file_name_data);
         }
-//        $data->template = $request->template;
         $data->template_name = $request->template_name;
 
         $data->save();

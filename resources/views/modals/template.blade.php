@@ -35,11 +35,17 @@
                                 <label for="name">Mã Template <span style="color: red">*</span></label>
                                 <input type="text" id="template" name="template" class="form-control" required>
                             </div>
-                            <div class="form-group col-lg-3 ">
-                                <label for="name">Ver Build</label>
-                                <input type="text" id="ver_build" name="ver_build" class="form-control">
-                            </div>
 
+
+                            <div class="form-group col-lg-3">
+                                <label class="control-label">Ver Build</label>
+                                <div class="input-group bootstrap-touchspin bootstrap-touchspin-injected">
+                                    <span class="input-group-addon bootstrap-touchspin-prefix input-group-prepend">
+                                        <span class="input-group-text" id="template_ver"></span>
+                                    </span>
+                                    <input type="text" id="ver_build" name="ver_build" class="form-control">
+                                </div>
+                            </div>
                             <div class="form-group col-lg-3 ">
                                 <label for="name">Convert Aab</label>
                                 <div>
