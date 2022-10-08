@@ -14,7 +14,17 @@ use Illuminate\Support\Str;
 class KeystoreController extends Controller
 {
     public function index(){
-        return view('keystore.index');
+
+        $header = [
+            'title' => 'Quản lý Keystore',
+
+            'button' => [
+                'Create'            => ['id'=>'createNewKeystore','style'=>'primary'],
+                'Multiple'   => ['id'=>'createMultiple','style'=>'warning'],
+            ]
+
+        ];
+        return view('keystore.index')->with(compact('header'));
     }
 
     public function getIndex(Request $request)
