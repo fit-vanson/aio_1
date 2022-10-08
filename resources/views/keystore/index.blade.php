@@ -49,11 +49,9 @@
 
                             <th>ID</th>
                             <th style="width: 10%">Tên Keystore</th>
-                            <th style="width: 10%">Pass Keystore</th>
-                            <th style="width: 10%">Aliases</th>
-                            <th style="width: 10%">Pass Aliases</th>
-                            <th style="width: 10%">SHA_256 Keystore</th>
-                            <th style="width: 10%">SHA_1 Keystore</th>
+                            <th style="width: 10%">Count Project</th>
+                            <th style="width: 10%">Pass Keystore | Aliases</th>
+                            <th style="width: 10%">SHA</th>
                             <th style="width: 30%">DEV</th>
                             <th style="width: 10%">Action</th>
                         </tr>
@@ -110,11 +108,9 @@
             columns: [
                 {data: 'id',visible: false},
                 {data: 'name_keystore'},
-                {data: 'pass_keystore'},
-                {data: 'aliases_keystore'},
-                {data: 'pass_aliases'},
-                {data: 'SHA_256_keystore'},
-                {data: 'SHA_1_keystore'},
+                {data: 'market_project_count'},
+                {data: 'pass_keystore',orderable: false},
+                {data: 'SHA_1_keystore',orderable: false,},
                 {data: 'dev', orderable: false},
                 {data: 'action',className: "text-center", name: 'action', orderable: false, searchable: false},
             ],

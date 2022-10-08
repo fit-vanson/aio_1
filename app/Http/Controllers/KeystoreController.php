@@ -41,42 +41,33 @@ class KeystoreController extends Controller
 //            ->orwhere('pass_keystore', 'like', '%' . $searchValue . '%')
 //            ->orWhere('aliases_keystore', 'like', '%' . $searchValue . '%')
 //            ->orWhere('pass_aliases', 'like', '%' . $searchValue . '%')
-//            ->orWhere('SHA_256_keystore', 'like', '%' . $searchValue . '%')
-//            ->orWhere('SHA_1_keystore', 'like', '%' . $searchValue . '%')
+            ->orWhere('SHA_256_keystore', 'like', '%' . $searchValue . '%')
+            ->orWhere('SHA_1_keystore', 'like', '%' . $searchValue . '%')
             ->orWhere('note', 'like', '%' . $searchValue . '%')
             ->count();
 
         // Get records, also we have included search filter as well
         $records = Keystore::orderBy($columnName, $columnSortOrder)
+            ->select('id','name_keystore','pass_keystore','aliases_keystore','SHA_256_keystore','SHA_1_keystore','note')
 //            ->where('name_keystore', 'k16006')
             ->where('name_keystore', 'like', '%' . $searchValue . '%')
 //            ->orwhere('pass_keystore', 'like', '%' . $searchValue . '%')
 //            ->orWhere('aliases_keystore', 'like', '%' . $searchValue . '%')
 //            ->orWhere('pass_aliases', 'like', '%' . $searchValue . '%')
-//            ->orWhere('SHA_1_keystore', 'like', '%' . $searchValue . '%')
-//            ->orWhere('SHA_256_keystore', 'like', '%' . $searchValue . '%')
+            ->orWhere('SHA_1_keystore', 'like', '%' . $searchValue . '%')
+            ->orWhere('SHA_256_keystore', 'like', '%' . $searchValue . '%')
             ->orWhere('note', 'like', '%' . $searchValue . '%')
             ->with('market_project.dev')
+            ->withCount('market_project')
             ->skip($start)
             ->take($rowperpage)
             ->get();
-
-
+//        dd($records);
 
         $data_arr = array();
         foreach ($records as $record) {
-
-//            dd($record);
-
             $btn = ' <a href="javascript:void(0)" onclick="editKeytore('.$record['id'].')" class="btn btn-warning"><i class="ti-pencil-alt"></i></a>';
             $btn = $btn.' <a href="javascript:void(0)" data-id="'.$record['id'].'" class="btn btn-danger deleteKeystore"><i class="ti-trash"></i></a>';
-
-//            if($record['file']){
-//                $file = '<span class="ml-lg-2"><i class="mdi mdi-check-circle" style="color: green"></i></<span>';
-//            }else{
-//                $file = '<span class="ml-lg-2"><i class="mdi mdi-close-circle " style="color: red"></i></span>';
-//            }
-
 
             $devs = [];
             foreach ($record->market_project as $dev_project){
@@ -89,13 +80,11 @@ class KeystoreController extends Controller
             }
 
             $data_arr[] = array(
-                "name_keystore" => '<div>'.$record['name_keystore'].' - ('.count($record->market_project).')</div>',
+                "name_keystore" => '<div>'.$record['name_keystore'].'</div>',
                 "id" => $record['id'],
-                "pass_keystore" => '<div class="truncate copyButton">'.$record['pass_keystore'].'</div>',
-                "aliases_keystore" => '<div class="truncate copyButton">'.$record['aliases_keystore'].'</div>',
-                "SHA_256_keystore" => '<div class="truncate copyButton">'.$record['SHA_256_keystore'].'</div>',
-                "SHA_1_keystore" => '<div class="truncate copyButton">'.$record['SHA_1_keystore'].'</div>',
-                "pass_aliases" => '<div class="truncate copyButton">'.$record['pass_aliases'].'</div>',
+                "market_project_count" => $record['market_project_count'],
+                "pass_keystore" => '<b>Pass:</b> <span class="copyButton">'.$record['pass_keystore'].'</span><br><b>Alias: </b><span class="copyButton">'.$record['aliases_keystore'].'</span>',
+                "SHA_1_keystore" => '<b class="truncate">SHA 1:</b><span class="truncate copyButton">'.$record['SHA_1_keystore'].'</span><br><b class="truncate">SHA 256:</b> <span class="truncate copyButton">'.$record['SHA_256_keystore'].'</span>',
                 "dev" => '<div class="text-wrap width-400">'.$dev.'</div>',
                 "note"=> $record['note'],
                 "action"=> $btn,
