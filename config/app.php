@@ -177,6 +177,7 @@ return [
         Yajra\DataTables\DataTablesServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
         Mavinoo\Batch\BatchServiceProvider::class,
+        Telegram\Bot\Laravel\TelegramServiceProvider::class,
 //        App\Providers\BroadcastServiceProvider
     ],
 
@@ -232,6 +233,7 @@ return [
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
         'Image' => Intervention\Image\Facades\Image::class,
         'Batch' => Mavinoo\Batch\BatchFacade::class,
+        'Telegram' => Telegram\Bot\Laravel\Facades\Telegram::class,
     ],
 
 ];
