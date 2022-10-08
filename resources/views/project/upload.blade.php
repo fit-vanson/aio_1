@@ -169,7 +169,7 @@
 <script src="{{ URL::asset('/assets/libs/magnific-popup/magnific-popup.min.js') }}"></script>
 <script src="{{ URL::asset('/assets/libs/lightgallery/js/lightgallery-all.js') }}"></script>
 <script src="{{ URL::asset('/assets/js/table.init.js') }}"></script>
-
+<script src="plugins/tinymce/tinymce.min.js"></script>
 
 
 <script type="text/javascript">
@@ -265,7 +265,7 @@
                         '</tr>'+
                         '<tr>'+
                             '<th>Description</td>'+
-                            '<td class="copyButton">'+value.pivot.description+'</td>'+
+                            '<td class="copyButton1111" id="copyButton1111">'+value.pivot.description+'</td>'+
                         '</tr>'+
                         '</tbody></table>' +
                         '</div></div></div>'+
