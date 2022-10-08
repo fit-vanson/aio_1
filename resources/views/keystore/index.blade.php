@@ -49,7 +49,7 @@
 
                             <th>ID</th>
                             <th style="width: 10%">Tên Keystore</th>
-                            <th style="width: 10%">Count Project</th>
+                            <th style="width: 5%">Count Project</th>
                             <th style="width: 10%">Pass Keystore | Aliases</th>
                             <th style="width: 10%">SHA</th>
                             <th style="width: 30%">DEV</th>
