@@ -76,9 +76,11 @@ class TemplateController extends Controller
 //            dd($record);
 
 
-            $btn = ' <a href="javascript:void(0)" onclick="editTemplate('.$record->id.')" class="btn btn-warning"><i class="ti-pencil-alt"></i></a>';
-            $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$record->id.'" data-original-title="Check" class="btn btn-info checkDataTemplate"><i class="ti-file"></i></a>';
-            $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$record->id.'" data-original-title="Delete" class="btn btn-danger deleteTemplate"><i class="ti-trash"></i></a>';
+//            $btn = ' <a href="javascript:void(0)" onclick="editTemplate('.$record->id.')" class="btn btn-warning"><i class="ti-pencil-alt"></i></a>';
+            $btn =      ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-warning editTemplate"><i class="ti-pencil-alt"></i></a>';
+//            $btn =      ' <button class="btn btn-primary editTemplate" type="button" id="editTemplate'.'" data-id="'.$record->id.'"><span>Create</span></button>';
+            $btn = $btn.' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-info checkDataTemplate"><i class="ti-file"></i></a>';
+            $btn = $btn.' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-danger deleteTemplate"><i class="ti-trash"></i></a>';
 
 
             $template = '<p style="margin: 0"><b>'.$record->template_name.'</b></p>
@@ -235,7 +237,8 @@ class TemplateController extends Controller
 
 
             $data_arr[] = array(
-                "logo" => $logo,
+                "id" => $record->id,
+                "template_logo" => $logo,
                 "template" => $template. '<br>'.$link.$template_apk.'  ' .$template_data ,
                 "category"=>$categories,
 //                "category"=>$Chplay_category.'<br>'.$Amazon_category.'<br>'.$Samsung_category.'<br>'.$Xiaomi_category.'<br>'.$Oppo_category.'<br>'.$Vivo_category.'<br>'.$Huawei_category,
@@ -261,15 +264,16 @@ class TemplateController extends Controller
 
     public function create(Request  $request)
     {
+
         $rules = [
             'template' =>'unique:ngocphandang_template,template',
-            'template_data' => 'mimes:zip',
-            'template_apk' => 'mimes:zip,apk'
+            'template_files.*' =>  'mimes:zip,jpg,apk',
+
         ];
         $message = [
             'template.unique'=>'Tên Template đã tồn tại',
-            'template_data.mimes'=>'Template Data: *.zip',
-            'template_apk.mimes'=>' Template APK: *.apk',
+            'template_files.mimes'=>'Template Data: *.zip, *.apk, *.jpg',
+
         ];
         $error = Validator::make($request->all(),$rules, $message );
 
@@ -292,6 +296,7 @@ class TemplateController extends Controller
             'ads_roll_huawei' => $request->Check_ads_roll_huawei,
 
         ];
+
         $categories = [];
         foreach (array_filter($request->category)  as $key=>$value){
             $categories[] = [
@@ -299,8 +304,6 @@ class TemplateController extends Controller
                 'value' =>$value
             ];
         }
-
-
 
         $ads =  json_encode($ads);
         $data = new Template();
@@ -341,20 +344,34 @@ class TemplateController extends Controller
             $data['template_logo'] = 'logo.'.$image->extension();
         }
 
-        if($request->template_apk){
-            $file = $request->template_apk;
-            $extension = $file->getClientOriginalExtension();
-            $file_name_apk = $request->ver_build.'.'.$extension;
-            $data['template_apk'] = $file_name_apk;
-            $file->move($path, $file_name_apk);
+
+        if($request->template_files){
+            $files= $request->template_files;
+            $num_image = 0;
+            foreach ($files as $file){
+                $extension = $file->getClientOriginalExtension();
+                switch ($extension){
+                    case 'apk':
+                        $file_name_apk = $data->ver_build.'.'.$extension;
+                        $data['template_apk'] = $file_name_apk;
+                        $file->move($path, $file_name_apk);
+                        break;
+                    case 'jpg':
+                        $fileName = $num_image+1;
+                        $file_name_data = $fileName.'.'.$extension;
+                        $data['template_preview'] = $fileName;
+                        $file->move($path, $file_name_data);
+                        $num_image ++;
+                        break;
+                    case 'zip':
+                        $file_name_data = $data->ver_build.'.'.$extension;
+                        $data['template_data'] = $file_name_data;
+                        $file->move($path, $file_name_data);
+                        break;
+                }
+            }
         }
-        if($request->template_data){
-            $file = $request->template_data;
-            $extension = $file->getClientOriginalExtension();
-            $file_name_data = $request->ver_build.'.'.$extension;
-            $data['template_data'] = $file_name_data;
-            $file->move($path, $file_name_data);
-        }
+
 
         $data->save();
         $allTemp  = Template::latest('id')->get();
@@ -373,7 +390,23 @@ class TemplateController extends Controller
      */
     public function store(Request $request)
     {
+        $rules = [
+            'template' =>'unique:ngocphandang_template,template',
+            'template_data' => 'mimes:zip',
+            'template_apk' => 'mimes:zip,apk'
+        ];
+        $message = [
+            'template.unique'=>'Tên Template đã tồn tại',
+            'template_data.mimes'=>'Template Data: *.zip',
+            'template_apk.mimes'=>' Template APK: *.apk',
+        ];
+        $error = Validator::make($request->all(),$rules, $message );
 
+        if($error->fails()){
+            return response()->json(['errors'=> $error->errors()->all()]);
+        }
+
+        dd($request->all());
     }
 
     /**
@@ -417,17 +450,20 @@ class TemplateController extends Controller
      */
     public function update(Request $request)
     {
+
         $id = $request->template_id;
         $rules = [
             'template' =>'unique:ngocphandang_template,template,'.$id.',id',
-            'template_data' => 'mimes:zip',
-            'template_apk' => 'mimes:zip,apk'
+            'template_files.*' =>  'mimes:zip,jpg,apk',
+
         ];
         $message = [
-            'template.unique'=>'Tên template đã tồn tại',
-            'template_data.mimes'=>'Template Data: *.zip',
-            'template_apk.mimes'=>' Template APK: *.apk',
+            'template.unique'=>'Tên Template đã tồn tại',
+            'template_files.mimes'=>'Template Data: *.zip, *.apk, *.jpg',
+
         ];
+
+
         $error = Validator::make($request->all(),$rules, $message );
         if($error->fails()){
             return response()->json(['errors'=> $error->errors()->all()]);
@@ -492,20 +528,51 @@ class TemplateController extends Controller
 
         }
 
-        if($request->template_apk){
-            $file = $request->template_apk;
-            $extension = $file->getClientOriginalExtension();
-            $file_name_apk = $request->ver_build.'.'.$extension;
-            $data->template_apk = $file_name_apk;
-            $file->move($path, $file_name_apk);
+
+        if($request->template_files){
+            $files= $request->template_files;
+            $num_image = 0;
+            foreach ($files as $file){
+                $extension = $file->getClientOriginalExtension();
+                switch ($extension){
+                    case 'apk':
+                        $file_name_apk = $data->ver_build.'.'.$extension;
+                        $data['template_apk'] = $file_name_apk;
+                        $file->move($path, $file_name_apk);
+                        break;
+                    case 'jpg':
+                        $fileName = $num_image+1;
+                        $file_name_data = $fileName.'.'.$extension;
+                        $data['template_preview'] = $fileName;
+                        $file->move($path, $file_name_data);
+                        $num_image ++;
+                        break;
+                    case 'zip':
+                        $file_name_data = $data->ver_build.'.'.$extension;
+                        $data['template_data'] = $file_name_data;
+                        $file->move($path, $file_name_data);
+                        break;
+                }
+            }
         }
-        if($request->template_data){
-            $file = $request->template_data;
-            $extension = $file->getClientOriginalExtension();
-            $file_name_data = $request->ver_build.'.'.$extension;
-            $data->template_data = $file_name_data;
-            $file->move($path, $file_name_data);
-        }
+
+
+//
+//        if($request->template_apk){
+//            $file = $request->template_apk;
+//            $extension = $file->getClientOriginalExtension();
+//            $file_name_apk = $request->ver_build.'.'.$extension;
+//            $data->template_apk = $file_name_apk;
+//            $file->move($path, $file_name_apk);
+//        }
+//        if($request->template_data){
+//            $file = $request->template_data;
+//            $extension = $file->getClientOriginalExtension();
+//            $file_name_data = $request->ver_build.'.'.$extension;
+//            $data->template_data = $file_name_data;
+//            $file->move($path, $file_name_data);
+//        }
+
         $data->template_name = $request->template_name;
 
         $data->save();

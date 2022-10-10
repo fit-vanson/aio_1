@@ -115,6 +115,7 @@
             processing: true,
             serverSide: true,
             displayLength: 50,
+            lengthMenu: [25, 50, 100, 200, 500, 1000],
             ajax: {
                 url: "{{ route('keystore.getIndex') }}",
                 type: "post"

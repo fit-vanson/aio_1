@@ -11,21 +11,51 @@
                 <form id="templateForm" name="templateForm" enctype="multipart/form-data" class="form-horizontal">
                     <input type="hidden" name="template_id" id="template_id">
 
-                    <div data-repeater-list="group-a">
                         <div  class="row">
                             <div class="form-group col-lg-3">
                                 <label>Logo</label>
                                 <input  id="logo" type="file" name="logo" class="form-control" hidden onchange="changeImg(this)" accept="image/*">
                                 <img id="avatar" class="thumbnail" width="100px" src="img/logo.png">
                             </div>
+
                             <div class="form-group col-lg-3">
-                                <label for="name">DATA</label><p></p>
-                                <input type="file" name="template_data" id="template_data" class="filestyle" data-buttonname="btn-secondary" accept=".zip">
+                                <label class="d-block ">Data on/off :</label>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="data_online" name="data_status" class="custom-control-input" value="1">
+                                    <label class="custom-control-label" for="data_online">Online</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="data_offline" name="data_status" class="custom-control-input" value="2">
+                                    <label class="custom-control-label" for="data_offline">Offline</label>
+                                </div>
+
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="data_all" name="data_status" class="custom-control-input" value="3">
+                                    <label class="custom-control-label" for="data_all">All</label>
+                                </div>
                             </div>
-                            <div class="form-group col-lg-3">
-                                <label for="name">APK</label><p></p>
-                                <input type="file" name="template_apk" id="template_apk" class="filestyle" data-buttonname="btn-secondary" accept=".apk">
+
+                            <div class="form-group col-lg-3 ">
+                                <label for="name">Type</label>
+                                <div>
+                                    <select class="form-control" id="template_type" name="template_type">
+                                        <option value="0">Chưa phân loại</option>
+                                        <option value="1">App</option>
+                                        <option value="2">Game</option>
+                                        <option value="3">Laucher & Theme</option>
+                                    </select>
+                                </div>
                             </div>
+
+{{--                            <div class="form-group col-lg-3">--}}
+{{--                                <label for="name">DATA</label><p></p>--}}
+{{--                                <input type="file" name="template_data" id="template_data" class="filestyle" data-buttonname="btn-secondary" accept=".zip">--}}
+{{--                            </div>--}}
+{{--                            <div class="form-group col-lg-3">--}}
+{{--                                <label for="name">APK</label><p></p>--}}
+{{--                                <input type="file" name="template_apk" id="template_apk" class="filestyle" data-buttonname="btn-secondary" accept=".apk">--}}
+{{--                            </div>--}}
+
                             <div class="form-group col-lg-3 ">
                                 <label for="name">Tên Template</label>
                                 <input type="text" id="template_name" name="template_name" class="form-control">
@@ -35,8 +65,6 @@
                                 <label for="name">Mã Template <span style="color: red">*</span></label>
                                 <input type="text" id="template" name="template" class="form-control" required>
                             </div>
-
-
                             <div class="form-group col-lg-3">
                                 <label class="control-label">Ver Build</label>
                                 <div class="input-group bootstrap-touchspin bootstrap-touchspin-injected">
@@ -71,6 +99,17 @@
                             <div class="form-group col-lg-6">
                                 <label for="name">Link của ứng dụng</label>
                                 <input type="text" id="link" name="link" class="form-control" >
+                            </div>
+
+                            <div class="form-group col-lg-12">
+                                <label for="name">FILE <code> (APK, ZIP, JPG)</code></label>
+                                <div class="col-sm-12">
+                                    <div class="dropzone" id="file_template"></div>
+{{--                                    <input  class="dropzone" name="preview_template" type="file" multiple="multiple">--}}
+{{--                                    <div  id="preview_template" data-maxfile="1" data-ext="image/png"  data-name="logo" ></div>--}}
+                                </div>
+{{--                                <input type="file" id="preview_template" name="preview_template[]" class="form-control" >--}}
+{{--                                <input id="fileupload" type="file" name="files[]" data-url="server/php/" multiple>--}}
                             </div>
                         </div>
 
@@ -157,8 +196,6 @@
                                 </div>
                             </div>
                         </div>
-
-
                         <div class="row">
                             <div class="form-group col-lg-6 ">
                                 <label for="name">SCRIPT: Copy File & Folder </label>
@@ -205,9 +242,9 @@
 
                         </div>
 
-                    </div>
+
                     <div class="col-sm-offset-2 col-sm-10">
-                        <button type="submit" class="btn btn-primary" id="saveBtn" value="create">Save changes
+                        <button type="submit" class="btn btn-primary" id="saveBtn_template" value="create">Save changes
                         </button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     </div>

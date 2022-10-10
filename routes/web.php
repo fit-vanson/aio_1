@@ -292,6 +292,7 @@ Route::group(['prefix'=>'template','middleware'=>['CheckLogout','2fa']], functio
     Route::get('/edit/{id}',[TemplateController::class,'edit'])->name('template.edit')->middleware('can:template-edit');
     Route::get('/show/{id}',[TemplateController::class,'edit'])->name('template.show')->middleware('can:template-show');
     Route::post('/update',[TemplateController::class,'update'])->name('template.update')->middleware('can:template-update');
+    Route::post('/store',[TemplateController::class,'store'])->name('template.store')->middleware('can:template-update');
     Route::get('/delete/{id}',[TemplateController::class,'delete'])->name('template.delete')->middleware('can:template-delete');
     Route::get('/upload',[TemplateController::class,'upload'])->name('template.upload')->middleware('can:template-index');
     Route::get('/convert',[TemplateController::class,'convert'])->name('template.convert')->middleware('can:template-index');
