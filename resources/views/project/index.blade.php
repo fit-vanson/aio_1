@@ -157,7 +157,7 @@
             $.fn.dataTable.ext.errMode = 'none';
             var table = $('#projectTable').DataTable({
                 displayLength: 50,
-                lengthMenu: [5, 10, 25, 50, 75, 100],
+                lengthMenu: [25, 50, 100, 200, 500, 1000],
                 // orderCellsTop: true,
                 // fixedHeader: true,
                 processing: true,

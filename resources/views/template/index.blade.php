@@ -94,7 +94,7 @@
         var table = $('#TemplateTable').DataTable({
             processing: true,
             serverSide: true,
-            displayLength: 1,
+            displayLength: 50,
             lengthMenu: [25, 50, 100, 200, 500, 1000],
             ajax: {
                 url: "{{ route('template.getIndex') }}",
