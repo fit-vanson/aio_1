@@ -97,18 +97,21 @@
                         "data": "status",
                         "render" : function(data)
                         {
-                            if(data == 0){
-                                return '<span class="badge badge-dark">Chưa xử dụng</span>';
+                            switch (data){
+                                case 1:
+                                    return '<span class="badge badge-primary">Đang sử dụng</span>';
+                                    break;
+                                case 2:
+                                    return '<span class="badge badge-warning">Tụt Match Rate</span>';
+                                    break;
+                                case 3:
+                                    return '<span class="badge badge-warning">Tụt Match Rate</span>';
+                                    break;
+                                default:
+                                    return '<span class="badge badge-dark">Chưa xử dụng</span>';
+                                    break;
                             }
-                            if(data == 1){
-                                return '<span class="badge badge-primary">Đang sử dụng</span>';
-                            }
-                            if(data == 2){
-                                return '<span class="badge badge-warning">Tụt Match Rate</span>';
-                            }
-                            if(data == 3){
-                                return '<span class="badge badge-danger">Disable</span>';
-                            }
+
                         },
 
                         "name": "status", "autoWidth": true
