@@ -105,13 +105,12 @@
                                     return '<span class="badge badge-warning">Tụt Match Rate</span>';
                                     break;
                                 case 3:
-                                    return '<span class="badge badge-warning">Tụt Match Rate</span>';
+                                    return '<span class="badge badge-danger">Disable</span>';
                                     break;
                                 default:
                                     return '<span class="badge badge-dark">Chưa xử dụng</span>';
                                     break;
                             }
-
                         },
 
                         "name": "status", "autoWidth": true
