@@ -112,7 +112,7 @@
                     columns: [
                         {data: 'id',visible: false},
                         {data: 'gmail'},
-                        {data: 'ga'},
+                        {data: 'ga',orderable: false,},
                         @foreach(\App\Models\Markets::all() as $market)
                         {data: '{{$market->market_name}}', orderable: false, searchable: false},
                         @endforeach

@@ -102,7 +102,7 @@
                             </div>
 
                             <div class="form-group col-lg-12">
-                                <label for="name">FILE <code> (APK, ZIP, JPG)</code></label>
+                                <label for="name">FILE <code> (APK, ZIP, JPG, WEBP)</code></label>
                                 <div class="col-sm-12">
                                     <div class="dropzone" id="file_template"></div>
 {{--                                    <input  class="dropzone" name="preview_template" type="file" multiple="multiple">--}}

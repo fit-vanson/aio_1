@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\LangsResource;
 use App\Http\Resources\ProjectResource;
 use App\Models\Language;
 use App\Models\Project;
@@ -16,9 +17,14 @@ use function PHPUnit\Framework\isNull;
 class DesignController extends Controller
 {
     public function index(){
+        $header = [
+            'title' => 'Project',
+            'button' => [
+                'Create'            => ['id'=>'createNewDesign','style'=>'primary'],
+            ]
+        ];
         $lags = Language::all();
-//        dd($lag);
-        return view('design.index')->with(compact('lags'));
+        return view('design.index')->with(compact('lags','header'));
     }
     public function getIndex(Request $request)
     {
@@ -88,7 +94,8 @@ class DesignController extends Controller
             $langs = $record->lang;
             $design = '';
             foreach ($langs as $lang){
-                $preview = $this->array_slice_assoc($lang->pivot->toArray(), ['pr1', 'pr2','pr3','pr4','pr5','pr6','pr7','pr8',]);
+//                $preview = $this->array_slice_assoc($lang->pivot->toArray(), ['pr1', 'pr2','pr3','pr4','pr5','pr6','pr7','pr8',]);
+                $preview = $lang->pivot->preview;
                 $needle = 0;
                 $ret =
                     array_keys(
@@ -98,13 +105,17 @@ class DesignController extends Controller
                     }));
 
                 if(count($ret) == 2 ){
-                    $result = ' <span style="font-size: 100%" class="badge badge-danger">'.$lang->lang_name. ' ('.array_sum($preview).') </span> ' ;
+                    $result = ' <span style="font-size: 100%" class="badge badge-danger">'.$lang->lang_name. ' ('.($preview).') </span> ' ;
                 }elseif ((count($ret) < 2) && (count($ret) > 0 )){
-                    $result = ' <span style="font-size: 100%" class="badge badge-warning">'.$lang->lang_name.' ('.array_sum($preview).') </span> ' ;
+                    $result = ' <span style="font-size: 100%" class="badge badge-warning">'.$lang->lang_name.' ('.($preview).') </span> ' ;
                 }else{
-                    $result = ' <span style="font-size: 100%" class="badge badge-success">'.$lang->lang_name.' ('.array_sum($preview).') </span> ' ;
+                    $result = ' <span style="font-size: 100%" class="badge badge-success">'.$lang->lang_name.' ('.($preview).') </span> ' ;
                 }
-                $design .=  $result;
+
+                if($lang->pivot->video == 1){
+                    $video = ' <span style="font-size: 100%" class="badge badge-success"> video</span> ' ;
+                }
+                $design .=  $result.@$video;
             }
 
             $data_arr[] = array(
@@ -136,95 +147,180 @@ class DesignController extends Controller
     }
 
     public function create(Request $request){
-        if($request->projectid == 'null' || $request->projectname  == 'null'){
+
+
+        if(empty($request->project_id)){
             return response()->json(['errors'=> 'Chọn Project']);
         }
 
-        $du_an = preg_split("/[-]+/",$request->projectname)[0];
+//        $du_an = preg_split("/[-]+/",$request->projectname)[0];
+//
+//        if($request->lang_code != 'undefined'){
+//            $path = storage_path('app/public/projects/'.trim($du_an).'/'.trim($request->projectname).'/'.trim($request->lang_code).'/');
+//            if (!file_exists($path)) {
+//                mkdir($path, 777, true);
+//            }
+//        }
+//        $action = $request->action;
+        $project = Project::find($request->project_id);
+        $du_an = $project->da->ma_da;
+        $langs = Language::all()->toArray();
 
-        if($request->lang_code != 'undefined'){
-            $path = storage_path('app/public/projects/'.trim($du_an).'/'.trim($request->projectname).'/'.trim($request->lang_code).'/');
-            if (!file_exists($path)) {
-                mkdir($path, 777, true);
-            }
+        $output_langs = [];
+        array_walk($langs, function($entry) use (&$output_langs) {
+            $output_langs[$entry["id"]] = $entry["lang_code"];
+        });
+
+
+
+
+
+        $path = storage_path('app/public/projects/'.$du_an.'/'.$project->projectname.'/');
+        if (!file_exists($path)) {
+            mkdir($path, 777, true);
         }
-        $action = $request->action;
-        $project = ProjectModel::find($request->projectid);
+
+        if($request->logo != 'undefined'){
+            $logo = $request->logo;
+            $img = Image::make($logo->path());
+            $img->resize(512, 512)
+                ->save($path.'lg.png',85);
+            $img->resize(114, 114)
+                ->save($path.'lg114.png',85);
+            $project->logo = 'lg.png';
+        }
+
+        $market = [];
+        foreach ($request->markets as $key=>$value){
+
+            $path_market =  $path.$output_langs[$key].'/';
+            if (!file_exists($path_market)) {
+                mkdir($path_market, 777, true);
+            }
+            if($value['banner'] != 'undefined' ){
+                $banner = $value['banner'];
+                $img = Image::make($banner->path());
+                $img->resize(1024, 500)
+                    ->save($path_market.'bn.jpg', 85, 'jpg');
+                $market[$key]['banner'] = 1;
+            }
+            if($value['video'] != 'undefined' ){
+                $video = $value['video'];
+                $video->move($path_market, 'video.mp4');
+                $market[$key]['video'] = 1;
+            }
 
 
-
-        switch ($action){
-            case 'logo':
-                $path_logo = storage_path('app/public/projects/'.$du_an.'/'.$request->projectname.'/');
-                if (!file_exists($path_logo)) {
-                    mkdir($path_logo, 777, true);
-                }
-                $files = $request->file('logo');
-                foreach ($files as $file) {
+            if(isset($value['preview']) && $value['preview'] != 'undefined' ){
+                $previews = $value['preview'];
+                $num = 1;
+                foreach ($previews as $file) {
                     $img = Image::make($file->path());
-                    $img->resize(512, 512)
-                        ->save($path_logo.'lg.png',85);
-                    $img->resize(114, 114)
-                        ->save($path_logo.'lg114.png',85);
-                }
-                $project->logo = 'lg.png';
-                break;
-            case 'banner':
-                $files = $request->file('banner');
-                foreach ($files as $file) {
-                    $img = Image::make($file->path());
-                    $img
-                        ->resize(1024, 500)
-                        ->save($path.'bn.jpg',85);
-                }
-                $project->user_design = auth()->id();
-                $project->lang()->syncWithPivotValues($request->lang, ['banner'=> 1],false);
-//                $project->lang()->updateExistingPivot((int)$request->lang, ['banner'=>1]);
-                break;
-            case 'preview':
-                $files = $request->file();
-
-
-
-                foreach ($files as $key=>$file) {
-
-
-                    $img = Image::make($file[0]->path());
-
-
                     if($img->height() > $img->width()){
                         $img
                             ->resize(1080, 1920)
-                            ->save($path.$key.'.jpg',85);
+                            ->save($path_market.'pr'.$num.'.jpg',85);
                     }elseif ($img->height() < $img->width()){
                         $img
                             ->resize(1920, 1080)
-                            ->save($path.$key.'.jpg',85);
+                            ->save($path_market.'pr'.$num.'.jpg',85);
                     }else{
                         $img
                             ->resize(1920, 1920)
-                            ->save($path.$key.'.jpg',85);
+                            ->save($path_market.'pr'.$num.'.jpg',85);
                     }
+                    $market[$key]['preview'] = $num;
+                    $num ++;
                 }
+            }
+        }
 
-                $project->user_design = auth()->id();
-                $project->lang()->syncWithPivotValues($request->lang, [$key=> 1],false);
-//                $project->lang()->updateExistingPivot((int)$request->lang, ['preview'=> $key+1]);
-                break;
-            case 'video':
-                $files = $request->file('video');
-                foreach ($files as $file) {
-                    $file->move($path, 'video.mp4');
-                }
-                $project->user_design = auth()->id();
-                $project->lang()->syncWithPivotValues($request->lang, ['video'=> 1],false);
-//                $project->lang()->updateExistingPivot((int)$request->lang, ['video'=> 1]);
-                break;
+        $project->user_design = auth()->id();
+        if ($project->status_design == 2  ){
+            $project->status_design = 1;
         }
         $project->save();
-        if ($project->status_design == 2  ){
-            $project->update(['status_design'=>1]);
+        foreach ($market as $k=>$v){
+            $project->lang()->syncWithPivotValues($k, $v,false);
         }
+
+
+
+//        dd($request->all());
+//
+//
+//        dd($du_an);
+//
+//        switch ($action){
+//            case 'logo':
+//                $path_logo = storage_path('app/public/projects/'.$du_an.'/'.$request->projectname.'/');
+//                if (!file_exists($path_logo)) {
+//                    mkdir($path_logo, 777, true);
+//                }
+//                $files = $request->file('logo');
+//                foreach ($files as $file) {
+//                    $img = Image::make($file->path());
+//                    $img->resize(512, 512)
+//                        ->save($path_logo.'lg.png',85);
+//                    $img->resize(114, 114)
+//                        ->save($path_logo.'lg114.png',85);
+//                }
+//                $project->logo = 'lg.png';
+//                break;
+//            case 'banner':
+//                $files = $request->file('banner');
+//                foreach ($files as $file) {
+//                    $img = Image::make($file->path());
+//                    $img
+//                        ->resize(1024, 500)
+//                        ->save($path.'bn.jpg',85);
+//                }
+//                $project->user_design = auth()->id();
+//                $project->lang()->syncWithPivotValues($request->lang, ['banner'=> 1],false);
+////                $project->lang()->updateExistingPivot((int)$request->lang, ['banner'=>1]);
+//                break;
+//            case 'preview':
+//                $files = $request->file();
+//
+//
+//
+//                foreach ($files as $key=>$file) {
+//
+//
+//                    $img = Image::make($file[0]->path());
+//
+//
+//                    if($img->height() > $img->width()){
+//                        $img
+//                            ->resize(1080, 1920)
+//                            ->save($path.$key.'.jpg',85);
+//                    }elseif ($img->height() < $img->width()){
+//                        $img
+//                            ->resize(1920, 1080)
+//                            ->save($path.$key.'.jpg',85);
+//                    }else{
+//                        $img
+//                            ->resize(1920, 1920)
+//                            ->save($path.$key.'.jpg',85);
+//                    }
+//                }
+//
+//                $project->user_design = auth()->id();
+//                $project->lang()->syncWithPivotValues($request->lang, [$key=> 1],false);
+////                $project->lang()->updateExistingPivot((int)$request->lang, ['preview'=> $key+1]);
+//                break;
+//            case 'video':
+//                $files = $request->file('video');
+//                foreach ($files as $file) {
+//                    $file->move($path, 'video.mp4');
+//                }
+//                $project->user_design = auth()->id();
+//                $project->lang()->syncWithPivotValues($request->lang, ['video'=> 1],false);
+////                $project->lang()->updateExistingPivot((int)$request->lang, ['video'=> 1]);
+//                break;
+//        }
+//        $project->save();
+
 
         return response()->json(['success'=>'Thành công']);
     }

@@ -127,7 +127,11 @@
             uploadMultiple: true,
             thumbnailWidth: 120,
             thumbnailHeight: 120,
-            thumbnailMethod:"crop"
+            thumbnailMethod:"crop",
+            init: function () {
+                // myDropzone.processQueue();
+            }
+
         };
 
         var myDropzone = new Dropzone('#file_template', myDropzoneOptions);

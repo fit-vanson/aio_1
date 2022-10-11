@@ -267,12 +267,12 @@ class TemplateController extends Controller
 
         $rules = [
             'template' =>'unique:ngocphandang_template,template',
-            'template_files.*' =>  'mimes:zip,jpg,apk',
+            'template_files.*' =>  'mimes:zip,jpg,apk,webp',
 
         ];
         $message = [
             'template.unique'=>'Tên Template đã tồn tại',
-            'template_files.mimes'=>'Template Data: *.zip, *.apk, *.jpg',
+            'template_files.mimes'=>'Template Data: *.zip, *.apk, *.jpg, *.webp',
 
         ];
         $error = Validator::make($request->all(),$rules, $message );
@@ -358,12 +358,12 @@ class TemplateController extends Controller
                         $data['template_apk'] = $file_name_apk;
                         $file->move($path, $file_name_apk);
                         break;
-                    case 'jpg':
+                    case 'jpg'|| 'webp':
                         $fileName = $num_image+1;
                         $img = Image::make($file->path());
                         $img
-//                            ->resize(100, 100)
-                            ->save($path.$fileName.'.'.$extension,85);
+                            ->resize(720, 1280)
+                            ->save($path.$fileName.'.'.$extension,60);
 //                        $file_name_data = $fileName.'.'.$extension;
                         $data['template_preview'] = $fileName;
 //                        $file->move($path, $file_name_data);
@@ -378,8 +378,6 @@ class TemplateController extends Controller
                 }
             }
         }
-
-
         $data->save();
         $allTemp  = Template::latest('id')->get();
         return response()->json([
@@ -461,12 +459,12 @@ class TemplateController extends Controller
         $id = $request->template_id;
         $rules = [
             'template' =>'unique:ngocphandang_template,template,'.$id.',id',
-            'template_files.*' =>  'mimes:zip,jpg,apk',
+            'template_files.*' =>  'mimes:zip,jpg,apk,webp',
 
         ];
         $message = [
             'template.unique'=>'Tên Template đã tồn tại',
-            'template_files.mimes'=>'Template Data: *.zip, *.apk, *.jpg',
+            'template_files.mimes'=>'Template Data: *.zip, *.apk, *.jpg,*.webp',
 
         ];
 
@@ -549,8 +547,8 @@ class TemplateController extends Controller
                         $fileName = $num_image+1;
                         $img = Image::make($file->path());
                         $img
-//                            ->resize(100, 100)
-                            ->save($path.$fileName.'.'.$extension,85);
+                            ->resize(720, 1280)
+                            ->save($path.$fileName.'.'.$extension,60);
 //                        $file_name_data = $fileName.'.'.$extension;
                         $data['template_preview'] = $fileName;
 
@@ -564,26 +562,7 @@ class TemplateController extends Controller
                 }
             }
         }
-
-
-//
-//        if($request->template_apk){
-//            $file = $request->template_apk;
-//            $extension = $file->getClientOriginalExtension();
-//            $file_name_apk = $request->ver_build.'.'.$extension;
-//            $data->template_apk = $file_name_apk;
-//            $file->move($path, $file_name_apk);
-//        }
-//        if($request->template_data){
-//            $file = $request->template_data;
-//            $extension = $file->getClientOriginalExtension();
-//            $file_name_data = $request->ver_build.'.'.$extension;
-//            $data->template_data = $file_name_data;
-//            $file->move($path, $file_name_data);
-//        }
-
         $data->template_name = $request->template_name;
-
         $data->save();
         return response()->json(['success'=>'Cập nhật thành công']);
     }

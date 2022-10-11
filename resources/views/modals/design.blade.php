@@ -44,26 +44,25 @@
                                 <div class="tab-pane @if($key == 1) active @endif p-3" id="{{$lag->lang_code}}" role="tabpanel">
                                     <div class="card">
                                         <div class="card-body">
-
                                             <div class="row">
                                                 <div class="col-sm-6">
                                                     <h5 class="card-title">Banner</h5>
-                                                    <div class="dropzone" id="banner" data-maxfile="1" data-ext="image/jpeg,image/png" data-lang="{{$lag->id}}" data-lang_code="{{$lag->lang_code}}" data-name="banner"></div>
+                                                    <div class="dropzone" id="banner_{{$lag->lang_code}}" data-maxfile="1" data-ext="image/jpeg,image/png" data-lang="{{$lag->id}}" data-lang_code="{{$lag->lang_code}}" data-name="banner"></div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <h5 class="card-title">Video</h5>
-                                                    <div class="dropzone" id="video" data-maxfile="1" data-ext=".mp4" data-lang="{{$lag->id}}" data-lang_code="{{$lag->lang_code}}" data-name="video" ></div>
-
+                                                    <div class="dropzone" id="video_{{$lag->lang_code}}" data-maxfile="1" data-ext=".mp4" data-lang="{{$lag->id}}" data-lang_code="{{$lag->lang_code}}" data-name="video" ></div>
                                                 </div>
                                             </div>
 
                                             <div class="row">
-                                                @for($i=1; $i<=8; $i++)
-                                                <div class="col-sm-3">
-                                                    <h5 class="card-title">Preview {{$i}}</h5>
-                                                    <div class="dropzone" id="preview" data-maxfile="1" data-ext="image/jpeg,image/png" data-lang="{{$lag->id}}" data-lang_code="{{$lag->lang_code}}" data-name="pr{{$i}}"></div>
+{{--                                                @for($i=1; $i<=8; $i++)--}}
+                                                <div class="col-sm-12">
+                                                    <h5 class="card-title">Preview </h5>
+{{--                                                    <div class="dropzone" id="preview" data-maxfile="8" data-ext="image/jpeg,image/png" data-lang="{{$lag->id}}" data-lang_code="{{$lag->lang_code}}" data-name="pr{{$i}}"></div>--}}
+                                                    <div class="dropzone" id="preview_{{$lag->lang_code}}" data-maxfile="8" data-ext="image/jpeg,image/png" data-lang="{{$lag->id}}" data-lang_code="{{$lag->lang_code}}" ></div>
                                                 </div>
-                                                @endfor
+{{--                                                @endfor--}}
                                             </div>
 
 
@@ -79,11 +78,11 @@
                                 @endforeach
                             </div>
                     </div>
-{{--                    <div class="col-sm-offset-2 col-sm-10">--}}
-{{--                        <button type="submit" class="btn btn-primary" id="saveBtn_dropzone" value="create">Save changes--}}
-{{--                        </button>--}}
-{{--                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>--}}
-{{--                    </div>--}}
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-primary" id="saveBtn_design" value="create">Save changes
+                        </button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
                 </form>
             </div>
         </div>

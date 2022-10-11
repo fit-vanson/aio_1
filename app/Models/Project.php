@@ -48,7 +48,7 @@ class Project extends Model
 
     public function lang(){
         return $this->belongsToMany(Language::class,ProjectHasLang::class,'project_id','lang_id')
-            ->withPivot('title','description','summary','banner','pr1','pr2','pr3','pr4','pr5','pr6','pr7','pr8','video')
+            ->withPivot('title','description','summary','banner','preview','pr1','pr2','pr3','pr4','pr5','pr6','pr7','pr8','video')
             ->withTimestamps();
     }
 
