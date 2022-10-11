@@ -276,6 +276,29 @@ class DevController extends Controller
     }
 
 
+    public function change($id)
+    {
+
+        $dev  = Dev::find($id);
+        $status = $dev->status;
+        switch ($status){
+            case 0:
+                $dev->status = 1;
+                break;
+            case 1:
+                $dev->status = 2;
+                break;
+            case 2:
+                $dev->status = 3;
+                break;
+            case 3:
+                $dev->status = 0;
+                break;
+        }
+        $dev->save();
+        return response()->json(['success'=>'Thành công.','dev'=>$dev]);
+    }
+
     public function checkProject(){
 
     }

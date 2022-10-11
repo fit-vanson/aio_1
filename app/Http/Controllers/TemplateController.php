@@ -338,11 +338,13 @@ class TemplateController extends Controller
 
         if(isset($request->logo)){
             $image = $request->file('logo');
+            $data['template_logo'] = 'logo.'.$image->extension();
             $img = Image::make($image->path());
             $img->resize(100, 100)
                 ->save($path.$data['template_logo'],85);
-            $data['template_logo'] = 'logo.'.$image->extension();
+
         }
+
 
 
         if($request->template_files){
@@ -358,11 +360,16 @@ class TemplateController extends Controller
                         break;
                     case 'jpg':
                         $fileName = $num_image+1;
-                        $file_name_data = $fileName.'.'.$extension;
+                        $img = Image::make($file->path());
+                        $img
+//                            ->resize(100, 100)
+                            ->save($path.$fileName.'.'.$extension,85);
+//                        $file_name_data = $fileName.'.'.$extension;
                         $data['template_preview'] = $fileName;
-                        $file->move($path, $file_name_data);
+//                        $file->move($path, $file_name_data);
                         $num_image ++;
                         break;
+
                     case 'zip':
                         $file_name_data = $data->ver_build.'.'.$extension;
                         $data['template_data'] = $file_name_data;
@@ -524,8 +531,6 @@ class TemplateController extends Controller
             $img = Image::make($image->path());
             $img->resize(100, 100)
                 ->save($path.$data['template_logo'],85);
-            $data['template_logo'] = 'logo.'.$image->extension();
-
         }
 
 
@@ -542,9 +547,13 @@ class TemplateController extends Controller
                         break;
                     case 'jpg':
                         $fileName = $num_image+1;
-                        $file_name_data = $fileName.'.'.$extension;
+                        $img = Image::make($file->path());
+                        $img
+//                            ->resize(100, 100)
+                            ->save($path.$fileName.'.'.$extension,85);
+//                        $file_name_data = $fileName.'.'.$extension;
                         $data['template_preview'] = $fileName;
-                        $file->move($path, $file_name_data);
+
                         $num_image ++;
                         break;
                     case 'zip':

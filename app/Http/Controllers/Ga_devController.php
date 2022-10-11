@@ -135,18 +135,20 @@ class Ga_devController extends Controller
             );
 
             foreach ($dev_markets_1 as $dev_market_1){
+
+
                 switch ($dev_market_1->status){
                     case 1:
-                        $dev_name = ' <span class="badge badge-primary">'.$dev_market_1->dev_name.'</span> ';
+                        $dev_name = ' <span class="badge badge-primary change_status" data-id="'.$dev_market_1->id.'">'.$dev_market_1->dev_name.'</span> ';
                         break;
                     case 2:
-                        $dev_name = ' <span class="badge badge-warning">'.$dev_market_1->dev_name.'</span> ';
+                        $dev_name = ' <span class="badge badge-warning change_status" data-id="'.$dev_market_1->id.'">'.$dev_market_1->dev_name.'</span> ';
                         break;
                     case 3:
-                        $dev_name = ' <span class="badge badge-danger">'.$dev_market_1->dev_name.'</span> ';
+                        $dev_name = ' <span class="badge badge-danger change_status" data-id="'.$dev_market_1->id.'">'.$dev_market_1->dev_name.'</span> ';
                         break;
                     default:
-                        $dev_name = ' <span class="badge badge-dark">'.$dev_market_1->dev_name.'</span> ';
+                        $dev_name = ' <span class="badge badge-dark change_status" data-id="'.$dev_market_1->id.'">'.$dev_market_1->dev_name.'</span> ';
                         break;
                 }
                 $dev_1 += [
@@ -157,16 +159,16 @@ class Ga_devController extends Controller
             foreach ($dev_markets_2 as $dev_market_2){
                 switch ($dev_market_2->status){
                     case 1:
-                        $dev_name .= ' <span class="badge badge-primary">'.$dev_market_2->dev_name.'</span> ';
+                        $dev_name .= ' <span class="badge badge-primary change_status" data-id="'.$dev_market_2->id.'">'.$dev_market_2->dev_name.'</span> ';
                         break;
                     case 2:
-                        $dev_name .= ' <span class="badge badge-warning">'.$dev_market_2->dev_name.'</span> ';
+                        $dev_name .= ' <span class="badge badge-warning change_status" data-id="'.$dev_market_2->id.'">'.$dev_market_2->dev_name.'</span> ';
                         break;
                     case 3:
-                        $dev_name .= ' <span class="badge badge-danger">'.$dev_market_2->dev_name.'</span> ';
+                        $dev_name .= ' <span class="badge badge-danger change_status" data-id="'.$dev_market_2->id.'">'.$dev_market_2->dev_name.'</span> ';
                         break;
                     default:
-                        $dev_name .= ' <span class="badge badge-dark">'.$dev_market_2->dev_name.'</span> ';
+                        $dev_name .= ' <span class="badge badge-dark change_status" data-id="'.$dev_market_2->id.'">'.$dev_market_2->dev_name.'</span> ';
                         break;
                 }
                 $dev_2 += [
@@ -176,8 +178,6 @@ class Ga_devController extends Controller
             }
             $data =  array_replace($arr, $dev_1,$dev_2);
             $data_arr[] = $data;
-
-
         }
 
         $response = array(

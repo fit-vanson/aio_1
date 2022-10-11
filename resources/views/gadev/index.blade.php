@@ -228,6 +228,36 @@
 
             });
 
+            $(document).on('click','.change_status', function (data){
+                var dev_id = $(this).data('id');
+                var btn = $(this);
+                $.ajax({
+                    url: "{{ asset("dev/change") }}/" + dev_id,
+                    type: "get",
+                    success: function (data) {
+                        var status = data.dev.status;
+                        var html ='' ;
+                        switch (status){
+                            case 0:
+                                html += ' <span class="badge badge-dark change_status" data-id="'+data.dev.id+'">'+data.dev.dev_name+'</span> ';
+                                break;
+                            case 1:
+                                html += ' <span class="badge badge-primary change_status" data-id="'+data.dev.id+'">'+data.dev.dev_name+'</span> ';
+                                break;
+                            case 2:
+                                html += ' <span class="badge badge-warning change_status"data-id="'+data.dev.id+'">'+data.dev.dev_name+'</span> ';
+                                break;
+                            case 3:
+                                html += ' <span class="badge badge-danger change_status" data-id="'+data.dev.id+'">'+data.dev.dev_name+'</span> ';
+                                break;
+                        }
+                        btn.replaceWith(html)
+
+                    }
+                });
+
+            });
+
             $(document).on('click','.deleteGadev', function (data){
                 var gadev_id = $(this).data("id");
                 Swal.fire({
@@ -256,6 +286,8 @@
                 });
 
             });
+
+
 
 
         });

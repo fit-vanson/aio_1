@@ -273,6 +273,24 @@ Route::group(['prefix'=>'project','middleware'=>['CheckLogout','2fa']], function
     Route::get('/manage',[Project_Controller::class,'manage'])->name('project.manage')->middleware('can:project-index');
     Route::post('/getManage',[Project_Controller::class,'getManage'])->name('project.getManage')->middleware('can:project-index');
 
+
+
+
+
+    Route::group(['prefix'=>'design','middleware'=>['CheckLogout','2fa']], function (){
+        Route::get('/',[DesignController::class,'index'])->name('design.index')->middleware('can:project-index');
+        Route::get('/project_show',[DesignController::class,'project_show'])->name('design.project_show')->middleware('can:project-index');
+        Route::post('/getIndex', [DesignController::class, "getIndex"])->name('design.getIndex');
+        Route::post('/create',[DesignController::class,'create'])->name('design.create')->middleware('can:project-add');
+        Route::get('/edit/{id}',[DesignController::class,'edit'])->name('design.edit')->middleware('can:project-edit');
+        Route::post('/update',[DesignController::class,'update'])->name('design.update')->middleware('can:project-update');
+    });
+
+
+
+
+
+
 });
 
 
@@ -386,6 +404,7 @@ Route::group(['prefix'=>'dev','middleware'=>['CheckLogout','2fa']], function (){
     Route::get('/show/{id}',[DevController::class,'show'])->name('dev.show')->middleware('can:dev-show');
     Route::post('/update',[DevController::class,'update'])->name('dev.update')->middleware('can:dev-update');
     Route::get('/delete/{id}',[DevController::class,'delete'])->name('dev.delete')->middleware('can:dev-delete');
+    Route::get('/change/{id}',[DevController::class,'change'])->name('dev.change')->middleware('can:dev-update');
 });
 
 Route::group(['prefix'=>'dev-amazon','middleware'=>['CheckLogout','2fa']], function (){
@@ -663,14 +682,7 @@ Route::group(['prefix'=>'bot',
     Route::get('/truncate',[BotController::class,'truncate'])->name('bot.truncate');
 });
 
-Route::group(['prefix'=>'design','middleware'=>['CheckLogout','2fa']], function (){
-    Route::get('/',[DesignController::class,'index'])->name('design.index')->middleware('can:project-index');
-    Route::get('/project_show',[DesignController::class,'project_show'])->name('design.project_show')->middleware('can:project-index');
-    Route::post('/getIndex', [DesignController::class, "getIndex"])->name('design.getIndex');
-    Route::post('/create',[DesignController::class,'create'])->name('design.create')->middleware('can:project-add');
-    Route::get('/edit/{id}',[DesignController::class,'edit'])->name('design.edit')->middleware('can:project-edit');
-    Route::post('/update',[DesignController::class,'update'])->name('design.update')->middleware('can:project-update');
-});
+
 
 Route::group(['prefix'=>'content','middleware'=>['CheckLogout','2fa']], function (){
     Route::get('/',[ContentController::class,'index'])->name('content.index')->middleware('can:project-index');
