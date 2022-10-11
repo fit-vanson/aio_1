@@ -50,11 +50,17 @@ class DesignController extends Controller
             // Total records
             $totalRecords = Project::has('lang')->select('count(*) as allcount')->count();
             $totalRecordswithFilter = Project::has('lang')->select('count(*) as allcount')
-                ->where('projectname','like', '%' . $searchValue . '%')
+                ->where(function($q) use ($searchValue) {
+                    $q->Where('projectname', 'like', '%' . $searchValue . '%')
+                        ->orWhere('projectid', 'like', '%' . $searchValue . '%');
+                })
                 ->Where('status_design', 'like', '%' .$columnName_arr[2]['search']['value'] . '%')
                 ->count();
             $records = Project::has('lang')
-                ->where('projectname','like', '%' . $searchValue . '%')
+                ->where(function($q) use ($searchValue) {
+                    $q->Where('projectname', 'like', '%' . $searchValue . '%')
+                        ->orWhere('projectid', 'like', '%' . $searchValue . '%');
+                })
                 ->Where('status_design', 'like', '%' . $columnName_arr[2]['search']['value'] . '%')
                 ->select('*')
                 ->orderBy($columnName, $columnSortOrder)
@@ -64,12 +70,18 @@ class DesignController extends Controller
         }else{
             $totalRecords = Project::has('lang')->where('user_design',auth()->id())->select('count(*) as allcount')->count();
             $totalRecordswithFilter = Project::has('lang')->select('count(*) as allcount')
-                ->where('projectname','like', '%' . $searchValue . '%')
+                ->where(function($q) use ($searchValue) {
+                    $q->Where('projectname', 'like', '%' . $searchValue . '%')
+                        ->orWhere('projectid', 'like', '%' . $searchValue . '%');
+                })
                 ->Where('status_design', 'like', '%' .$columnName_arr[2]['search']['value'] . '%')
                 ->where('user_design',auth()->id())
                 ->count();
             $records = Project::has('lang')
-                ->where('projectname','like', '%' . $searchValue . '%')
+                ->where(function($q) use ($searchValue) {
+                    $q->Where('projectname', 'like', '%' . $searchValue . '%')
+                        ->orWhere('projectid', 'like', '%' . $searchValue . '%');
+                })
                 ->Where('status_design', 'like', '%' .$columnName_arr[2]['search']['value'] . '%')
                 ->where('user_design',auth()->id())
                 ->select('*')
