@@ -54,6 +54,7 @@
                                 <tr>
                                     <th style="display: none" >ID</th>
                                     <th style="width: 20%">Gmail</th>
+                                    <th style="width: 10%">GA</th>
                                     @foreach(\App\Models\Markets::all() as $market)
                                         <th style="width: 10%">{{$market->market_name}}</th>
                                     @endforeach
@@ -111,6 +112,7 @@
                     columns: [
                         {data: 'id',visible: false},
                         {data: 'gmail'},
+                        {data: 'ga'},
                         @foreach(\App\Models\Markets::all() as $market)
                         {data: '{{$market->market_name}}', orderable: false, searchable: false},
                         @endforeach

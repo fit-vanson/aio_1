@@ -14,9 +14,6 @@ class Ga_dev extends Model
 
     public $timestamps = false;
     protected $table = 'gmail_gadev';
-//    protected $fillable = [
-//        'gmail','mailrecovery','vpn_iplogin'
-//    ];
     protected $guarded = [];
 
 
@@ -27,6 +24,18 @@ class Ga_dev extends Model
     public function devs_2()
     {
         return $this->hasMany(Dev::class,'mail_id_2');
+    }
+    public function ga()
+    {
+        return $this->hasOne(Ga::class,'gmail_gadev_chinh');
+    }
+    public function ga_1()
+    {
+        return $this->hasOne(Ga::class,'gmail_gadev_phu_1');
+    }
+    public function ga_2()
+    {
+        return $this->hasOne(Ga::class,'gmail_gadev_phu_2');
     }
 
 }

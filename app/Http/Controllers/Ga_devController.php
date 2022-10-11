@@ -111,7 +111,7 @@ class Ga_devController extends Controller
 
         // Get records, also we have included search filter as well
         $records = Ga_dev::orderBy($columnName, $columnSortOrder)
-            ->with('devs_1','devs_2')
+            ->with('devs_1','devs_2','ga','ga_1','ga_2')
             ->Where('gmail','like', '%' .$searchValue. '%')
 //            ->Where('gmail','elinaebertsakq27@gmail.com')
             ->skip($start)
@@ -120,6 +120,7 @@ class Ga_devController extends Controller
         $markets = Markets::all();
         $data_arr = array();
         foreach ($records as $record) {
+
             $dev_markets_1 = $record->devs_1;
             $dev_markets_2 = $record->devs_2;
             $arr = $dev_1 = $dev_2 = [];
@@ -128,9 +129,14 @@ class Ga_devController extends Controller
                     $market->market_name => '',
                 ];
             }
+
+            $ga = $record->ga ?  $record->ga->ga_name : '' ;
+            $ga_1 = $record->ga_1 ?  $record->ga_1->ga_name : '';
+            $ga_2 = $record->ga_2 ?  $record->ga_2->ga_name : '';
+
             $arr += array(
                 "id" => $record->id,
-                "ga" => $record->ga_1 ? $record->ga_1->ga_name : '',
+                "ga" => $ga.'-'.$ga_1.'-'.$ga_2,
                 "gmail" => '<div class="copyButton">'.$record->gmail.'</div>',
             );
 
@@ -159,16 +165,16 @@ class Ga_devController extends Controller
             foreach ($dev_markets_2 as $dev_market_2){
                 switch ($dev_market_2->status){
                     case 1:
-                        $dev_name .= ' <span class="badge badge-primary change_status" data-id="'.$dev_market_2->id.'">'.$dev_market_2->dev_name.'</span> ';
+                        @$dev_name .= ' <span class="badge badge-primary change_status" data-id="'.$dev_market_2->id.'">'.$dev_market_2->dev_name.'</span> ';
                         break;
                     case 2:
-                        $dev_name .= ' <span class="badge badge-warning change_status" data-id="'.$dev_market_2->id.'">'.$dev_market_2->dev_name.'</span> ';
+                        @$dev_name .= ' <span class="badge badge-warning change_status" data-id="'.$dev_market_2->id.'">'.$dev_market_2->dev_name.'</span> ';
                         break;
                     case 3:
-                        $dev_name .= ' <span class="badge badge-danger change_status" data-id="'.$dev_market_2->id.'">'.$dev_market_2->dev_name.'</span> ';
+                        @$dev_name .= ' <span class="badge badge-danger change_status" data-id="'.$dev_market_2->id.'">'.$dev_market_2->dev_name.'</span> ';
                         break;
                     default:
-                        $dev_name .= ' <span class="badge badge-dark change_status" data-id="'.$dev_market_2->id.'">'.$dev_market_2->dev_name.'</span> ';
+                        @$dev_name .= ' <span class="badge badge-dark change_status" data-id="'.$dev_market_2->id.'">'.$dev_market_2->dev_name.'</span> ';
                         break;
                 }
                 $dev_2 += [
