@@ -14,22 +14,6 @@ class Ga_devController extends Controller
 {
     public function index()
     {
-
-
-//    case 1:
-//                    $status = '<span class="badge badge-primary">Đang phát triển</span>';
-//                    break;
-//                case 2:
-//                    $status = '<span class="badge badge-warning">Đóng</span>';
-//                    break;
-//                case 3:
-//                    $status = '<span class="badge badge-danger">Suspend</span>';
-//                    break;
-//                default:
-//                    $status =  '<span class="badge badge-dark">Chưa xử dụng</span>';
-//                    break;
-
-
         $header = [
             'title' => 'Quản lý GaDev',
 
@@ -127,20 +111,18 @@ class Ga_devController extends Controller
 
         // Get records, also we have included search filter as well
         $records = Ga_dev::orderBy($columnName, $columnSortOrder)
-            ->with('devs')
+            ->with('devs_1','devs_2')
             ->Where('gmail','like', '%' .$searchValue. '%')
 //            ->Where('gmail','elinaebertsakq27@gmail.com')
             ->skip($start)
             ->take($rowperpage)
             ->get();
-
-
         $markets = Markets::all();
         $data_arr = array();
         foreach ($records as $record) {
-
-            $dev_markets = $record->devs;
-            $arr =$dev = [];
+            $dev_markets_1 = $record->devs_1;
+            $dev_markets_2 = $record->devs_2;
+            $arr = $dev_1 = $dev_2 = [];
             foreach ($markets as $market){
                 $arr += [
                     $market->market_name => '',
@@ -148,31 +130,54 @@ class Ga_devController extends Controller
             }
             $arr += array(
                 "id" => $record->id,
+                "ga" => $record->ga_1 ? $record->ga_1->ga_name : '',
                 "gmail" => '<div class="copyButton">'.$record->gmail.'</div>',
             );
 
-            foreach ($dev_markets as $dev_market){
-                switch ($dev_market->status){
+            foreach ($dev_markets_1 as $dev_market_1){
+                switch ($dev_market_1->status){
                     case 1:
-                        $dev_name = '<span class="badge badge-primary">'.$dev_market->dev_name.'</span>';
+                        $dev_name = ' <span class="badge badge-primary">'.$dev_market_1->dev_name.'</span> ';
                         break;
                     case 2:
-                        $dev_name = '<span class="badge badge-warning">'.$dev_market->dev_name.'</span>';
+                        $dev_name = ' <span class="badge badge-warning">'.$dev_market_1->dev_name.'</span> ';
                         break;
                     case 3:
-                        $dev_name = '<span class="badge badge-danger">'.$dev_market->dev_name.'</span>';
+                        $dev_name = ' <span class="badge badge-danger">'.$dev_market_1->dev_name.'</span> ';
                         break;
                     default:
-                        $dev_name =  '<span class="badge badge-dark">'.$dev_market->dev_name.'</span>';
+                        $dev_name = ' <span class="badge badge-dark">'.$dev_market_1->dev_name.'</span> ';
                         break;
                 }
-                $dev += [
-                    $dev_market->markets->market_name => $dev_name,
+                $dev_1 += [
+                    $dev_market_1->markets->market_name => $dev_name,
 
                 ];
             }
-            $data =  array_replace($arr, $dev);
+            foreach ($dev_markets_2 as $dev_market_2){
+                switch ($dev_market_2->status){
+                    case 1:
+                        $dev_name .= ' <span class="badge badge-primary">'.$dev_market_2->dev_name.'</span> ';
+                        break;
+                    case 2:
+                        $dev_name .= ' <span class="badge badge-warning">'.$dev_market_2->dev_name.'</span> ';
+                        break;
+                    case 3:
+                        $dev_name .= ' <span class="badge badge-danger">'.$dev_market_2->dev_name.'</span> ';
+                        break;
+                    default:
+                        $dev_name .= ' <span class="badge badge-dark">'.$dev_market_2->dev_name.'</span> ';
+                        break;
+                }
+                $dev_2 += [
+                    $dev_market_2->markets->market_name => $dev_name,
+
+                ];
+            }
+            $data =  array_replace($arr, $dev_1,$dev_2);
             $data_arr[] = $data;
+
+
         }
 
         $response = array(

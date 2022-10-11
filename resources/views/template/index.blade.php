@@ -1,14 +1,14 @@
 @extends('layouts.master')
 
 @section('css')
-    <!-- datatables css -->
+
     <link href="{{ URL::asset('/assets/libs/rwd-table/rwd-table.min.css') }}" rel="stylesheet" type="text/css"/>
     <link href="{{ URL::asset('/assets/libs/datatables/datatables.min.css') }}" rel="stylesheet" type="text/css"/>
     <link href="{{ URL::asset('assets/libs/toastr/toastr.min.css') }}" rel="stylesheet" type="text/css"/>
     <link href="{{ URL::asset('assets/libs/toastr/ext-component-toastr.css') }}" rel="stylesheet" type="text/css"/>
     <link href="{{ URL::asset('assets/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css"/>
-    <!-- Dropzone css -->
-{{--    <link href="{{ URL::asset('plugins/dropzone/dist/dropzone.css') }}" rel="stylesheet" type="text/css">--}}
+
+
     <link href="{{ URL::asset('/assets/libs/dropzone/dropzone.min.css') }}" rel="stylesheet" type="text/css" />
 
     <style>
@@ -35,22 +35,21 @@
                 <div class="card-body">
                     <div class="table-rep-plugin" >
                         <div class="table-responsive mb-0" data-pattern="priority-columns">
-                            <table id="TemplateTable" class="table table-striped table-bordered dt-responsive data-table"
-                                   style="width: 100%;">
-                        <thead>
-                        <tr>
-                            <th style="display: none;">ID</th>
-                            <th style="width: 10%">Logo</th>
-                            <th style="width: 30%">Tên Template</th>
-                            <th style="width: 20%">Phân loại</th>
-                            <th style="width: 25%">Thông tin Template</th>
-                            <th style="width: 5%">Type</th>
-                            <th style="width: 10%">Action</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
+                            <table id="TemplateTable" class="table table-striped table-bordered dt-responsive data-table" style="width: 100%;">
+                                <thead>
+                                <tr>
+                                    <th style="display: none;">ID</th>
+                                    <th style="width: 10%">Logo</th>
+                                    <th style="width: 30%">Tên Template</th>
+                                    <th style="width: 20%">Phân loại</th>
+                                    <th style="width: 25%">Thông tin Template</th>
+                                    <th style="width: 5%">Type</th>
+                                    <th style="width: 10%">Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -59,20 +58,17 @@
     </div> <!-- end row -->
 @endsection
 @section('script')
-<!-- Required datatable js -->
+
 <!-- Plugins js -->
 <script src="{{ URL::asset('/assets/libs/rwd-table/rwd-table.min.js') }}"></script>
 <script src="{{ URL::asset('/assets/libs/datatables/datatables.min.js') }}"></script>
-
 <script src="{{ URL::asset('/assets/libs/toastr/toastr.min.js') }}"></script>
 <script src="{{ URL::asset('/assets/libs/sweetalert2/sweetalert2.min.js') }}"></script>
 <script src="{{ URL::asset('/assets/js/table.init.js') }}"></script>
 <script src="{{ URL::asset('/assets/js/customs.js') }}"></script>
 
-{{--<script src="{{ URL::asset('/assets/libs/dropzone/dropzone.min.js') }}"></script>--}}
 
 <!-- Dropzone js -->
-<!-- Plugins js -->
 <script src="{{ URL::asset('/assets/libs/dropzone/dropzone.min.js') }}"></script>
 
 
@@ -129,6 +125,9 @@
             dictRemoveFile: 'Xoá',
             parallelUploads: 20,
             uploadMultiple: true,
+            thumbnailWidth: 120,
+            thumbnailHeight: 120,
+            thumbnailMethod:"crop"
         };
 
         var myDropzone = new Dropzone('#file_template', myDropzoneOptions);
@@ -285,6 +284,7 @@
                         myDropzone.emit("addedfile", apkFile);
                         myDropzone.emit("complete", apkFile);
                         myDropzone.emit("success", apkFile);
+                        myDropzone.emit("thumbnail", apkFile,'img/apk.png');
                         myDropzone.files.push( apkFile );
                     }
                     if(data.template_data){
@@ -292,11 +292,12 @@
                         myDropzone.emit("addedfile", dataFile);
                         myDropzone.emit("complete", dataFile);
                         myDropzone.emit("success", dataFile);
+                        myDropzone.emit("thumbnail", dataFile,'img/zip.png');
                         myDropzone.files.push( dataFile );
                     }
                     if(data.template_preview){
                         for( var v = 1 ; v  <= data.template_preview; v++){
-                            var previewFile = { name: v};
+                            var previewFile = { name: v+'.jpg'};
                             myDropzone.emit("addedfile", previewFile);
                             myDropzone.emit("complete", previewFile);
                             myDropzone.emit("success", previewFile);
@@ -304,119 +305,6 @@
                             myDropzone.files.push( previewFile );
                         }
                     }
-
-
-
-
-
-                    // myDropzone.files.push( dataFile ); // file must be added manually
-                    // // myDropzone.removeAllFiles( true );
-
-
-                    // var mockFile = { name: 'test.jpg', size: 0, status: 'success' };
-                    // myDropzone.emit( "addedfile", mockFile );
-                    // myDropzone.emit( "thumbnail", mockFile, 'test.jpg' );
-                    // file must be added manually
-
-                    // myDropzone.destroy();
-                    // myDropzone = new Dropzone('#file_template', myDropzoneOptions);
-
-
-                    // myDropzone = new Dropzone('#file_template',{
-                    // // myDropzone =  $('#file_template').dropzone({
-                    //     url: '.',
-                    //     autoProcessQueue: false,
-                    //     // addRemoveLinks: true,
-                    //     // dictRemoveFile: 'Xoá',
-                    //     parallelUploads: 20,
-                    //     uploadMultiple: true,
-                    //     init: function () {
-                    //         var _this = this; // For the closure
-                    //         console.log(data)
-                    //         if(data.template_apk){
-                    //             var apkFile = { name: data.template_apk};
-                    //
-                    //
-                    //             myDropzone.emit("addedfile", apkFile);
-                    //             // myDropzone.emit("thumbnail", apkFile, value.path);
-                    //             myDropzone.emit("complete", apkFile);
-                    //             //
-                    //             // _this.options.addedfile.call(_this, apkFile);
-                    //             // apkFile.previewElement.classList.add('dz-success');
-                    //             // apkFile.previewElement.classList.add('dz-complete');
-                    //             // _this.options.thumbnail.call(_this, apkFile, "storage/template/"+data.template+'/'+ data.template_apk);
-                    //         }
-                    //         if(data.template_data){
-                    //             var dataFile = { name: data.template_data};
-                    //
-                    //             myDropzone.emit("addedfile", dataFile);
-                    //             // myDropzone.emit("thumbnail", dataFile, value.path);
-                    //             myDropzone.emit("complete", dataFile);
-                    //
-                    //
-                    //             // _this.options.addedfile.call(_this, dataFile);
-                    //             // dataFile.previewElement.classList.add('dz-success');
-                    //             // dataFile.previewElement.classList.add('dz-complete');
-                    //             // _this.options.thumbnail.call(_this, dataFile, "storage/template/"+data.template+'/'+ data.template_data);
-                    //         }
-                    //     }
-                    // })
-
-
-                    //     console.log(1)
-                    // });
-                    // $('#file_template').dropzone({
-                    // myDropzone = new Dropzone('#file_template',{
-                    //     url: '.',
-                    //     autoProcessQueue: false,
-                    //     addRemoveLinks: true,
-                    //     dictRemoveFile: 'Xoá',
-                    //     parallelUploads: 20,
-                    //     uploadMultiple: true,
-                    //     init: function () {
-                    //         var _this = this; // For the closure
-                    //         console.log(data)
-                    //         if(data.template_apk){
-                    //             var apkFile = { name: data.template_apk};
-                    //             _this.options.addedfile.call(_this, apkFile);
-                    //             _this.options.thumbnail.call(_this, apkFile, "storage/template/"+data.template+'/'+ data.template_apk);
-                    //         }
-                    //         if(data.template_data){
-                    //             var dataFile = { name: data.template_data};
-                    //             _this.options.addedfile.call(_this, dataFile);
-                    //             _this.options.thumbnail.call(_this, dataFile, "storage/template/"+data.template+'/'+ data.template_data);
-                    //         }
-                    //         if(data.template_preview){
-                    //             $.each(data.template_preview,function (k,v){
-                    //                 console.log(k)
-                    //                 console.log(v)
-                    //             })
-                    //
-                    //             var template_preview = { name: data.template_data};
-                    //             _this.options.addedfile.call(_this, dataFile);
-                    //             _this.options.thumbnail.call(_this, dataFile, "storage/template/"+data.template+'/'+ data.template_data);
-                    //         }
-                    //             // $.each(data, function(key,value) {
-                    //             // var mockFile = { name: value.name, size: value.size };
-                    //                 // _this.options.addedfile.call(_this, mockFile);
-                    //                 // _this.options.thumbnail.call(_this, mockFile, "uploads/"+value.name);
-                    //             // });
-                    //         // });
-                    //
-                    //
-                    //         // let mockFile = { name: "Filename", size: 12345 };
-                    //         // let callback = null; // Optional callback when it's done
-                    //         // let crossOrigin = null; // Added to the `img` tag for crossOrigin handling
-                    //         // let resizeThumbnail = false; // Tells Dropzone whether it should resize the image first
-                    //         // _this.displayExistingFile(mockFile, "https://i.picsum.photos/id/959/120/120.jpg", callback, crossOrigin, resizeThumbnail);
-                    //
-                    //     },
-                    // });
-
-
-
-
-
                 },
                 error: function (data) {
                     console.log('Error:', data);

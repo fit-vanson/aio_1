@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Dev extends Model
 {
     use HasFactory;
+//    use \Awobaz\Compoships\Compoships;
 
     public $timestamps = false;
 //    protected $table = 'ngocphandang_dev';
