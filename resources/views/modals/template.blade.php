@@ -92,13 +92,17 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="form-group col-lg-6">
+                            <div class="form-group col-lg-4">
                                 <label for="name">Package</label>
                                 <input type="text" id="package" name="package" class="form-control" >
                             </div>
-                            <div class="form-group col-lg-6">
+                            <div class="form-group col-lg-4">
                                 <label for="name">Link của ứng dụng</label>
                                 <input type="text" id="link" name="link" class="form-control" >
+                            </div>
+                            <div class="form-group col-lg-4">
+                                <label for="name">SDK</label>
+                                <input type="text" id="sdk" name="sdk" class="form-control" >
                             </div>
 
                             <div class="form-group col-lg-12">

@@ -324,6 +324,7 @@ class TemplateController extends Controller
         $data['ads'] = $ads;
         $data['package'] = $request->package;
         $data['link'] = $request->link;
+        $data['sdk'] = $request->sdk;
         $data['convert_aab'] = $request->convert_aab;
         $data['status'] = $request->status;
 
@@ -363,7 +364,7 @@ class TemplateController extends Controller
                         $img = Image::make($file->path());
                         $img
                             ->resize(720, 1280)
-                            ->save($path.$fileName.'.'.$extension,60);
+                            ->save($path.$fileName.'.jpg',60,'jpg');
 //                        $file_name_data = $fileName.'.'.$extension;
                         $data['template_preview'] = $fileName;
 //                        $file->move($path, $file_name_data);
@@ -515,6 +516,7 @@ class TemplateController extends Controller
         $data->ads = $ads;
         $data->package = $request->package;
         $data->link = $request->link;
+        $data->sdk = $request->sdk;
         $data->convert_aab = $request->convert_aab;
         $data->status = $request->status;
         $data->category = $categories ;
@@ -543,12 +545,14 @@ class TemplateController extends Controller
                         $data['template_apk'] = $file_name_apk;
                         $file->move($path, $file_name_apk);
                         break;
-                    case 'jpg':
+                    case 'jpg' || 'webp':
                         $fileName = $num_image+1;
                         $img = Image::make($file->path());
                         $img
                             ->resize(720, 1280)
-                            ->save($path.$fileName.'.'.$extension,60);
+//                            ->encode('jpg', 60)
+                            ->save($path.$fileName.'.jpg',60,'jpg');
+//                            ->save($path.$fileName,60,'jpg');
 //                        $file_name_data = $fileName.'.'.$extension;
                         $data['template_preview'] = $fileName;
 

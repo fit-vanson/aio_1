@@ -272,6 +272,7 @@
                     $('#policy2').val(data.policy2);
                     $('#note').val(data.note);
                     $('#link').val(data.link);
+                    $('#sdk').val(data.sdk);
                     $('#package').val(data.package);
                     $('#convert_aab').val(data.convert_aab);
                     $('#status').val(data.status);
