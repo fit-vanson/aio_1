@@ -426,7 +426,7 @@
     <script>
         function editDev(id) {
             $.get('{{asset('dev/edit')}}/'+id,function (data) {
-                console.log(data)
+
 
                 $('#dev_id').val(data.id);
                 $('#store_name').val(data.store_name);
@@ -436,27 +436,44 @@
                     $("#ga_id").select2("trigger", "select", {
                         data: { id: data.ga_id,text: data.ga.ga_name }
                     });
+                }else {
+                    $("#ga_id").val('');
+                    $("#ga_id").trigger('change.select2');
                 }
+
                 if(data.market_id){
                     $("#market_id").select2("trigger", "select", {
                         data: { id: data.market_id,text: data.markets.market_name }
                     });
+                }else {
+                    $("#market_id").val('');
+                    $("#market_id").trigger('change.select2');
                 }
 
                 if(data.mail_id_1){
                     $("#mail_id_1").select2("trigger", "select", {
                         data: { id: data.mail_id_1,text: data.gmail_dev1.gmail }
                     });
-                    }
+                }else {
+                    $("#mail_id_1").val('');
+                    $("#mail_id_1").trigger('change.select2');
+                }
+
                 if(data.mail_id_2){
                     $("#mail_id_2").select2("trigger", "select", {
                         data: { id: data.mail_id_2,text: data.gmail_dev2.gmail }
                     });
+                }else {
+                    $("#mail_id_2").val('');
+                    $("#mail_id_2").trigger('change.select2');
                 }
                 if(data.profile_id){
                     $("#profile_id").select2("trigger", "select", {
                         data: { id: data.profile_id,text: data.profile.profile_name + ': ' +data.profile.profile_ho_va_ten + ' - ' +data.profile.profile_add  }
                     });
+                }else {
+                    $("#profile_id").val('');
+                    $("#profile_id").trigger('change.select2');
                 }
 
 

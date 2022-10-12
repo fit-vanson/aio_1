@@ -135,6 +135,7 @@
         };
 
         var myDropzone = new Dropzone('#file_template', myDropzoneOptions);
+
         $('.modal').on('hidden.bs.modal', function (e) {
             myDropzone.removeAllFiles();
             myDropzone.removeAllFiles(true);
@@ -279,9 +280,6 @@
                     });
 
                     // myDropzone = new Dropzone('#file_template', myDropzoneOptions);
-
-
-                    console.log(data)
 
                     if(data.template_apk){
                         var apkFile = { name: data.template_apk};

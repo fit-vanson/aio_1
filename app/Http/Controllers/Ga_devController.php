@@ -113,33 +113,42 @@ class Ga_devController extends Controller
         $records = Ga_dev::orderBy($columnName, $columnSortOrder)
             ->with('devs_1','devs_2','ga','ga_1','ga_2')
             ->Where('gmail','like', '%' .$searchValue. '%')
-//            ->Where('gmail','elinaebertsakq27@gmail.com')
+//            ->Where('gmail','levanhung245i@gmail.com')
             ->skip($start)
             ->take($rowperpage)
             ->get();
         $markets = Markets::all();
         $data_arr = array();
-        foreach ($records as $record) {
 
+        foreach ($records as $record) {
             $dev_markets_1 = $record->devs_1;
             $dev_markets_2 = $record->devs_2;
-            $arr = $dev_1 = $dev_2 = [];
+            $dev_1 = $dev_2 = [];
+            $arr = array();
             foreach ($markets as $market){
-                $arr += [
+                $arr+= [
                     $market->market_name => '',
                 ];
             }
 
-            $ga = $record->ga ?  $record->ga->ga_name : '' ;
-            $ga_1 = $record->ga_1 ?  $record->ga_1->ga_name : '';
-            $ga_2 = $record->ga_2 ?  $record->ga_2->ga_name : '';
+
+
+//            $ga = $record->ga ?  $record->ga->ga_name : '' ;
+//            $ga_1 = $record->ga_1 ?  $record->ga_1->ga_name : '';
+//            $ga_2 = $record->ga_2 ?  $record->ga_2->ga_name : '';
+
+            $ga = [
+                $record->ga ?  $record->ga->ga_name : null ,
+                $record->ga_1 ?  $record->ga_1->ga_name : null,
+                $record->ga_2 ?  $record->ga_2->ga_name : null
+            ];
 
             $arr += array(
                 "id" => $record->id,
-                "ga" => $ga.'-'.$ga_1.'-'.$ga_2,
+//                "ga" => $ga.'-'.$ga_1.'-'.$ga_2,
+                "ga" => $ga ,
                 "gmail" => '<div class="copyButton">'.$record->gmail.'</div>',
             );
-
             foreach ($dev_markets_1 as $dev_market_1){
 
 
@@ -162,29 +171,33 @@ class Ga_devController extends Controller
 
                 ];
             }
+
             foreach ($dev_markets_2 as $dev_market_2){
                 switch ($dev_market_2->status){
                     case 1:
-                        @$dev_name .= ' <span class="badge badge-primary change_status" data-id="'.$dev_market_2->id.'">'.$dev_market_2->dev_name.'</span> ';
+                        $dev_2_name = ' <span class="badge badge-primary change_status" data-id="'.$dev_market_2->id.'">'.$dev_market_2->dev_name.'</span> ';
                         break;
                     case 2:
-                        @$dev_name .= ' <span class="badge badge-warning change_status" data-id="'.$dev_market_2->id.'">'.$dev_market_2->dev_name.'</span> ';
+                        $dev_2_name = ' <span class="badge badge-warning change_status" data-id="'.$dev_market_2->id.'">'.$dev_market_2->dev_name.'</span> ';
                         break;
                     case 3:
-                        @$dev_name .= ' <span class="badge badge-danger change_status" data-id="'.$dev_market_2->id.'">'.$dev_market_2->dev_name.'</span> ';
+                        $dev_2_name = ' <span class="badge badge-danger change_status" data-id="'.$dev_market_2->id.'">'.$dev_market_2->dev_name.'</span> ';
                         break;
                     default:
-                        @$dev_name .= ' <span class="badge badge-dark change_status" data-id="'.$dev_market_2->id.'">'.$dev_market_2->dev_name.'</span> ';
+                        $dev_2_name = ' <span class="badge badge-dark change_status" data-id="'.$dev_market_2->id.'">'.$dev_market_2->dev_name.'</span> ';
                         break;
                 }
                 $dev_2 += [
-                    $dev_market_2->markets->market_name => $dev_name,
+                    $dev_market_2->markets->market_name => $dev_2_name,
 
                 ];
             }
-            $data =  array_replace($arr, $dev_1,$dev_2);
+
+            $data = array_merge_recursive($arr,$dev_1, $dev_2);
             $data_arr[] = $data;
         }
+
+
 
         $response = array(
             "draw" => intval($draw),
