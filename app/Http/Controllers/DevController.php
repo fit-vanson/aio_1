@@ -53,6 +53,9 @@ class DevController extends Controller
             ->where(function($q) use ($searchValue) {
                 $q->Where('store_name', 'like', '%' . $searchValue . '%')
                     ->orWhere('dev_name', 'like', '%' . $searchValue . '%')
+                    ->orwhereHas('gmail_dev2', function ($query) use ($searchValue) {
+                        return $query->Where('gmail', 'like', '%' . $searchValue . '%');
+                    })
                     ->orwhereHas('gmail_dev1', function ($query) use ($searchValue) {
                         return $query->Where('gmail', 'like', '%' . $searchValue . '%');
                     });
@@ -67,6 +70,9 @@ class DevController extends Controller
                 $q->Where('store_name', 'like', '%' . $searchValue . '%')
                     ->orWhere('dev_name', 'like', '%' . $searchValue . '%')
                     ->orwhereHas('gmail_dev1', function ($query) use ($searchValue) {
+                        return $query->Where('gmail', 'like', '%' . $searchValue . '%');
+                    })
+                    ->orwhereHas('gmail_dev2', function ($query) use ($searchValue) {
                         return $query->Where('gmail', 'like', '%' . $searchValue . '%');
                     });
             })
