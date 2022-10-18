@@ -421,6 +421,24 @@
                     }
                 });
             });
+
+            $(document).on('click','#get_token', function (data){
+                var market = $('#market_id').val();
+                var client_id = $('#api_client_id').val();
+                var client_secret = $('#api_client_secret').val();
+                console.log(market)
+                if(market == 1 && client_id.length > 0 &&  client_secret.length > 0){
+                    window.open("{{ asset("api/get-token-callback") }}?client_id="+client_id+ "&client_secret="+client_secret);
+                    $('#ajaxModelDev').modal('hide');
+                }else {
+                    $.notify('Market: CHPlay \n API Client ID: not null \n API Client Secret: not null  ' , "error");
+                }
+
+
+
+
+
+            });
         });
     </script>
     <script>

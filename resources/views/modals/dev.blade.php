@@ -106,17 +106,17 @@
                             </div>
 
                             <div class="form-group col-lg-6 ">
-                                <label for="name">API Client Secret</label>
+                                <label for="name">API Client Secret <code>VIVO: access_secret</code></label>
                                 <input type="text" id="api_client_secret" name="api_client_secret" class="form-control">
                             </div>
 
                             <div class="form-group col-lg-6 ">
-                                <label for="name">API Token</label>
+                                <label for="name">API Token <code id="get_token">get token</code></label>
                                 <input type="text" id="api_token" name="api_token" class="form-control">
                             </div>
 
                             <div class="form-group col-lg-6 ">
-                                <label for="name">API Access Key</label>
+                                <label for="name">API Access Key <code>VIVO: access_key </code></label>
                                 <input type="text" id="api_access_key" name="api_access_key" class="form-control">
                             </div>
 

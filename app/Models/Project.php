@@ -60,6 +60,10 @@ class Project extends Model
         return $this->belongsTo(Template::class,'template');
     }
 
+    public function dev(){
+        return $this->belongsToMany(Dev::class,MarketProject::class,'project_id','dev_id');
+    }
+
 
 
 

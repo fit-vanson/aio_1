@@ -85,7 +85,12 @@ class DevController extends Controller
         $data_arr = array();
         foreach ($records as $record) {
             $btn = ' <a href="javascript:void(0)" onclick="editDev('.$record->id.')" class="btn btn-warning"><i class="ti-pencil-alt"></i></a>';
-            $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$record->id.'" data-original-title="Delete" class="btn btn-danger deleteDev"><i class="ti-trash"></i></a>';
+            $btn = $btn.' <a href="javascript:void(0)"data-id="'.$record->id.'"  class="btn btn-danger deleteDev"><i class="ti-trash"></i></a>';
+            if($record->market_id == 1){
+                $btn = $btn.' <a  href="/api/get-token/'.$record->id.'" target="_blank" class="btn btn-info"><i class="mdi mdi-key"></i></a>';
+            }
+
+
 
             if($record->info_logo == null ){
                 $logo =  '<img width="60px" height="60px" src="assets\images\logo-member.jpg">';

@@ -40,8 +40,10 @@ Route::get('/getProfile', [ApiController::class, 'getProfile'])->name('api.getPr
 
 
 Route::get('/get_admod_list', [ApiController::class, 'get_admod_list'])->name('api.get_admod_list');
-Route::get('/get_gclient', [ApiController::class, 'get_gclient'])->name('api.get_gclient');
+Route::get('/get-gclient', [ApiController::class, 'get_gclient'])->name('api.get_gclient');
+Route::get('/get-token/{id}', [ApiController::class, 'get_token'])->name('api.get_token');
 Route::get('/get-token-callback', [ApiController::class, 'get_get_token_callback'])->name('api.get_get_token_callback');
 Route::get('/getReview', [ApiController::class, 'getReview'])->name('api.getReview');
+
 
 

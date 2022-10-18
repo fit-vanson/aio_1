@@ -11,6 +11,7 @@ use App\Http\Resources\MarketsResource;
 use App\Http\Resources\ProfileResource;
 use App\Http\Resources\TemplateResource;
 use App\Models\Da;
+use App\Models\Dev;
 use App\Models\Ga;
 use App\Models\Ga_dev;
 use App\Models\Keystore;
@@ -184,16 +185,22 @@ class ApiController extends Controller
 
     function get_get_token_callback(Request $request)
     {
-//        $admod_account = AdModAccount::where('id', $request->state)->first();
-        $g_client = $this->get_gclient($request);
+
+        $dev = Dev::find($request->state);
+        $g_client = $this->get_gclient($request,$dev);
         if (isset($request->code) && $request->code != '') {
-            $accessToken = $g_client->fetchAccessTokenWithAuthCode($_GET['code']);
+            $code = $request->code;
+            $accessToken = $g_client->fetchAccessTokenWithAuthCode($code);
         }
+
         if (isset($accessToken)){
             $service = new Google_Service_AndroidPublisher($g_client);
 //
-            $package_name = "com.devprotechnology.gallerylock";
+            $package_name = "com.devpro.technology.imagevideorecovery";
             $token = $accessToken['access_token'];
+//            $token = 'ya29.a0Aa4xrXPvYSt5juBY5WdhoRJVdgiQTBFyFSwZ0S3kQM1M3uCXkhE57WViGSaUMPxPIGWR0Y5xOn8TkzNBRbQv55vvC9UL7iMXPcJ-YWpuMjWjpzmJyqKMu93ow5sb9L9TZs1RZi7tEqxFxJhtO4hcvwDg-Lk3aCgYKATASARASFQEjDvL9uWw6mYQoYMhtSioZDVQj7w0163';
+//            $refresh_token = "1//0eCsVRzUSqgBGCgYIARAAGA4SNwF-L9IrOiNb0B2ZM2oPNQjL82Bg45K9BmrWBfpLUE9UBLWv9pHjuvl3r9P4RAtad1VIOkW5leA";
+
             $optParams = array(
 //                "maxResults"=>10,
 //                "startIndex"=>0,
@@ -204,62 +211,66 @@ class ApiController extends Controller
 
 //            $url = "https://www.googleapis.com/androidpublisher/v3/applications/$package_name/reviews?access_token=$token";
             $response = $service->reviews->listReviews($package_name,$optParams);
+
+            $review = $response->getReviews();
+            dd($review,$accessToken);
+
 //            $response = Http::get($url);
+
 
             dd($response);
         }
 
         $authUrl = $g_client->createAuthUrl();
-
-
         echo '<META http-equiv="refresh" content="0;URL=' . $authUrl . '">';
         return;
         }
 
 
-    function get_get_ga_token(Request $request)
+    function get_token(Request $request)
     {
-
         if (isset($request->id)) {
-            $admod_account = AdModAccount::where('id', $request->id)->first();
+            $dev = Dev::find($request->id);
         }
+        $g_client = $this->get_gclient($request, $dev);
+        if($g_client){
+            if (isset($request->code) && $request->code != '') {
+                $code = $request->code;
+                $auth_result = $g_client->authenticate($code);
 
-        $g_client = $this->get_gclient($request, $admod_account);
-
-        if (isset($request->code) && $request->code != '') {
-            $code = $request->code;
-            $auth_result = $g_client->authenticate($code);
-
-            Log::debug("auth_result: " . $auth_result['auth_result']);
-            $access_token = $g_client->getAccessToken();
-            Log::debug('access_token:' . $access_token);
+                Log::debug("auth_result: " . $auth_result['auth_result']);
+                $access_token = $g_client->getAccessToken();
+                Log::debug('access_token:' . $access_token);
 //            $service = new \Google_Service_AdSense($g_client);
-            $service = new Google_Service_AdMob($g_client);
-            $acc_service = $this->get_user($service);
+                $service = new Google_Service_AdMob($g_client);
+                $acc_service = $this->get_user($service);
 
-            $user_name = $acc_service["name"];
-            $user_id = $acc_service["id"];
-            $admod_account = AdModAccount::where('admod_pub_id', $user_id)->first();
-            if (count($admod_account) > 0) {
-                $admod_account->access_token_full = \GuzzleHttp\json_encode($access_token);
-                $admod_account->access_token = \GuzzleHttp\json_decode(\GuzzleHttp\json_encode($access_token))->access_token;
-                $admod_account->save();
-            } else {
-                AdModAccount::create([
-                    'admod_pub_id' => $user_id,
-                    'adsmod_name' => $user_name,
-                    'access_token_full' => \GuzzleHttp\json_encode($access_token),
-                    'access_token' => \GuzzleHttp\json_decode(\GuzzleHttp\json_encode($access_token))->access_token
-                ]);
+                $user_name = $acc_service["name"];
+                $user_id = $acc_service["id"];
+                $admod_account = AdModAccount::where('admod_pub_id', $user_id)->first();
+                if (count($admod_account) > 0) {
+                    $admod_account->access_token_full = \GuzzleHttp\json_encode($access_token);
+                    $admod_account->access_token = \GuzzleHttp\json_decode(\GuzzleHttp\json_encode($access_token))->access_token;
+                    $admod_account->save();
+                } else {
+                    AdModAccount::create([
+                        'admod_pub_id' => $user_id,
+                        'adsmod_name' => $user_name,
+                        'access_token_full' => \GuzzleHttp\json_encode($access_token),
+                        'access_token' => \GuzzleHttp\json_decode(\GuzzleHttp\json_encode($access_token))->access_token
+                    ]);
+                }
+                echo '<META http-equiv="refresh" content="0;URL=' . url("/api/admod") . '">';
+                return;
+
             }
-            echo '<META http-equiv="refresh" content="0;URL=' . url("/api/admod") . '">';
+            $authUrl = $g_client->createAuthUrl();
+            echo '<META http-equiv="refresh" content="0;URL=' . $authUrl . '">';
             return;
-
+        }else{
+            return 'API Client ID: null <br> API Client Secret: null';
         }
-        $authUrl = $g_client->createAuthUrl();
 
-        echo '<META http-equiv="refresh" content="0;URL=' . $authUrl . '">';
-        return;
     }
     function get_user($service)
     {
@@ -275,33 +286,34 @@ class ApiController extends Controller
         }
     }
 
-    function get_gclient($request)
+    function get_gclient($request, $dev)
     {
+
         $client = new \Google_Client();
-        try {
-            $client_id = '1081368451259-hfk41u1dgtp99mp2806p6vg0g5c9738q.apps.googleusercontent.com';
-            $client_secret = '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';
-            $package_name = "com.devprotechnology.gallerylock";
+        $client_id = $dev->api_client_id;
+        $client_secret = $dev->api_client_secret;
 
-
-            $redirect_uri = URL::current();
-            $redirect_uri = substr($redirect_uri, 0, strrpos($redirect_uri, '/'));
-            $redirect_uri .= "/get-token-callback";
+        if(empty($client_id) || empty($client_secret)){
+            return false;
+        }else{
+            $redirect_uri = $_SERVER['APP_URL'];
+//            $redirect_uri = substr($redirect_uri, 0, strrpos($redirect_uri, '/'));
+            $redirect_uri .= "/api/get-token-callback";
 
 
             $client = new Google_Client();
-            $client->setApplicationName($package_name);
+            $client->setApplicationName('VIETMMO GOOGLEAPI');
             $client->setClientId($client_id);
+            $client->setState(array('a_id' => $dev->id));
             $client->setClientSecret($client_secret);
             $client->setRedirectUri($redirect_uri);
             $client->addScope(Google_Service_AndroidPublisher::ANDROIDPUBLISHER);
             $client->setAccessType('offline');
-
-        } catch (\Google_Exception $exception) {
-            print_r($exception);
+            return $client;
         }
 
-        return $client;
+
+
 
     }
 
@@ -309,14 +321,15 @@ class ApiController extends Controller
     public function getReview(){
 
         $client_id = '1081368451259-hfk41u1dgtp99mp2806p6vg0g5c9738q.apps.googleusercontent.com';
-        $client_secret = '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';
+        $client_secret = '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';
+        $package_name = "com.devpro.technology.imagevideorecovery";
+
         $redirect_uri = URL::current();
-
         $redirect_uri = substr($redirect_uri, 0, strrpos($redirect_uri, '/'));
-        $redirect_uri .= "/getReview";
-        $package_name = "com.devprotechnology.gallerylock";
+        $redirect_uri .= "/get-token-callback";
 
-        $client = new Google_Client();
+
+        $client = new \Google_Client();
         $client->setApplicationName($package_name);
         $client->setClientId($client_id);
         $client->setClientSecret($client_secret);
@@ -324,36 +337,59 @@ class ApiController extends Controller
         $client->addScope(Google_Service_AndroidPublisher::ANDROIDPUBLISHER);
         $client->setAccessType('offline');
 
-        if(!$client->getAccessToken() && !isset($_GET['code'])) {
-            $authUrl = $client->createAuthUrl();
-            echo "<a class='login' href='$authUrl'>Connect Me!</a>";
+        $service = new Google_Service_AndroidPublisher($client);
+
+
+//
+
+//        $token = $accessToken['access_token'];
+//        $token = 'ya29.a0Aa4xrXPvYSt5juBY5WdhoRJVdgiQTBFyFSwZ0S3kQM1M3uCXkhE57WViGSaUMPxPIGWR0Y5xOn8TkzNBRbQv55vvC9UL7iMXPcJ-YWpuMjWjpzmJyqKMu93ow5sb9L9TZs1RZi7tEqxFxJhtO4hcvwDg-Lk3aCgYKATASARASFQEjDvL9uWw6mYQoYMhtSioZDVQj7w0163';
+        $token = 'ya29.a0Aa4xrXM780e6-tudd9fWQ6AaRZ9-0R1PlJQxjKGZTK_Id_yqm6FRXtcw5Mi78btO85Pb0jy6C-4mL8xzA6nYNeQSo3J_6EIZ2zT7xXDl71Ih4I7TEeU8IEklArwTJYv_yML1cbuKE1Z8uiCeYlmpwek8afJp2HaCgYKATASARASFQEjDvL9hwhFJnv07Uz-ta8ihs6ETQ0163';
+//        $token = 'ya29.a0Aa4xrXOcgqUaNq1EvQOIVmD55AeJ3q2F3NVwqbP8M0uRwXtlH0QDTTT8ze7pjHA5DeeCKcHA9GlbFEH4iwB4B1DyuDOScVrGVWP4DaRO_Tt4tFwslpZPwn1QlSGeuh-oiDEIlJxAo9XOkPtqJfNKVvb4YExjaCgYKATASARESFQEjDvL9cDE9w4JaGAXDACXJvtCzcQ0163';
+        $token = '';
+        $refresh_token = '1//0ePcJwre0nFJECgYIARAAGA4SNwF-L9IrMMbKvA5DzpV2oYVpE55MxzZUH88V4xC8caSR7sIHCUJULIN1B1x_129ChCkSJp8FcG8';
+
+        if(!$token){
+           $reset_token = $client->refreshToken($refresh_token);
+           $token = $reset_token['access_token'];
         }
 
-        if(isset($_GET['code'])){
-            $accessToken = $client->fetchAccessTokenWithAuthCode($_GET['code']);
-        }
 
-        if (isset($accessToken)){
-            print "<a class='logout' href='".$_SERVER['PHP_SELF']."?logout=1'>LogOut</a><br>";
 
-            $service = new Google_Service_AndroidPublisher($client);
+        $optParams = array(
+//                "maxResults"=>10,
+//                "startIndex"=>0,
+//                "token"=> $token,
+//                "translationLanguage"=>"en"
+        );
 
-            $optParams = array(
-                "maxResults"=>10,
-                "startIndex"=>0,
-                "token"=> $accessToken['access_token'],
-                "translationLanguage"=>"en"
-            );
 
-            try {
-                $response = $service->reviews->listReviews($package_name,$optParams);
-                echo "<pre>".print_r($response,true)."</pre>";
+            $url = "https://www.googleapis.com/androidpublisher/v3/applications/$package_name/reviews?access_token=$token";
+//        $response = $service->reviews->listReviews($package_name,$optParams);
+        $response = Http::get($url);
+
+        dd($response->json());
+
+
+
+        $reviews = $response->getReviews();
+        foreach ($reviews as $review){
+            $comments   = $review->getComments();
+            foreach ($comments as $comment){
+                $userComment = $comment->getUserComment();
+                $developerComment = $comment->getDeveloperComment();
+                $text = $userComment->text;
+                $lang = $userComment->reviewerLanguage;
+
+                dd($text,$lang,$userComment,$developerComment,$comment,$comments,$reviews);
+
+
             }
-            catch (Google_Service_Exception $e) {
-                $json = $e->getMessage();
-                echo $json;
-            }
+//            $text = $c
+            dd($comments);
+
         }
+        dd($review);
 
 
 

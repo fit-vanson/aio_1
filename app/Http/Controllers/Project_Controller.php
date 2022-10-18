@@ -62,6 +62,10 @@ class Project_Controller extends Controller
                     ->where('keystore', 'like', '%' . $searchValue . '%')
                     ->orwhere('package', 'like', '%' . $searchValue . '%');
             })
+            ->orwhereHas('dev', function ($query) use ($searchValue) {
+                $query
+                    ->where('dev_name', 'like', '%' . $searchValue . '%');
+            })
             ->count();
         $records = Project::orderBy($columnName, $columnSortOrder)
             ->with('markets.pivot.dev.ga','ma_template','da')
@@ -70,9 +74,12 @@ class Project_Controller extends Controller
             ->orwhere('title_app', 'like', '%' . $searchValue . '%')
             ->orwhereHas('markets', function ($query) use ($searchValue) {
                 $query
-
                     ->where('keystore', 'like', '%' . $searchValue . '%')
                     ->orwhere('package', 'like', '%' . $searchValue . '%');
+            })
+            ->orwhereHas('dev', function ($query) use ($searchValue) {
+                $query
+                    ->where('dev_name', 'like', '%' . $searchValue . '%');
             })
             ->skip($start)
             ->take($rowperpage)
@@ -257,8 +264,6 @@ class Project_Controller extends Controller
                 ->save($path_logo.'lg114.png',85);
             $data['logo'] = 'lg.png';
         }
-
-
         $inset_market = [];
 
         foreach ($request->market as $key=>$value){
@@ -284,11 +289,8 @@ class Project_Controller extends Controller
     }
 
     public function edit($id){
-
         $project = Project::find($id);
-
         return response()->json($project->load('markets.pivot.dev','markets.pivot.keystores','da','ma_template.markets','lang'));
-//        return response()->json($project);
     }
 
     public function update(Request $request){
@@ -519,19 +521,6 @@ class Project_Controller extends Controller
                         }
 
                     }
-//                    foreach ($array as $key=>$value){
-//                        $project = Project::where('projectname',$key)->pluck('projectid');
-//                        $projects_market =
-//                            MarketProject::whereIN('project_id',$project)->get();
-//                        foreach ($projects_market as $project_market){
-//                            $project_market->keystore = @trim($value[$project_market->market_id]);
-//                            $project_market->save();
-//                            Keystore::updateorcreate([
-//                                'name_keystore' => @trim($value[$project_market->market_id])
-//                            ]);
-//                        }
-//
-//                    }
                     break;
                 case 'upload_status':
                     foreach ($array as $key=>$value){
@@ -661,19 +650,38 @@ class Project_Controller extends Controller
 
         $totalRecords = Project::select('count(*) as allcount')
             ->where('buildinfo_console','<>',0)
-
             ->count();
         $totalRecordswithFilter = Project::select('count(*) as allcount')
-            ->Where('projectname', 'like', '%' . $searchValue . '%')
+            ->where(function($q) use ($searchValue) {
+                $q->Where('projectname', 'like', '%' . $searchValue . '%')
+                    ->orwhereHas('markets', function ($query) use ($searchValue) {
+                        $query
+                            ->where('keystore', 'like', '%' . $searchValue . '%')
+                            ->orwhere('package', 'like', '%' . $searchValue . '%');
+                    })
+                    ->orwhereHas('dev', function ($query) use ($searchValue) {
+                        $query
+                            ->where('dev_name', 'like', '%' . $searchValue . '%');
+                    });
+            })
             ->where('buildinfo_console','<>',0)
             ->whereIn('buildinfo_console',$status_console)
-
             ->count();
         $records = Project::orderBy($columnName, $columnSortOrder)
             ->with('markets','ma_template','da')
-            ->Where('projectname', 'like', '%' . $searchValue . '%')
+            ->where(function($q) use ($searchValue) {
+                $q->Where('projectname', 'like', '%' . $searchValue . '%')
+                    ->orwhereHas('markets', function ($query) use ($searchValue) {
+                        $query
+                            ->where('keystore', 'like', '%' . $searchValue . '%')
+                            ->orwhere('package', 'like', '%' . $searchValue . '%');
+                    })
+                    ->orwhereHas('dev', function ($query) use ($searchValue) {
+                        $query
+                            ->where('dev_name', 'like', '%' . $searchValue . '%');
+                    });
+            })
             ->whereIn('buildinfo_console',$status_console)
-
             ->where('buildinfo_console','<>',0)
             ->skip($start)
             ->take($rowperpage)
@@ -721,9 +729,6 @@ class Project_Controller extends Controller
 
                 if($market->pivot->package){
                     $package .= '<p class="card-title-desc font-16"><img src="img/icon/'.$market->market_logo.'"> '.$market->pivot->package.'</p>';
-
-
-
                     if($market->pivot->sdk){
                         $sdk .= ' <span class="badge badge-'.$badges[$key].'" style="font-size: 12px"> '.strtoupper($market->market_name[0]).': '.$market->pivot->sdk.' </span> ';
                     }
@@ -746,8 +751,6 @@ class Project_Controller extends Controller
                     }
                 }
             }
-
-
             $data_arr[] = array(
                 "projectid" => $record->projectid,
                 "logo" => $logo,
@@ -780,23 +783,8 @@ class Project_Controller extends Controller
     {
         $header = [
             'title' => 'Upload Project',
-            'button' => [
-//                'All'       => ['id'=>'all','style'=>'primary'],
-//                'Chờ xử lý' => ['id'=>'WaitProcessing','style'=>'warning'],
-//                'Đang xử lý'=> ['id'=>'Processing','style'=>'info'],
-//                'Kết thúc'  => ['id'=>'End','style'=>'success'],
-//                'Remove'    => ['id'=>'RemoveA','style'=>'danger'],
-            ]
+            'button' => []
         ];
-
-
-
-
-//
-//
-//        $projects = Project::has('lang')->where('status_design',4)->orderByDesc('projectname')->get();
-////        return view('design_content.index')->with(compact('projects'));
-////        dd($projects);
 
         return view('project.upload')->with(compact('header'));
     }
@@ -920,22 +908,13 @@ class Project_Controller extends Controller
         if($request->action == 'app'){
             return view('fake_app',compact('result'));
         }
-
-
-
     }
 
     public function manage ()
     {
         $header = [
             'title' => 'Quản lý app '.$_GET['market'],
-            'button' => [
-//                'All'       => ['id'=>'all','style'=>'primary'],
-//                'Chờ xử lý' => ['id'=>'WaitProcessing','style'=>'warning'],
-//                'Đang xử lý'=> ['id'=>'Processing','style'=>'info'],
-//                'Kết thúc'  => ['id'=>'End','style'=>'success'],
-//                'Remove'    => ['id'=>'RemoveA','style'=>'danger'],
-            ]
+            'button' => []
         ];
         return view('project.manage')->with(compact('header'));
     }
@@ -985,9 +964,6 @@ class Project_Controller extends Controller
             ->take($rowperpage)
             ->get();
 
-
-
-
         $data_arr = array();
         foreach ($records as $record) {
             $btn = ' <a href="javascript:void(0)"data-id="'.$record->projectid.'" class="btn btn-warning removeProject"><i class="mdi mdi-file-move"></i></a>';
@@ -1017,10 +993,6 @@ class Project_Controller extends Controller
 
             $status = $record->pivot->status_app;
             $console = $record->buildinfo_console;
-
-//            dd($record->pivot->pivotParent->market_name);
-
-
             $Chplay_status =  '<span data-package="'.$record->pivot->id.'" class="check_Status_'.$record->pivot->pivotParent->market_name.' badge badge-';
             switch ($status){
                 case 1:
@@ -1049,9 +1021,6 @@ class Project_Controller extends Controller
                     break;
             }
             $Chplay_status .=  '</span>';
-
-
-
 
             switch ($console){
                 case 1:
@@ -1103,34 +1072,6 @@ class Project_Controller extends Controller
                 "buildinfo_console"=> $record->buildinfo_console,
                 "action"=> $btn
             );
-
-
-//            $mess_info = '';
-//            $full_mess ='null';
-//            if ($record->buildinfo_mess){
-//                $buildinfo_mess = $record->buildinfo_mess;
-//                $full_mess =  (str_replace('|','<br>',$buildinfo_mess));
-//                $buildinfo_mess =  (explode('|',$buildinfo_mess));
-//                $buildinfo_mess = array_reverse($buildinfo_mess);
-//                for($i = 0 ; $i < 6 ; $i++){
-//                    if(isset($buildinfo_mess[$i])){
-//                        $mess_info .=  $buildinfo_mess[$i].'<br>';
-//                    }
-//                }
-//            }
-
-
-//            $data_arr[] = array(
-//                "projectid" => $record->projectid,
-//                "logo" => $logo,
-//                "projectname"=>$project.$template.$mada.'<br>'.$record->title_app.'<br>'.$version.'<br>'.$sdk.'<br>'.$keystore,
-//                "markets"=>$package,
-//
-//                "buildinfo_mess" => $mess_info,
-//                "full_mess" => $full_mess,
-//                "buildinfo_console" =>$record->buildinfo_console,
-//                "action"=> $btn,
-//            );
         }
         $response = array(
             "draw" => intval($draw),
