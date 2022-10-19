@@ -14,6 +14,7 @@ use App\Models\Da;
 use App\Models\Dev;
 use App\Models\Ga;
 use App\Models\Ga_dev;
+use App\Models\GoogleReview;
 use App\Models\Keystore;
 use App\Models\Market_dev;
 use App\Models\MarketProject;
@@ -26,6 +27,7 @@ use Google_Service_AndroidPublisher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\URL;
@@ -185,40 +187,18 @@ class ApiController extends Controller
 
     function get_get_token_callback(Request $request)
     {
-
         $dev = Dev::find($request->state);
         $g_client = $this->get_gclient($request,$dev);
         if (isset($request->code) && $request->code != '') {
             $code = $request->code;
             $accessToken = $g_client->fetchAccessTokenWithAuthCode($code);
         }
-
         if (isset($accessToken)){
-            $service = new Google_Service_AndroidPublisher($g_client);
-//
-            $package_name = "com.devpro.technology.imagevideorecovery";
-            $token = $accessToken['access_token'];
-//            $token = 'ya29.a0Aa4xrXPvYSt5juBY5WdhoRJVdgiQTBFyFSwZ0S3kQM1M3uCXkhE57WViGSaUMPxPIGWR0Y5xOn8TkzNBRbQv55vvC9UL7iMXPcJ-YWpuMjWjpzmJyqKMu93ow5sb9L9TZs1RZi7tEqxFxJhtO4hcvwDg-Lk3aCgYKATASARASFQEjDvL9uWw6mYQoYMhtSioZDVQj7w0163';
-//            $refresh_token = "1//0eCsVRzUSqgBGCgYIARAAGA4SNwF-L9IrOiNb0B2ZM2oPNQjL82Bg45K9BmrWBfpLUE9UBLWv9pHjuvl3r9P4RAtad1VIOkW5leA";
-
-            $optParams = array(
-//                "maxResults"=>10,
-//                "startIndex"=>0,
-//                "token"=> $accessToken['access_token'],
-//                "translationLanguage"=>"en"
-            );
-
-
-//            $url = "https://www.googleapis.com/androidpublisher/v3/applications/$package_name/reviews?access_token=$token";
-            $response = $service->reviews->listReviews($package_name,$optParams);
-
-            $review = $response->getReviews();
-            dd($review,$accessToken);
-
-//            $response = Http::get($url);
-
-
-            dd($response);
+            $dev->api_token = $accessToken['access_token'];
+            $dev->api_expires_in_token = time()+ $accessToken['expires_in'] ;
+            $dev->api_refresh_token = $accessToken['refresh_token'] ;
+            $dev->save();
+            return "<script>window.close();</script>";
         }
 
         $authUrl = $g_client->createAuthUrl();
@@ -230,39 +210,20 @@ class ApiController extends Controller
     function get_token(Request $request)
     {
         if (isset($request->id)) {
-            $dev = Dev::find($request->id);
+            $dev = Dev::findorfail($request->id);
         }
         $g_client = $this->get_gclient($request, $dev);
         if($g_client){
             if (isset($request->code) && $request->code != '') {
                 $code = $request->code;
-                $auth_result = $g_client->authenticate($code);
-
-                Log::debug("auth_result: " . $auth_result['auth_result']);
-                $access_token = $g_client->getAccessToken();
-                Log::debug('access_token:' . $access_token);
-//            $service = new \Google_Service_AdSense($g_client);
-                $service = new Google_Service_AdMob($g_client);
-                $acc_service = $this->get_user($service);
-
-                $user_name = $acc_service["name"];
-                $user_id = $acc_service["id"];
-                $admod_account = AdModAccount::where('admod_pub_id', $user_id)->first();
-                if (count($admod_account) > 0) {
-                    $admod_account->access_token_full = \GuzzleHttp\json_encode($access_token);
-                    $admod_account->access_token = \GuzzleHttp\json_decode(\GuzzleHttp\json_encode($access_token))->access_token;
-                    $admod_account->save();
-                } else {
-                    AdModAccount::create([
-                        'admod_pub_id' => $user_id,
-                        'adsmod_name' => $user_name,
-                        'access_token_full' => \GuzzleHttp\json_encode($access_token),
-                        'access_token' => \GuzzleHttp\json_decode(\GuzzleHttp\json_encode($access_token))->access_token
-                    ]);
-                }
-                echo '<META http-equiv="refresh" content="0;URL=' . url("/api/admod") . '">';
-                return;
-
+                $accessToken = $g_client->fetchAccessTokenWithAuthCode($code);
+            }
+            if (isset($accessToken)){
+                $dev->api_token = $accessToken['access_token'];
+                $dev->api_expires_in_token = time()+ $accessToken['expires_in'] ;
+                $dev->api_refresh_token = $accessToken['refresh_token'] ;
+                $dev->save();
+                return "<script>window.close();</script>";
             }
             $authUrl = $g_client->createAuthUrl();
             echo '<META http-equiv="refresh" content="0;URL=' . $authUrl . '">';
@@ -289,19 +250,17 @@ class ApiController extends Controller
     function get_gclient($request, $dev)
     {
 
-        $client = new \Google_Client();
         $client_id = $dev->api_client_id;
         $client_secret = $dev->api_client_secret;
 
         if(empty($client_id) || empty($client_secret)){
             return false;
         }else{
+
             $redirect_uri = $_SERVER['APP_URL'];
-//            $redirect_uri = substr($redirect_uri, 0, strrpos($redirect_uri, '/'));
             $redirect_uri .= "/api/get-token-callback";
-
-
             $client = new Google_Client();
+
             $client->setApplicationName('VIETMMO GOOGLEAPI');
             $client->setClientId($client_id);
             $client->setState(array('a_id' => $dev->id));
@@ -309,91 +268,133 @@ class ApiController extends Controller
             $client->setRedirectUri($redirect_uri);
             $client->addScope(Google_Service_AndroidPublisher::ANDROIDPUBLISHER);
             $client->setAccessType('offline');
+//            $client->setIncludeGrantedScopes(true);
             return $client;
+
         }
-
-
-
 
     }
 
+    public function getReview(Request $request,$id){
 
-    public function getReview(){
+        $dev = Dev::findorfail($id);
+        $client = $this->get_gclient($request,$dev);
+        $service = new Google_Service_AndroidPublisher($client);
+        $refresh_token = $dev->api_refresh_token;
+        if(isset($refresh_token) && $dev->api_expires_in_token < time()){
+            $client->fetchAccessTokenWithRefreshToken($refresh_token);
+            $accessToken = $client->getAccessToken();
+            $dev->api_token = $accessToken['access_token'];
+            $dev->api_expires_in_token = time()+ $accessToken['expires_in'] ;
+            $dev->save();
+        }
+        $token = $dev->api_token;
+        $optParams = array(
+            "maxResults"=>50,
+            "startIndex"=>0,
+            "token"=> $client->setAccessToken($token),
+//                "translationLanguage"=>"en"
+        );
 
-        $client_id = '1081368451259-hfk41u1dgtp99mp2806p6vg0g5c9738q.apps.googleusercontent.com';
-        $client_secret = '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';
-        $package_name = "com.devpro.technology.imagevideorecovery";
+        $dataArr = [];
+        foreach ($dev->projects_market as $project){
+            $package_name = $project->package;
+            try {
+                $response = $service->reviews->listReviews($package_name,$optParams);
+                $reviews =  $response->getReviews();
 
-        $redirect_uri = URL::current();
-        $redirect_uri = substr($redirect_uri, 0, strrpos($redirect_uri, '/'));
-        $redirect_uri .= "/get-token-callback";
+                if ($reviews){
+
+                    $data = [];
+                    foreach ($reviews as $review){
+                        $comments   = $review->getComments();
+//                        $dataArr[] = [
+//                            'project_id' =>  $project->project_id,
+//                            'project_market_id' =>  $project->id,
+//                            'package' =>  $project->package,
+//                            'reviewId' =>  $review->reviewId,
+//                            'authorName' =>  $review->authorName,
+//                            'userComment' =>  $comments[0]->getUserComment()->getText(),
+//                            'reviewerLanguage' =>  $comments[0]->getUserComment()->reviewerLanguage,
+//                            'thumbsDownCount' =>  $comments[0]->getUserComment()->getThumbsDownCount(),
+//                            'thumbsUpCount' =>  $comments[0]->getUserComment()->getThumbsUpCount(),
+//                            'starRating' =>  $comments[0]->getUserComment()->getStarRating(),
+//                            'deviceMetadata' =>  json_encode($comments[0]->getUserComment()->getDeviceMetadata()),
+//                            'lastModifiedUser' =>  $comments[0]->getUserComment()->getLastModified()->getSeconds(),
+//                            'developerComment' => isset($comments[1]) ?  $comments[1]->getDeveloperComment()->getText() : null,
+//                            'lastModifiedDeveloper' => isset($comments[1]) ?  $comments[1]->getDeveloperComment()->getLastModified()->getSeconds() : null,
+//                        ];
+                        GoogleReview::updateorCreate(
+                            [
+                                'reviewId' =>  $review->reviewId,
+                            ],
+                            [
+                                'project_id' =>  $project->project_id,
+                                'project_market_id' =>  $project->id,
+                                'package' =>  $project->package,
+                                'authorName' =>  $review->authorName,
+                                'userComment' =>  $comments[0]->getUserComment()->getText(),
+                                'reviewerLanguage' =>  $comments[0]->getUserComment()->reviewerLanguage,
+                                'thumbsDownCount' =>  $comments[0]->getUserComment()->getThumbsDownCount(),
+                                'thumbsUpCount' =>  $comments[0]->getUserComment()->getThumbsUpCount(),
+                                'starRating' =>  $comments[0]->getUserComment()->getStarRating(),
+                                'deviceMetadata' =>  json_encode($comments[0]->getUserComment()->getDeviceMetadata()),
+                                'lastModifiedUser' =>  $comments[0]->getUserComment()->getLastModified()->getSeconds(),
+                                'developerComment' => isset($comments[1]) ?  $comments[1]->getDeveloperComment()->getText() : null,
+                                'lastModifiedDeveloper' => isset($comments[1]) ?  $comments[1]->getDeveloperComment()->getLastModified()->getSeconds() : null,
+                            ]
+                        );
+                    }
+                }
+            }catch (\Exception $exception) {
+                Log::debug('Message -  getReview: ' . $exception->getMessage() . '---' . $exception->getLine());
+            }
+        }
+        dd(1);
+    }
 
 
-        $client = new \Google_Client();
-        $client->setApplicationName($package_name);
-        $client->setClientId($client_id);
-        $client->setClientSecret($client_secret);
-        $client->setRedirectUri($redirect_uri);
-        $client->addScope(Google_Service_AndroidPublisher::ANDROIDPUBLISHER);
-        $client->setAccessType('offline');
+    public function postReview(Request $request,$id){
+        $dev = Dev::findorfail($id);
+        $client = $this->get_gclient($request,$dev);
+
 
         $service = new Google_Service_AndroidPublisher($client);
-
-
-//
-
-//        $token = $accessToken['access_token'];
-//        $token = 'ya29.a0Aa4xrXPvYSt5juBY5WdhoRJVdgiQTBFyFSwZ0S3kQM1M3uCXkhE57WViGSaUMPxPIGWR0Y5xOn8TkzNBRbQv55vvC9UL7iMXPcJ-YWpuMjWjpzmJyqKMu93ow5sb9L9TZs1RZi7tEqxFxJhtO4hcvwDg-Lk3aCgYKATASARASFQEjDvL9uWw6mYQoYMhtSioZDVQj7w0163';
-        $token = 'ya29.a0Aa4xrXM780e6-tudd9fWQ6AaRZ9-0R1PlJQxjKGZTK_Id_yqm6FRXtcw5Mi78btO85Pb0jy6C-4mL8xzA6nYNeQSo3J_6EIZ2zT7xXDl71Ih4I7TEeU8IEklArwTJYv_yML1cbuKE1Z8uiCeYlmpwek8afJp2HaCgYKATASARASFQEjDvL9hwhFJnv07Uz-ta8ihs6ETQ0163';
-//        $token = 'ya29.a0Aa4xrXOcgqUaNq1EvQOIVmD55AeJ3q2F3NVwqbP8M0uRwXtlH0QDTTT8ze7pjHA5DeeCKcHA9GlbFEH4iwB4B1DyuDOScVrGVWP4DaRO_Tt4tFwslpZPwn1QlSGeuh-oiDEIlJxAo9XOkPtqJfNKVvb4YExjaCgYKATASARESFQEjDvL9cDE9w4JaGAXDACXJvtCzcQ0163';
-        $token = '';
-        $refresh_token = '1//0ePcJwre0nFJECgYIARAAGA4SNwF-L9IrMMbKvA5DzpV2oYVpE55MxzZUH88V4xC8caSR7sIHCUJULIN1B1x_129ChCkSJp8FcG8';
-
-        if(!$token){
-           $reset_token = $client->refreshToken($refresh_token);
-           $token = $reset_token['access_token'];
+        $refresh_token = $dev->api_refresh_token;
+        if(isset($refresh_token) && $dev->api_expires_in_token < time()){
+            $client->fetchAccessTokenWithRefreshToken($refresh_token);
+            $accessToken = $client->getAccessToken();
+            $dev->api_token = $accessToken['access_token'];
+            $dev->api_expires_in_token = time()+ $accessToken['expires_in'] ;
+            $dev->save();
         }
-
-
-
+        $token = $dev->api_token;
         $optParams = array(
-//                "maxResults"=>10,
-//                "startIndex"=>0,
-//                "token"=> $token,
+            "maxResults"=>50,
+            "startIndex"=>0,
+            "token"=> $client->setAccessToken($token),
 //                "translationLanguage"=>"en"
         );
 
 
-            $url = "https://www.googleapis.com/androidpublisher/v3/applications/$package_name/reviews?access_token=$token";
-//        $response = $service->reviews->listReviews($package_name,$optParams);
-        $response = Http::get($url);
+        $package_name = "com.devpro.technology.imagevideorecovery";
+        $reviewID = '4cdb9156-e9b5-4a74-b54e-b10114b6b1e4';
 
-        dd($response->json());
-
-
-
-        $reviews = $response->getReviews();
-        foreach ($reviews as $review){
-            $comments   = $review->getComments();
-            foreach ($comments as $comment){
-                $userComment = $comment->getUserComment();
-                $developerComment = $comment->getDeveloperComment();
-                $text = $userComment->text;
-                $lang = $userComment->reviewerLanguage;
-
-                dd($text,$lang,$userComment,$developerComment,$comment,$comments,$reviews);
+        $dataArr = array(
+            'replyText' => 'Thanks for your feedback!'
+        );
+//        dd($reply);
+//
+//
+//
+        $endpoint = "https://www.googleapis.com/androidpublisher/v3/applications/$package_name/reviews/$reviewID:reply?access_token=$token";
 
 
-            }
-//            $text = $c
-            dd($comments);
+        $response = Http::withHeaders([
+            'Content-Type: application/json',
+        ])->post($endpoint, $dataArr);
 
-        }
-        dd($review);
-
-
-
-
+//        $response = $service->reviews->reply($package_name,$reviewID,$reply,$optParams);
+        dd($response);
     }
-
 }
