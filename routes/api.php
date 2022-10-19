@@ -43,7 +43,8 @@ Route::get('/get_admod_list', [ApiController::class, 'get_admod_list'])->name('a
 Route::get('/get-gclient', [ApiController::class, 'get_gclient'])->name('api.get_gclient');
 Route::get('/get-token/{id}', [ApiController::class, 'get_token'])->name('api.get_token');
 Route::get('/get-token-callback', [ApiController::class, 'get_get_token_callback'])->name('api.get_get_token_callback');
-Route::get('/getReview', [ApiController::class, 'getReview'])->name('api.getReview');
+Route::get('/getReview/{id}', [ApiController::class, 'getReview'])->name('api.getReview');
+Route::get('/postReview/{id}', [ApiController::class, 'postReview'])->name('api.postReview');
 
 
 

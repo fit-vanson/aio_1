@@ -61,6 +61,9 @@
                                     @endif
                                         <li><a href="{{route('project.upload')}}">Upload</a></li>
 
+                                        @can('project-index')
+                                            <li><a href="{{route('review.index')}}">Review Chplay</a></li>
+                                        @endcan
 
                                 </ul>
 

@@ -24,6 +24,7 @@ use App\Http\Controllers\DevVivoController;
 use App\Http\Controllers\DevXiaomiController;
 use App\Http\Controllers\Ga_devController;
 use App\Http\Controllers\GaController;
+use App\Http\Controllers\GoogleReviewController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\HubController;
 use App\Http\Controllers\ImeiController;
@@ -714,6 +715,14 @@ Route::group(['prefix'=>'design','middleware'=>['CheckLogout','2fa']], function 
     Route::post('/create',[DesignController::class,'create'])->name('design.create')->middleware('can:project-add');
     Route::get('/edit/{id}',[DesignController::class,'edit'])->name('design.edit')->middleware('can:project-edit');
     Route::post('/update',[DesignController::class,'update'])->name('design.update')->middleware('can:project-update');
+});
+
+Route::group(['prefix'=>'review','middleware'=>['CheckLogout','2fa']], function (){
+    Route::get('/',[GoogleReviewController::class,'index'])->name('review.index')->middleware('can:project-index');
+    Route::post('/getIndex', [GoogleReviewController::class, "getIndex"])->name('review.getIndex');
+    Route::post('/create',[GoogleReviewController::class,'create'])->name('review.create')->middleware('can:project-add');
+    Route::get('/edit/{id}',[GoogleReviewController::class,'edit'])->name('review.edit')->middleware('can:project-edit');
+    Route::post('/update',[GoogleReviewController::class,'update'])->name('review.update')->middleware('can:project-update');
 });
 
 

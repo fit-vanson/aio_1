@@ -32,5 +32,13 @@ class Dev extends Model
         return $this->belongsTo(Ga_dev::class,'mail_id_2');
     }
 
+    public function projects(){
+        return $this->belongsToMany(Project::class,MarketProject::class,'dev_id','project_id');
+    }
+
+    public function projects_market(){
+        return $this->hasMany(MarketProject::class,'dev_id');
+    }
+
 }
 
