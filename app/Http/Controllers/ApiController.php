@@ -194,10 +194,9 @@ class ApiController extends Controller
             $accessToken = $g_client->fetchAccessTokenWithAuthCode($code);
         }
         if (isset($accessToken)){
-            dd($accessToken);
             $dev->api_token = $accessToken['access_token'];
             $dev->api_expires_in_token = time()+ $accessToken['expires_in'] ;
-            $dev->api_refresh_token = $accessToken['refresh_token'] ;
+            $dev->api_refresh_token = @$accessToken['refresh_token'] ;
             $dev->save();
             return "<script>window.close();</script>";
         }
