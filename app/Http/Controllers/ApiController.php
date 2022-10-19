@@ -268,7 +268,8 @@ class ApiController extends Controller
             $client->setRedirectUri($redirect_uri);
             $client->addScope(Google_Service_AndroidPublisher::ANDROIDPUBLISHER);
             $client->setAccessType('offline');
-//            $client->setIncludeGrantedScopes(true);
+            $client->setApprovalPrompt("force");
+            $client->setIncludeGrantedScopes(true);
             return $client;
 
         }
@@ -287,7 +288,10 @@ class ApiController extends Controller
             $dev->api_token = $accessToken['access_token'];
             $dev->api_expires_in_token = time()+ $accessToken['expires_in'] ;
             $dev->save();
+        }else{
+            $this->get_token($dev->id);
         }
+
         $token = $dev->api_token;
         $optParams = array(
             "maxResults"=>50,
