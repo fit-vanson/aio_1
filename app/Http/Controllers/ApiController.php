@@ -288,8 +288,6 @@ class ApiController extends Controller
             $dev->api_token = $accessToken['access_token'];
             $dev->api_expires_in_token = time()+ $accessToken['expires_in'] ;
             $dev->save();
-        }else{
-            $this->get_token($dev->id);
         }
 
         $token = $dev->api_token;
