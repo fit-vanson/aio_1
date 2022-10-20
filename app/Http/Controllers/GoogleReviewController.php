@@ -37,7 +37,7 @@ class GoogleReviewController extends Controller
         $totalRecordswithFilter = GoogleReview::select('count(*) as allcount')->count();
 
         // Get records, also we have included search filter as well
-        $records = GoogleReview::with('project.da')
+        $records = GoogleReview::with('project_market','project.da')
             ->orderBy($columnName, $columnSortOrder)
             ->skip($start)
             ->take($rowperpage)
@@ -45,10 +45,20 @@ class GoogleReviewController extends Controller
         $data_arr = array();
         foreach ($records as $record) {
 
-            $logo = '<img class="rounded mx-auto d-block"  width="100px"  height="100px"  src="'.url('storage/projects/'.$record->project->da->ma_da.'/'.$record->project->projectname.'/lg114.png').'">';
+            $html = '<span>
+                        <p><b>Title app: </b>'.$record->project->title_app.'</p>
+                        <p><b>Package: </b>'.$record->package.'</p>
+                        <p><b>Rating: </b>'.$record->project_market->bot_score.'</p>
+                        <p><b>Download: </b>'.$record->project_market->bot_installs.'</p>
+                        <p><b>Number Review: </b>'.$record->project_market->bot_numberReviews.'</p>
+                        <p><b>Version: </b>'.$record->project_market->bot_appVersion.'</p>
+                     </span>';
 
 
 
+
+
+            $logo = '<a href="'.$record->project_market->app_link.'" target="_blank"> <img class="rounded mx-auto d-block" data-toggle="popover" data-placement="right" title="<h5>'.$record->project->projectname.'</h5>"  data-content="'.$html.'"  width="100px"  height="100px" src="'.url('storage/projects/'.$record->project->da->ma_da.'/'.$record->project->projectname.'/lg114.png').'"></a>';
             $data_arr[] = array(
                 "id" => $record->id,
                 "project_id" => $logo,

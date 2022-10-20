@@ -9,6 +9,15 @@
     <link href="{{ URL::asset('plugins/datatables/responsive.bootstrap4.min.css') }}" rel="stylesheet" type="text/css" />
     <!-- x-editable -->
     <link href="{{ URL::asset('plugins/x-editable/css/bootstrap-editable.css') }}" rel="stylesheet" type="text/css" />
+
+
+    <style>
+        .popover{
+            width: 100%;
+
+        }
+    </style>
+
 @endsection
 
 
@@ -58,15 +67,21 @@
 {{--    <script src="{{ URL::asset('assets/pages/table-editable.int.js') }}"></script>--}}
 
 
+
+
+
     <script type="text/javascript">
         $(function () {
+
+            $('[data-toggle="popover"]').popover({
+                html: true
+            })
+
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-
-            var groupColumn = 0;
             var reviewTable = $('#reviewTable').dataTable({
                 processing: true,
                 serverSide: true,
@@ -86,8 +101,21 @@
                     {data: 'lastModifiedDeveloper'},
                 ],
 
+                fnRowCallback: function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+
+                    if (aData.status == 1) {
+                        $('td', nRow).css('background-color', 'rgb(240 184 190)');
+                    }
+                },
                 drawCallback: function (settings) {
                     $.fn.editable.defaults.mode = 'inline';
+                    $('[data-toggle="popover"]').popover({
+                        html: true,
+                        trigger: "hover",
+                        container: 'body'
+
+
+                    });
                     $('.editable').editable({
                         success:function(data,newValue){
                             var _id = $(this).data('pk')
@@ -96,7 +124,7 @@
                                 responseTime: 400,
                                 success: function (result) {
                                     if(result.success){
-                                        $.notify(data.success, "success");
+                                        $.notify(result.success, "success");
                                     }
                                     if(result.error){
                                         $.notify(result.error['message'], "error");
@@ -105,30 +133,12 @@
                             });
                         } ,
                     });
-
-
-
-
                 },
-
-
-
             });
 
         })
 
 
-
-
-
-        // function get_editable() {
-        //     $.fn.editable.defaults.mode = 'inline';
-        //     $('.editable').editable({
-        //         success:function(data){
-        //             console.log(data);
-        //         } ,
-        //     });
-        // }
     </script>
 
 
