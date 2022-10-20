@@ -19,45 +19,22 @@
                 <div class="card-body">
 
                     <div class="table-responsive">
-                        <table id="reviewForm" class="table">
+                        <table id="reviewForm" class="table table-striped table-bordered dt-responsive data-table"
+                               style="width: 100%;">
                             <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Age (AutoFill)</th>
-                                <th>Qty (AutoFill and Editable)</th>
-                                <th>Cost (Editable)</th>
+                                <th>User Comment</th>
+                                <th>Language</th>
+                                <th>Down Count</th>
+                                <th>Up Count</th>
+                                <th>Star Rating</th>
+                                <th>Last Modifie dUser</th>
+                                <th>Developer Comment</th>
+                                <th>Last Modified Developer</th>
                             </tr>
                             </thead>
-                            <tr>
-                                <td>1</td>
-                                <td data-original-value="11">11</td>
-                                <td data-original-value="1"><a href="#" data-type="text" data-pk="1" class="editable" data-url="" data-title="Edit Quantity">1</a></td>
-                                <td data-original-value="1.99">12</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td data-original-value="22">22</td>
-                                <td data-original-value="2"><a href="#" data-type="text" data-pk="2" class="editable" data-url="" data-title="Edit Quantity">2</a></td>
-                                <td data-original-value="2.99"><a href="#" data-type="text" data-pk="1" class="" data-url="" data-title="Edit Quantity">2.99</a></td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td data-original-value="33">33</td>
-                                <td data-original-value="3"><a href="#" data-type="text" data-pk="3" class="editable" data-url="" data-title="Edit Quantity">3</a></td>
-                                <td data-original-value="3.99"><a href="#" data-type="text" data-pk="1" class="editable" data-url="" data-title="Edit Quantity">3.99</a></td>
-                            </tr>
-                            <tr>
-                                <td>4</td>
-                                <td data-original-value="44">44</td>
-                                <td data-original-value="4"><a href="#" data-type="text" data-pk="4" class="editable" data-url="" data-title="Edit Quantity">4</a></td>
-                                <td data-original-value="4.99"><a href="#" data-type="text" data-pk="1" class="editable" data-url="" data-title="Edit Quantity">4.99</a></td>
-                            </tr>
-                            <tr>
-                                <td>5</td>
-                                <td data-original-value="55">55</td>
-                                <td data-original-value="5"><a href="#" data-type="text" data-pk="5" class="editable" data-url="" data-title="Edit Quantity">5</a></td>
-                                <td data-original-value="5.99"><a href="#" data-type="text" data-pk="1" class="editable" data-url="" data-title="Edit Quantity">5.99</a></td>
-                            </tr>
+
                         </table>
                     </div>
 
@@ -82,16 +59,53 @@
 
     <script type="text/javascript">
         $(function () {
-
-            var datatable = $('#reviewForm').dataTable({
-                "columns": [
-                    { "name": "id" },
-                    { "name": "age" },
-                    { "name": "qty" },
-                    { "name": "cost" },
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            var groupColumn = 0;
+            var reviewForm = $('#reviewForm').dataTable({
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: "{{ route('review.getIndex') }}",
+                    type: "post"
+                },
+                columns: [
+                    {data: 'project_id'},
+                    {data: 'userComment'},
+                    {data: 'reviewerLanguage'},
+                    {data: 'thumbsDownCount'},
+                    {data: 'thumbsUpCount'},
+                    {data: 'starRating'},
+                    {data: 'lastModifiedUser'},
+                    {data: 'developerComment'},
+                    {data: 'lastModifiedDeveloper'},
                 ],
+                rowGroup: {
+                    dataSrc: 1
+                },
+                columnDefs: [{ visible: false, targets: groupColumn }],
+                drawCallback: function (settings) {
+                    var api = this.api();
+                    var rows = api.rows({ page: 'current' }).nodes();
+                    var last = null;
+                    api
+                        .column(groupColumn, { page: 'current' })
+                        .data()
+                        .each(function (group, i) {
+                            if (last !== group) {
+                                $(rows)
+                                    .eq(i)
+                                    .before('<tr class="group"><td colspan="9">' + group + '</td></tr>');
 
-                "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                                last = group;
+                            }
+                        });
+                },
+
+                fnRowCallback: function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                     var setCell = function(response, newValue) {
                         var table = new $.fn.dataTable.Api('.table');
                         var cell = table.cell('td.focus');
@@ -125,8 +139,18 @@
                 // "autoFill" : {
                 //     "columns" : [1]
                 // },
-                "keys" : true
+                // "keys" : true
             });
+
+            $('#reviewForm tbody').on( 'click', 'tr.group', function () {
+                var currentOrder = reviewForm.order()[0];
+                if ( currentOrder[0] === groupColumn && currentOrder[1] === 'asc' ) {
+                    reviewForm.order( [ groupColumn, 'desc' ] ).draw();
+                }
+                else {
+                    reviewForm.order( [ groupColumn, 'asc' ] ).draw();
+                }
+            } );
 
             addCellChangeHandler();
             addAutoFillHandler();
