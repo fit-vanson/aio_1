@@ -45,6 +45,11 @@ class GoogleReviewController extends Controller
         $data_arr = array();
         foreach ($records as $record) {
 
+            $mess = null;
+            if($record->message){
+                $mess = json_decode($record->message,true)['error']['message'];
+            }
+
             $html = '<span>
                         <p><b>Title app: </b>'.$record->project->title_app.'</p>
                         <p><b>Package: </b>'.$record->package.'</p>
@@ -52,6 +57,7 @@ class GoogleReviewController extends Controller
                         <p><b>Download: </b>'.$record->project_market->bot_installs.'</p>
                         <p><b>Number Review: </b>'.$record->project_market->bot_numberReviews.'</p>
                         <p><b>Version: </b>'.$record->project_market->bot_appVersion.'</p>
+                        <p><b>Message: </b>'.$mess.'</p>
                      </span>';
 
 

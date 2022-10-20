@@ -13,7 +13,7 @@
 
     <style>
         .popover{
-            width: 100%;
+            min-width: 50em !important;
 
         }
     </style>
@@ -113,8 +113,6 @@
                         html: true,
                         trigger: "hover",
                         container: 'body'
-
-
                     });
                     $('.editable').editable({
                         success:function(data,newValue){
