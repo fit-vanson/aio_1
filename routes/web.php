@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApiController;
 use App\Http\Controllers\Apk_ProcessController;
 use App\Http\Controllers\BotController;
 use App\Http\Controllers\BuildPreviewController;
@@ -722,6 +723,7 @@ Route::group(['prefix'=>'review','middleware'=>['CheckLogout','2fa']], function 
     Route::post('/getIndex', [GoogleReviewController::class, "getIndex"])->name('review.getIndex');
     Route::post('/create',[GoogleReviewController::class,'create'])->name('review.create')->middleware('can:project-add');
     Route::get('/edit/{id}',[GoogleReviewController::class,'edit'])->name('review.edit')->middleware('can:project-edit');
+    Route::get('/get_postReview',[ApiController::class,'get_postReview'])->name('review.get_postReview')->middleware('can:project-edit');
     Route::post('/update',[GoogleReviewController::class,'update'])->name('review.update')->middleware('can:project-update');
 });
 

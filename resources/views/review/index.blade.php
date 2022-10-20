@@ -19,23 +19,24 @@
                 <div class="card-body">
 
                     <div class="table-responsive">
-                        <table id="reviewForm" class="table table-striped table-bordered dt-responsive data-table"
-                               style="width: 100%;">
+                        <table id="reviewTable" class="table table-editable table-striped table-bordered dt-responsive data-table" style="width: 100%">
                             <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>User Comment</th>
-                                <th>Language</th>
-                                <th>Down Count</th>
-                                <th>Up Count</th>
-                                <th>Star Rating</th>
-                                <th>Last Modifie dUser</th>
-                                <th>Developer Comment</th>
-                                <th>Last Modified Developer</th>
+                                <th style="width: 10%">Project ID</th>
+                                <th style="width: 25%">User Comment</th>
+                                <th style="width: 5%">Language</th>
+                                <th style="width: 5%">Down Count</th>
+                                <th style="width: 5%">Up Count</th>
+                                <th style="width: 5%">Star Rating</th>
+                                <th style="width: 10%">Last Modifie dUser</th>
+                                <th style="width: 25%">Developer Comment</th>
+                                <th style="width: 10%">Last Modified Developer</th>
                             </tr>
                             </thead>
-
                         </table>
+
+
+
                     </div>
 
                 </div>
@@ -64,8 +65,9 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
+
             var groupColumn = 0;
-            var reviewForm = $('#reviewForm').dataTable({
+            var reviewTable = $('#reviewTable').dataTable({
                 processing: true,
                 serverSide: true,
                 ajax: {
@@ -83,115 +85,53 @@
                     {data: 'developerComment'},
                     {data: 'lastModifiedDeveloper'},
                 ],
-                rowGroup: {
-                    dataSrc: 1
-                },
-                columnDefs: [{ visible: false, targets: groupColumn }],
+
                 drawCallback: function (settings) {
-                    var api = this.api();
-                    var rows = api.rows({ page: 'current' }).nodes();
-                    var last = null;
-                    api
-                        .column(groupColumn, { page: 'current' })
-                        .data()
-                        .each(function (group, i) {
-                            if (last !== group) {
-                                $(rows)
-                                    .eq(i)
-                                    .before('<tr class="group"><td colspan="9">' + group + '</td></tr>');
+                    $.fn.editable.defaults.mode = 'inline';
+                    $('.editable').editable({
+                        success:function(data,newValue){
+                            var _id = $(this).data('pk')
+                            $.ajax({
+                                url: "{{ asset("review/get_postReview") }}?id=" + _id+'&replyText='+newValue,
+                                responseTime: 400,
+                                success: function (result) {
+                                    if(result.success){
+                                        $.notify(data.success, "success");
+                                    }
+                                    if(result.error){
+                                        $.notify(result.error['message'], "error");
+                                    }
+                                }
+                            });
+                        } ,
+                    });
 
-                                last = group;
-                            }
-                        });
+
+
+
                 },
 
-                fnRowCallback: function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-                    var setCell = function(response, newValue) {
-                        var table = new $.fn.dataTable.Api('.table');
-                        var cell = table.cell('td.focus');
-                        var cellData = cell.data();
-
-                        var div = document.createElement('div');
-                        div.innerHTML = cellData;
-                        var a = div.childNodes;
-                        a.innerHTML = newValue;
 
 
-                        cell.data(div.innerHTML);
-
-                        console.log('jml a new ' + div.innerHTML);
-                        console.log(a.innerHTML);
-                        highlightCell($(cell.node()));
-
-                        // This is huge cheese, but the a has lost it's editable nature.  Do it again.
-                        $('td.focus a').editable({
-                            'mode': 'inline',
-                            'success' : setCell
-                        });
-                    };
-                    $('.editable').editable(
-                        {
-                            'mode': 'inline',
-                            'success' : setCell
-                        }
-                    );
-                },
-                // "autoFill" : {
-                //     "columns" : [1]
-                // },
-                // "keys" : true
             });
 
-            $('#reviewForm tbody').on( 'click', 'tr.group', function () {
-                var currentOrder = reviewForm.order()[0];
-                if ( currentOrder[0] === groupColumn && currentOrder[1] === 'asc' ) {
-                    reviewForm.order( [ groupColumn, 'desc' ] ).draw();
-                }
-                else {
-                    reviewForm.order( [ groupColumn, 'asc' ] ).draw();
-                }
-            } );
-
-            addCellChangeHandler();
-            addAutoFillHandler();
-
-            function highlightCell($cell) {
-                var originalValue = $cell.attr('data-original-value');
-                if (!originalValue) {
-                    return;
-                }
-                var actualValue = $cell.text();
-                if (!isNaN(originalValue)) {
-                    originalValue = parseFloat(originalValue);
-                }
-                if (!isNaN(actualValue)) {
-                    actualValue = parseFloat(actualValue);
-                }
-                if ( originalValue === actualValue ) {
-                    $cell.removeClass('cat-cell-modified').addClass('cat-cell-original');
-                } else {
-                    $cell.removeClass('cat-cell-original').addClass('cat-cell-modified');
-                }
-            }
-
-            function addCellChangeHandler() {
-                $('a[data-pk]').on('hidden', function (e, editable) {
-                    var $a = $(this);
-                    var $cell = $a.parent('td');
-                    highlightCell($cell);
-                });
-            }
-
-            function addAutoFillHandler() {
-                var table = $('.table').DataTable();
-                table.on('autoFill', function (e, datatable, cells) {
-                    var datatableCellApis = $.each(cells, function(index, row) {
-                        var datatableCellApi = row[0].cell;
-                        var $jQueryObject = $(datatableCellApi.node());
-                        highlightCell($jQueryObject);
-                    });
-                });
-            }
         })
+
+
+
+
+
+        // function get_editable() {
+        //     $.fn.editable.defaults.mode = 'inline';
+        //     $('.editable').editable({
+        //         success:function(data){
+        //             console.log(data);
+        //         } ,
+        //     });
+        // }
     </script>
+
+
+
+
 @endsection

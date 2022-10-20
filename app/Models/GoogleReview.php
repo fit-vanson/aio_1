@@ -13,4 +13,8 @@ class GoogleReview extends Model
     public function project(){
         return $this->belongsTo(Project::class,'project_id');
     }
+
+    public function project_market(){
+        return $this->belongsTo(MarketProject::class,'project_market_id');
+    }
 }

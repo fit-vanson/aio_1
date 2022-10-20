@@ -399,4 +399,51 @@ class ApiController extends Controller
 //        $response = $service->reviews->reply($package_name,$reviewID,$reply,$optParams);
         dd($response);
     }
+
+
+
+    public function get_postReview(Request $request){
+
+
+        $review = GoogleReview::find($request->id);
+
+        $reviewID = $review->reviewId;
+        $package = $review->package;
+        $dev = $review->project_market->dev;
+
+        $client = $this->get_gclient($request,$dev);
+
+        $service = new Google_Service_AndroidPublisher($client);
+        $refresh_token = $dev->api_refresh_token;
+        if(isset($refresh_token) && $dev->api_expires_in_token < time()){
+            $client->fetchAccessTokenWithRefreshToken($refresh_token);
+            $accessToken = $client->getAccessToken();
+            $dev->api_token = $accessToken['access_token'];
+            $dev->api_expires_in_token = time()+ $accessToken['expires_in'] ;
+            $dev->save();
+        }
+        $token = $dev->api_token;
+
+        $dataArr = array(
+            'replyText' => $request->replyText
+        );
+        $url = "https://www.googleapis.com/androidpublisher/v3/applications/$package/reviews/$reviewID:reply?access_token=$token";
+        $response = Http::withHeaders([
+            'Content-Type: application/json',
+        ])->post($url, $dataArr);
+
+        $review->developerComment = $request->replyText;
+        $review->lastModifiedDeveloper = time();
+
+        if ($response->successful()){
+            $review->status = 0;
+            $review->save();
+            return response()->json(['success'=>'Thành công']);
+        }else if($response->failed()){
+            $review->status = 1;
+            $review->message = $response->json();
+            $review->save();
+            return response()->json($response->json());
+        }
+    }
 }

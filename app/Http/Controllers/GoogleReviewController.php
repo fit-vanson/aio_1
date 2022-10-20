@@ -45,23 +45,9 @@ class GoogleReviewController extends Controller
         $data_arr = array();
         foreach ($records as $record) {
 
-
-//            $btn = ' <a href="javascript:void(0)" onclick="editDev('.$record->id.')" class="btn btn-warning"><i class="ti-pencil-alt"></i></a>';
-//            $btn = $btn.' <a href="javascript:void(0)"data-id="'.$record->id.'"  class="btn btn-danger deleteDev"><i class="ti-trash"></i></a>';
-//            if($record->market_id == 1){
-//                $btn = $btn.' <a  href="/api/get-token/'.$record->id.'" target="_blank" class="btn btn-info"><i class="mdi mdi-key"></i></a>';
-//            }
-
-
             $logo = '<img class="rounded mx-auto d-block"  width="100px"  height="100px"  src="'.url('storage/projects/'.$record->project->da->ma_da.'/'.$record->project->projectname.'/lg114.png').'">';
 
-            $logo = '<div class="media m-b-30">
-                        <img class="d-flex align-self-start rounded mr-3" src="'.url('storage/projects/'.$record->project->da->ma_da.'/'.$record->project->projectname.'/lg114.png').'" alt="'.$record->project->projectname.'" height="64">
-                        <div class="media-body">
-                            <h5 class="mt-0 font-16">'.$record->project->projectname.'</h5>
-                            <p>'.$record->package.'</p>
-                        </div>
-                    </div>';
+
 
             $data_arr[] = array(
                 "id" => $record->id,
@@ -72,8 +58,10 @@ class GoogleReviewController extends Controller
                 "thumbsDownCount" => $record->thumbsDownCount,
                 "thumbsUpCount" => $record->thumbsUpCount,
                 "starRating" => $record->starRating,
+                "status" => $record->status,
+                "message" => $record->message,
                 "lastModifiedUser" => date('d-m-Y H:i:s',$record->lastModifiedUser),
-                "developerComment" => $record->developerComment,
+                "developerComment" => '<a href="#" data-pk="'.$record->id.'" class="editable" data-url="">'.$record->developerComment.'</a>',
                 "lastModifiedDeveloper" => date('d-m-Y H:i:s',$record->lastModifiedDeveloper),
             );
 
