@@ -189,12 +189,18 @@ class TemplateController extends Controller
                     break;
             }
 
+            if($record->template_preview > 6 ){
+                $preview = 6;
+            }else{
+                $preview = $record->template_preview;
+            }
+
 
 
             $template_preview = '<div class="light_gallery img-list" id="light_gallery">';
-            for ($i=1; $i<=$record->template_preview; $i++ ){
+            for ($i=1; $i<=$preview; $i++ ){
                 $template_preview .= '<a class="img_class" style="margin:5px" href="/storage/template/'.$record->template.'/'.$i.'.jpg" title="preview '.$i.'">
-                                        <img src="/storage/template/'.$record->template.'/'.$i.'.jpg" alt="preview '.$i.'" height="80">
+                                        <img src="/storage/template/'.$record->template.'/'.$i.'.jpg" alt="preview '.$i.'" height="150">
                                     </a>';
             }
 
