@@ -34,7 +34,7 @@
                                 <a href="javascript:void(0);" class="waves-effect"><i class="ti-image"></i> <span> Template<span class="float-right menu-arrow"><i class="mdi mdi-chevron-right"></i></span> </span> </a>
                                 <ul class="submenu">
                                     @can('template-index')
-                                        <li><a href="{{route('template.index')}}">Template Project</a></li>
+                                        <li><a href="{{route('template.index')}}">Template Project (APK)</a></li>
                                     @endcan
                                     @can('template-preview-index')
                                         <li><a href="{{route('template-preview.index')}}">Template Frame Preview</a></li>

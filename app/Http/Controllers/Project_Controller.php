@@ -161,9 +161,9 @@ class Project_Controller extends Controller
                     $ads = json_decode($market->pivot->ads,true);
 
                     if(count(array_filter($ads)) != 0){
-                        $ads_status = ' <span class="badge badge-success" style="font-size: 12px">ADS</span>';
+                        $ads_status = ' <span class="badge badge-success" style="font-size: 11px">ads</span>';
                     }else{
-                        $ads_status = ' <span class="badge badge-danger" style="font-size: 12px">ADS</span>';
+                        $ads_status = ' ';
                     }
 
 
@@ -218,7 +218,7 @@ class Project_Controller extends Controller
             $data_arr[] = array(
                 "projectid" => $record->projectid,
                 "logo" => $logo,
-                "projectname"=>$project.$template.$mada.'<br>'.$record->title_app.'<br>'.$version.'<br>'.$sdk.'<br>'.$keystore.'<br>'.$status_check.' <br>'.$status_design,
+                "projectname"=>$project.$template.$mada.'<br>'.$record->title_app.'<br>'.$version.'<br>'.$sdk.'<br>'.$keystore.'<br>'.$status_check.' - '.$status_design,
                 "markets"=>$package,
                 "status"=>@$result,
                 "action"=> $btn,
