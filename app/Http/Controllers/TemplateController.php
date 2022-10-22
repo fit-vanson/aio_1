@@ -73,19 +73,9 @@ class TemplateController extends Controller
 
         $data_arr = array();
         foreach ($records as $record) {
-//            dd($record);
-
-
-//            $btn = ' <a href="javascript:void(0)" onclick="editTemplate('.$record->id.')" class="btn btn-warning"><i class="ti-pencil-alt"></i></a>';
             $btn =      ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-warning editTemplate"><i class="ti-pencil-alt"></i></a>';
-//            $btn =      ' <button class="btn btn-primary editTemplate" type="button" id="editTemplate'.'" data-id="'.$record->id.'"><span>Create</span></button>';
             $btn = $btn.' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-info checkDataTemplate"><i class="ti-file"></i></a>';
             $btn = $btn.' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-danger deleteTemplate"><i class="ti-trash"></i></a>';
-
-
-            $template = '<p style="margin: 0"><b>'.$record->template_name.'</b></p>
-                            <a href="/project?q=template&id='.$record->id.'"> <span>'.$record->template.' - ('.count($record->project).')</span></a>
-                            <p class="text-muted" style="margin: 0">'.$record->ver_build.'</p>';
 
 
             if($record['script_copy'] !== Null){
@@ -111,13 +101,6 @@ class TemplateController extends Controller
             $script = $script_copy . $script_img. $script_svg2xml .$script_file;
 
             $ads = json_decode($record->ads,true);
-
-            $value_ads = '<br>';
-
-
-
-
-
             $ads_admod = $this->array_slice_assoc($ads, ['ads_id', 'ads_banner','ads_inter','ads_reward','ads_native','ads_open']);
             $ads_start = $this->array_slice_assoc($ads, ['ads_start']);
             $ads_huawei = $this->array_slice_assoc($ads, ['ads_banner_huawei', 'ads_inter_huawei','ads_reward_huawei','ads_native_huawei','ads_splash_huawei','ads_roll_huawei']);
