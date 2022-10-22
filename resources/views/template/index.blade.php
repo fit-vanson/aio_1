@@ -9,6 +9,13 @@
     <link href="{{ URL::asset('assets/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css"/>
 
 
+    <link href="{{ URL::asset('assets/libs/magnific-popup/magnific-popup.min.css') }}" rel="stylesheet" type="text/css" />
+
+
+    <link href="{{ URL::asset('assets/libs/lightgallery/css/lightgallery.css') }}" rel="stylesheet" type="text/css" />
+
+
+
     <link href="{{ URL::asset('/assets/libs/dropzone/dropzone.min.css') }}" rel="stylesheet" type="text/css" />
 
     <style>
@@ -67,6 +74,9 @@
 <script src="{{ URL::asset('/assets/js/table.init.js') }}"></script>
 <script src="{{ URL::asset('/assets/js/customs.js') }}"></script>
 
+<script src="{{ URL::asset('/assets/libs/magnific-popup/magnific-popup.min.js') }}"></script>
+<script src="{{ URL::asset('/assets/libs/lightgallery/js/lightgallery-all.js') }}"></script>
+
 
 <!-- Dropzone js -->
 <script src="{{ URL::asset('/assets/libs/dropzone/dropzone.min.js') }}"></script>
@@ -98,7 +108,7 @@
             },
             columns: [
                 {data: 'id', visible: false},
-                {data: 'template_logo'},
+                {data: 'template_logo',className: "text-center"},
                 {data: 'template'},
                 {data: 'category'},
                 {data: 'script'},
@@ -108,7 +118,10 @@
             "columnDefs": [
                 {"orderable": false, "targets": [0, 3]}
             ],
-            order: [0, 'desc']
+            order: [0, 'desc'],
+            drawCallback: function (settings) {
+                $('.light_gallery').lightGallery({});
+            },
 
         });
 

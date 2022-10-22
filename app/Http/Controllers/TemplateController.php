@@ -121,52 +121,6 @@ class TemplateController extends Controller
                 }
             }
 
-
-
-//            if(isset($ads['ads_id'])){
-//                $ads_id = "<span style='color:green;'> Id</span> - ";
-//            }else{
-//                $ads_id = "<span style='color:red;'> Id</span> - ";
-//            }
-//
-//            if(isset($ads['ads_banner'])){
-//                $ads_banner = "<span style='color:green;'> Banner</span> - ";
-//            }else{
-//                $ads_banner = "<span style='color:red;'> Banner</span> - ";
-//            }
-//
-//            if(isset($ads['ads_inter'])){
-//                $ads_inter = "<span style='color:green;'> Inter</span> - ";
-//            }else{
-//                $ads_inter = "<span style='color:red;'> Inter</span> - ";
-//            }
-//
-//            if(isset($ads['ads_reward'])){
-//                $ads_reward = "<span style='color:green;'> Reward</span> - ";
-//            }else{
-//                $ads_reward = "<span style='color:red;'> Reward</span> - ";
-//            }
-//
-//            if(isset($ads['ads_native'])){
-//                $ads_native = "<span style='color:green;'> Native</span> - ";
-//            }else{
-//                $ads_native = "<span style='color:red;'> Native</span> - ";
-//            }
-//
-//            if(isset($ads['ads_open'])){
-//                $ads_open = "<span style='color:green;'> Open</span> - ";
-//            }else{
-//                $ads_open = "<span style='color:red;'> Open</span> - ";
-//            }
-//
-//            if(isset($ads['ads_start'])){
-//                $ads_start = "<span style='color:green;'> Start</span>";
-//            }else{
-//                $ads_start = "<span style='color:red;'> Start</span>";
-//            }
-//            $ads ='<br>'.$ads_id.$ads_banner.$ads_inter.$ads_reward.$ads_native.$ads_open.$ads_start;
-
-
             if($record->convert_aab != 0){
                 $convert_aab = '<br>'. "<span style='color:green;'> Aab</span>";
             }else{
@@ -202,22 +156,23 @@ class TemplateController extends Controller
             foreach ($record->markets as $category){
                 $categories .= '<p class="card-title-desc font-16"><img src="img/icon/'.$category->market_logo.'"> '.$category->pivot->value.'</p>';
             }
-            if ($record->link_chplay !== null){
-                $link= "<a  target= _blank href='$record->link_chplay'>Link</a>";
+
+
+            if(isset($record->template_logo)){
+                $logo = "<p><img class='rounded mx-auto d-block'  width='100px'  height='100px'  src='../storage/template/$record->template/$record->template_logo'></p>";
+
+            }else{
+                $logo = '<p><img class="rounded mx-auto d-block" width="100px" height="100px" src="assets\images\logo-sm.png"></p>';
+            }
+            $template_apk   = $record->template_apk ?  ' <a href="/storage/template/'.$record->template.'/'.$record->template_apk.'" class="badge badge-success" style="font-size: 12px">APK</a> ' : ' <span  class="badge badge-danger" style="font-size: 12px">APK</span> ';
+            $template_data  = $record->template_data ? ' <a href="/storage/template/'.$record->template.'/'.$record->template_data.'" class="badge badge-success" style="font-size: 12px">Data</a> ' : ' <span  class="badge badge-danger" style="font-size: 12px">Data</span> ';
+
+            if ($record->link !== null){
+                $link= ' <a  target= _blank href="'.$record->link.'"><span  class="badge badge-success" style="font-size: 12px">Link</span></a> ';
             }
             else{
                 $link = null;
             }
-
-            if(isset($record->template_logo)){
-                $logo = "<img class='rounded mx-auto d-block'  width='100px'  height='100px'  src='../storage/template/$record->template/$record->template_logo'>";
-
-            }else{
-                $logo = '<img class="rounded mx-auto d-block" width="100px" height="100px" src="assets\images\logo-sm.png">';
-            }
-            $template_apk   = $record->template_apk ?  '<a href="/storage/template/'.$record->template.'/'.$record->template_apk.'" class="badge badge-success" style="font-size: 12px">APK</a>' : '<span  class="badge badge-danger" style="font-size: 12px">APK</span>';
-            $template_data  = $record->template_data ? '<a href="/storage/template/'.$record->template.'/'.$record->template_data.'" class="badge badge-success" style="font-size: 12px">Data</a>' : '<span  class="badge badge-danger" style="font-size: 12px">Data</span>';
-
             $type = $record->template_type;
             switch ($type){
                 case 0:
@@ -236,13 +191,22 @@ class TemplateController extends Controller
 
 
 
+            $template_preview = '<div class="light_gallery img-list" id="light_gallery">';
+            for ($i=1; $i<=$record->template_preview; $i++ ){
+                $template_preview .= '<a class="img_class" style="margin:5px" href="/storage/template/'.$record->template.'/'.$i.'.jpg" title="preview '.$i.'">
+                                        <img src="/storage/template/'.$record->template.'/'.$i.'.jpg" alt="preview '.$i.'" height="80">
+                                    </a>';
+            }
+
+            $template_preview .='</div>';
+
             $data_arr[] = array(
                 "id" => $record->id,
-                "template_logo" => $logo,
-                "template" => $template. '<br>'.$link.$template_apk.'  ' .$template_data ,
+                "template_logo" => '<p class="h3 font-16"> '.$record->ver_build.' </p>'.$logo.$link .$template_apk.$template_data,
+                "template" => '<span class="h3 font-16"> '.$record->template_name.' </span>'.'<p class="text-muted">'.$record->package.'</p>' .$template_preview,
                 "category"=>$categories,
 //                "category"=>$Chplay_category.'<br>'.$Amazon_category.'<br>'.$Samsung_category.'<br>'.$Xiaomi_category.'<br>'.$Oppo_category.'<br>'.$Vivo_category.'<br>'.$Huawei_category,
-                "script" => '<div class="text-wrap width-400">'.$script.$value_ads.$convert_aab.$status.'<br>Package: '.$record->package.'</div>',
+                "script" => '<div class="text-wrap width-400">'.$script.$value_ads.$convert_aab.$status.'</div>',
                 "time_create"=> $time_create,
                 "time_update"=> $time_update,
                 "time_get"=> $time_get,
