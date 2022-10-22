@@ -23,17 +23,38 @@
                                     @can('project-index')
                                     <li><a href="{{route('project.index')}}">Quản lý Project</a></li>
                                     @endcan
-                                    @can('template-index')
-                                    <li><a href="{{route('template.index')}}">Quản lý Template</a></li>
-                                    @endcan
-
-
                                     @can('project-index')
                                         <li><a href="{{route('project.process')}}">Tiến trình xử lý</a></li>
+                                    @endcan
+
+                                </ul>
+                            </li>
+
+                            <li>
+                                <a href="javascript:void(0);" class="waves-effect"><i class="ti-image"></i> <span> Template<span class="float-right menu-arrow"><i class="mdi mdi-chevron-right"></i></span> </span> </a>
+                                <ul class="submenu">
+                                    @can('template-index')
+                                        <li><a href="{{route('template.index')}}">Template Project</a></li>
+                                    @endcan
+                                    @can('template-preview-index')
+                                        <li><a href="{{route('template-preview.index')}}">Template Frame Preview</a></li>
+                                        <li><a href="{{route('template-text-preview.index')}}">Template Text Preview</a></li>
+                                        <li><a href="{{route('category_template_frame.index')}}">Category Template Frame</a></li>
+                                        <li><a href="{{route('category_template.index')}}">Category Template</a></li>
+                                        <li><a href="{{route('data_profile.index')}}">Data Mẫu</a></li>
+                                    @endcan
+
+                                </ul>
+                            </li>
+
+                            <li>
+                                <a href="javascript:void(0);" class="waves-effect"><i class="ti-package"></i> <span> Markets and Keystore <span class="float-right menu-arrow"><i class="mdi mdi-chevron-right"></i></span> </span> </a>
+                                <ul class="submenu">
+
+                                    @can('project-index')
 
                                         @foreach( \App\Models\Markets::all() as $market)
-                                        <li><a href="{{route('project.manage',['market'=>$market->market_name])}}">Quản lý APP {{$market->market_name}}</a></li>
-
+                                            <li><a href="{{route('project.manage',['market'=>$market->market_name])}}">Quản lý APP {{$market->market_name}}</a></li>
                                         @endforeach
                                     @endcan
                                     @can('keystore-index')
@@ -115,19 +136,7 @@
                             </li>
 
 
-                            <li>
-                                <a href="javascript:void(0);" class="waves-effect"><i class="ti-image"></i> <span> Template Preview <span class="float-right menu-arrow"><i class="mdi mdi-chevron-right"></i></span> </span> </a>
-                                <ul class="submenu">
-                                    @can('template-preview-index')
-                                        <li><a href="{{route('template-preview.index')}}">Template Frame Preview</a></li>
-                                        <li><a href="{{route('template-text-preview.index')}}">Template Text Preview</a></li>
-                                        <li><a href="{{route('category_template_frame.index')}}">Category Template Frame</a></li>
-                                        <li><a href="{{route('category_template.index')}}">Category Template</a></li>
-                                        <li><a href="{{route('data_profile.index')}}">Data Mẫu</a></li>
-                                    @endcan
 
-                                </ul>
-                            </li>
                             <li>
                                 <a href="javascript:void(0);" class="waves-effect"><i class="ti-receipt"></i> <span> Ga & Dev & Ads <span class="float-right menu-arrow"><i class="mdi mdi-chevron-right"></i></span> </span> </a>
                                 <ul class="submenu">

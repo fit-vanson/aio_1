@@ -902,16 +902,29 @@
                 type: 'get',
                 url: '{{asset('api/getProject')}}?projectID='+projectID+'&marketID='+marketID,
                 success: function (data) {
+                    if(data.sdk){
+                        $('#market_'+marketID+'_sdk').val(data.sdk)
+                    }else {
+                        $('#market_'+marketID+'_sdk').attr("placeholder", data.project.ma_template.sdk);
+                    }
                     $('#market_'+marketID+'_package').val(data.package)
                     $('#market_'+marketID+'_app_link').val(data.app_link)
                     $('#market_'+marketID+'_policy_link').val(data.policy_link)
                     $('#market_'+marketID+'_app_id').val(data.appID)
                     $('#market_'+marketID+'_app_name_x').val(data.app_name_x)
-                    $('#market_'+marketID+'_sdk').val(data.sdk)
+
                     $('#market_'+marketID+'_video_link').val(data.video_link)
                     var ads = JSON.parse(data.ads);
                     $.each(ads, function (k,v){
                         $('#market_'+marketID+'_'+k).val(v)
+                    })
+                    var ads_template = JSON.parse(data.project.ma_template.ads);
+                    $.each(ads_template, function (k,v){
+                        if(v){
+                            $('#market_'+marketID+'_'+k).show();
+                        }else {
+                            $('#market_'+marketID+'_'+k).hide();
+                        }
                     })
                     $('#'+marketID+'_dev_id').select2("trigger", "select", {
                         data: {

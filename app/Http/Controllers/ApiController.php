@@ -39,7 +39,7 @@ class ApiController extends Controller
     public function getProject(){
         if(\request()->projectID){
             if (\request()->marketID){
-                $project = MarketProject::with('dev')->where('project_id',\request()->projectID)->where('market_id',\request()->marketID)->first();
+                $project = MarketProject::with('dev','project.ma_template')->where('project_id',\request()->projectID)->where('market_id',\request()->marketID)->first();
             }else{
                 $project = Project::with('markets')->find(\request()->projectID);
             }
