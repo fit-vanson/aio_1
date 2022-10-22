@@ -113,24 +113,45 @@ class TemplateController extends Controller
             $ads = json_decode($record->ads,true);
 
             $value_ads = '<br>';
-            foreach ($ads as $key=> $value){
-                if ($value ==1){
-                    $value_ads .= '<span style="color:green;">'.$key.'</span> - ';
-                }else{
-                    $value_ads .= ' <span style="color:red;">'.$key.'</span> - ';
-                }
+
+
+
+
+
+            $ads_admod = $this->array_slice_assoc($ads, ['ads_id', 'ads_banner','ads_inter','ads_reward','ads_native','ads_open']);
+            $ads_start = $this->array_slice_assoc($ads, ['ads_start']);
+            $ads_huawei = $this->array_slice_assoc($ads, ['ads_banner_huawei', 'ads_inter_huawei','ads_reward_huawei','ads_native_huawei','ads_splash_huawei','ads_roll_huawei']);
+
+
+            if(count(array_filter($ads_admod)) != 0){
+                $ads_admod_status = 'Admod: <i class="font-20 ion ion-md-checkmark-circle" style="color: green"></i>';
+            }else{
+                $ads_admod_status = 'Admod: <i class="font-20 ion ion-md-close-circle" style="color: red"></i>';
             }
 
-            if($record->convert_aab != 0){
-                $convert_aab = '<br>'. "<span style='color:green;'> Aab</span>";
+            if(count(array_filter($ads_start)) != 0){
+                $ads_start_status = 'Start: <i class="font-20 ion ion-md-checkmark-circle" style="color: green"></i>';
             }else{
-                $convert_aab = '<br>'. "<span style='color:red;'> Aab</span>";
+                $ads_start_status = 'Start: <i class="font-20 ion ion-md-close-circle" style="color: red"></i>';
+            }
+
+            if(count(array_filter($ads_huawei)) != 0){
+                $ads_huawei_status = 'Huawei: <i class="font-20 ion ion-md-checkmark-circle" style="color: green"></i>';
+            }else{
+                $ads_huawei_status = 'Huawei: <i class="font-20 ion ion-md-close-circle" style="color: red"></i>';
+            }
+
+
+            if($record->convert_aab != 0){
+                $convert_aab = 'AAB: <i class="font-20 ion ion-md-checkmark-circle" style="color: green"></i>';
+            }else{
+                $convert_aab = 'AAB: <i class="font-20ion ion-md-close-circle" style="color: red"></i>';
             }
 
             if($record->status == 0){
-                $status = '<br>'. "Trạng thái: <span style='color:green;'> Mở</span>";
+                $status = 'Trạng thái: <i class="font-20 ion ion-md-checkmark-circle" style="color: green"></i>';
             }else{
-                $status = '<br>'. "Trạng thái: <span style='color:red;'> Đóng</span>";
+                $status = 'Trạng thái: <i class="font-20 ion ion-md-close-circle" style="color: red"></i>';
             }
 
             if($record->time_create == 0 ){
@@ -194,9 +215,6 @@ class TemplateController extends Controller
             }else{
                 $preview = $record->template_preview;
             }
-
-
-
             $template_preview = '<div class="light_gallery img-list" id="light_gallery">';
             for ($i=1; $i<=$preview; $i++ ){
                 $template_preview .= '<a class="img_class" style="margin:5px" href="/storage/template/'.$record->template.'/'.$i.'.jpg" title="preview '.$i.'">
@@ -212,7 +230,8 @@ class TemplateController extends Controller
                 "template" => '<span class="h3 font-16"> '.$record->template_name.' </span>'.'<p class="text-muted">'.$record->package.'</p>' .$template_preview,
                 "category"=>$categories,
 //                "category"=>$Chplay_category.'<br>'.$Amazon_category.'<br>'.$Samsung_category.'<br>'.$Xiaomi_category.'<br>'.$Oppo_category.'<br>'.$Vivo_category.'<br>'.$Huawei_category,
-                "script" => '<div class="text-wrap width-400">'.$script.$value_ads.$convert_aab.$status.'</div>',
+//                "script" => '<div class="text-wrap width-400">'.$script.$value_ads.$convert_aab.$status.'</div>',
+                "script" => '<div class="text-wrap width-400">'.$script.'<br>'.$ads_admod_status.'<br>'.$ads_start_status.'<br>'.$ads_huawei_status.'<br>'.$convert_aab.'<br>'.$status.'</div>',
                 "time_create"=> $time_create,
                 "time_update"=> $time_update,
                 "time_get"=> $time_get,
@@ -574,6 +593,10 @@ class TemplateController extends Controller
     {
 //        dd(Auth::id());
         return view('template.upload');
+    }
+
+    function array_slice_assoc($array,$keys) {
+        return array_intersect_key($array,array_flip($keys));
     }
 
 
