@@ -137,23 +137,23 @@ class TemplateController extends Controller
                 $status = 'Trạng thái: <i class="font-20 ion ion-md-close-circle" style="color: red"></i>';
             }
 
-            if($record->time_create == 0 ){
-                $time_create =   null;
-            }else{
-                $time_create =  date( 'd/m/Y',$record->time_create);
-            }
-
-            if($record->time_update == 0 ){
-                $time_update =   null;
-            }else{
-                $time_update =  date( 'd/m/Y',$record->time_update);
-            }
-
-            if($record->time_get == 0 ){
-                $time_get =   null;
-            }else{
-                $time_get =  date( 'd/m/Y',$record->time_get);
-            }
+//            if($record->time_create == 0 ){
+//                $time_create =   null;
+//            }else{
+//                $time_create =  date( 'd/m/Y',$record->time_create);
+//            }
+//
+//            if($record->time_update == 0 ){
+//                $time_update =   null;
+//            }else{
+//                $time_update =  date( 'd/m/Y',$record->time_update);
+//            }
+//
+//            if($record->time_get == 0 ){
+//                $time_get =   null;
+//            }else{
+//                $time_get =  date( 'd/m/Y',$record->time_get);
+//            }
 
             $categories = '';
 
@@ -215,9 +215,9 @@ class TemplateController extends Controller
 //                "category"=>$Chplay_category.'<br>'.$Amazon_category.'<br>'.$Samsung_category.'<br>'.$Xiaomi_category.'<br>'.$Oppo_category.'<br>'.$Vivo_category.'<br>'.$Huawei_category,
 //                "script" => '<div class="text-wrap width-400">'.$script.$value_ads.$convert_aab.$status.'</div>',
                 "script" => '<div class="text-wrap width-400">'.$script.'<br>'.$ads_admod_status.'<br>'.$ads_start_status.'<br>'.$ads_huawei_status.'<br>'.$convert_aab.'<br>'.$status.'</div>',
-                "time_create"=> $time_create,
-                "time_update"=> $time_update,
-                "time_get"=> $time_get,
+//                "time_create"=> $time_create,
+//                "time_update"=> $time_update,
+//                "time_get"=> $time_get,
                 "template_type"=> $type,
                 "action"=> $btn,
             );
