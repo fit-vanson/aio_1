@@ -125,19 +125,57 @@ class Project_Controller extends Controller
                 'dark',
                 'secondary',
             ];
+
+            $data_check = $record->data_check;
+            switch ($data_check){
+                case '0':
+                    $status_check = 'DATA : <span class="badge badge-danger" style="font-size: 12px">No Valid</span> ';
+                    break;
+                case '1':
+                    $status_check = 'DATA : <span class="badge badge-success" style="font-size: 12px">Valid</span>';
+                    break;
+            }
+            $data_design = $record->status_design;
+            switch ($data_design){
+                case 0:
+                    $status_design =' DESIGN: <span style="font-size: 100%" class="badge badge-secondary">Gửi chờ duyệt</span>' ;
+                    break;
+                case 1:
+                    $status_design = ' DESIGN: <span style="font-size: 100%" class="badge badge-info">Đã chỉnh sửa, cần duyệt lại</span>';
+                    break;
+                case 2:
+                    $status_design = ' DESIGN: <span style="font-size: 100%" class="badge badge-warning">Fail, cần chỉnh sửa</span>';
+                    break;
+                case 3:
+                    $status_design = ' DESIGN: <span style="font-size: 100%" class="badge badge-danger">Fail, Project loại khỏi dự án</span>';
+                    break;
+                case 4:
+                    $status_design = ' DESIGN: <span style="font-size: 100%" class="badge badge-success">Done, Kết thúc Project</span>';
+                    break;
+            }
+
             foreach ($record->markets as $key=>$market){
                 if($market->pivot->package){
+
+
+                    $ads = json_decode($market->pivot->ads,true);
+
+                    if(count(array_filter($ads)) != 0){
+                        $ads_status = ' <span class="badge badge-success" style="font-size: 12px">ADS</span>';
+                    }else{
+                        $ads_status = ' <span class="badge badge-danger" style="font-size: 12px">ADS</span>';
+                    }
+
+
                     $result .= '<div class="font-16">';
-                    $package .= '<p class="card-title-desc font-16"><img src="img/icon/'.$market->market_logo.'"><a id="app_link_'.$market->pivot->id.'" href="'.$market->pivot->app_link.'"  target="_blank"> '.$market->pivot->package.'</a></p>';
+                    $package .= '<p class="card-title-desc font-16"><img src="img/icon/'.$market->market_logo.'"><a id="app_link_'.$market->pivot->id.'" href="'.$market->pivot->app_link.'"  target="_blank"> '.$market->pivot->package.'</a>'.$ads_status.'</p>';
                     if($market->pivot->sdk){
                         $sdk .= ' <span class="badge badge-'.$badges[$key].'" style="font-size: 12px"> '.strtoupper($market->market_name[0]).': '.$market->pivot->sdk.' </span> ';
                     }
                     if($market->pivot->keystore){
                         $keystore .= ' <span class="badge badge-'.$badges[$key].'" style="font-size: 12px"> '.strtoupper($market->market_name[0]).': '.$market->pivot->keystore.' </span> ';
                     }
-
                     $result .= '<img src="img/icon/'.$market->market_logo.'"> ';
-
                     $result .= $market->pivot->aab_link ? ' <a href="'.$market->pivot->aab_link.'"  target="_blank" class="badge badge-success">AAB</a> ' : ' <a class="badge badge-secondary">AAB</a> ' ;
 
                     $result .= $market->pivot->apk_link ? ' <a href="'.$market->pivot->apk_link.'"  target="_blank" class="badge badge-success">APK</a> ' : ' <a class="badge badge-secondary">APK</a> ' ;
@@ -180,7 +218,7 @@ class Project_Controller extends Controller
             $data_arr[] = array(
                 "projectid" => $record->projectid,
                 "logo" => $logo,
-                "projectname"=>$project.$template.$mada.'<br>'.$record->title_app.'<br>'.$version.'<br>'.$sdk.'<br>'.$keystore,
+                "projectname"=>$project.$template.$mada.'<br>'.$record->title_app.'<br>'.$version.'<br>'.$sdk.'<br>'.$keystore.'<br>'.$status_check.' <br>'.$status_design,
                 "markets"=>$package,
                 "status"=>@$result,
                 "action"=> $btn,

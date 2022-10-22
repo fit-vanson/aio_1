@@ -61,9 +61,6 @@ class GoogleReviewController extends Controller
                      </span>';
 
 
-
-
-
             $logo = '<a href="'.$record->project_market->app_link.'" target="_blank"> <img class="rounded mx-auto d-block" data-toggle="popover" data-placement="right" title="<h5>'.$record->project->projectname.'</h5>"  data-content="'.$html.'"  width="100px"  height="100px" src="'.url('storage/projects/'.$record->project->da->ma_da.'/'.$record->project->projectname.'/lg114.png').'"></a>';
             $data_arr[] = array(
                 "id" => $record->id,
