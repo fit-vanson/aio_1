@@ -32,13 +32,14 @@
                             <thead>
                             <tr>
                                 <th style="width: 10%">Project ID</th>
-                                <th style="width: 25%">User Comment</th>
+                                <th style="width: 20%">User Comment</th>
+                                <th style="width: 10%">Author Name</th>
                                 <th style="width: 5%">Language</th>
                                 <th style="width: 5%">Down Count</th>
                                 <th style="width: 5%">Up Count</th>
                                 <th style="width: 5%">Star Rating</th>
                                 <th style="width: 10%">Last Modifie dUser</th>
-                                <th style="width: 25%">Developer Comment</th>
+                                <th style="width: 20%">Developer Comment</th>
                                 <th style="width: 10%">Last Modified Developer</th>
                             </tr>
                             </thead>
@@ -92,6 +93,7 @@
                 columns: [
                     {data: 'project_id'},
                     {data: 'userComment'},
+                    {data: 'authorName'},
                     {data: 'reviewerLanguage'},
                     {data: 'thumbsDownCount'},
                     {data: 'thumbsUpCount'},

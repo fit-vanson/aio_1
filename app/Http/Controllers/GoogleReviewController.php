@@ -65,6 +65,7 @@ class GoogleReviewController extends Controller
             $data_arr[] = array(
                 "id" => $record->id,
                 "project_id" => $logo,
+                "authorName" => $record->authorName,
                 "reviewId" => $record->reviewId,
                 "userComment" => $record->userComment,
                 "reviewerLanguage" => $record->reviewerLanguage,
