@@ -30,6 +30,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\URL;
 
 class ApiController extends Controller
@@ -310,22 +311,22 @@ class ApiController extends Controller
                     $data = [];
                     foreach ($reviews as $review){
                         $comments   = $review->getComments();
-//                        $dataArr[] = [
-//                            'project_id' =>  $project->project_id,
-//                            'project_market_id' =>  $project->id,
-//                            'package' =>  $project->package,
-//                            'reviewId' =>  $review->reviewId,
-//                            'authorName' =>  $review->authorName,
-//                            'userComment' =>  $comments[0]->getUserComment()->getText(),
-//                            'reviewerLanguage' =>  $comments[0]->getUserComment()->reviewerLanguage,
-//                            'thumbsDownCount' =>  $comments[0]->getUserComment()->getThumbsDownCount(),
-//                            'thumbsUpCount' =>  $comments[0]->getUserComment()->getThumbsUpCount(),
-//                            'starRating' =>  $comments[0]->getUserComment()->getStarRating(),
-//                            'deviceMetadata' =>  json_encode($comments[0]->getUserComment()->getDeviceMetadata()),
-//                            'lastModifiedUser' =>  $comments[0]->getUserComment()->getLastModified()->getSeconds(),
-//                            'developerComment' => isset($comments[1]) ?  $comments[1]->getDeveloperComment()->getText() : null,
-//                            'lastModifiedDeveloper' => isset($comments[1]) ?  $comments[1]->getDeveloperComment()->getLastModified()->getSeconds() : null,
-//                        ];
+                        $dataArr[] = [
+                            'project_id' =>  $project->project_id,
+                            'project_market_id' =>  $project->id,
+                            'package' =>  $project->package,
+                            'reviewId' =>  $review->reviewId,
+                            'authorName' =>  $review->authorName,
+                            'userComment' =>  $comments[0]->getUserComment()->getText(),
+                            'reviewerLanguage' =>  $comments[0]->getUserComment()->reviewerLanguage,
+                            'thumbsDownCount' =>  $comments[0]->getUserComment()->getThumbsDownCount(),
+                            'thumbsUpCount' =>  $comments[0]->getUserComment()->getThumbsUpCount(),
+                            'starRating' =>  $comments[0]->getUserComment()->getStarRating(),
+                            'deviceMetadata' =>  json_encode($comments[0]->getUserComment()->getDeviceMetadata()),
+                            'lastModifiedUser' =>  $comments[0]->getUserComment()->getLastModified()->getSeconds(),
+                            'developerComment' => isset($comments[1]) ?  $comments[1]->getDeveloperComment()->getText() : null,
+                            'lastModifiedDeveloper' => isset($comments[1]) ?  $comments[1]->getDeveloperComment()->getLastModified()->getSeconds() : null,
+                        ];
                         GoogleReview::updateorCreate(
                             [
                                 'reviewId' =>  $review->reviewId,
@@ -352,7 +353,7 @@ class ApiController extends Controller
                 Log::debug('Message -  getReview: ' . $exception->getMessage() . '---' . $exception->getLine());
             }
         }
-        dd(1);
+        return Response::json($dataArr);
     }
 
 

@@ -84,10 +84,14 @@ class DevController extends Controller
             ->get();
         $data_arr = array();
         foreach ($records as $record) {
+
             $btn = ' <a href="javascript:void(0)" onclick="editDev('.$record->id.')" class="btn btn-warning"><i class="ti-pencil-alt"></i></a>';
             $btn = $btn.' <a href="javascript:void(0)"data-id="'.$record->id.'"  class="btn btn-danger deleteDev"><i class="ti-trash"></i></a>';
-            if($record->market_id == 1){
+            if($record->market_id == 1 && $record->api_client_secret){
                 $btn = $btn.' <a  href="/api/get-token/'.$record->id.'" target="_blank" class="btn btn-info"><i class="mdi mdi-key"></i></a>';
+                if($record->api_token){
+                    $btn = $btn.' <a  href="/api/getReview/'.$record->id.'" target="_blank" class="btn btn-secondary"><i class="mdi mdi-emoticon-kiss-outline"></i></a>';
+                }
             }
 
 
