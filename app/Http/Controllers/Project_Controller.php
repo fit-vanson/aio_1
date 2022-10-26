@@ -813,7 +813,10 @@ class Project_Controller extends Controller
     }
 
     public function show($id){
-        $project = Project::find($id)->load('lang','da','ma_template');
+        $project = Project::findorfail($id)->load('markets.pivot.dev','markets.pivot.keystores','da','ma_template.markets','lang');
+
+//        return response()->json($project->load('markets.pivot.dev','markets.pivot.keystores','da','ma_template.markets','lang'));
+
         return view('project.show')->with(compact('project'));
     }
 
