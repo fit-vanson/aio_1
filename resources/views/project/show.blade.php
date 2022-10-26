@@ -163,26 +163,22 @@
                         }
                         if($value->pivot->video){
                             $video =
-                                '<div class="popup-gallery">'.
                                     '<a class="video" style="margin:5px;    float: left!important;" href="'.url('/storage/projects').'/'.$project->da->ma_da.'/'.$project->projectname.'/'.$value->lang_code.'/video.mp4" title="'.$value->lang_name.' Video">' .
                                     '<div class="img-responsive img-container">' .
                                     '<img  src="'.url('/img').'/video.png" alt="'.$value->lang_name.' Video" height="200">' .
                                     '</div>'.
-                                    '</a>'.
-                                '</div>';
+                                    '</a>';
                         }else{
                             $video = '';
                         }
 
                         if($value->pivot->banner){
                             $banner =
-                                '<div class="popup-gallery">'.
                                 '<a class="image float-left" style="margin:5px" href="'.url('/storage/projects').'/'.$project->da->ma_da.'/'.$project->projectname.'/'.$value->lang_code.'/bn.jpg" title="'.$value->lang_name.' Banner">' .
                                 '<div class="img-responsive img-container">' .
                                 '<img  src="'.url('/storage/projects').'/'.$project->da->ma_da.'/'.$project->projectname.'/'.$value->lang_code.'/bn.jpg" alt="'.$value->lang_name.' Banner" height="200">' .
                                 '</div>'.
-                                '</a>'.
-                                '</div>';
+                                '</a>';
                         }else{
                             $banner = '';
                         }
@@ -212,8 +208,8 @@
                                         '</div>'.
                                     '</div>'.
                                 '</div>'.
-                                '<div class="popup-gallery">'.$preview.'</div>'.
-                                $banner.$video.
+                                '<div class="popup-gallery">'.$preview. $banner.$video.'</div>'.
+
                             '</div>';
                     }
                     ?>

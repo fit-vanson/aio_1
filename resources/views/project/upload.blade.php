@@ -2,8 +2,6 @@
 
 @section('css')
 
-/*<link href="plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />*/
-/*<link href="plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css" />*/
 
 <link href="{{ URL::asset('/assets/libs/rwd-table/rwd-table.min.css') }}" rel="stylesheet" type="text/css"/>
 {{--<link href="{{ URL::asset('/assets/libs/datatables/datatables.min.css') }}" rel="stylesheet" type="text/css"/>--}}
@@ -17,20 +15,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
 
-
-
-<!-- Responsive datatable examples -->
-/*<link href="plugins/datatables/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" />*/
-
-<!-- Sweet-Alert  -->
-
-/*<script src="https://cdn.datatables.net/scroller/2.0.7/js/dataTables.scroller.min.js"></script>*/
-
-<!-- Select2 Js  -->
-/*<link href="plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />*/
-
-<!-- Dropzone css -->
-{{--<link href="{{ URL::asset('/assets/libs/dropzone/dropzone.min.css') }}" rel="stylesheet" type="text/css" />--}}
 
 <style>
     div.dataTables_wrapper  div.dataTables_filter {
@@ -181,7 +165,6 @@
             }
         });
 
-
         var table = $('#project_uploadTable').DataTable({
             displayLength: 20,
             bLengthChange: false,
@@ -202,18 +185,14 @@
                 {data: 'projectname', name: 'projectname'},
 
             ],
-            order: [[ 0, 'desc' ]]
+            order: [[ 0, 'desc' ]],
         });
-
-
-
 
         $(document).on('click', '.showProject', function (data) {
             var _id = $(this).data("id");
             $('#project_detail').show()
             $('.list_project_' + _id).addClass('active')
             $.get('{{asset('project/edit')}}/' + _id, function (data) {
-
                 $("#logo_project").attr("src", "../storage/projects/" + data.da.ma_da + '/' + data.projectname + "/" + data.logo);
                 $('#notes_design').val(data.notes_design);
                 $('#project_id').val(data.projectid);
@@ -242,7 +221,7 @@
                     for (var i = 1; i <= 8; i++) {
 
                             preview +=
-                                '<a class="img_class" style="margin:5px" href="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/pr' + i + '.jpg" title="preview ' + i + '">' +
+                                '<a class="image float-left" style="margin:5px" href="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/pr' + i + '.jpg" title="preview ' + i + '">' +
                                 '<div class="img-responsive img-container">' +
                                 '<img  src="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/pr' + i + '.jpg" alt="" height="200">' +
                                 '</div>' +
@@ -269,20 +248,20 @@
                         '</tr>'+
                         '</tbody></table>' +
                         '</div></div></div>'+
-                        '<div class="light_gallery  d-flex justify-content-center img-list" id="light_gallery">'
+                        '<div class="popup-gallery">'
                         + preview +
 
-                        '<a class="img_class" style="margin:5px" href="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/bn.jpg" title="preview ' + i + '">' +
+                        '<a class="image float-left" style="margin:5px" href="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/bn.jpg" title="'+ value.lang_code +' Banner">' +
                         '<div class="img-responsive img-container">' +
-                        '<img src="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/bn.jpg" alt="" height="200">' +
+                        '<img src="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/bn.jpg" alt="'+ value.lang_code +' Banner" height="200">' +
                         '</div>' +
                         '</a>' +
 
-
-                        '<video width="320" height="240" controls>'+
-                        '<source src="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/video.mp4" type="video/mp4">'+
-
-                        '</video>'+
+                        '<a class="video" style="margin:5px" href="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/video.mp4" title="'+ value.lang_code +' Video">' +
+                        '<div class="img-responsive img-container">' +
+                        '<img src="{{ URL::asset('/img') }}'+ '/video.png" alt="'+ value.lang_code +' Video" height="200">' +
+                        '</div>' +
+                        '</a>' +
                         '</div></div>';
                 })
 
@@ -342,6 +321,58 @@
                 $('#tablist').html(tablist)
                 $('#tab_content').html(tab_content)
                 $('#market_upload').html(market)
+
+
+
+
+                $('.popup-gallery').magnificPopup({
+                    delegate: 'a',
+                    type: 'image',
+                    gallery: {
+                        enabled: true,
+                        navigateByImgClick: true,
+                        preload: [0,1] // Will preload 0 - before current, and 1 after the current image
+                    },
+                    callbacks: {
+                        elementParse: function(item) {
+                            console.log(item.el[0].className);
+                            if(item.el[0].className == 'video') {
+                                item.type = 'iframe',
+                                    item.iframe = {
+                                        patterns: {
+                                            youtube: {
+                                                index: 'youtube.com/', // String that detects type of video (in this case YouTube). Simply via url.indexOf(index).
+
+                                                id: 'v=', // String that splits URL in a two parts, second part should be %id%
+                                                // Or null - full URL will be returned
+                                                // Or a function that should return %id%, for example:
+                                                // id: function(url) { return 'parsed id'; }
+
+                                                src: '//www.youtube.com/embed/%id%?autoplay=1' // URL that will be set as a source for iframe.
+                                            },
+                                            vimeo: {
+                                                index: 'vimeo.com/',
+                                                id: '/',
+                                                src: '//player.vimeo.com/video/%id%?autoplay=1'
+                                            },
+                                            gmaps: {
+                                                index: '//maps.google.',
+                                                src: '%id%&output=embed'
+                                            }
+                                        }
+                                    }
+                            } else {
+                                item.type = 'image',
+                                    item.tLoading = 'Loading image #%curr%...',
+                                    item.mainClass = 'mfp-img-mobile',
+                                    item.image = {
+                                        tError: '<a href="%url%">The image #%curr%</a> could not be loaded.'
+                                    }
+                            }
+
+                        }
+                    }
+                });
             });
         });
         $(document).on("click", ".submit_upload_status", function(){
