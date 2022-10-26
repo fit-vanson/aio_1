@@ -217,18 +217,38 @@
                         '<span class="d-block d-sm-none"><i class="fas fa-home"></i></span>' +
                         '<span class="d-none d-sm-block">' + value.lang_name + '</span>' +
                         '</a></li>';
-                    var preview = '';
+                    var preview = video = banner = '';
                     for (var i = 1; i <= 8; i++) {
-
                             preview +=
-                                '<a class="image float-left" style="margin:5px" href="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/pr' + i + '.jpg" title="preview ' + i + '">' +
+                                '<a class="image float-left" style="margin:5px" href="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/pr' + i + '.jpg" title=" ' + value.lang_name + ' Preview ' + i + '">' +
                                 '<div class="img-responsive img-container">' +
-                                '<img  src="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/pr' + i + '.jpg" alt="" height="200">' +
+                                '<img  src="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/pr' + i + '.jpg" alt="' + value.lang_name + ' Preview ' + i + '" height="200">' +
                                 '</div>' +
                                 '</a>'
 
 
                     }
+                    if(value.pivot.video){
+                        video = '<a class="video" style="margin:5px" href="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/video.mp4" title="'+ value.lang_name +' Video">' +
+                            '<div class="img-responsive img-container">' +
+                            '<img src="{{ URL::asset('/img') }}'+ '/video.png" alt="'+ value.lang_name +' Video" height="200">' +
+                            '</div>' +
+                            '</a>';
+
+                    }
+
+                    if(value.pivot.banner){
+                        banner =  '<a class="image float-left" style="margin:5px" href="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/bn.jpg" title="'+ value.lang_name +' Banner">' +
+                            '<div class="img-responsive img-container">' +
+                            '<img src="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/bn.jpg" alt="'+ value.lang_name +' Banner" height="200">' +
+                            '</div>' +
+                            '</a>' ;
+                    }
+
+
+
+
+
                     tab_content += '<div class="tab-pane p-3 gallery  '+active+'" id="' + value.lang_code + '" role="tabpanel">' +
 
                         '<div class="card-body d-flex justify-content-center"><div class="row"><div class="form-group col-lg-9">'+
@@ -249,19 +269,7 @@
                         '</tbody></table>' +
                         '</div></div></div>'+
                         '<div class="popup-gallery">'
-                        + preview +
-
-                        '<a class="image float-left" style="margin:5px" href="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/bn.jpg" title="'+ value.lang_code +' Banner">' +
-                        '<div class="img-responsive img-container">' +
-                        '<img src="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/bn.jpg" alt="'+ value.lang_code +' Banner" height="200">' +
-                        '</div>' +
-                        '</a>' +
-
-                        '<a class="video" style="margin:5px" href="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/video.mp4" title="'+ value.lang_code +' Video">' +
-                        '<div class="img-responsive img-container">' +
-                        '<img src="{{ URL::asset('/img') }}'+ '/video.png" alt="'+ value.lang_code +' Video" height="200">' +
-                        '</div>' +
-                        '</a>' +
+                        + preview + banner + video +
                         '</div></div>';
                 })
 
