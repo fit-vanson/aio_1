@@ -1027,7 +1027,12 @@ class Project_Controller extends Controller
             $template = '<span class="text-muted" style="line-height:0.5"> ('.$template.') </span>';
             $mada = '<span class="" style="line-height:0.5"> - '.$mada.'</span>';
 
-            $package = 'Package: <span class="text-muted" style="line-height:0.5"> '.$record->pivot->package.' </span>';
+
+//            '<p class="card-title-desc font-16"><img src="img/icon/'.$market->market_logo.'"><a id="app_link_'.$market->pivot->id.'" href="'.$market->pivot->app_link.'"  target="_blank"> '.$market->pivot->package.'</a>'.$ads_status.'</p>';
+
+//            $package = 'Package: <span class="text-muted" style="line-height:0.5"> '.$record->pivot->package.' </span>';
+
+            $package = 'Package: <a id="app_link_'.$record->pivot->id.'" href="'.$record->pivot->app_link.'"  target="_blank"> <span class="text-muted" style="line-height:0.5"> '.$record->pivot->package.' </span></a>';
             $keystore = 'Key:<span class="text-muted" style="line-height:0.5"> '.$record->pivot->sdk.' </span>';
             $sdk = 'SDK : <span class="text-muted" style="line-height:0.5"> '.$record->pivot->keytore.' </span>';
 
