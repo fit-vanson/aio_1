@@ -158,11 +158,13 @@ class DevController extends Controller
                 $gmail1 = '<p style="margin: auto" class="text-muted ">'.$record->gmail_dev2->gmail.' - <span style="font-style: italic"> '.$record->gmail_dev2->vpn_iplogin.'</span></p>';
             }
 
+            $store_name = '<p style="margin: auto" class="text-muted ">'.$record->store_name.'</p>';
+
 
             $data_arr[] = array(
                 "id" => $record->id,
                 "ga_id" => $logo.'<br>'.$ga_name.' <br>'.$profile,
-                "dev_name" => $record->dev_name,
+                "dev_name" => $record->dev_name.$store_name,
                 "mail_id_1"=> @$gmail.@$gmail1,
                 "market_id"=> @$record->markets->market_name,
 //                "project_count" => ' <span class="badge badge-secondary">'.count($record->project).'</span> ' .' <span class="badge badge-success"> '.$release.' </span>'. ' <span class="badge badge-danger"> '.$check.' </span>' ,
