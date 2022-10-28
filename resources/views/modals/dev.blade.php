@@ -79,8 +79,8 @@
                             </div>
 
                             <div class="form-group col-lg-6 ">
-                                <label for="name">Profile Info <span style="color: red">*</span></label>
-                                <select class="form-control" id="profile_id" name="profile_id" required></select>
+                                <label for="name">Profile Info </label>
+                                <select class="form-control" id="profile_id" name="profile_id" ></select>
                             </div>
 
                             <div class="form-group col-lg-6">

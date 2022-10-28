@@ -151,11 +151,16 @@ class DevController extends Controller
                 $company_pers = '<img height="70px" src="img/icon/company.png">';
             }
 
-            if($record->gadev){
-                $gmail = '<span>'.$record->gadev->gmail.' - <span style="font-style: italic"> '.$record->gadev->vpn_iplogin.'</span></span>';
+
+
+
+
+
+            if($record->gmail_dev1){
+                $gmail = '<span>'.$record->gmail_dev1->gmail.' - <span style="font-style: italic"> '.$record->gmail_dev1->vpn_iplogin.'</span></span>';
             }
-            if($record->gadev1){
-                $gmail1 = '<p style="margin: auto" class="text-muted ">'.$record->gadev->gmail.' - <span style="font-style: italic"> '.$record->gadev->vpn_iplogin.'</span></p>';
+            if($record->gmail_dev2){
+                $gmail1 = '<p style="margin: auto" class="text-muted ">'.$record->gmail_dev2->gmail.' - <span style="font-style: italic"> '.$record->gmail_dev2->vpn_iplogin.'</span></p>';
             }
 
 
