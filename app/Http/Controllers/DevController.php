@@ -81,7 +81,7 @@ class DevController extends Controller
 
             ->skip($start)
             ->take($rowperpage)
-            ->dd();
+            ->get();
         $data_arr = array();
         foreach ($records as $record) {
 
