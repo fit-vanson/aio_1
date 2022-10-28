@@ -67,8 +67,8 @@ class DevController extends Controller
         // Get records, also we have included search filter as well
         $records = Dev::orderBy($columnName, $columnSortOrder)
             ->where(function($q) use ($searchValue) {
-                $q->Where('store_name', 'like', '%' . $searchValue . '%')
-                    ->orWhere('dev_name', 'like', '%' . $searchValue . '%')
+                $q->Where('dev_name', 'like', '%' . $searchValue . '%')
+                    ->orWhere('store_name', 'like', '%' . $searchValue . '%')
                     ->orwhereHas('gmail_dev1', function ($query) use ($searchValue) {
                         return $query->Where('gmail', 'like', '%' . $searchValue . '%');
                     })
@@ -81,7 +81,7 @@ class DevController extends Controller
 
             ->skip($start)
             ->take($rowperpage)
-            ->get();
+            ->dd();
         $data_arr = array();
         foreach ($records as $record) {
 
@@ -150,11 +150,6 @@ class DevController extends Controller
             }else{
                 $company_pers = '<img height="70px" src="img/icon/company.png">';
             }
-
-
-
-
-
 
             if($record->gmail_dev1){
                 $gmail = '<span>'.$record->gmail_dev1->gmail.' - <span style="font-style: italic"> '.$record->gmail_dev1->vpn_iplogin.'</span></span>';
