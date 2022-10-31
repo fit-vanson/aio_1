@@ -209,7 +209,7 @@ class TemplateController extends Controller
 
             $data_arr[] = array(
                 "id" => $record->id,
-                "template_logo" => '<p class="h3 font-16"> '.$record->ver_build.' </p>'.$logo.$link .$template_apk.$template_data,
+                "template_logo" => '<p class="h3 font-16"> '.$record->ver_build.' </p>'.$logo.$link .$template_apk.$template_data.'<p class="h3 font-16 mt-2"> '.$record->sdk.' </p>',
                 "template" => '<span class="h3 font-16"> '.$record->template_name.' </span>'.'<p class="text-muted">'.$record->package.'</p>' .$template_preview,
                 "category"=>$categories,
 //                "category"=>$Chplay_category.'<br>'.$Amazon_category.'<br>'.$Samsung_category.'<br>'.$Xiaomi_category.'<br>'.$Oppo_category.'<br>'.$Vivo_category.'<br>'.$Huawei_category,
