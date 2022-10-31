@@ -120,6 +120,11 @@
             ],
             order: [0, 'desc'],
             drawCallback: function (settings) {
+                $('[data-toggle="popover"]').popover({
+                    html: true,
+                    trigger: "hover",
+                    container: 'body'
+                });
                 $('.light_gallery').lightGallery({});
             },
 

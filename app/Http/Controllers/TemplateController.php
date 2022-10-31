@@ -162,11 +162,19 @@ class TemplateController extends Controller
             }
 
 
+
+            $html = '<span>
+                        <p><b>Ghi chứ: </b>'.$record->note.'</p>
+
+                     </span>';
+
+
             if(isset($record->template_logo)){
-                $logo = "<p><img class='rounded mx-auto d-block'  width='100px'  height='100px'  src='../storage/template/$record->template/$record->template_logo'></p>";
+//                $logo = "<p><img class='rounded mx-auto d-block'  width='100px'  height='100px'  src='../storage/template/$record->template/$record->template_logo'></p>";
+                $logo = '<p><img class="rounded mx-auto d-block" data-toggle="popover" data-placement="right" title="<h5>'.$record->template.'</h5>"  data-content="'.$html.'"  width="100px"  height="100px"  src="../storage/template/'.$record->template_logo.'"></p>';
 
             }else{
-                $logo = '<p><img class="rounded mx-auto d-block" width="100px" height="100px" src="assets\images\logo-sm.png"></p>';
+                $logo = '<p><img class="rounded mx-auto d-block" data-toggle="popover" data-placement="right" title="<h5>'.$record->template.'</h5>"  data-content="'.$html.'"  width="100px" height="100px" src="assets\images\logo-sm.png"></p>';
             }
             $template_apk   = $record->template_apk ?  ' <a href="/storage/template/'.$record->template.'/'.$record->template_apk.'" class="badge badge-success" style="font-size: 12px">APK</a> ' : ' <span  class="badge badge-danger" style="font-size: 12px">APK</span> ';
             $template_data  = $record->template_data ? ' <a href="/storage/template/'.$record->template.'/'.$record->template_data.'" class="badge badge-success" style="font-size: 12px">Data</a> ' : ' <span  class="badge badge-danger" style="font-size: 12px">Data</span> ';
