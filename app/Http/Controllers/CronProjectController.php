@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Dev;
 use App\Models\Dev_Huawei;
 use App\Models\Dev_Vivo;
 use App\Models\Market_dev;
@@ -9,6 +10,7 @@ use App\Models\MarketProject;
 use App\Models\ProjectModel;
 use App\Models\Setting;
 use Carbon\Carbon;
+use Firebase\JWT\JWT;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Http;
@@ -677,6 +679,231 @@ class CronProjectController extends Controller
             ]);
         }
 
+    }
+
+
+
+
+    public function samsung($status_upload = null){
+
+        $this->api_samsung();
+
+
+        $time =  Setting::first();
+        $timeCron = Carbon::now()->subMinutes($time->time_cron)->setTimezone('Asia/Ho_Chi_Minh')->timestamp;
+        $status_upload = isset($_GET['status_upload']) ? $_GET['status_upload'] : $status_upload;
+
+        $appsSamsung = MarketProject::with('dev')
+            ->where('market_id', 3)
+            ->where('status_upload','like','%'. $status_upload.'%')
+            ->whereHas('dev', function ($query) {
+                return $query
+                    ->whereNotNull('api_client_secret')
+                    ->where('api_client_secret','<>','');
+
+            })
+            ->where(function ($q) use ($timeCron) {
+                $q->where('bot_time', '<=', $timeCron)
+                    ->orWhere('bot_time', null);
+            })
+//            ->get();
+            ->paginate($time->limit_cron);
+
+        dd($appsSamsung);
+
+
+        $dev = Dev::where('market_id', 3)
+            ->where(function($q)  {
+                $q ->whereNotNull('api_client_secret')
+                    ->where('api_client_secret','<>','');
+            })
+            ->whereHas('projects_market', function ($q) use ($timeCron) {
+                $q->where('bot_time', '<=', $timeCron)
+                    ->orWhere('bot_time', null);
+            })
+            ->paginate($time->limit_cron);
+
+        dd($dev);
+
+
+
+
+
+
+        echo '<br/><br/>';
+        echo '<br/>' .'=========== Vivo ==============' ;
+        echo '<br/><b>'.'Yêu cầu:';
+        echo '<br/>&emsp;'.'- Project có Package của Vivo.';
+        echo '<br/>&emsp;'.'- Dev Vivo có Client ID và Client Secret'.'</b><br/><br/>';
+    }
+
+
+    function api_samsung(){
+        $devs = Dev::where('market_id', 3)
+            ->where(function($q)  {
+                $q ->whereNotNull('api_client_secret')
+                    ->where('api_client_secret','<>','');
+            })
+            ->get();
+
+        foreach ($devs as $dev){
+            $token = $dev->api_token;
+            $account_id = $dev->api_client_id;
+            $privateKey = $dev->api_client_secret ;
+
+
+
+            if(!$this->check_token($token,$account_id)){
+                $token = $this->get_token_samsung($account_id,$privateKey);
+                $dev->api_token = $token;
+                $dev->save();
+            }
+
+
+            $contentList =  $this->contentList($token,$account_id);
+//            dd($contentList);
+
+//            dd($contentList);
+            $dataArr = [];
+            foreach ($contentList as $content){
+//                $contentInfo = $this->contentInfo($token,$account_id,$content['contentId']);
+                $contentInfo = $this->contentInfo($token,$account_id,'000006486573');
+                dd($contentInfo);
+                $package = $contentInfo[0]['binaryList'][0]['packageName'];
+
+                dd($package,$contentInfo);
+                $contentStatus = $contentInfo[0]['contentStatus'];
+                switch ($contentStatus){
+                    case 'REGISTERING':
+                        $status_app = 2;
+                        break;
+                    case 'FOR_SALE':
+                        $status_app = 1;
+                        break;
+                    case 'SUSPENDED':
+                        $status_app = 5;
+                        break;
+                    case 'TERMINATED':
+                        $status_app = 2;
+
+                }
+                $dataArr[$package] = [
+                    'appID' => $content['contentId'],
+                    'status_app' =>$status_app,
+//                    'package' => $package,
+                ];
+            }
+
+            $dataProject = [];
+            foreach ($dev->projects_market as $project){
+                $dataArr[$project->package] = [
+                    'id' => $project->id,
+//                    'package' => $project->package,
+                    'dev_id' => $project->dev_id,
+                ];
+            }
+
+
+
+//            dd($dataProject);
+            dd($dataArr);
+
+
+
+            dd(  );
+
+            $MarketProjectInstance = new MarketProject();
+            $index = ['market_id','dev_id','app_name_x'];
+            $result = batch()->update($MarketProjectInstance, $dataArr, $index);
+
+            dd($dataArr,$result);
+
+        }
+        return true;
+    }
+
+    function check_token($token,$account_id){
+        $endpoint = "https://devapi.samsungapps.com/auth/checkAccessToken";
+        $Headers = [
+            'Authorization'=> 'Bearer ' . $token,
+            'service-account-id'=> $account_id,
+        ];
+        try {
+            $response = Http::withHeaders($Headers)->get($endpoint);
+            if ($response->successful()){
+                $result = $response->json();
+                $return = $result['ok'];
+                return $return ;
+            }
+        }catch (\Exception $exception) {
+            Log::error('Message:' . $exception->getMessage() . '--- Token: ' . $exception->getLine());
+        }
+
+    }
+
+    function get_token_samsung($account_id,$privateKey){
+        $JWT = $this->gen_jwt($account_id,$privateKey);
+        $Headers = [
+            'Authorization'=> 'Bearer ' . $JWT,
+            'content-type'=>'application/json',
+        ];
+        $endpoint = "https://devapi.samsungapps.com/auth/accessToken";
+        try {
+            $response = Http::withHeaders($Headers)->post( $endpoint);
+            if ($response->successful()){
+                $result = $response->json();
+                $accessToken = $result['createdItem']['accessToken'];
+                return $accessToken;
+            }
+        }catch (\Exception $exception) {
+            Log::error('Message:' . $exception->getMessage() . '--- Token: ' . $exception->getLine());
+        }
+    }
+
+    function gen_jwt($account_id,$privateKey)
+    {
+        $payload =  [
+            "iss"=> $account_id,
+            "scopes"=> ["publishing", "gss"],
+            "iat"=> time(),
+            "exp"=> time()+1200
+        ];
+        $jwt = JWT::encode($payload, $privateKey, 'RS256');
+        return $jwt;
+    }
+
+    function  contentList($token,$account_id){
+        $endpoint = "https://devapi.samsungapps.com/seller/contentList";
+        $Headers = [
+            'Authorization'=> 'Bearer ' . $token,
+            'service-account-id'=>$account_id,
+        ];
+        try {
+            $response = Http::withHeaders($Headers)->get($endpoint);
+            if ($response->successful()){
+                $result = $response->json();
+                return $result ;
+            }
+        }catch (\Exception $exception) {
+            Log::error('Message:' . $exception->getMessage() . '--- Token: ' . $exception->getLine());
+        }
+    }
+
+    function contentInfo($token,$account_id,$contentId){
+        $endpoint = "https://devapi.samsungapps.com/seller/contentInfo?contentId=$contentId";
+        $Headers = [
+            'Authorization'=> 'Bearer ' . $token,
+            'service-account-id'=> $account_id,
+        ];
+        try {
+            $response = Http::withHeaders($Headers)->get($endpoint);
+            if ($response->successful()){
+                $result = $response->json();
+                return $result ;
+            }
+        }catch (\Exception $exception) {
+            Log::error('Message:' . $exception->getMessage() . '--- Token: ' . $exception->getLine());
+        }
     }
 
 

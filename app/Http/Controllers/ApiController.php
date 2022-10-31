@@ -22,16 +22,15 @@ use App\Models\Markets;
 use App\Models\ProfileV2;
 use App\Models\Project;
 use App\Models\Template;
+use CURLFile;
+use Firebase\JWT\JWT;
 use Google_Client;
 use Google_Service_AndroidPublisher;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\URL;
+
 
 class ApiController extends Controller
 {
@@ -447,4 +446,297 @@ class ApiController extends Controller
             return response()->json($response->json());
         }
     }
+
+
+
+    public function samsung(Request $request){
+
+
+
+        $privateKey = '-----BEGIN RSA PRIVATE KEY-----
+MIIEpQIBAAKCAQEA+dH2ivRTpwBMZ23l9DouDYShDOKkc+W/5Ra5iyCB0slA4v60
+91Wnt5fT4D3siDNCuRkiYqYkfOoouNOSaNLmZG9rv5tvh5nw420fBUDS7TQlZm9P
+z+gf7N5a/1iW0uYlhUQufbAM2Tat9GI0klTCNsE28QVU1Ttl8J1X/k3RuLZqTyKD
+wuG6lp6RTj5I9MpFSmA0v8GGkkcd9galYpxaRm9A9fOqdkrcAAfnSPFJKOUWJEBP
+Ia0PGYHjU59n0q2D3/GSpkqH/U8qUlI/72CDnALj/xjtnEbjIZWjRv6JXFiuwhjy
+pRWy+o2kYJv+HSpQvaspLdpb0+KM2z4OsPu5lQIDAQABAoIBAF8dSbjt/UuAGZbn
+iL3LyOzsqkS1pddaig028b2+yq7uYP4L6+qfehO0gr7F1OCmY6kFoMneZ9YHcSmt
+o/i1E3L52RRCodwHCGgOi9j8LVKSoAq4JrMJtd4BarP9jq8NYQu0Qd8owDuTTffV
+zB5Klwcx2TE6zmnBC7bosS/pgQfJ623Nk86Qv7klQcJmgRYsRLyupfU5zlbzINPU
+y79u9YwIRjRNa6WCd5mv7P+A+mi4MZkzsSg5tMzVqWMFe5DhT3m6m1yfe5zgS7ih
+6GDRdEgmHNUXW/jnNynJq12Ti73QAOdYYHF9MfuP8mYwsLxxq8tz/Ne1GCfqmjib
+APlqfaECgYEA/W/czhSGw94treC+4fJTwvLEmSHBfRTlwWLLz+CwR3ZPSVD7kDJ4
+9mwdZ8r0c7H3fy7VtaGwDFNhVvERDtSB9Ll1rg1regA2OWwF4DSjrivPu4PKqqCK
+swmiAtMNDr6S71FgSiN941KPCXE4QSs7ve+FscaL5tuZiBkCxbGiwCMCgYEA/Fi8
+n6RLjPwvm137d8mcPCf31gRFcCk8WM9qxYqDNZVMLyn6z8pdS0+24nvK1DdKj0+l
+wNtktJGngI8Nvx06P1b4bzvuJ41Zh6qm+ivnYTMxDhoVNPIEalu9PRCO+Ot2JU4n
+TQ16OkRqJdRauHXOUIQdVnPYLzwNko5OEJCW3ucCgYEAvFKyViRknAluEiXOUeGb
+ImL5efzeZY7wx4odfyQseX3NnuJhfJ40ypA+LZFfotUc31IzFdvHEPGohE1v6oA4
+7VweuS5ZrfeYU4UUvK0A7/y4SVO+dpoDVtUSoVyo+Ererpzem1jSQ+hmR5LtRWfV
+5ealhxvNe8e0x7AmIjdEg9cCgYEAufYKyvqgUn1l9/ECZ/xDDnHFygnLwiQhPLFd
+1cWFe+9R/U/KbWaL6fwMokrn5gv4/jOLytvjEs5jyfGiB7zaN+M3oYFgt/UKjVfN
+RX8lPBQlimbeSe4wItEIW//f3MBoiIVXoQjVkirorogXcugd6mfx1sv3/JccyWvl
+S3/CLvECgYEA0p8rY3B7X00JXrhipxOd8jc3+xhKYtxRGkh18YfXrLYsWRk2Z82R
+rA/b/gGjcq1n6aFWcz7M7XHnRmWzSi4tNOBsO7XUVRIV0dbXDOd8No8gCgqIu+65
+BKUyc6NW6/fEZsTTUK3dMDbOJLU42oZnnLnw3bZe37G09/EmR54iDkA=
+-----END RSA PRIVATE KEY-----';
+
+        $account_id = 'df95b1b6-3c61-46d7-81d2-9afe2f6da775';
+        $token = '0CgHMdGsd0bvfgzaqw1t2fZz';
+//        if(!$this->check_token($token,$account_id)){
+            $token = $this->get_token_samsung($account_id,$privateKey);
+//        }
+
+//        dd($token);
+
+//        $contentList = $this->contentList($token,$account_id);
+//
+//        dd($contentList);
+
+
+        $contentId = '000006482916';
+        $dir_apk = 'https://api.vietmmo.net/build/DA219/DA219-57/CHPLAY_DA219-57_TA111_V4_Ver_5_2910_2022_align_k16006.apk';
+//        $contentInfo = $this->contentInfo($token,$account_id,$contentId);
+
+//        dd($contentInfo);
+
+        $sessionID = $this->createUploadSessionId($token,$account_id);
+        $file = $this->file_upload($token,$account_id,$sessionID,$dir_apk);
+        $update_app = $this->contentUpdate($token,$account_id,$contentId,$file->fileKey);
+//        $submit_app = $this->contentSubmit($token,$account_id,$contentId,$file->fileKey);
+
+        dd($file,$update_app,$submit_app);
+
+//        dd($file);
+
+
+
+    }
+
+
+
+
+    function gen_jwt($account_id,$privateKey)
+    {
+        dd($privateKey);
+        $payload =  [
+            "iss"=> $account_id,
+            "scopes"=> ["publishing", "gss"],
+            "iat"=> time(),
+            "exp"=> time()+1200
+        ];
+        $jwt = JWT::encode($payload, $privateKey, 'RS256');
+        return $jwt;
+    }
+
+    function get_token_samsung($account_id,$privateKey){
+        $JWT = $this->gen_jwt($account_id,$privateKey);
+        $Headers = [
+            'Authorization'=> 'Bearer ' . $JWT,
+            'content-type'=>'application/json',
+        ];
+        $endpoint = "https://devapi.samsungapps.com/auth/accessToken";
+        try {
+            $response = Http::withHeaders($Headers)->post( $endpoint);
+            if ($response->successful()){
+                $result = $response->json();
+                $accessToken = $result['createdItem']['accessToken'];
+                return $accessToken;
+            }
+        }catch (\Exception $exception) {
+            Log::error('Message:' . $exception->getMessage() . '--- Token: ' . $exception->getLine());
+        }
+    }
+
+    function check_token($token,$account_id){
+        $endpoint = "https://devapi.samsungapps.com/auth/checkAccessToken";
+        $Headers = [
+            'Authorization'=> 'Bearer ' . $token,
+            'service-account-id'=> $account_id,
+        ];
+        try {
+            $response = Http::withHeaders($Headers)->get($endpoint);
+            if ($response->successful()){
+                $result = $response->json();
+                $return = $result['ok'];
+                return $return ;
+            }
+        }catch (\Exception $exception) {
+            Log::error('Message:' . $exception->getMessage() . '--- Token: ' . $exception->getLine());
+        }
+
+    }
+
+    function  contentList($token,$account_id){
+        $endpoint = "https://devapi.samsungapps.com/seller/contentList";
+        $Headers = [
+            'Authorization'=> 'Bearer ' . $token,
+            'service-account-id'=>$account_id,
+        ];
+        try {
+            $response = Http::withHeaders($Headers)->get($endpoint);
+            if ($response->successful()){
+                $result = $response->json();
+                return $result ;
+            }
+        }catch (\Exception $exception) {
+            Log::error('Message:' . $exception->getMessage() . '--- Token: ' . $exception->getLine());
+        }
+    }
+
+    function contentInfo($token,$account_id,$contentId){
+        $endpoint = "https://devapi.samsungapps.com/seller/contentInfo?contentId=$contentId";
+        $Headers = [
+            'Authorization'=> 'Bearer ' . $token,
+            'service-account-id'=> $account_id,
+        ];
+        try {
+            $response = Http::withHeaders($Headers)->get($endpoint);
+            if ($response->successful()){
+                $result = $response->json();
+                return $result ;
+            }
+        }catch (\Exception $exception) {
+            Log::error('Message:' . $exception->getMessage() . '--- Token: ' . $exception->getLine());
+        }
+    }
+
+    function createUploadSessionId($token,$account_id){
+        $endpoint = "https://devapi.samsungapps.com/seller/createUploadSessionId";
+        $Headers = [
+            'Authorization'=> 'Bearer ' . $token,
+            'service-account-id'=> $account_id,
+        ];
+        try {
+            $response = Http::withHeaders($Headers)->post( $endpoint);
+            if ($response->successful()){
+                $result = $response->json();
+                $return = $result['sessionId'];
+                return $return ;
+            }
+        }catch (\Exception $exception) {
+            Log::error('Message: Upload Session_Id ---' . $exception->getMessage() . $exception->getLine());
+        }
+    }
+
+    function file_upload($token, $account_id, $sessionID,$dir){
+        try {
+            $cFile = curl_file_create($dir);
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, 'https://seller.samsungapps.com/galaxyapi/fileUpload');
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                'Content-Type' => 'multipart/form-data',
+                'Accept'=> 'application/json',
+                'Authorization' => 'Bearer '.$token,
+                'service-account-id' => $account_id,
+            ]);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, [
+                'file' => $cFile,
+                'sessionId' => $sessionID,
+            ]);
+
+
+            $response = curl_exec($ch);
+            $result = json_decode($response);
+            curl_close($ch);
+            return $result;
+        }catch (\Exception $exception) {
+            Log::error('Message: file_upload' . $exception->getMessage() . $exception->getLine());
+        }
+    }
+
+    function contentUpdate($token,$account_id,$contentId,$fileKey){
+            $dataArr = [
+                "contentId"=> $contentId,
+                "defaultLanguageCode" => "ENG",
+                "paid" => "N",
+                "binaryList" =>[
+                    [
+                        "gms" => "Y",
+                        "filekey"=> $fileKey
+                    ],
+                ]
+            ];
+
+            $endpoint = "https://devapi.samsungapps.com/seller/contentUpdate";
+            $endpoint_submit = "https://devapi.samsungapps.com/seller/contentSubmit";
+            $Headers = [
+                'Content-Type'=> 'application/json',
+                'Authorization'=> 'Bearer ' . $token,
+                'service-account-id'=>$account_id,
+            ];
+        try {
+            $response = Http::withHeaders($Headers)->post($endpoint, $dataArr);
+            $response_submit = Http::withHeaders($Headers)->post($endpoint_submit, $dataArr);
+
+            $contentInfo = $this->contentInfo($token,$account_id,$contentId);
+            dd($response_submit->json(),$response->json(),$contentInfo);
+            if ($response->successful()){
+                $result = $response->json();
+                $return = $result['contentStatus'];
+                return $return ;
+            }
+        }catch (\Exception $exception) {
+            Log::error('Message: contentUpdate -- ' . $exception->getMessage() . $exception->getLine());
+        }
+
+    }
+
+    function contentSubmit($token,$account_id,$contentId,$fileKey){
+
+
+//        $ch = curl_init();
+//        curl_setopt($ch, CURLOPT_URL, 'https://devapi.samsungapps.com/seller/contentSubmit');
+//        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+//        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+//        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+//            'Content-Type' => 'application/json',
+//            'authorization ' => 'Bearer  '.$token,
+//            'service-account-id' => $account_id,
+//        ]);
+////        curl_setopt($ch, CURLOPT_POSTFIELDS, '{"contentId": "000006482916"}');
+//
+//        $response = curl_exec($ch);
+//
+//
+//
+//        $result = json_decode($response);
+//
+//
+//
+//        dd($response, $result,$contentId,3423);
+//
+//        curl_close($ch);
+
+
+
+        $dataArr = [
+            'contentId'=>$contentId
+        ];
+
+        $endpoint = "https://devapi.samsungapps.com/seller/contentSubmit";
+        $headers = [
+            'Content-Type'=> 'application/json',
+            'Authorization'=> 'Bearer ' . $token,
+            'service-account-id'=> $account_id,
+
+        ];
+        $contentId_detail = $this->contentInfo($token,$account_id,$contentId);
+
+//        try {
+            $response = Http::withHeaders($headers)->post($endpoint, $dataArr);
+            dd($contentId_detail,$response,$response->json());
+            if ($response->successful()){
+                $result = $response->json();
+                dd($result);
+                $return = $result['contentStatus'];
+                return $return ;
+            }
+//        }catch (\Exception $exception) {
+//            Log::error('Message: contentSubmit -- ' . $exception->getMessage() . $exception->getLine());
+//        }
+    }
+
 }

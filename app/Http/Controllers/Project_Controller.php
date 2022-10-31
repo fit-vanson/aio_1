@@ -66,6 +66,10 @@ class Project_Controller extends Controller
                 $query
                     ->where('dev_name', 'like', '%' . $searchValue . '%');
             })
+            ->orwhereHas('ma_template', function ($query) use ($searchValue) {
+                $query
+                    ->where('template', 'like', '%' . $searchValue . '%');
+            })
             ->count();
         $records = Project::orderBy($columnName, $columnSortOrder)
             ->with('markets.pivot.dev.ga','ma_template','da')
@@ -80,6 +84,10 @@ class Project_Controller extends Controller
             ->orwhereHas('dev', function ($query) use ($searchValue) {
                 $query
                     ->where('dev_name', 'like', '%' . $searchValue . '%');
+            })
+            ->orwhereHas('ma_template', function ($query) use ($searchValue) {
+                $query
+                    ->where('template', 'like', '%' . $searchValue . '%');
             })
             ->skip($start)
             ->take($rowperpage)

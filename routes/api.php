@@ -46,5 +46,10 @@ Route::get('/get-token-callback', [ApiController::class, 'get_get_token_callback
 Route::get('/getReview/{id}', [ApiController::class, 'getReview'])->name('api.getReview');
 Route::get('/postReview/{id}', [ApiController::class, 'postReview'])->name('api.postReview');
 
+Route::get('/get-inappproducts',[ApiController::class,'get_inappproducts'])->name('api.get_inappproducts');
+Route::get('/samsung',[ApiController::class,'samsung'])->name('api.samsung');
+
+
+
 
 
