@@ -60,7 +60,8 @@ class Project_Controller extends Controller
             ->orwhereHas('markets', function ($query) use ($searchValue) {
                 $query
                     ->where('keystore', 'like', '%' . $searchValue . '%')
-                    ->orwhere('package', 'like', '%' . $searchValue . '%');
+                    ->orwhere('package', 'like', '%' . $searchValue . '%')
+                    ->orwhere('appID', 'like', '%' . $searchValue . '%');
             })
             ->orwhereHas('dev', function ($query) use ($searchValue) {
                 $query
@@ -79,7 +80,8 @@ class Project_Controller extends Controller
             ->orwhereHas('markets', function ($query) use ($searchValue) {
                 $query
                     ->where('keystore', 'like', '%' . $searchValue . '%')
-                    ->orwhere('package', 'like', '%' . $searchValue . '%');
+                    ->orwhere('package', 'like', '%' . $searchValue . '%')
+                    ->orwhere('appID', 'like', '%' . $searchValue . '%');
             })
             ->orwhereHas('dev', function ($query) use ($searchValue) {
                 $query

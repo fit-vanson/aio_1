@@ -57,6 +57,16 @@ class CronProjectController extends Controller
             Log::error('Message:' . $exception->getMessage() . '--- Cron Project Vivo : ' . $exception->getLine());
         }
 
+
+        try {
+            $samsung   = $this->samsung();
+        }catch (\Exception $exception) {
+            Log::error('Message:' . $exception->getMessage() . '--- Cron Project Samsung : ' . $exception->getLine());
+        }
+
+
+
+
         if($chplay !== false   || $huawei !== false || $vivo !== false  ){
             echo '<META http-equiv="refresh" content="5;URL=' . url("cronProject") . '">';
         }
@@ -465,7 +475,6 @@ class CronProjectController extends Controller
         return $data;
     }
 
-
     public function getScoreHuawei($domain,$token,$clientID,$appID){
         $data = '';
         if(isset($_GET['submonth'])){
@@ -686,55 +695,15 @@ class CronProjectController extends Controller
 
     public function samsung($status_upload = null){
 
-        $this->api_samsung();
-
-
-        $time =  Setting::first();
-        $timeCron = Carbon::now()->subMinutes($time->time_cron)->setTimezone('Asia/Ho_Chi_Minh')->timestamp;
-        $status_upload = isset($_GET['status_upload']) ? $_GET['status_upload'] : $status_upload;
-
-        $appsSamsung = MarketProject::with('dev')
-            ->where('market_id', 3)
-            ->where('status_upload','like','%'. $status_upload.'%')
-            ->whereHas('dev', function ($query) {
-                return $query
-                    ->whereNotNull('api_client_secret')
-                    ->where('api_client_secret','<>','');
-
-            })
-            ->where(function ($q) use ($timeCron) {
-                $q->where('bot_time', '<=', $timeCron)
-                    ->orWhere('bot_time', null);
-            })
-//            ->get();
-            ->paginate($time->limit_cron);
-
-        dd($appsSamsung);
-
-
-        $dev = Dev::where('market_id', 3)
-            ->where(function($q)  {
-                $q ->whereNotNull('api_client_secret')
-                    ->where('api_client_secret','<>','');
-            })
-            ->whereHas('projects_market', function ($q) use ($timeCron) {
-                $q->where('bot_time', '<=', $timeCron)
-                    ->orWhere('bot_time', null);
-            })
-            ->paginate($time->limit_cron);
-
-        dd($dev);
-
-
-
-
-
-
         echo '<br/><br/>';
-        echo '<br/>' .'=========== Vivo ==============' ;
+        echo '<br/>' .'=========== Samsung ==============' ;
         echo '<br/><b>'.'Yêu cầu:';
-        echo '<br/>&emsp;'.'- Project có Package của Vivo.';
-        echo '<br/>&emsp;'.'- Dev Vivo có Client ID và Client Secret'.'</b><br/><br/>';
+        echo '<br/>&emsp;'.'- Project có AppID của Samsung.';
+        echo '<br/>&emsp;'.'- Dev Samsung có Client ID và Client Secret'.'</b><br/><br/>';
+        echo $this->api_samsung();
+        return;
+
+
     }
 
 
@@ -751,28 +720,18 @@ class CronProjectController extends Controller
             $account_id = $dev->api_client_id;
             $privateKey = $dev->api_client_secret ;
 
-
-
             if(!$this->check_token($token,$account_id)){
                 $token = $this->get_token_samsung($account_id,$privateKey);
                 $dev->api_token = $token;
                 $dev->save();
             }
-
-
             $contentList =  $this->contentList($token,$account_id);
-//            dd($contentList);
-
-//            dd($contentList);
             $dataArr = [];
+            $echo = $sms = '';
             foreach ($contentList as $content){
-//                $contentInfo = $this->contentInfo($token,$account_id,$content['contentId']);
-                $contentInfo = $this->contentInfo($token,$account_id,'000006486573');
-                dd($contentInfo);
-                $package = $contentInfo[0]['binaryList'][0]['packageName'];
+//                $a= $this->contentInfo($token,$account_id,'000006486573');
 
-                dd($package,$contentInfo);
-                $contentStatus = $contentInfo[0]['contentStatus'];
+                $contentStatus = $content['contentStatus'];
                 switch ($contentStatus){
                     case 'REGISTERING':
                         $status_app = 2;
@@ -782,42 +741,29 @@ class CronProjectController extends Controller
                         break;
                     case 'SUSPENDED':
                         $status_app = 5;
+                        $sms .= "\n<b>AppID: </b>"
+                            . '<code>'.$content['contentId'].'</code> - '
+                            . '<code>'.$content['contentName'].'</code> - '
+                            . '<code>'.$content['contentStatus'].' </code>';
                         break;
                     case 'TERMINATED':
                         $status_app = 2;
 
                 }
-                $dataArr[$package] = [
+                $dataArr[] = [
                     'appID' => $content['contentId'],
                     'status_app' =>$status_app,
-//                    'package' => $package,
+                    'bot_time' => time(),
                 ];
+                $echo .=  '<br/>'.'Dang chay: '.Carbon::now('Asia/Ho_Chi_Minh'). '-'. $content['contentId'].'--- '.$contentStatus;
+
             }
-
-            $dataProject = [];
-            foreach ($dev->projects_market as $project){
-                $dataArr[$project->package] = [
-                    'id' => $project->id,
-//                    'package' => $project->package,
-                    'dev_id' => $project->dev_id,
-                ];
-            }
-
-
-
-//            dd($dataProject);
-            dd($dataArr);
-
-
-
-            dd(  );
 
             $MarketProjectInstance = new MarketProject();
-            $index = ['market_id','dev_id','app_name_x'];
-            $result = batch()->update($MarketProjectInstance, $dataArr, $index);
-
-            dd($dataArr,$result);
-
+            $index = 'appID';
+            batch()->update($MarketProjectInstance, array_unique($dataArr,SORT_REGULAR), $index);
+            $this->sendMessTelegram('Samsung',$sms);
+            return $echo;
         }
         return true;
     }
