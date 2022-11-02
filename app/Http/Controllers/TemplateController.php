@@ -61,10 +61,12 @@ class TemplateController extends Controller
 
         // Get records, also we have included search filter as well
         $records = Template::orderBy($columnName, $columnSortOrder)
-            ->where('template', 'like', '%' . $searchValue . '%')
-            ->orwhere('template_name', 'like', '%' . $searchValue . '%')
-            ->orWhere('ver_build', 'like', '%' . $searchValue . '%')
-            ->orWhere('category', 'like', '%' . $searchValue . '%')
+
+//            ->where('template', 'TA997')
+//            ->where('template', 'like', '%' . $searchValue . '%')
+//            ->orwhere('template_name', 'like', '%' . $searchValue . '%')
+//            ->orWhere('ver_build', 'like', '%' . $searchValue . '%')
+//            ->orWhere('category', 'like', '%' . $searchValue . '%')
             ->skip($start)
             ->take($rowperpage)
             ->with('project','markets')
@@ -137,24 +139,6 @@ class TemplateController extends Controller
                 $status = 'Trạng thái: <i class="font-20 ion ion-md-close-circle" style="color: red"></i>';
             }
 
-//            if($record->time_create == 0 ){
-//                $time_create =   null;
-//            }else{
-//                $time_create =  date( 'd/m/Y',$record->time_create);
-//            }
-//
-//            if($record->time_update == 0 ){
-//                $time_update =   null;
-//            }else{
-//                $time_update =  date( 'd/m/Y',$record->time_update);
-//            }
-//
-//            if($record->time_get == 0 ){
-//                $time_get =   null;
-//            }else{
-//                $time_get =  date( 'd/m/Y',$record->time_get);
-//            }
-
             $categories = '';
 
             foreach ($record->markets as $category){
@@ -163,18 +147,13 @@ class TemplateController extends Controller
 
 
 
-            $html = '<span>
-                        <p><b>Ghi chú: </b>'.$record->note.'</p>
-
-                     </span>';
-
-
+            $html = '<span><p><b>Ghi chú: </b>'.str_replace('"','',$record->note).'</p></span>';
             if(isset($record->template_logo)){
 //                $logo = "<p><img class='rounded mx-auto d-block'  width='100px'  height='100px'  src='../storage/template/$record->template/$record->template_logo'></p>";
-                $logo = '<p><img class="rounded mx-auto d-block" data-toggle="popover" data-placement="right" title="<h5>'.$record->template.'</h5>"  data-content="'.$html.'"  width="100px"  height="100px"  src="../storage/template/'.$record->template.'/'.$record->template_logo.'"></p>';
+                $logo = '<img class="rounded mx-auto d-block" data-toggle="popover" data-placement="right" data-content="'.$html.'"  width="100px"  height="100px"  src="../storage/template/'.$record->template.'/'.$record->template_logo.'">';
 
             }else{
-                $logo = '<p><img class="rounded mx-auto d-block" data-toggle="popover" data-placement="right" title="<h5>'.$record->template.'</h5>"  data-content="'.$html.'"  width="100px" height="100px" src="assets\images\logo-sm.png"></p>';
+                $logo = '<p><img class="rounded mx-auto d-block" data-toggle="popover" data-placement="right" data-content="'.$html.'"  width="100px" height="100px" src="assets\images\logo-sm.png"></p>';
             }
             $template_apk   = $record->template_apk ?  ' <a href="/storage/template/'.$record->template.'/'.$record->template_apk.'" class="badge badge-success" style="font-size: 12px">APK</a> ' : ' <span  class="badge badge-danger" style="font-size: 12px">APK</span> ';
             $template_data  = $record->template_data ? ' <a href="/storage/template/'.$record->template.'/'.$record->template_data.'" class="badge badge-success" style="font-size: 12px">Data</a> ' : ' <span  class="badge badge-danger" style="font-size: 12px">Data</span> ';
