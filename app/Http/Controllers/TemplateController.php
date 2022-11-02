@@ -145,9 +145,7 @@ class TemplateController extends Controller
                 $categories .= '<p class="card-title-desc font-16"><img src="img/icon/'.$category->market_logo.'"> '.$category->pivot->value.'</p>';
             }
 
-
-
-            $html = '<span><p><b>Ghi chú: </b>'.str_replace('"','',$record->note).'</p></span>';
+            $html = '<span><p><b>Ghi chú: </b><br>'.str_replace('"','',$record->note).'</p></span>';
             if(isset($record->template_logo)){
 //                $logo = "<p><img class='rounded mx-auto d-block'  width='100px'  height='100px'  src='../storage/template/$record->template/$record->template_logo'></p>";
                 $logo = '<img class="rounded mx-auto d-block" data-toggle="popover" data-placement="right" data-content="'.$html.'"  width="100px"  height="100px"  src="../storage/template/'.$record->template.'/'.$record->template_logo.'">';
