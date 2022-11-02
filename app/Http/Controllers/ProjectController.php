@@ -4680,7 +4680,7 @@ class ProjectController extends Controller
     }
 
     public function getProject($id){
-        $project = ProjectModel::where('projectname',$id)->first();
+        $project = ProjectModel::with('da')->where('projectname',$id)->first();
         if (isset($project)){
             return response()->json(['msg'=>'success','data'=>$project]);
         }else{

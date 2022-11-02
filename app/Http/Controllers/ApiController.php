@@ -496,16 +496,16 @@ BKUyc6NW6/fEZsTTUK3dMDbOJLU42oZnnLnw3bZe37G09/EmR54iDkA=
 
         $contentId = '000006482916';
         $dir_apk = 'https://api.vietmmo.net/build/DA219/DA219-57/CHPLAY_DA219-57_TA111_V4_Ver_5_2910_2022_align_k16006.apk';
-//        $contentInfo = $this->contentInfo($token,$account_id,$contentId);
+        $contentInfo = $this->contentInfo($token,$account_id,$contentId);
 
-//        dd($contentInfo);
+        dd($contentInfo);
 
-        $sessionID = $this->createUploadSessionId($token,$account_id);
-        $file = $this->file_upload($token,$account_id,$sessionID,$dir_apk);
-        $update_app = $this->contentUpdate($token,$account_id,$contentId,$file->fileKey);
-//        $submit_app = $this->contentSubmit($token,$account_id,$contentId,$file->fileKey);
+//        $sessionID = $this->createUploadSessionId($token,$account_id);
+//        $file = $this->file_upload($token,$account_id,$sessionID,$dir_apk);
+//        $update_app = $this->contentUpdate($token,$account_id,$contentId,$file->fileKey);
+        $submit_app = $this->contentSubmit($token,$account_id,$contentId);
 
-        dd($file,$update_app,$submit_app);
+        dd($submit_app);
 
 //        dd($file);
 
@@ -518,7 +518,6 @@ BKUyc6NW6/fEZsTTUK3dMDbOJLU42oZnnLnw3bZe37G09/EmR54iDkA=
 
     function gen_jwt($account_id,$privateKey)
     {
-        dd($privateKey);
         $payload =  [
             "iss"=> $account_id,
             "scopes"=> ["publishing", "gss"],
@@ -684,7 +683,7 @@ BKUyc6NW6/fEZsTTUK3dMDbOJLU42oZnnLnw3bZe37G09/EmR54iDkA=
 
     }
 
-    function contentSubmit($token,$account_id,$contentId,$fileKey){
+    function contentSubmit($token,$account_id,$contentId){
 
 
 //        $ch = curl_init();
