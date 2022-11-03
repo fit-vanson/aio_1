@@ -361,21 +361,21 @@
                         tab_content += '<div class="tab-pane p-3 gallery  '+active+'" id="' + value.lang_code + '" role="tabpanel">' +
 
                             '<div class="card-body d-flex justify-content-center"><div class="row"><div class="form-group col-lg-9">'+
-                            '<table class="table table-bordered table-striped mb-0">'+
-                            '<tbody id="lang_upload" >'+
-                            '<tr>'+
-                            '<th>Title</td>'+
-                            '<td class="copyButton">'+value.pivot.title+'</button></td>'+
-                            '</tr>'+
-                            '<tr>'+
-                            '<th>Summary</td>'+
-                            '<td class="copyButton">'+value.pivot.summary+'</button></td>'+
-                            '</tr>'+
-                            '<tr>'+
-                            '<th>Description</td>'+
-                            '<td class="copyButton1111" id="copyButton1111">'+value.pivot.description+'</td>'+
-                            '</tr>'+
-                            '</tbody></table>' +
+                            // '<table class="table table-bordered table-striped mb-0">'+
+                            // '<tbody id="lang_upload" >'+
+                            // '<tr>'+
+                            // '<th>Title</td>'+
+                            // '<td class="copyButton">'+value.pivot.title+'</button></td>'+
+                            // '</tr>'+
+                            // '<tr>'+
+                            // '<th>Summary</td>'+
+                            // '<td class="copyButton">'+value.pivot.summary+'</button></td>'+
+                            // '</tr>'+
+                            // '<tr>'+
+                            // '<th>Description</td>'+
+                            // '<td class="copyButton1111" id="copyButton1111">'+value.pivot.description+'</td>'+
+                            // '</tr>'+
+                            // '</tbody></table>' +
                             '</div></div></div>'+
                             '<div class="popup-gallery">'
                             + preview + banner + video +
