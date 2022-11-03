@@ -246,7 +246,6 @@ class DesignController extends Controller
                 }
             }
         }
-
         $project->user_design = auth()->id();
         if ($project->status_design == 2  ){
             $project->status_design = 1;
