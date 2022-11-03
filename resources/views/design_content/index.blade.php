@@ -302,7 +302,7 @@
                 {{--})--}}
 
                 $.get('{{asset('design-content/edit')}}/' + _id, function (data) {
-                    $("#logo_project").attr("src", "../storage/projects/" + data.da.ma_da + '/' + data.projectname + "/lg.png");
+                    $("#logo_project").attr("src", "../storage/projects/" + data.da.ma_da + '/' + data.projectname + "/lg114.png");
                     $('#notes_design').val(data.notes_design);
                     $('#project_id').val(data.projectid);
                     $('#pro_name').html(data.projectname);
