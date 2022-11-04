@@ -120,9 +120,9 @@ class DesignController extends Controller
             }
 
             if(isset($record->logo)){
-                $logo = '<a class="image-popup-no-margins image float-left" style="margin:5px" href="'.url('storage/projects/'.$mada.'/'.$record->projectname.'/lg114.png').'" title="Logo">' .
+                $logo = '<a class="image-popup-no-margins image float-left" style="margin:5px" href="'.url('storage/projects/'.$mada.'/'.$record->projectname.'/lg.png').'" title="Logo">' .
 
-                    '<img  src="'.url('storage/projects/'.$mada.'/'.$record->projectname.'/lg114.png').'" alt="logo" height="100">' .
+                    '<img  src="'.url('storage/projects/'.$mada.'/'.$record->projectname.'/lg.png').'" alt="logo" height="100">' .
 
                     '</a>';
             }else{
