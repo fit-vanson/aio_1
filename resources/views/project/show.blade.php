@@ -54,7 +54,7 @@
                         <div class="form-group col-lg-3">
                             <label for="name">Logo</label>
                             <p class="card-title-desc">
-                                <img id="logo_project" src="../storage/projects/{{$project->da->ma_da}}/{{$project->projectname}}/{{$project->logo}}"  class="d-block img-fluid" src="" width="200px" alt="">
+                                <img id="logo_project" src="../storage/projects/{{@$project->da->ma_da}}/{{$project->projectname}}/{{$project->logo}}"  class="d-block img-fluid" src="" width="200px" alt="">
                             </p>
                         </div>
                         <div class="form-group col-lg-9">
@@ -186,7 +186,7 @@
 
                         $tab_content .=
                             '<div class="tab-pane p-3 gallery  '.$active.'" id="' . $value->lang_code . '" role="tabpanel">' .
-                                '<div class="card-body d-flex justify-content-center">'.
+                                '<div class="card-body d-flex ">'.
                                     '<div class="row">'.
                                         '<div class="form-group col-lg-9">'.
                                             '<table class="table table-bordered table-striped mb-0">'.
@@ -209,7 +209,6 @@
                                     '</div>'.
                                 '</div>'.
                                 '<div class="popup-gallery">'.$preview. $banner.$video.'</div>'.
-
                             '</div>';
                     }
                     ?>
