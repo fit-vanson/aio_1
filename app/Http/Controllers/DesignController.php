@@ -132,12 +132,12 @@ class DesignController extends Controller
 
                 $ret = array_filter($this->array_slice_assoc($lang->pivot->toArray(), ['banner', 'video']));
 
-                if(array_key_exists('banner',$ret)){
-                    $result = ' <span style="font-size: 100%" class="badge badge-warning">'.$lang->lang_name. ' ('.($preview).') </span> ' ;
+                if(array_key_exists('banner',$ret) && array_key_exists('video',$ret)){
+                    $result = ' <span style="font-size: 100%" class="badge badge-success">'.$lang->lang_name. ' ('.($preview).') </span> ' ;
                 }elseif (array_key_exists('video',$ret)){
                     $result = ' <span style="font-size: 100%" class="badge badge-info">'.$lang->lang_name.' ('.($preview).') </span> ' ;
-                }elseif(array_key_exists('video',$ret) && array_key_exists('banner',$ret) ){
-                    $result = ' <span style="font-size: 100%" class="badge badge-success">'.$lang->lang_name.' ('.($preview).') </span> ' ;
+                }elseif(array_key_exists('banner',$ret) ){
+                    $result = ' <span style="font-size: 100%" class="badge badge-warning">'.$lang->lang_name.' ('.($preview).') </span> ' ;
                 }else{
                     $result = ' <span style="font-size: 100%" class="badge badge-danger">'.$lang->lang_name.' ('.($preview).') </span> ' ;
                 }
