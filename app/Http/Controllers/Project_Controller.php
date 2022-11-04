@@ -96,14 +96,17 @@ class Project_Controller extends Controller
             ->get();
         $data_arr = array();
         foreach ($records as $record) {
-            $btn = ' <a href="javascript:void(0)" data-id="'.$record->projectid.'" class="btn btn-warning editProject"><i class="ti-pencil-alt"></i></a>';
+            $btn = '<div class="button-items">';
+            $btn .= ' <a href="javascript:void(0)" data-id="'.$record->projectid.'" class="btn btn-warning editProject"><i class="ti-pencil-alt"></i></a>';
             $btn .= ' <a href="'.route('project.show',['id'=>$record->projectid]).'" target="_blank"  class="btn btn-secondary"><i class="ti-eye"></i></a>';
             if($record->buildinfo_console == 0){
                 $btn = $btn. ' <br><br>  <a href="javascript:void(0)" onclick="quickEditProject('.$record->projectid.')" class="btn btn-success"><i class="mdi mdi-android-head"></i></a>';
             }
             $btn = $btn.' <a href="javascript:void(0)" data-id="'.$record->projectid.'" data-original-title="Delete" class="btn btn-danger deleteProject"><i class="ti-trash"></i></a>';
-            $btn = $btn.' <a href="javascript:void(0)" data-id="'.$record->projectid.'"  class="btn btn-info fakeProject"><i class="ti-info-alt"></i></a>';
+            $btn = $btn.' <a href="javascript:void(0)" data-id="'.$record->projectid.'"  class="btn btn-dark fakeProject"><i class="ti-info-alt"></i></a>';
+            $btn = $btn.' <a href="javascript:void(0)" data-id="'.$record->projectid.'"  class="btn btn-info copyProject"><i class="mdi mdi-content-copy"></i></a>';
 
+            $btn = $btn.'</div>';
             $mada =  $template = '';
             if($record->da){
                 $mada = $record->da->ma_da;
@@ -166,16 +169,12 @@ class Project_Controller extends Controller
 
             foreach ($record->markets as $key=>$market){
                 if($market->pivot->package){
-
-
                     $ads = json_decode($market->pivot->ads,true);
-
-                    if(count(array_filter($ads)) != 0){
+                    if(isset($ads) && count(array_filter($ads)) != 0){
                         $ads_status = ' <span class="badge badge-success" style="font-size: 11px">ads</span>';
                     }else{
                         $ads_status = ' ';
                     }
-
 
                     $result .= '<div class="font-16">';
                     $package .= '<p class="card-title-desc font-16"><img src="img/icon/'.$market->market_logo.'"><a id="app_link_'.$market->pivot->id.'" href="'.$market->pivot->app_link.'"  target="_blank"> '.$market->pivot->package.'</a>'.$ads_status.'</p>';
@@ -825,6 +824,7 @@ class Project_Controller extends Controller
     public function show($id){
         $project = Project::findorfail($id)->load('markets.pivot.dev','markets.pivot.keystores','da','ma_template.markets','lang');
 
+        dd($project);
 //        return response()->json($project->load('markets.pivot.dev','markets.pivot.keystores','da','ma_template.markets','lang'));
 
         return view('project.show')->with(compact('project'));
@@ -1138,6 +1138,55 @@ class Project_Controller extends Controller
 
         echo json_encode($response);
 
+    }
+
+    public function copyProject(Request $request){
+
+
+//        $rules = [
+//            'project_name_copy' =>'required|unique:ngocphandang_project,projectname',
+//        ];
+//        $message = [
+//            'project_name_copy.unique'=>'Tên Project đã tồn tại',
+//        ];
+//        $error = Validator::make($request->all(),$rules, $message );
+//
+//        if($error->fails()){
+//            return response()->json(['errors'=> $error->errors()->all()]);
+//        }
+
+
+
+//        dd($request->all());
+        $project_origin = Project::findorfail($request->project_id_origin);
+//        dd($project_origin);
+        $new_project =  $project_origin->duplicate();
+//        $new_project =  $project_origin->replicate();
+        $new_project->projectname =  $request->projectname;
+        $new_project->push();
+        dd($new_project);
+//        $new_project->relations = [];
+        $new_project->load('markets','lang');
+
+        dd($new_project->relations,$new_project);
+
+        foreach ($new_project->relations as $relationName => $values){
+
+            dd($values,$relationName,12);
+            $new_project->{$relationName}()->sync($values);
+//            $new_project->lang()->sync($values);
+        }
+        dd($new_project,1);
+
+//        dd($new_project);
+//        $new_project->projectname = $request->project_name_copy;
+        $new_project->save();
+
+
+
+
+        dd($new_project,12);
+        dd($request->all());
     }
 
 }
