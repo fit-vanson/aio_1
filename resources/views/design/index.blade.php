@@ -169,7 +169,7 @@
 
                     $.each([0,1,2,4], function ( d, j ) {
                         var status ='';
-                        switch (d){
+                        switch (j){
                             case 0:
                                 status ='<span style="font-size: 100%" class="badge badge-secondary">Gửi chờ duyệt</span>' ;
                                 break;
@@ -186,7 +186,7 @@
                                 status = '<span style="font-size: 100%" class="badge badge-success">Done, Kết thúc Project</span>';
                                 break;
                         }
-                        select.append( '<option value="'+d+'">'+status+'</option>' )
+                        select.append( '<option value="'+j+'">'+status+'</option>' )
                     } );
                 } );
             },
