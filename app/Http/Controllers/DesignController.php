@@ -110,23 +110,21 @@ class DesignController extends Controller
 
             if(!empty(array_filter($banner))){
                 $random_lang = array_rand(array_filter($banner),1);
-                $random_banner = '<a class="image-popup-no-margins image float-left" style="margin:5px" href="'.url('storage/projects/'.$mada.'/'.$record->projectname.'/'.$random_lang.'/bn.jpg').'" title="'.$random_lang.' Banner">' .
+                $random_banner = '<a class="image-popup-no-margins image" style="margin:5px" href="'.url('storage/projects/'.$mada.'/'.$record->projectname.'/'.$random_lang.'/bn.jpg').'" title="'.$random_lang.' Banner">' .
                     '<img  src="'.url('storage/projects/'.$mada.'/'.$record->projectname.'/'.$random_lang.'/bn.jpg').'" alt="'.$random_lang.' Banner" height="100">' .
                     '</a>';
             }else{
-                $random_banner = '<a class="image-popup-no-margins image float-left" style="margin:5px" href="assets\images\logo-sm.png" title="Logo">' .
+                $random_banner = '<a class="image-popup-no-margins image" style="margin:5px" href="assets\images\logo-sm.png" title="Logo">' .
                     '<img  src="assets\images\logo-sm.png" alt="logo" height="100">' .
                     '</a>';
             }
 
             if(isset($record->logo)){
-                $logo = '<a class="image-popup-no-margins image float-left" style="margin:5px" href="'.url('storage/projects/'.$mada.'/'.$record->projectname.'/lg.png').'" title="Logo">' .
-
+                $logo = '<a class="image-popup-no-margins image" style="margin:5px" href="'.url('storage/projects/'.$mada.'/'.$record->projectname.'/lg.png').'" title="Logo">' .
                     '<img  src="'.url('storage/projects/'.$mada.'/'.$record->projectname.'/lg.png').'" alt="logo" height="100">' .
-
                     '</a>';
             }else{
-                $logo = '<a class="image-popup-no-margins image float-left" style="margin:5px" href="assets\images\logo-sm.png" title="Logo">' .
+                $logo = '<a class="image-popup-no-margins image " style="margin:5px" href="assets\images\logo-sm.png" title="Logo">' .
                     '<img  src="assets\images\logo-sm.png" alt="logo" height="100">' .
                     '</a>';
             }
