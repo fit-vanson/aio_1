@@ -13,12 +13,16 @@ use Illuminate\Support\Facades\Validator;
 use Intervention\Image\Facades\Image;
 use function PHPUnit\Framework\isEmpty;
 use function PHPUnit\Framework\isNull;
+use function Symfony\Component\String\s;
 
 class DesignController extends Controller
 {
     public function index(){
+
+//        $this->convert();
+
         $header = [
-            'title' => 'Project',
+            'title' => 'Design',
             'button' => [
                 'Create'            => ['id'=>'createNewDesign','style'=>'primary'],
             ]
@@ -357,6 +361,17 @@ class DesignController extends Controller
     }
 
     function array_slice_assoc($array,$keys) {
+
         return array_intersect_key($array,array_flip($keys));
     }
+
+//    public function convert(){
+//        $lang_projects = ProjectHasLang::all();
+//        foreach ($lang_projects as $project){//
+//            $sum= array_sum($this->array_slice_assoc($project->toArray(), ['pr1','pr2','pr3','pr4','pr5','pr6','pr7','pr8']));
+//            $project->preview = $sum;
+//            $project->save();
+//        }
+//    }
+
 }
