@@ -29,7 +29,7 @@
                     @if(isset($header))
                             @if(isset($header['badge']))
                                 @foreach($header['badge'] as $key=>$value)
-                                    <span class=" badge badge-{{$value['style']}}">{{$key}}</span>
+                                    <span class="font-14 badge badge-{{$value['style']}}">{{$key}}</span>
                                 @endforeach
                             @endif
                     @endif

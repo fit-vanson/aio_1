@@ -45,12 +45,22 @@
             const regexForStripHTML = /<[^>]*>?/gm;
             const text = $(this).html();
             const stripContent = text.replaceAll(regexForStripHTML, '');
-            // $temp.val($(this).html()).select();
-            $temp.val(stripContent).select();
+            $temp.val($(this).html()).select();
+            // $temp.val(stripContent).select();
             document.execCommand("copy");
             $temp.remove();
             $.notify('Copy success ', "success");
         })
+
+
+
+
+
+        // function copyDesVN() {
+        //     let textarea = document.getElementById("des_vn");
+        //     tinyMCE.execCommand('selectAll',true,textarea);
+        //     tinyMCE.execCommand('copy',true,textarea);
+        // }
     });
 </script>
 
