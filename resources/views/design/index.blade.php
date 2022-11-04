@@ -27,6 +27,7 @@
                             <table id="designTable" class="table table-striped table-bordered dt-responsive data-table" style="width: 100%;">
                                 <thead>
                                 <tr>
+                                    <th style="width: 20%;">Logo</th>
                                     <th style="width: 20%;">Project Name</th>
                                     <th style="width: 30%;">Ngôn ngữ </th>
                                     <th style="width: 20%;">Status</th>
@@ -117,10 +118,9 @@
                 type: 'post',
             },
             columns: [
+                {data: 'logo', name: 'logo'},
                 {data: 'projectid', name: 'projectid'},
                 {data: 'lang_id', name: 'lang_id',orderable: false},
-                // {data: 'preview', name: 'preview'},
-                // {data: 'video', name: 'video'},
                 {data: 'status_design', name: 'status_design',orderable: false},
                 {data: 'user_design', name: 'user_design'},
                 {data: 'action',className: "text-center", name: 'action', orderable: false, searchable: false},
@@ -149,12 +149,12 @@
                         }
                         return status
                     },
-                    targets: [2]
+                    targets: [3]
                 }
             ],
 
             initComplete: function () {
-                this.api().columns([2]).every( function () {
+                this.api().columns([3]).every( function () {
                     var column = this;
                     var select = $('<select class="form-control"><option value="">Trạng thái</option></select>')
                         .appendTo( $(column.header()).empty() )

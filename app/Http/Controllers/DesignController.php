@@ -65,14 +65,14 @@ class DesignController extends Controller
                     $q->Where('projectname', 'like', '%' . $searchValue . '%')
                         ->orWhere('projectid', 'like', '%' . $searchValue . '%');
                 })
-                ->Where('status_design', 'like', '%' .$columnName_arr[2]['search']['value'] . '%')
+                ->Where('status_design', 'like', '%' .$columnName_arr[3]['search']['value'] . '%')
                 ->count();
             $records = Project::has('lang')
                 ->where(function($q) use ($searchValue) {
                     $q->Where('projectname', 'like', '%' . $searchValue . '%')
                         ->orWhere('projectid', 'like', '%' . $searchValue . '%');
                 })
-                ->Where('status_design', 'like', '%' . $columnName_arr[2]['search']['value'] . '%')
+                ->Where('status_design', 'like', '%' . $columnName_arr[3]['search']['value'] . '%')
                 ->select('*')
                 ->orderBy($columnName, $columnSortOrder)
                 ->skip($start)
@@ -115,6 +115,7 @@ class DesignController extends Controller
 //                $btn = $btn.' <a href="javascript:void(0)"  data-id="'.$record->projectid.'" class="btn btn-danger deleteProjectLang"><i class="ti-trash"></i></a>';
 //            }
 
+
             $project_name = $record->projectname;
 //            $du_an = preg_split("/[-]+/",$project_name)[0];
             $langs = $record->lang;
@@ -144,18 +145,25 @@ class DesignController extends Controller
                 }else{
                     $result = ' <span style="font-size: 100%" class="badge badge-danger">'.$lang->lang_name.' ('.($preview).') </span> ' ;
                 }
-
-//                if($lang->pivot->video == 1){
-//                    $video = ' <span style="font-size: 100%" class="badge badge-success"> video</span> ' ;
-//                }
                 $design .=  $result;
             }
 
+            if($record->da){
+                $mada = $record->da->ma_da;
+            }
+            if(isset($record->logo)){
+                $logo = '<img class="rounded mx-auto d-block"  width="100px"  height="100px"  src="'.url('storage/projects/'.$mada.'/'.$record->projectname.'/lg114.png').'">';
+            }else{
+                $logo = '<img class="rounded mx-auto d-block" width="100px" height="100px" src="assets\images\logo-sm.png">';
+            }
+
+
             $data_arr[] = array(
 //                'id' => $record->id,
+                'logo' => $logo,
                 'projectid' => $project_name,
                 'lang_id' => $design,
-                'user_design' => $record->user ? $record->user->name : null,
+                'user_design' => $record->user ? $record->user->name : 'Admin',
                 'status_design' => $record->status_design,
                 "action"=> $btn,
             );
