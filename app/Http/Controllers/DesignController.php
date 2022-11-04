@@ -121,30 +121,27 @@ class DesignController extends Controller
             $langs = $record->lang;
             $design = '';
             foreach ($langs as $lang){
-//                dd($lang);
-//                $preview = $this->array_slice_assoc($lang->pivot->toArray(), ['pr1', 'pr2','pr3','pr4','pr5','pr6','pr7','pr8',]);
                 $preview = $lang->pivot->preview;
-                $needle = 0;
+//                $needle = 1;
 //                $ret =
 //                    array_keys(
 //                        array_filter(
-//                            $this->array_slice_assoc($lang->pivot->toArray(), ['banner', 'video']), function($var) use ($needle){
+//                            $this->array_slice_assoc($lang->pivot->toArray(), ['banner', 'video','preview']), function($var) use ($needle){
 //                        return strpos($var, $needle) !== false;
 //                    }));
 
-//                $ret = array_sum($this->array_slice_assoc($lang->pivot->toArray(), ['banner', 'video','pr1','pr2','pr3','pr4','pr5','pr6','pr7','pr8']));
-//                dd($ret,$lang->pivot);
+                $ret = array_filter($this->array_slice_assoc($lang->pivot->toArray(), ['banner', 'video']));
 
-
-                if($lang->pivot->banner == 1 ){
+                if(array_key_exists('banner',$ret)){
                     $result = ' <span style="font-size: 100%" class="badge badge-warning">'.$lang->lang_name. ' ('.($preview).') </span> ' ;
-                }elseif ($lang->pivot->video == 1){
+                }elseif (array_key_exists('video',$ret)){
                     $result = ' <span style="font-size: 100%" class="badge badge-info">'.$lang->lang_name.' ('.($preview).') </span> ' ;
-                }elseif($lang->pivot->video == 1 && $lang->pivot->banner == 1 ){
+                }elseif(array_key_exists('video',$ret) && array_key_exists('banner',$ret) ){
                     $result = ' <span style="font-size: 100%" class="badge badge-success">'.$lang->lang_name.' ('.($preview).') </span> ' ;
                 }else{
                     $result = ' <span style="font-size: 100%" class="badge badge-danger">'.$lang->lang_name.' ('.($preview).') </span> ' ;
                 }
+
                 $design .=  $result;
             }
 
