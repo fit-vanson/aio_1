@@ -11,15 +11,17 @@ class Project extends Model
 {
     use HasFactory;
     use EagerLoadPivotTrait;
+    use \Bkwld\Cloner\Cloneable;
     protected $table = 'ngocphandang_project';
     protected $primaryKey = 'projectid';
     protected $guarded =[];
+    protected $cloneable_relations = ['markets_copy', 'lang_copy'];
 
 
     public function markets(){
         return $this->belongsToMany(Markets::class,MarketProject::class,'project_id','market_id')
             ->withPivot(
-                'id',
+//                'id',
                 'dev_id',
                 'appID',
                 'app_name_x',
@@ -62,6 +64,20 @@ class Project extends Model
 
     public function dev(){
         return $this->belongsToMany(Dev::class,MarketProject::class,'project_id','dev_id');
+    }
+
+
+
+    public function markets_copy(){
+        return $this->belongsToMany(Markets::class,MarketProject::class,'project_id','market_id');
+    }
+
+    public function lang_copy(){
+        return $this->belongsToMany(Language::class,ProjectHasLang::class,'project_id','lang_id');
+    }
+
+    public function user(){
+        return $this->belongsTo(User::class,'user_design');
     }
 
 
