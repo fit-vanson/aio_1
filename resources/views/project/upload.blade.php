@@ -128,13 +128,8 @@
 <!-- Required datatable js -->
 
 <script src="{{ URL::asset('/assets/libs/rwd-table/rwd-table.min.js') }}"></script>
-{{--<script src="{{ URL::asset('/assets/libs/datatables/datatables.min.js') }}"></script>--}}
-
-
-
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
 
-{{--<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>--}}
 <script src="https://cdn.datatables.net/scroller/2.0.7/js/dataTables.scroller.min.js"></script>
 
 <script src="plugins/select2/js/select2.min.js"></script>

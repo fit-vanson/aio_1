@@ -14,6 +14,11 @@
 <!-- Select2 Js  -->
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
+
+
+
+
+
 @endsection
 
 @section('content')
@@ -56,13 +61,14 @@
 <script src="{{ URL::asset('/assets/js/customs.js') }}"></script>
 
 
-<!-- Dropzone js -->
+{{--<!-- Dropzone js -->--}}
 <script src="{{ URL::asset('/assets/libs/dropzone/dropzone.min.js') }}"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <script src="{{ URL::asset('/assets/libs/magnific-popup/magnific-popup.min.js') }}"></script>
 <script src="{{ URL::asset('/assets/libs/lightgallery/js/lightgallery-all.js') }}"></script>
+
 
 
 <script type="text/javascript">
@@ -189,6 +195,26 @@
                         select.append( '<option value="'+j+'">'+status+'</option>' )
                     } );
                 } );
+            },
+
+
+
+            drawCallback: function (settings) {
+
+                $('.image-popup-no-margins').magnificPopup({
+                    type: 'image',
+                    closeOnContentClick: true,
+                    closeBtnInside: false,
+                    fixedContentPos: true,
+                    mainClass: 'mfp-no-margins mfp-with-zoom', // class to remove default margin from left and right side
+                    image: {
+                        verticalFit: true
+                    },
+                    zoom: {
+                        enabled: true,
+                        duration: 300 // don't foget to change the duration also in CSS
+                    }
+                });
             },
 
         });

@@ -56,80 +56,38 @@ class DesignController extends Controller
         $columnSortOrder = $order_arr[0]['dir']; // asc or desc
         $searchValue =  $search_arr['value']; // Search value
 
+        // Total records
+        $totalRecords = Project::has('lang')->select('count(*) as allcount')->count();
+        $totalRecordswithFilter = Project::has('lang')->select('count(*) as allcount')
+            ->where(function($q) use ($searchValue) {
+                $q->Where('projectname', 'like', '%' . $searchValue . '%')
+                    ->orWhere('projectid', 'like', '%' . $searchValue . '%');
+            })
+            ->Where('status_design', 'like', '%' .$columnName_arr[3]['search']['value'] . '%')
+            ->count();
+        $records = Project::with('lang')
+            ->has('lang')
+            ->where(function($q) use ($searchValue) {
+                $q->Where('projectname', 'like', '%' . $searchValue . '%')
+                    ->orWhere('projectid', 'like', '%' . $searchValue . '%');
+            })
+            ->Where('status_design', 'like', '%' . $columnName_arr[3]['search']['value'] . '%')
+            ->select('*')
+            ->orderBy($columnName, $columnSortOrder)
+            ->skip($start)
+            ->take($rowperpage)
+            ->get();
 
-//        if( in_array( "Admin" ,array_column(auth()->user()->roles()->get()->toArray(),'name'))){
-            // Total records
-            $totalRecords = Project::has('lang')->select('count(*) as allcount')->count();
-            $totalRecordswithFilter = Project::has('lang')->select('count(*) as allcount')
-                ->where(function($q) use ($searchValue) {
-                    $q->Where('projectname', 'like', '%' . $searchValue . '%')
-                        ->orWhere('projectid', 'like', '%' . $searchValue . '%');
-                })
-                ->Where('status_design', 'like', '%' .$columnName_arr[3]['search']['value'] . '%')
-                ->count();
-            $records = Project::has('lang')
-                ->where(function($q) use ($searchValue) {
-                    $q->Where('projectname', 'like', '%' . $searchValue . '%')
-                        ->orWhere('projectid', 'like', '%' . $searchValue . '%');
-                })
-                ->Where('status_design', 'like', '%' . $columnName_arr[3]['search']['value'] . '%')
-                ->select('*')
-                ->orderBy($columnName, $columnSortOrder)
-                ->skip($start)
-                ->take($rowperpage)
-                ->get();
-//        }else{
-//            $totalRecords = Project::has('lang')->where('user_design',auth()->id())->select('count(*) as allcount')->count();
-//            $totalRecordswithFilter = Project::has('lang')->select('count(*) as allcount')
-//                ->where(function($q) use ($searchValue) {
-//                    $q->Where('projectname', 'like', '%' . $searchValue . '%')
-//                        ->orWhere('projectid', 'like', '%' . $searchValue . '%');
-//                })
-//                ->Where('status_design', 'like', '%' .$columnName_arr[2]['search']['value'] . '%')
-//                ->where('user_design',auth()->id())
-//                ->count();
-//            $records = Project::has('lang')
-//                ->where(function($q) use ($searchValue) {
-//                    $q->Where('projectname', 'like', '%' . $searchValue . '%')
-//                        ->orWhere('projectid', 'like', '%' . $searchValue . '%');
-//                })
-//                ->Where('status_design', 'like', '%' .$columnName_arr[2]['search']['value'] . '%')
-//                ->where('user_design',auth()->id())
-//                ->select('*')
-//                ->orderBy($columnName, $columnSortOrder)
-//                ->skip($start)
-//                ->take($rowperpage)
-//                ->get();
-//        }
-
-
-//        dd($records);
         $data_arr = array();
         foreach ($records as $key=>$record) {
-//            dd($record);
-//            $btn = ' <a href="javascript:void(0)" data-id_row="'.$key.'"  onclick="editProjectLang('.$record->id.')" class="btn btn-warning"><i class="ti-pencil-alt"></i></a>';
             $btn = ' <a href="javascript:void(0)"  data-id="'.$record->projectid.'" class="btn btn-warning editProjectLang"><i class="ti-pencil-alt"></i></a>';
             $btn .= ' <a href="'.route('project.show',['id'=>$record->projectid]).'" target="_blank"  class="btn btn-secondary"><i class="ti-eye"></i></a>';
 
-//            if( in_array( "Admin" ,array_column(auth()->user()->roles()->get()->toArray(),'name'))){
-//                $btn = $btn.' <a href="javascript:void(0)"  data-id="'.$record->projectid.'" class="btn btn-danger deleteProjectLang"><i class="ti-trash"></i></a>';
-//            }
-
-
             $project_name = $record->projectname;
-//            $du_an = preg_split("/[-]+/",$project_name)[0];
             $langs = $record->lang;
             $design = '';
             foreach ($langs as $lang){
                 $preview = $lang->pivot->preview;
-//                $needle = 1;
-//                $ret =
-//                    array_keys(
-//                        array_filter(
-//                            $this->array_slice_assoc($lang->pivot->toArray(), ['banner', 'video','preview']), function($var) use ($needle){
-//                        return strpos($var, $needle) !== false;
-//                    }));
-
                 $ret = array_filter($this->array_slice_assoc($lang->pivot->toArray(), ['banner', 'video']));
 
                 if(array_key_exists('banner',$ret) && array_key_exists('video',$ret)){
@@ -141,23 +99,42 @@ class DesignController extends Controller
                 }else{
                     $result = ' <span style="font-size: 100%" class="badge badge-danger">'.$lang->lang_name.' ('.($preview).') </span> ' ;
                 }
-
                 $design .=  $result;
+                $banner[$lang->lang_code] =$lang->pivot->banner;
             }
+
 
             if($record->da){
                 $mada = $record->da->ma_da;
             }
-            if(isset($record->logo)){
-                $logo = '<img class="rounded mx-auto d-block"  width="100px"  height="100px"  src="'.url('storage/projects/'.$mada.'/'.$record->projectname.'/lg114.png').'">';
+
+            if(!empty(array_filter($banner))){
+                $random_lang = array_rand(array_filter($banner),1);
+                $random_banner = '<a class="image-popup-no-margins image float-left" style="margin:5px" href="'.url('storage/projects/'.$mada.'/'.$record->projectname.'/'.$random_lang.'/bn.png').'" title="'.$random_lang.' Banner">' .
+                    '<img  src="'.url('storage/projects/'.$mada.'/'.$record->projectname.'/'.$random_lang.'/bn.png').'" alt="'.$random_lang.' Banner" height="100">' .
+                    '</a>';
             }else{
-                $logo = '<img class="rounded mx-auto d-block" width="100px" height="100px" src="assets\images\logo-sm.png">';
+                $random_banner = '<a class="image-popup-no-margins image float-left" style="margin:5px" href="assets\images\logo-sm.png" title="Logo">' .
+                    '<img  src="assets\images\logo-sm.png" alt="logo" height="100">' .
+                    '</a>';
+            }
+
+            if(isset($record->logo)){
+                $logo = '<a class="image-popup-no-margins image float-left" style="margin:5px" href="'.url('storage/projects/'.$mada.'/'.$record->projectname.'/lg114.png').'" title="Logo">' .
+
+                    '<img  src="'.url('storage/projects/'.$mada.'/'.$record->projectname.'/lg114.png').'" alt="logo" height="100">' .
+
+                    '</a>';
+            }else{
+                $logo = '<a class="image-popup-no-margins image float-left" style="margin:5px" href="assets\images\logo-sm.png" title="Logo">' .
+                    '<img  src="assets\images\logo-sm.png" alt="logo" height="100">' .
+                    '</a>';
             }
 
 
+
             $data_arr[] = array(
-//                'id' => $record->id,
-                'logo' => $logo,
+                'logo' => $logo.$random_banner,
                 'projectid' => $project_name,
                 'lang_id' => $design,
                 'user_design' => $record->user ? $record->user->name : 'Admin',
