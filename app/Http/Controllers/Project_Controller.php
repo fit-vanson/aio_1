@@ -166,7 +166,6 @@ class Project_Controller extends Controller
                     $status_design = ' DESIGN: <span style="font-size: 100%" class="badge badge-success">Done, Kết thúc Project</span>';
                     break;
             }
-
             foreach ($record->markets as $key=>$market){
                 if($market->pivot->package){
                     $ads = json_decode($market->pivot->ads,true);
