@@ -12,7 +12,7 @@
 <link href="{{ URL::asset('assets/libs/magnific-popup/magnific-popup.min.css') }}" rel="stylesheet" type="text/css" />
 <link href="{{ URL::asset('assets/libs/lightgallery/css/lightgallery.css') }}" rel="stylesheet" type="text/css" />
 <!-- Select2 Js  -->
-<link href="plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
 @endsection
 
@@ -58,7 +58,7 @@
 <!-- Dropzone js -->
 <script src="{{ URL::asset('/assets/libs/dropzone/dropzone.min.js') }}"></script>
 
-<script src="plugins/select2/js/select2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <script src="{{ URL::asset('/assets/libs/magnific-popup/magnific-popup.min.js') }}"></script>
 <script src="{{ URL::asset('/assets/libs/lightgallery/js/lightgallery-all.js') }}"></script>
@@ -70,6 +70,41 @@
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $("#project_id").select2({
+            placeholder: "Select a customer",
+            minimumInputLength: 2,
+            ajax: {
+                url: '{{route('design.project_show')}}',
+                dataType: 'json',
+                type: "GET",
+                // quietMillis: 50,
+                data: function(params) {
+                    return {
+                        q: params.term, // search term
+                        page: params.page
+                    };
+                },
+                processResults: function(data) {
+                    return {
+                        results: $.map(data, function (item) {
+                            return {
+                                text: item.name,
+                                // slug: item.slug,
+                                id: item.id
+                            }
+                        })
+                    };
+                },
+                // cache: true
+            },
+            initSelection : function (element, callback) {
+                var data = [];
+                $(element.val()).each(function () {
+                    data.push({id: this, text: this});
+                });
+                callback(data);
             }
         });
 
@@ -109,7 +144,7 @@
                                 status = '<span style="font-size: 100%" class="badge badge-danger">Fail, Project loại khỏi dự án</span>';
                                 break;
                             case 4:
-                                status = '<span style="font-size: 100%" class="badge badge-success">Done, Kết thúc Project</span>';
+                                status = '<span style="font-size: 100%" class="badge badge-success">Duyệt (Pass)</span>';
                                 break;
                         }
                         return status
@@ -132,7 +167,7 @@
                                 .draw();
                         } );
 
-                    $.each([0,1,2,3,4], function ( d, j ) {
+                    $.each([0,1,2,4], function ( d, j ) {
                         var status ='';
                         switch (d){
                             case 0:
@@ -144,9 +179,9 @@
                             case 2:
                                 status = '<span style="font-size: 100%" class="badge badge-warning">Fail, cần chỉnh sửa</span>';
                                 break;
-                            case 3:
-                                status = '<span style="font-size: 100%" class="badge badge-danger">Fail, Project loại khỏi dự án</span>';
-                                break;
+                            // case 3:
+                            //     status = '<span style="font-size: 100%" class="badge badge-danger">Fail, Project loại khỏi dự án</span>';
+                            //     break;
                             case 4:
                                 status = '<span style="font-size: 100%" class="badge badge-success">Done, Kết thúc Project</span>';
                                 break;
@@ -157,60 +192,112 @@
             },
 
         });
-        {{--var _id = null;--}}
-        {{--var _name = null;--}}
-        {{--$(document).on('change', '#project_id', function () {--}}
-        {{--    var projectID = $(this).select2('data')[0].id;--}}
-        {{--    var projectName = $(this).select2('data')[0].text;--}}
-        {{--    $('#pro_id').val(projectID);--}}
-        {{--    $('#pro_text').val(projectName);--}}
-        {{--    _id = $('#pro_id').val();--}}
-        {{--    _name = $('#pro_text').val();--}}
-        {{--    $('div.dz-success').remove();--}}
-        {{--});--}}
-        $('.dropzone').each(function() {
-            var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
-            var options = $(this).attr('id');
-            var lang = $(this).data("lang");
-            var lang_code = $(this).data("lang_code");
-            var maxfile = $(this).data("maxfile");
-            var extfile = $(this).data("ext");
-            var dropParamName = $(this).data("name");
-            const getMeSomeUrl = () => {
-                return '{{route('design.create')}}?projectid=' + _id + '&projectname=' + _name+'&action=' + options + '&lang_code=' + lang_code + '&lang=' + lang
+
+
+
+        {{--$('.dropzone').each(function() {--}}
+        {{--    var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');--}}
+        {{--    // var options = $(this).attr('id');--}}
+        {{--    // var lang = $(this).data("lang");--}}
+        {{--    // var lang_code = $(this).data("lang_code");--}}
+        {{--    var maxfile = $(this).data("maxfile");--}}
+        {{--    var extfile = $(this).data("ext");--}}
+        {{--    var dropParamName = $(this).data("name");--}}
+
+        {{--    --}}{{--const getMeSomeUrl = () => {--}}
+        {{--    --}}{{--    return '{{route('design.create')}}?projectid=' + _id + '&projectname=' + _name+'&action=' + options + '&lang_code=' + lang_code + '&lang=' + lang--}}
+        {{--    --}}{{--}--}}
+
+        {{--    $(this).dropzone({--}}
+        {{--        url: '#',--}}
+        {{--        headers: {--}}
+        {{--            'x-csrf-token': CSRF_TOKEN,--}}
+        {{--        },--}}
+        {{--        paramName: dropParamName,--}}
+        {{--        maxFiles: maxfile,--}}
+        {{--        maxFilesize: 20000,--}}
+        {{--        parallelUploads: 20,--}}
+        {{--        uploadMultiple: true,--}}
+        {{--        acceptedFiles: extfile,--}}
+        {{--        addRemoveLinks: true,--}}
+        {{--        dictRemoveFile: 'Xoá',--}}
+        {{--        autoProcessQueue: false,--}}
+        {{--        init: function () {--}}
+        {{--            var _this = this; // For the closure--}}
+        {{--            this.on('success', function (file, response) {--}}
+        {{--            });--}}
+        {{--        },--}}
+        {{--    });--}}
+
+        {{--})--}}
+
+
+
+
+        var myDropzoneOptions = {
+            url: '#',
+            autoProcessQueue: false,
+            addRemoveLinks: true,
+            dictRemoveFile: 'Xoá',
+            parallelUploads: 20,
+            uploadMultiple: true,
+            thumbnailWidth: 120,
+            thumbnailHeight: 120,
+            thumbnailMethod:"crop",
+            init: function (data) {
+                this.on("processing", function(file) {
+                    this.options.url = "/some-other-url";
+                });
+                // myDropzone.processQueue();
+                // var mockFile = { name: "Filename 1.pdf", size: 12345678 };
+                // this.files.push(mockFile);    // add to files array
+                // this.emit("addedfile", mockFile);
+                // this.emit("thumbnail", mockFile, '1111');
+                // this.emit("complete", mockFile);
+                // this.on("addedfile", function(file) { alert("Added file."); });
             }
-            $(this).dropzone({
-                url: '#',
-                headers: {
-                    'x-csrf-token': CSRF_TOKEN,
-                },
-                paramName: dropParamName,
-                maxFiles: maxfile,
-                maxFilesize: 20000,
-                parallelUploads: 20,
-                uploadMultiple: true,
-                acceptedFiles: extfile,
-                addRemoveLinks: true,
-                dictRemoveFile: 'Xoá',
-                autoProcessQueue: false,
+        };
 
-                init: function () {
-                    var _this = this; // For the closure
 
-                    this.on('success', function (file, response) {
-                        // _this.removeFile(file);
-                        // if (response.success) {
-                        //     $.notify(_name,  "success");
-                        //     table.draw();
-                        // }
-                        // if (response.errors) {
-                        //     _this.removeFile(file);
-                        //     $.notify(response.errors, "error");
-                        // }
-                    });
-                },
-            });
-        })
+        var logoDropzone = new Dropzone('#logo', myDropzoneOptions);
+
+
+        <?php
+            foreach ($lags as $lang){
+        ?>
+                var {{$lang->lang_code}}_banner_Dropzone = new Dropzone('#banner_{{$lang->lang_code}}', myDropzoneOptions);
+                {{--var banner_Dropzone = new Dropzone('#banner_{{$lang->lang_code}}', myDropzoneOptions);--}}
+                var {{$lang->lang_code}}_video_Dropzone = new Dropzone('#video_{{$lang->lang_code}}', myDropzoneOptions);
+                {{--var video_Dropzone = new Dropzone('#video_{{$lang->lang_code}}', myDropzoneOptions);--}}
+                var {{$lang->lang_code}}_preview_Dropzone = new Dropzone('#preview_{{$lang->lang_code}}', myDropzoneOptions);
+                {{--var preview_Dropzone = new Dropzone('#preview_{{$lang->lang_code}}', myDropzoneOptions);--}}
+
+        <?php
+            }
+        ?>
+
+
+
+        $('.modal').on('hidden.bs.modal', function (e) {
+            <?php
+                foreach ($lags as $lang){
+            ?>
+                    logoDropzone.removeAllFiles();
+                    logoDropzone.removeAllFiles(true);
+
+                    {{$lang->lang_code}}_banner_Dropzone.removeAllFiles();
+                    {{$lang->lang_code}}_banner_Dropzone.removeAllFiles(true);
+
+                    {{$lang->lang_code}}_video_Dropzone.removeAllFiles();
+                    {{$lang->lang_code}}_video_Dropzone.removeAllFiles(true);
+
+                    {{$lang->lang_code}}_preview_Dropzone.removeAllFiles();
+                    {{$lang->lang_code}}_preview_Dropzone.removeAllFiles(true);
+            <?php
+                }
+            ?>
+        });
+
 
         $('#createNewDesign').click(function () {
             $('.project_select').show();
@@ -219,37 +306,82 @@
             $('#designForm').trigger("reset");
             $('#modelHeading').html("Thêm mới");
             $('#ajaxModel').modal('show');
+            $('#project_id').val('');
+            $('#project_id').trigger('change.select2');
 
-            $("#project_id").select2({
-                minimumInputLength: 2,
-                ajax: {
-                    url: '{{route('design.project_show')}}',
-                    dataType: 'json',
-                    type: "GET",
-                    // quietMillis: 50,
-                    data: function(params) {
-                        return {
-                            q: params.term, // search term
-                            page: params.page
-                        };
-                    },
-                    processResults: function(data) {
-                        return {
-                            results: $.map(data, function (item) {
-                                return {
-                                    text: item.name,
-                                    // slug: item.slug,
-                                    id: item.id
-                                }
-                            })
-                        };
-                    },
-                    // cache: true
-                },
-            });
+        });
 
-            // myDropzone.destroy();
-            // myDropzone = new Dropzone('.dropzone', myDropzoneOptions);
+
+        $('#project_id').on('select2:selecting', function(e) {
+            var project_id = '';
+            var _id = e.params.args.data.id;
+
+            $.get('{{asset('design/edit')}}/'+_id,function (data) {
+                var langs = data.lang;
+                console.log(data)
+                // $.each(langs, function ($k,$v){
+
+
+                    // console.log($v)
+
+
+                    var path = 'storage/projects/'+data.da.ma_da+'/'+data.projectname+'/en/';
+                    // if($v.pivot.banner != 0){
+                        var banner = { name: 'bn.jpg'};
+                        en_banner_Dropzone.emit("addedfile", banner);
+                        en_banner_Dropzone.emit("complete", banner);
+                        en_banner_Dropzone.emit("success", banner);
+                        en_banner_Dropzone.emit("thumbnail", banner,path + 'bn.jpg');
+                        en_banner_Dropzone.files.push( banner );
+                    // }
+{{--                    if(v.pivot.video != 0){--}}
+{{--                        var video = { name: 'video.mp4'};--}}
+{{--                        video_Dropzone.emit("addedfile", video);--}}
+{{--                        video_Dropzone.emit("complete", video);--}}
+{{--                        video_Dropzone.emit("success", video);--}}
+{{--                        video_Dropzone.emit("thumbnail", video,path + 'video.mp4');--}}
+{{--                        video_Dropzone.files.push( video );--}}
+{{--                    }--}}
+{{--                    if(v.pivot.preview != 0){--}}
+{{--                        console.log(v.pivot.preview)--}}
+{{--                        var apkFile = { name: 'bn.jpg'};--}}
+{{--                        // banner_Dropzone.emit("addedfile", apkFile);--}}
+{{--                        // banner_Dropzone.emit("complete", apkFile);--}}
+{{--                        // banner_Dropzone.emit("success", apkFile);--}}
+{{--                        // banner_Dropzone.emit("thumbnail", apkFile,'img/apk.png');--}}
+{{--                        // banner_Dropzone.files.push( apkFile );--}}
+{{--                    }--}}
+//                 })
+
+
+
+{{--                <?php--}}
+{{--                foreach ($lags as $lang){--}}
+{{--//                    dd($lang);--}}
+{{--                ?>--}}
+
+{{--                var apkFile = { name: 'bn.jpg'};--}}
+{{--                // logoDropzone.removeAllFiles();--}}
+{{--                // logoDropzone.removeAllFiles(true);--}}
+
+{{--                banner_{{$lang->lang_code}}_Dropzone.removeAllFiles();--}}
+{{--                banner_{{$lang->lang_code}}_Dropzone.removeAllFiles(true);--}}
+
+{{--                video_{{$lang->lang_code}}_Dropzone.removeAllFiles();--}}
+{{--                video_{{$lang->lang_code}}_Dropzone.removeAllFiles(true);--}}
+
+{{--                preview_{{$lang->lang_code}}_Dropzone.removeAllFiles();--}}
+{{--                preview_{{$lang->lang_code}}_Dropzone.removeAllFiles(true);--}}
+{{--                <?php--}}
+{{--                }--}}
+{{--                ?>--}}
+
+
+            })
+
+
+
+
         });
 
 
@@ -412,25 +544,16 @@
         });
         $(document).on('click','.editProjectLang', function (data){
             var _id = $(this).data("id");
-            // var row_id = $(this).data("id_row");
-
-
 
             $.get('{{asset('design/edit')}}/'+_id,function (data) {
-                // $('#saveBtnEditDesign').val(row_id);
-                // $('#ajaxModelEdit').modal('show');
                 $('#ajaxModel').modal('show');
-                $('#pro_id').val(data.projectid);
-                $('#pro_text').val(data.projectname);
-                $('.project_select').hide();
+                $("#project_id").select2("trigger", "select", {
+                    data: {
+                        id: data.projectid,
+                        text: data.projectname,
+                    }
+                });
 
-
-                // $('.modal').on('hidden.bs.modal', function (e) {
-                //     $('body').addClass('modal-open');
-                // });
-                // $('#design_id_edit').val(data.projectid);
-                // $('#status').val(data.status_design);
-                // $('#notes').val(data.notes_design);
             })
         });
 

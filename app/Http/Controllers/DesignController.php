@@ -25,10 +25,18 @@ class DesignController extends Controller
             'title' => 'Design',
             'button' => [
                 'Create'            => ['id'=>'createNewDesign','style'=>'primary'],
+            ],
+            'badge' => [
+//                'Đang phát triển' => ['style'=>'primary'],
+                'Có Banner'            => ['style'=>'badge badge-warning'],
+                'Có Video'         => ['style'=>'badge badge-info'],
+                'Có Banner-Video'    => ['style'=>'badge badge-success'],
+                'Chưa có gì'    => ['style'=>'badge badge-danger'],
             ]
         ];
         $lags = Language::all();
-        return view('design.index')->with(compact('lags','header'));
+        return view('design.index')
+        ->with(compact('lags','header'));
     }
     public function getIndex(Request $request)
     {
@@ -48,9 +56,8 @@ class DesignController extends Controller
         $columnSortOrder = $order_arr[0]['dir']; // asc or desc
         $searchValue =  $search_arr['value']; // Search value
 
-//        dd($searchValue);
 
-        if( in_array( "Admin" ,array_column(auth()->user()->roles()->get()->toArray(),'name'))){
+//        if( in_array( "Admin" ,array_column(auth()->user()->roles()->get()->toArray(),'name'))){
             // Total records
             $totalRecords = Project::has('lang')->select('count(*) as allcount')->count();
             $totalRecordswithFilter = Project::has('lang')->select('count(*) as allcount')
@@ -71,32 +78,35 @@ class DesignController extends Controller
                 ->skip($start)
                 ->take($rowperpage)
                 ->get();
-        }else{
-            $totalRecords = Project::has('lang')->where('user_design',auth()->id())->select('count(*) as allcount')->count();
-            $totalRecordswithFilter = Project::has('lang')->select('count(*) as allcount')
-                ->where(function($q) use ($searchValue) {
-                    $q->Where('projectname', 'like', '%' . $searchValue . '%')
-                        ->orWhere('projectid', 'like', '%' . $searchValue . '%');
-                })
-                ->Where('status_design', 'like', '%' .$columnName_arr[2]['search']['value'] . '%')
-                ->where('user_design',auth()->id())
-                ->count();
-            $records = Project::has('lang')
-                ->where(function($q) use ($searchValue) {
-                    $q->Where('projectname', 'like', '%' . $searchValue . '%')
-                        ->orWhere('projectid', 'like', '%' . $searchValue . '%');
-                })
-                ->Where('status_design', 'like', '%' .$columnName_arr[2]['search']['value'] . '%')
-                ->where('user_design',auth()->id())
-                ->select('*')
-                ->orderBy($columnName, $columnSortOrder)
-                ->skip($start)
-                ->take($rowperpage)
-                ->get();
-        }
+//        }else{
+//            $totalRecords = Project::has('lang')->where('user_design',auth()->id())->select('count(*) as allcount')->count();
+//            $totalRecordswithFilter = Project::has('lang')->select('count(*) as allcount')
+//                ->where(function($q) use ($searchValue) {
+//                    $q->Where('projectname', 'like', '%' . $searchValue . '%')
+//                        ->orWhere('projectid', 'like', '%' . $searchValue . '%');
+//                })
+//                ->Where('status_design', 'like', '%' .$columnName_arr[2]['search']['value'] . '%')
+//                ->where('user_design',auth()->id())
+//                ->count();
+//            $records = Project::has('lang')
+//                ->where(function($q) use ($searchValue) {
+//                    $q->Where('projectname', 'like', '%' . $searchValue . '%')
+//                        ->orWhere('projectid', 'like', '%' . $searchValue . '%');
+//                })
+//                ->Where('status_design', 'like', '%' .$columnName_arr[2]['search']['value'] . '%')
+//                ->where('user_design',auth()->id())
+//                ->select('*')
+//                ->orderBy($columnName, $columnSortOrder)
+//                ->skip($start)
+//                ->take($rowperpage)
+//                ->get();
+//        }
 
+
+//        dd($records);
         $data_arr = array();
         foreach ($records as $key=>$record) {
+//            dd($record);
 //            $btn = ' <a href="javascript:void(0)" data-id_row="'.$key.'"  onclick="editProjectLang('.$record->id.')" class="btn btn-warning"><i class="ti-pencil-alt"></i></a>';
             $btn = ' <a href="javascript:void(0)"  data-id="'.$record->projectid.'" class="btn btn-warning editProjectLang"><i class="ti-pencil-alt"></i></a>';
             $btn .= ' <a href="'.route('project.show',['id'=>$record->projectid]).'" target="_blank"  class="btn btn-secondary"><i class="ti-eye"></i></a>';
@@ -110,28 +120,35 @@ class DesignController extends Controller
             $langs = $record->lang;
             $design = '';
             foreach ($langs as $lang){
+//                dd($lang);
 //                $preview = $this->array_slice_assoc($lang->pivot->toArray(), ['pr1', 'pr2','pr3','pr4','pr5','pr6','pr7','pr8',]);
                 $preview = $lang->pivot->preview;
                 $needle = 0;
-                $ret =
-                    array_keys(
-                        array_filter(
-                            $this->array_slice_assoc($lang->pivot->toArray(), ['banner', 'video']), function($var) use ($needle){
-                        return strpos($var, $needle) !== false;
-                    }));
+//                $ret =
+//                    array_keys(
+//                        array_filter(
+//                            $this->array_slice_assoc($lang->pivot->toArray(), ['banner', 'video']), function($var) use ($needle){
+//                        return strpos($var, $needle) !== false;
+//                    }));
 
-                if(count($ret) == 2 ){
-                    $result = ' <span style="font-size: 100%" class="badge badge-danger">'.$lang->lang_name. ' ('.($preview).') </span> ' ;
-                }elseif ((count($ret) < 2) && (count($ret) > 0 )){
-                    $result = ' <span style="font-size: 100%" class="badge badge-warning">'.$lang->lang_name.' ('.($preview).') </span> ' ;
-                }else{
+//                $ret = array_sum($this->array_slice_assoc($lang->pivot->toArray(), ['banner', 'video','pr1','pr2','pr3','pr4','pr5','pr6','pr7','pr8']));
+//                dd($ret,$lang->pivot);
+
+
+                if($lang->pivot->banner == 1 ){
+                    $result = ' <span style="font-size: 100%" class="badge badge-warning">'.$lang->lang_name. ' ('.($preview).') </span> ' ;
+                }elseif ($lang->pivot->video == 1){
+                    $result = ' <span style="font-size: 100%" class="badge badge-info">'.$lang->lang_name.' ('.($preview).') </span> ' ;
+                }elseif($lang->pivot->video == 1 && $lang->pivot->banner == 1 ){
                     $result = ' <span style="font-size: 100%" class="badge badge-success">'.$lang->lang_name.' ('.($preview).') </span> ' ;
+                }else{
+                    $result = ' <span style="font-size: 100%" class="badge badge-danger">'.$lang->lang_name.' ('.($preview).') </span> ' ;
                 }
 
-                if($lang->pivot->video == 1){
-                    $video = ' <span style="font-size: 100%" class="badge badge-success"> video</span> ' ;
-                }
-                $design .=  $result.@$video;
+//                if($lang->pivot->video == 1){
+//                    $video = ' <span style="font-size: 100%" class="badge badge-success"> video</span> ' ;
+//                }
+                $design .=  $result;
             }
 
             $data_arr[] = array(
