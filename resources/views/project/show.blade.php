@@ -54,7 +54,9 @@
                         <div class="form-group col-lg-3">
                             <label for="name">Logo</label>
                             <p class="card-title-desc">
-                                <img id="logo_project" src="../storage/projects/{{@$project->da->ma_da}}/{{$project->projectname}}/{{$project->logo}}"  class="d-block img-fluid" src="" width="200px" alt="">
+
+{{--                                <img id="logo_project" src="../storage/projects/{{@$project->da->ma_da}}/{{$project->projectname}}/{{$project->logo}}"  class="d-block img-fluid" src="" width="200px" alt="">--}}
+                                <img id="logo_project" src="{{url('api/picture/token='.@$token.'?project_id='.$project->projectid.'&view=banner')}}"  class="d-block img-fluid" src="" width="200px" alt="">
                             </p>
                         </div>
                         <div class="form-group col-lg-9">
@@ -139,6 +141,8 @@
 
                     <?php
                     $tablist =  $tab_content = '';
+                    $token = uniqid();
+
                     foreach($project->lang as $key=>$value){
                         if($value->id == 2){
                             $active = 'active';
@@ -174,9 +178,9 @@
 
                         if($value->pivot->banner){
                             $banner =
-                                '<a class="image float-left" style="margin:5px" href="'.url('/storage/projects').'/'.$project->da->ma_da.'/'.$project->projectname.'/'.$value->lang_code.'/bn.jpg" title="'.$value->lang_name.' Banner">' .
+                                '<a class="image float-left" style="margin:5px" href="'.url('api/picture/token='.$token.'?project_id='.$project->projectid.'&lang_id='.$value->lang_code.'&view=banner').'" title="'.$value->lang_name.' Banner">' .
                                 '<div class="img-responsive img-container">' .
-                                '<img  src="'.url('/storage/projects').'/'.$project->da->ma_da.'/'.$project->projectname.'/'.$value->lang_code.'/bn.jpg" alt="'.$value->lang_name.' Banner" height="200">' .
+                                '<img  src="'.url('api/picture/token='.$token.'?project_id='.$project->projectid.'&lang_id='.$value->lang_code.'&view=banner').'" alt="'.$value->lang_name.' Banner" height="200">' .
                                 '</div>'.
                                 '</a>';
                         }else{
