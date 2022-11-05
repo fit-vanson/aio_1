@@ -89,12 +89,12 @@ class DesignController extends Controller
             ->skip($start)
             ->take($rowperpage)
             ->get();
-        $token = sha1(uniqid(time(), true));
+
         $data_arr = array();
         foreach ($records as $key=>$record) {
             $btn = ' <a href="javascript:void(0)"  data-name="'.$record->projectname.'" data-id="'.$record->projectid.'" class="btn btn-warning editProjectLang"><i class="ti-pencil-alt"></i></a>';
             $btn .= ' <a href="'.route('project.show',['id'=>$record->projectid]).'" target="_blank"  class="btn btn-secondary"><i class="ti-eye"></i></a>';
-
+            $token = sha1(uniqid(time(), true));
 
 //            dd($record);
             $project_name = $record->projectname;
