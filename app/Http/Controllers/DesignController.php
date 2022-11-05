@@ -380,9 +380,10 @@ class DesignController extends Controller
             case 'banner':
                 $url =  response()->file(public_path('/storage/projects/').@$project_lang->project->da->ma_da.'/'.@$project_lang->project->projectname.'/'.@$project_lang->lang->lang_code.'/bn.jpg');
                 break;
-//            case 'preview':
-//                $url =  response()->file(public_path('/storage/projects/').$project_lang->project->da->ma_da.'/'.$project_lang->project->projectname.'/'.$project_lang->lang->lang_code.'/bn.jpg');
-//                break;
+            case 'preview':
+                $preview = \request()->preview;
+                $url =  response()->file(public_path('/storage/projects/').$project_lang->project->da->ma_da.'/'.$project_lang->project->projectname.'/'.$project_lang->lang->lang_code.'/pr'.$preview.'.jpg');
+                break;
             case 'logo':
 //                dd($project_lang->load('da'));
 //                <img  src="'.url('storage/projects/'.$mada.'/'.$record->projectname.'/lg.png').'" alt="logo" height="100">

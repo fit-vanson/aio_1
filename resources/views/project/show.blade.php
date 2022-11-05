@@ -159,9 +159,9 @@
                         $preview= '';
                         for($i = 1 ; $i <= $value->pivot->preview; $i++){
                             $preview .=
-                                '<a class="image float-left" style="margin:5px" href="'.url('/storage/projects').'/'.$project->da->ma_da.'/'.$project->projectname.'/'.$value->lang_code.'/pr'.$i.'.jpg" title="'.$value->lang_name.' - Preview '.$i.'">' .
+                                '<a class="image float-left" style="margin:5px" href="'.url('api/picture/token='.$token.'?project_id='.$project->projectid.'&lang_id='.$value->id.'&preview='.$i.'&view=preview').'" title="'.$value->lang_name.' - Preview '.$i.'">' .
                                     '<div class="img-responsive img-container">' .
-                                    '<img  src="'.url('/storage/projects').'/'.$project->da->ma_da.'/'.$project->projectname.'/'.$value->lang_code.'/pr'.$i.'.jpg" alt="'.$value->lang_name.' - Preview '.$i.'" height="200">' .
+                                    '<img  src="'.url('api/picture/token='.$token.'?project_id='.$project->projectid.'&lang_id='.$value->id.'&preview='.$i.'&view=preview').'" alt="'.$value->lang_name.' - Preview '.$i.'" height="200">' .
                                     '</div>'.
                                 '</a>';
                         }
