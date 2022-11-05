@@ -376,12 +376,7 @@ class DesignController extends Controller
         $view = \request()->view;
         $project_id = \request()->project_id;
         $lang_id = \request()->lang_id;
-
-
-
         $project_lang = $lang_id ? ProjectHasLang::where('project_id',$project_id)->where('lang_id',$lang_id)->first() : Project::find($project_id);
-
-
         switch ($view){
             case 'banner':
                 $url =  response()->file(public_path('/storage/projects/').@$project_lang->project->da->ma_da.'/'.@$project_lang->project->projectname.'/'.@$project_lang->lang->lang_code.'/bn.jpg');
@@ -392,7 +387,7 @@ class DesignController extends Controller
             case 'logo':
 //                dd($project_lang->load('da'));
 //                <img  src="'.url('storage/projects/'.$mada.'/'.$record->projectname.'/lg.png').'" alt="logo" height="100">
-                $url =  response()->file(public_path('/storage/projects/').@$project_lang->project->da->ma_da.'/'.@$project_lang->project->projectname.'/lg114.jpg');
+                $url =  response()->file(public_path('/storage/projects/').$project_lang->da->ma_da.'/'.$project_lang->project->projectname.'/lg114.jpg');
                 break;
         }
         return $url;
