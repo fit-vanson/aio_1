@@ -19,7 +19,7 @@ class DesignController extends Controller
 {
     public function index(){
 
-//        $this->encodeUrl();
+//        $this->encodeUrl(1,1,'banner');
 
         $header = [
             'title' => 'Design',
@@ -93,6 +93,8 @@ class DesignController extends Controller
             $btn = ' <a href="javascript:void(0)"  data-name="'.$record->projectname.'" data-id="'.$record->projectid.'" class="btn btn-warning editProjectLang"><i class="ti-pencil-alt"></i></a>';
             $btn .= ' <a href="'.route('project.show',['id'=>$record->projectid]).'" target="_blank"  class="btn btn-secondary"><i class="ti-eye"></i></a>';
 
+
+//            dd($record);
             $project_name = $record->projectname;
             $langs = $record->lang;
             $design = '';
@@ -120,8 +122,12 @@ class DesignController extends Controller
 
             if(!empty(array_filter($banner))){
                 $random_lang = array_rand(array_filter($banner),1);
-                $random_banner = '<a class="image-popup-no-margins image" style="margin:5px" href="'.url('storage/projects/'.$mada.'/'.$record->projectname.'/'.$random_lang.'/bn.jpg').'" title="'.$random_lang.' Banner">' .
-                    '<img  src="'.url('storage/projects/'.$mada.'/'.$record->projectname.'/'.$random_lang.'/bn.jpg').'" alt="'.$random_lang.' Banner" height="100">' .
+//                $random_banner = '<a class="image-popup-no-margins image" style="margin:5px" href="'.url('storage/projects/'.$mada.'/'.$record->projectname.'/'.$random_lang.'/bn.jpg').'" title="'.$random_lang.' Banner">' .
+//                    '<img  src="'.url('storage/projects/'.$mada.'/'.$record->projectname.'/'.$random_lang.'/bn.jpg').'" alt="'.$random_lang.' Banner" height="100">' .
+//                    '</a>';
+
+                $random_banner = '<a class="image-popup-no-margins image" style="margin:5px" href="'.$this->encodeUrl($record->projectid,2,'banner').'">' .
+                    '<img  src="'.$this->encodeUrl($record->projectid,2,'banner').'" alt="'.$random_lang.' Banner" height="100">' .
                     '</a>';
             }else{
                 $random_banner = '<a class="image-popup-no-margins image" style="margin:5px" href="assets\images\logo-sm.png" title="Logo">' .
@@ -374,18 +380,43 @@ class DesignController extends Controller
     }
 
 
-    function encodeUrl(){
+    function encodeUrl($project_id,$lang_id,$option){
         //project_id
         //lang_id
         // option
-        $project_id  = 1;
-        $lang_id = 1 ;
-        $option = 'banner' ;
+//        $project_id  = 1;
+//        $lang_id = 1 ;
+//        $option = 'banner' ;
 
-        $url = ProjectHasLang::where('project_id',$project_id)->where('lang_id',$lang_id)->first();
-        dd($url);
-        dd(1);
+
+
+
+        $token = sha1(uniqid(time(), true));
+
+
+        $project_lang = ProjectHasLang::where('project_id',$project_id)->where('lang_id',$lang_id)->first();
+//        dd($project_lang,$project_id,$lang_id);
+//        dd($project_lang->load('project.da','lang'));
+        switch ($option){
+            case 'banner':
+//                $url =  response()->file(public_path('storage/projects/'.$project_lang->project->da->ma_da.'/'.$project_lang->project->projectname.'/'.$project_lang->lang->lang_code.'/bn.jpg'));
+//                 $url =  $this->show($token);
+                 $url =  url(('storage/projects/'.@$project_lang->project->da->ma_da.'/'.@$project_lang->project->projectname.'/'.@$project_lang->lang->lang_code.'/bn.jpg?token='.$token));
+
+        }
+//        dd($url);
+
+        return $url ;
+
+//        dd(1);
     }
+
+    function show($token,$option){
+
+
+    }
+
+
 
 //    public function convert(){
 //        $lang_projects = ProjectHasLang::all();
