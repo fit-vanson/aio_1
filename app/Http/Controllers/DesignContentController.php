@@ -48,15 +48,23 @@ class DesignContentController extends Controller
 
 
         $totalRecords = Project::select('count(*) as allcount')
-            ->has('lang')->whereIN('status_design',[0,1])
+            ->whereHas('lang', function ($query) {
+                return $query->where('banner', 1);
+            })
+            ->whereIN('status_design',[0,1])
             ->count();
         $totalRecordswithFilter = Project::select('count(*) as allcount')
-            ->has('lang')
+            ->whereHas('lang', function ($query) {
+                return $query->where('banner', 1);
+            })
             ->whereIN('status_design',[0,1])
             ->where('projectname', 'like', '%' . $searchValue . '%')
             ->count();
         $records = Project::orderBy($columnName, $columnSortOrder)
-            ->has('lang')->whereIN('status_design',[0,1])
+            ->whereHas('lang', function ($query) {
+                return $query->where('banner', 1);
+            })
+            ->whereIN('status_design',[0,1])
             ->where('projectname', 'like', '%' . $searchValue . '%')
             ->skip($start)
             ->take($rowperpage)
