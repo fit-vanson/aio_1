@@ -19,7 +19,9 @@ class DesignController extends Controller
 {
     public function index(){
 
-//        $this->encodeUrl(1,1,'banner');
+//        $token =sha1(uniqid(time(), true));
+//        $this->picture('/token='.$token.'?project_id=1&lang_id=1&view=banner');
+//        $record->projectid,2,'banner'
 
         $header = [
             'title' => 'Design',
@@ -87,7 +89,7 @@ class DesignController extends Controller
             ->skip($start)
             ->take($rowperpage)
             ->get();
-
+        $token = sha1(uniqid(time(), true));
         $data_arr = array();
         foreach ($records as $key=>$record) {
             $btn = ' <a href="javascript:void(0)"  data-name="'.$record->projectname.'" data-id="'.$record->projectid.'" class="btn btn-warning editProjectLang"><i class="ti-pencil-alt"></i></a>';
@@ -112,7 +114,7 @@ class DesignController extends Controller
                     $result = ' <span style="font-size: 100%" class="badge badge-danger">'.$lang->lang_name.' ('.($preview).') </span> ' ;
                 }
                 $design .=  $result;
-                $banner[$lang->lang_code] =$lang->pivot->banner;
+                $banner[$lang->id] =$lang->pivot->banner;
             }
 
 
@@ -126,8 +128,8 @@ class DesignController extends Controller
 //                    '<img  src="'.url('storage/projects/'.$mada.'/'.$record->projectname.'/'.$random_lang.'/bn.jpg').'" alt="'.$random_lang.' Banner" height="100">' .
 //                    '</a>';
 
-                $random_banner = '<a class="image-popup-no-margins image" style="margin:5px" href="'.$this->encodeUrl($record->projectid,2,'banner').'">' .
-                    '<img  src="'.$this->encodeUrl($record->projectid,2,'banner').'" alt="'.$random_lang.' Banner" height="100">' .
+                $random_banner = '<a class="image-popup-no-margins image" style="margin:5px" href="'.url('api/picture/token='.$token.'?project_id='.$record->projectid.'&lang_id=1&view=banner').'">' .
+                    '<img  src="'.url('api/picture/token='.$token.'?project_id='.$record->projectid.'&lang_id='.$random_lang.'&view=banner').'" alt="'.$random_lang.' Banner" height="100">' .
                     '</a>';
             }else{
                 $random_banner = '<a class="image-popup-no-margins image" style="margin:5px" href="assets\images\logo-sm.png" title="Logo">' .
@@ -200,11 +202,6 @@ class DesignController extends Controller
         array_walk($langs, function($entry) use (&$output_langs) {
             $output_langs[$entry["id"]] = $entry["lang_code"];
         });
-
-
-
-
-
         $path = storage_path('app/public/projects/'.$du_an.'/'.$project->projectname.'/');
         if (!file_exists($path)) {
             mkdir($path, 777, true);
@@ -222,7 +219,6 @@ class DesignController extends Controller
 
         $market = [];
         foreach ($request->markets as $key=>$value){
-
             $path_market =  $path.$output_langs[$key].'/';
             if (!file_exists($path_market)) {
                 mkdir($path_market, 777, true);
@@ -239,8 +235,6 @@ class DesignController extends Controller
                 $video->move($path_market, 'video.mp4');
                 $market[$key]['video'] = 1;
             }
-
-
             if(isset($value['preview']) && $value['preview'] != 'undefined' ){
                 $previews = $value['preview'];
                 $num = 1;
@@ -263,11 +257,14 @@ class DesignController extends Controller
                     $num ++;
                 }
             }
+//            $market[$key]['token'] = sha1(uniqid(time(), true));
         }
         $project->user_design = auth()->id();
         if ($project->status_design == 2  ){
             $project->status_design = 1;
         }
+
+
         $project->save();
         foreach ($market as $k=>$v){
             $project->lang()->syncWithPivotValues($k, $v,false);
@@ -414,6 +411,25 @@ class DesignController extends Controller
     function show($token,$option){
 
 
+    }
+
+    public function picture($param){
+
+        $project_id = \request()->project_id;
+        $lang_id = \request()->lang_id;
+        $view = \request()->view;
+        $project_lang = ProjectHasLang::where('project_id',$project_id)->where('lang_id',$lang_id)->first();
+
+
+        switch ($view){
+            case 'banner':
+                $url =  response()->file(public_path('/storage/projects/').$project_lang->project->da->ma_da.'/'.$project_lang->project->projectname.'/'.$project_lang->lang->lang_code.'/bn.jpg');
+                break;
+
+
+        }
+        return $url;
+//        dd($pram);
     }
 
 
