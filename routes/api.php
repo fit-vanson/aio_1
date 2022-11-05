@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\DaController;
+use App\Http\Controllers\DesignController;
 use App\Http\Controllers\KeystoreController;
 use App\Http\Controllers\MarketDevController;
 use App\Http\Controllers\MarketsController;
@@ -48,6 +49,9 @@ Route::get('/postReview/{id}', [ApiController::class, 'postReview'])->name('api.
 
 Route::get('/get-inappproducts',[ApiController::class,'get_inappproducts'])->name('api.get_inappproducts');
 Route::get('/samsung',[ApiController::class,'samsung'])->name('api.samsung');
+
+
+Route::get('/picture/{param}',[DesignController::class,'picture'])->name('api.picture');
 
 
 
