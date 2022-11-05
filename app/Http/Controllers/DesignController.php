@@ -57,16 +57,26 @@ class DesignController extends Controller
         $searchValue =  $search_arr['value']; // Search value
 
         // Total records
-        $totalRecords = Project::has('lang')->select('count(*) as allcount')->count();
-        $totalRecordswithFilter = Project::has('lang')->select('count(*) as allcount')
+        $totalRecords = Project::whereHas('lang', function ($query) {
+            return $query->where('banner', 1);
+            })
+            ->select('count(*) as allcount')
+            ->count();
+
+        $totalRecordswithFilter = Project::whereHas('lang', function ($query) {
+            return $query->where('banner', 1);
+            })
+            ->select('count(*) as allcount')
             ->where(function($q) use ($searchValue) {
                 $q->Where('projectname', 'like', '%' . $searchValue . '%')
                     ->orWhere('projectid', 'like', '%' . $searchValue . '%');
             })
             ->Where('status_design', 'like', '%' .$columnName_arr[3]['search']['value'] . '%')
             ->count();
-        $records = Project::with('lang')
-            ->has('lang')
+
+        $records = Project::whereHas('lang', function ($query) {
+                return $query->where('banner', 1);
+            })
             ->where(function($q) use ($searchValue) {
                 $q->Where('projectname', 'like', '%' . $searchValue . '%')
                     ->orWhere('projectid', 'like', '%' . $searchValue . '%');
@@ -77,6 +87,7 @@ class DesignController extends Controller
             ->skip($start)
             ->take($rowperpage)
             ->get();
+
 
         $data_arr = array();
         foreach ($records as $key=>$record) {
@@ -149,6 +160,7 @@ class DesignController extends Controller
 
         echo json_encode($response);
     }
+
 
     public function project_show(){
         $searchValue = \request()->q;
