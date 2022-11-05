@@ -19,7 +19,7 @@ class DesignController extends Controller
 {
     public function index(){
 
-//        $this->convert();
+//        $this->encodeUrl();
 
         $header = [
             'title' => 'Design',
@@ -88,10 +88,9 @@ class DesignController extends Controller
             ->take($rowperpage)
             ->get();
 
-
         $data_arr = array();
         foreach ($records as $key=>$record) {
-            $btn = ' <a href="javascript:void(0)"  data-id="'.$record->projectid.'" class="btn btn-warning editProjectLang"><i class="ti-pencil-alt"></i></a>';
+            $btn = ' <a href="javascript:void(0)"  data-name="'.$record->projectname.'" data-id="'.$record->projectid.'" class="btn btn-warning editProjectLang"><i class="ti-pencil-alt"></i></a>';
             $btn .= ' <a href="'.route('project.show',['id'=>$record->projectid]).'" target="_blank"  class="btn btn-secondary"><i class="ti-eye"></i></a>';
 
             $project_name = $record->projectname;
@@ -372,6 +371,20 @@ class DesignController extends Controller
     function array_slice_assoc($array,$keys) {
 
         return array_intersect_key($array,array_flip($keys));
+    }
+
+
+    function encodeUrl(){
+        //project_id
+        //lang_id
+        // option
+        $project_id  = 1;
+        $lang_id = 1 ;
+        $option = 'banner' ;
+
+        $url = ProjectHasLang::where('project_id',$project_id)->where('lang_id',$lang_id)->first();
+        dd($url);
+        dd(1);
     }
 
 //    public function convert(){
