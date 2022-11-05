@@ -144,7 +144,6 @@ class DesignController extends Controller
             }
 
 
-
             $data_arr[] = array(
                 'logo' => $logo.$random_banner,
                 'projectid' => $project_name,
