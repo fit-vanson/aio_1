@@ -387,7 +387,7 @@ class DesignController extends Controller
             case 'logo':
 //                dd($project_lang->load('da'));
 //                <img  src="'.url('storage/projects/'.$mada.'/'.$record->projectname.'/lg.png').'" alt="logo" height="100">
-                $url =  response()->file(public_path('/storage/projects/').$project_lang->da->ma_da.'/'.$project_lang->project->projectname.'/lg114.jpg');
+                $url =  response()->file(public_path('/storage/projects/').$project_lang->da->ma_da.'/'.$project_lang->projectname.'/lg114.jpg');
                 break;
         }
         return $url;
