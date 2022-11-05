@@ -89,12 +89,12 @@ class DesignController extends Controller
             ->skip($start)
             ->take($rowperpage)
             ->get();
-
+        $token = uniqid();
         $data_arr = array();
         foreach ($records as $key=>$record) {
             $btn = ' <a href="javascript:void(0)"  data-name="'.$record->projectname.'" data-id="'.$record->projectid.'" class="btn btn-warning editProjectLang"><i class="ti-pencil-alt"></i></a>';
             $btn .= ' <a href="'.route('project.show',['id'=>$record->projectid]).'" target="_blank"  class="btn btn-secondary"><i class="ti-eye"></i></a>';
-            $token = sha1(uniqid(time(), true));
+
 
 //            dd($record);
             $project_name = $record->projectname;
@@ -128,7 +128,7 @@ class DesignController extends Controller
 //                    '<img  src="'.url('storage/projects/'.$mada.'/'.$record->projectname.'/'.$random_lang.'/bn.jpg').'" alt="'.$random_lang.' Banner" height="100">' .
 //                    '</a>';
 
-                $random_banner = '<a class="image-popup-no-margins image" style="margin:5px" href="'.url('api/picture/token='.$token.'?project_id='.$record->projectid.'&lang_id=1&view=banner').'">' .
+                $random_banner = '<a class="image-popup-no-margins image" style="margin:5px" href="'.url('api/picture/token='.$token.'?project_id='.$record->projectid.'&lang_id='.$random_lang.'&view=banner').'">' .
                     '<img  src="'.url('api/picture/token='.$token.'?project_id='.$record->projectid.'&lang_id='.$random_lang.'&view=banner').'" alt="'.$random_lang.' Banner" height="100">' .
                     '</a>';
             }else{
