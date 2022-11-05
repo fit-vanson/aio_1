@@ -124,10 +124,6 @@ class DesignController extends Controller
 
             if(!empty(array_filter($banner))){
                 $random_lang = array_rand(array_filter($banner),1);
-//                $random_banner = '<a class="image-popup-no-margins image" style="margin:5px" href="'.url('storage/projects/'.$mada.'/'.$record->projectname.'/'.$random_lang.'/bn.jpg').'" title="'.$random_lang.' Banner">' .
-//                    '<img  src="'.url('storage/projects/'.$mada.'/'.$record->projectname.'/'.$random_lang.'/bn.jpg').'" alt="'.$random_lang.' Banner" height="100">' .
-//                    '</a>';
-
                 $random_banner = '<a class="image-popup-no-margins image" style="margin:5px" href="'.url('api/picture/token='.$token.'?project_id='.$record->projectid.'&lang_id='.$random_lang.'&view=banner').'">' .
                     '<img  src="'.url('api/picture/token='.$token.'?project_id='.$record->projectid.'&lang_id='.$random_lang.'&view=banner').'" alt="'.$random_lang.' Banner" height="100">' .
                     '</a>';
@@ -138,8 +134,8 @@ class DesignController extends Controller
             }
 
             if(isset($record->logo)){
-                $logo = '<a class="image-popup-no-margins image" style="margin:5px" href="'.url('storage/projects/'.$mada.'/'.$record->projectname.'/lg.png').'" title="Logo">' .
-                    '<img  src="'.url('storage/projects/'.$mada.'/'.$record->projectname.'/lg.png').'" alt="logo" height="100">' .
+                $logo = '<a class="image-popup-no-margins image" style="margin:5px" href="'.url('api/picture/token='.$token.'?project_id='.$record->projectid.'&view=logo').'" title="Logo">' .
+                    '<img  src="'.url('api/picture/token='.$token.'?project_id='.$record->projectid.'&view=logo').'" alt="logo" height="100">' .
                     '</a>';
             }else{
                 $logo = '<a class="image-popup-no-margins image " style="margin:5px" href="assets\images\logo-sm.png" title="Logo">' .
@@ -375,58 +371,29 @@ class DesignController extends Controller
 
         return array_intersect_key($array,array_flip($keys));
     }
-
-
-    function encodeUrl($project_id,$lang_id,$option){
-        //project_id
-        //lang_id
-        // option
-//        $project_id  = 1;
-//        $lang_id = 1 ;
-//        $option = 'banner' ;
-
-
-
-
-        $token = sha1(uniqid(time(), true));
-
-
-        $project_lang = ProjectHasLang::where('project_id',$project_id)->where('lang_id',$lang_id)->first();
-//        dd($project_lang,$project_id,$lang_id);
-//        dd($project_lang->load('project.da','lang'));
-        switch ($option){
-            case 'banner':
-//                $url =  response()->file(public_path('storage/projects/'.$project_lang->project->da->ma_da.'/'.$project_lang->project->projectname.'/'.$project_lang->lang->lang_code.'/bn.jpg'));
-//                 $url =  $this->show($token);
-                 $url =  url(('storage/projects/'.@$project_lang->project->da->ma_da.'/'.@$project_lang->project->projectname.'/'.@$project_lang->lang->lang_code.'/bn.jpg?token='.$token));
-
-        }
-//        dd($url);
-
-        return $url ;
-
-//        dd(1);
-    }
-
-    function show($token,$option){
-
-
-    }
-
     public function picture($param){
 
+        $view = \request()->view;
         $project_id = \request()->project_id;
         $lang_id = \request()->lang_id;
-        $view = \request()->view;
-        $project_lang = ProjectHasLang::where('project_id',$project_id)->where('lang_id',$lang_id)->first();
+
+
+
+        $project_lang = $lang_id ? ProjectHasLang::where('project_id',$project_id)->where('lang_id',$lang_id)->first() : Project::find($project_id);
 
 
         switch ($view){
             case 'banner':
-                $url =  response()->file(public_path('/storage/projects/').$project_lang->project->da->ma_da.'/'.$project_lang->project->projectname.'/'.$project_lang->lang->lang_code.'/bn.jpg');
+                $url =  response()->file(public_path('/storage/projects/').@$project_lang->project->da->ma_da.'/'.@$project_lang->project->projectname.'/'.@$project_lang->lang->lang_code.'/bn.jpg');
                 break;
-
-
+//            case 'preview':
+//                $url =  response()->file(public_path('/storage/projects/').$project_lang->project->da->ma_da.'/'.$project_lang->project->projectname.'/'.$project_lang->lang->lang_code.'/bn.jpg');
+//                break;
+            case 'logo':
+//                dd($project_lang->load('da'));
+//                <img  src="'.url('storage/projects/'.$mada.'/'.$record->projectname.'/lg.png').'" alt="logo" height="100">
+                $url =  response()->file(public_path('/storage/projects/').@$project_lang->project->da->ma_da.'/'.@$project_lang->project->projectname.'/lg114.jpg');
+                break;
         }
         return $url;
 //        dd($pram);
