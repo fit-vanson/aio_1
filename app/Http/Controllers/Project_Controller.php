@@ -418,26 +418,58 @@ class Project_Controller extends Controller
 
         }
 
-
-
         $data->projectname = $request->projectname;
         $data->save();
         try {
             $inset_market = [];
-            foreach ($request->market as $key=>$value){
+            foreach ($request->market as $key => $value){
                 if($value['package']){
                     $inset_market[$key] = [
                         'package' => $value['package'],
-                        'dev_id' => @$value['dev_id']   ,
-                        'keystore' => @$value['keystore'],
-                        'sdk' => @$value['sdk'],
-                        'app_link' => @$value['app_link'],
-                        'policy_link' => @$value['policy_link'],
-                        'ads' => json_encode(@$value['ads']),
-                        'app_name_x' => @$value['app_name_x'],
-                        'appID' => @$value['appID'],
-                        'video_link' => @$value['video_link'],
-                    ];
+                        'ads' => json_encode($value['ads']),
+                        ];
+                    if(isset($value['dev_id'])){
+                        $inset_market[$key] += [
+                            'dev_id' => $value['dev_id']
+                        ];
+                    }
+                    if(isset($value['keystore'])){
+                        $inset_market[$key] += [
+                            'keystore' => $value['keystore']
+                        ];
+                    }
+                    if(isset($value['sdk'])){
+
+                        $inset_market[$key] += [
+                            'sdk' => $value['sdk']
+                        ];
+                    }
+                    if(isset($value['app_link'])){
+                        $inset_market[$key] += [
+                            'app_link' => $value['app_link']
+                        ];
+                    }
+                    if(isset($value['policy_link'])){
+                        $inset_market[$key] += [
+                            'policy_link' => $value['policy_link']
+                        ];
+                    }
+                    if(isset($value['app_name_x'])){
+                        $inset_market[$key] += [
+                            'app_name_x' => $value['app_name_x']
+                        ];
+                    }
+                    if(isset($value['appID'])){
+                        $inset_market[$key] += [
+                            'appID' => $value['appID']
+                        ];
+                    }
+                    if(isset($value['video_link'])){
+                        $inset_market[$key] += [
+                            'video_link' => $value['video_link']
+                        ];
+                    }
+
                 }
             }
             $data->markets()->sync($inset_market);
@@ -821,6 +853,7 @@ class Project_Controller extends Controller
     }
 
     public function show($id){
+
         $project = Project::findorfail($id)->load('markets.pivot.dev','markets.pivot.keystores','da','ma_template.markets','lang');
 //        return response()->json($project->load('markets.pivot.dev','markets.pivot.keystores','da','ma_template.markets','lang'));
         return view('project.show')->with(compact('project'));
