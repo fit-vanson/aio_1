@@ -22,7 +22,26 @@
 @endsection
 
 @section('content')
-    @include('modals.apk_upload')
+{{--    @include('modals.apk_upload')--}}
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="mb-5">
+                        <form id="apk_uploadForm" name="apk_uploadForm" class="form-horizontal">
+                            <div class="form-group">
+                                <label for="name" class="col-sm-5 control-label">APK Upload</label>
+                                <div class="col-sm-12">
+                                    <div class="dropzone" name="apk_upload" id="apk_upload" data-maxfile="1" data-name="apk_upload" ></div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -32,9 +51,9 @@
                             <table id="apk_uploadTable" class="table table-striped table-bordered dt-responsive data-table" style="width: 100%;">
                                 <thead>
                                 <tr>
-                                    <th>Logo</th>
-                                    <th>File APK</th>
-                                    <th>File name </th>
+                                    <th style="width: 5%">Logo</th>
+                                    <th style="width: 45%">File APK</th>
+                                    <th style="width: 50%">File name </th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -71,6 +90,9 @@
 <script type="text/javascript">
     Dropzone.autoDiscover = false;
     $(function () {
+        $('.table-responsive').responsiveTable({
+            // addDisplayAllBtn: 'btn btn-secondary'
+        });
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -100,23 +122,46 @@
             $('#designForm').trigger("reset");
             $('#modelHeading').html("Thêm mới");
             $('#ajaxModel').modal('show');
-
-
         });
 
+        var myDropzoneOptions = {
+            url: '{{route('apk_upload_analysis.create')}}',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            // autoProcessQueue: false,
+            addRemoveLinks: true,
+            dictRemoveFile: 'Xoá',
+            acceptedFiles: ".apk",
+            init: function () {
+                var _this = this; // For the closure
+                this.on('success', function (file, response) {
+                    if (response.success) {
+                        _this.removeFile(file);
+                    }
+                    if (response.errors) {
+                        for (var count = 0; count < response.errors.length; count++) {
+                            toastr['error'](file.name, response.errors[count], {
+                                showMethod: 'slideDown',
+                                hideMethod: 'slideUp',
+                                timeOut: 5000,
+                            });
+                        }
+                    }
+                    if(_this.files.length == 0 ){
+                        table.clear().draw();
+                        toastr['success']('OK', response.success, {
+                            showMethod: 'slideDown',
+                            hideMethod: 'slideUp',
+                            timeOut: 1000,
+                        });
+                    }
+                });
+            }
 
+        };
 
-
-
-
-
-
-
-
-
-
-
-
+        var myDropzone = new Dropzone('#apk_upload', myDropzoneOptions);
 
     });
 

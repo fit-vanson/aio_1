@@ -18,7 +18,6 @@ class Apk_ProcessController extends Controller
 
 {
 
-//    public function index(Request $request,$id,$cate_id){
     public function index(Request $request){
 
 

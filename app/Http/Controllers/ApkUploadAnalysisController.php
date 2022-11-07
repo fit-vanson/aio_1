@@ -13,7 +13,7 @@ class ApkUploadAnalysisController extends Controller
             'title' => 'Apk Upload Analysis',
 
             'button' => [
-                'Create'            => ['id'=>'createNewApkUpload','style'=>'primary'],
+//                'Create'            => ['id'=>'createNewApkUpload','style'=>'primary'],
 //                'Build And Check'   => ['id'=>'build_check','style'=>'warning'],
 //                'Status'            => ['id'=>'dev_status','style'=>'info'],
 //                'KeyStore'          => ['id'=>'change_keystore','style'=>'success'],
@@ -74,5 +74,26 @@ class ApkUploadAnalysisController extends Controller
         );
 
         echo json_encode($response);
+    }
+
+    public function create(Request $request){
+//        dd($request->file);
+
+        if($request->file){
+            $folder = uniqid();
+            $path = storage_path('app/public/apkupload/'.$folder.'/');
+            if (!file_exists($path)) {
+                mkdir($path, 777, true);
+            }
+            $file = $request->file;
+            $file_name = $file->getClientOriginalName();
+            $file->move($path, $file_name);
+
+            $data = new ApkUploadAnalysis();
+            $data->name = $file_name;
+            $data->filename = $folder;
+            $data->save();
+            return response()->json(['success'=>'Thành công']);
+        }
     }
 }
