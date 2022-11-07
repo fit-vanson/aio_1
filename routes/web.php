@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\Apk_ProcessController;
+use App\Http\Controllers\ApkUploadAnalysisController;
 use App\Http\Controllers\BotController;
 use App\Http\Controllers\BuildPreviewController;
 use App\Http\Controllers\CategoryTemplateController;
@@ -274,6 +275,9 @@ Route::group(['prefix'=>'project','middleware'=>['CheckLogout','2fa']], function
     Route::get('/fake/{id}',[Project_Controller::class,'fake'])->name('project.fake')->middleware('can:project-index');
     Route::get('/manage',[Project_Controller::class,'manage'])->name('project.manage')->middleware('can:project-index');
     Route::post('/getManage',[Project_Controller::class,'getManage'])->name('project.getManage')->middleware('can:project-index');
+
+
+    Route::post('/copyProject',[Project_Controller::class,'copyProject'])->name('project.copyProject')->middleware('can:project-add');
 
 
 
@@ -658,6 +662,17 @@ Route::group(['prefix'=>'apk_process'], function (){
     Route::get('/update_pss/{id}',[Apk_ProcessController::class,'update_pss'])->name('apk_process.update_pss');
 //    Route::get('/delete/{id}',[Apk_ProcessController::class,'delete']);
 });
+
+Route::group(['prefix'=>'apk_upload_analysis'], function (){
+    Route::get('/',[ApkUploadAnalysisController::class,'index'])->name('apk_upload_analysis.index');
+    Route::get('success',[ApkUploadAnalysisController::class,'success'])->name('apk_upload_analysis.success');
+    Route::post('getIndex',[ApkUploadAnalysisController::class,'getIndex'])->name('apk_upload_analysis.getIndex');
+    Route::get('/delete/{id}',[ApkUploadAnalysisController::class,'delete'])->name('apk_upload_analysis.delete');
+//    Route::get('/update_pss/{id}',[ApkUploadAnalysisController::class,'update_pss'])->name('apk_process.update_pss');
+//    Route::get('/delete/{id}',[Apk_analysisController::class,'delete']);
+});
+
+
 
 Route::group(['prefix'=>'checkapi','middleware'=>['CheckLogout','2fa']], function (){
     Route::get('/',[CheckApiController::class,'index'])->name('checkapi.index');
