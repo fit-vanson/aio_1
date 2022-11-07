@@ -439,7 +439,6 @@ class Project_Controller extends Controller
                         ];
                     }
                     if(isset($value['sdk'])){
-
                         $inset_market[$key] += [
                             'sdk' => $value['sdk']
                         ];
@@ -472,7 +471,7 @@ class Project_Controller extends Controller
 
                 }
             }
-            $data->markets()->sync($inset_market);
+            $data->markets()->sync($inset_market,false);
         }catch (\Exception $exception) {
             Log::error('Message: Inset_market' . $exception->getMessage() . '--' . $exception->getLine());
         }
