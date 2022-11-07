@@ -132,6 +132,8 @@
                                     </li>
                                     <li {{@$_GET['pss_console'] == 3 ? 'class=mm-active' :'' }}><a href="{{route('apk_process.index',['pss_console'=>3])}}"><i class="ti-check"></i>Đã xử lý</a></li>
 
+                                    <li><a href="{{route('apk_upload_analysis.index')}}">Apk Upload</a></li>
+
                                 </ul>
                             </li>
 
