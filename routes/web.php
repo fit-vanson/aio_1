@@ -667,6 +667,8 @@ Route::group(['prefix'=>'apk_upload_analysis'], function (){
     Route::get('/',[ApkUploadAnalysisController::class,'index'])->name('apk_upload_analysis.index');
     Route::get('success',[ApkUploadAnalysisController::class,'success'])->name('apk_upload_analysis.success');
     Route::post('getIndex',[ApkUploadAnalysisController::class,'getIndex'])->name('apk_upload_analysis.getIndex');
+    Route::post('/create',[ApkUploadAnalysisController::class,'create'])->name('apk_upload_analysis.create');
+
     Route::get('/delete/{id}',[ApkUploadAnalysisController::class,'delete'])->name('apk_upload_analysis.delete');
 //    Route::get('/update_pss/{id}',[ApkUploadAnalysisController::class,'update_pss'])->name('apk_process.update_pss');
 //    Route::get('/delete/{id}',[Apk_analysisController::class,'delete']);
