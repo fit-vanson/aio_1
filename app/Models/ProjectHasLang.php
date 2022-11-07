@@ -25,7 +25,7 @@ class ProjectHasLang extends Model
 
     public function project()
     {
-        return $this->belongsTo(ProjectModel::class, 'project_id','projectid');
+        return $this->belongsTo(Project::class, 'project_id','projectid');
     }
 
     public function lang()
