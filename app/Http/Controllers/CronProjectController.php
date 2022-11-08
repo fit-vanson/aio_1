@@ -266,6 +266,7 @@ class CronProjectController extends Controller
         if($appsHuawei){
             $ch = '';
             $sms =  '';
+            $status_cron =  'Mặc định';
             foreach ($appsHuawei as $appHuawei){
                 $ch .=  '<br/>'.'Dang chay:  '.  '- '.$appHuawei->project->projectname.' - '. Carbon::now('Asia/Ho_Chi_Minh');
                 $monthCron = isset($_GET['submonth']) ? Carbon::now()->subMonth($_GET['submonth'])->format('Ym') :  Carbon::now()->format('Ym');
@@ -304,72 +305,84 @@ class CronProjectController extends Controller
                                     switch ($status){
                                         case 0:
                                             $status_app = 1;
+                                            $status_cron = 'released';
 //                                    $sms .= "\n<b>Project name: </b>"
 //                                        . '<code>'.$appHuawei->project->projectname.'</code> - '
 //                                        . "<code> ok  </code>";
                                             break;
                                         case 1 :
                                             $status_app = 4;
+                                            $status_cron = 'Release rejected';
                                             $sms .= "\n<b>Project name: </b>"
                                                 . '<code>'.$appHuawei->project->projectname.'</code> - '
                                                 . "<code> Release rejected  </code>";
                                             break;
                                         case  11:
                                             $status_app = 4;
+                                            $status_cron = 'Release rejected';
                                             $sms .= "\n<b>Project name: </b>"
                                                 . '<code>'.$appHuawei->project->projectname.'</code> - '
                                                 . "<code> Release canceled  </code>";
                                             break;
                                         case 2 :
                                             $status_app = 3;
+                                            $status_cron = 'Release rejected';
                                             $sms .= "\n<b>Project name: </b>"
                                                 . '<code>'.$appHuawei->project->projectname.'</code> - '
                                                 . "<code> Removed (including forcible removal)  </code>";
                                             break;
                                         case 6 :
                                             $status_app = 3;
+                                            $status_cron = 'Release rejected';
                                             $sms .= "\n<b>Project name: </b>"
                                                 . '<code>'.$appHuawei->project->projectname.'</code> - '
                                                 . "<code> Removal requested  </code>";
                                             break;
                                         case 8 :
                                             $status_app = 3;
+                                            $status_cron = 'Release rejected';
                                             $sms .= "\n<b>Project name: </b>"
                                                 . '<code>'.$appHuawei->project->projectname.'</code> - '
                                                 . "<code> Update rejected  </code>";
                                             break;
                                         case 9:
                                             $status_app = 3;
+                                            $status_cron = 'Release rejected';
                                             $sms .= "\n<b>Project name: </b>"
                                                 . '<code>'.$appHuawei->project->projectname.'</code> - '
                                                 . "<code> Removal rejected  </code>";
                                             break;
                                         case 3:
                                             $status_app = 6;
+                                            $status_cron = 'Release rejected';
                                             $sms .= "\n<b>Project name: </b>"
                                                 . '<code>'.$appHuawei->project->projectname.'</code> - '
                                                 . "<code> Releasing  </code>";
                                             break;
                                         case  4 :
                                             $status_app = 6;
+                                            $status_cron = 'Release rejected';
                                             $sms .= "\n<b>Project name: </b>"
                                                 . '<code>'.$appHuawei->project->projectname.'</code> - '
                                                 . "<code> Reviewing  </code>";
                                             break;
                                         case  5:
                                             $status_app = 6;
+                                            $status_cron = 'Release rejected';
                                             $sms .= "\n<b>Project name: </b>"
                                                 . '<code>'.$appHuawei->project->projectname.'</code> - '
                                                 . "<code> Updating  </code>";
                                             break;
                                         case 7:
                                             $status_app = 0;
+                                            $status_cron = 'Release rejected';
                                             $sms .= "\n<b>Project name: </b>"
                                                 . '<code>'.$appHuawei->project->projectname.'</code> - '
                                                 . "<code> Draft  </code>";
                                             break;
                                         case 10:
                                             $status_app = 2;
+                                            $status_cron = 'Release rejected';
                                             $sms .= "\n<b>Project name: </b>"
                                                 . '<code>'.$appHuawei->project->projectname.'</code> - '
                                                 . "<code> UnPublish  </code>";
@@ -391,7 +404,7 @@ class CronProjectController extends Controller
                             }
                             $appHuawei->bot_time = time();
                             $appHuawei->save();
-                            $ch .= '--'. $status .'---';
+                            $ch .= '--'. $status_cron .'---';
                         }
 
                     }
@@ -406,7 +419,7 @@ class CronProjectController extends Controller
             $this->sendMessTelegram('Huawei',$sms);
 
             if(\request()->return){
-                return response()->json(['success'=>'OK', 'project'=>$appHuawei]);
+                return response()->json(['success'=>'OK', 'project'=>$appHuawei,'status'=>$status_cron]);
             }else{
                 echo '<br/><br/>';
                 echo '<br/>' .'=========== Huawei ==============' ;

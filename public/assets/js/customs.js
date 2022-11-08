@@ -142,7 +142,7 @@ $(document).ready(function() {
                     html += '</span>';
                     btn.replaceWith(html);
                     $('#app_link_'+_id).attr("href",data.app_link);
-                    $.notify(data.project.project.projectname, "success");
+                    $.notify(data.project.project.projectname + ' - ' +data.status , "success");
                 }
             },
             error: function (data) {
