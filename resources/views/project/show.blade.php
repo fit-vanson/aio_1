@@ -41,7 +41,7 @@
                             <p class="card-title-desc">
 
 {{--                                <img id="logo_project" src="../storage/projects/{{@$project->da->ma_da}}/{{$project->projectname}}/{{$project->logo}}"  class="d-block img-fluid" src="" width="200px" alt="">--}}
-                                <img id="logo_project" src="{{url('api/picture/'.uniqid().'/'.$project->da->ma_da.'&'.$project->projectname.'&lg114.png')}}"  class="d-block img-fluid"  width="200px" alt="">
+                                <img id="logo_project" src="{{url('api/picture/'.uniqid().'/'.$project->da->ma_da.'&'.$project->projectname.'&lg.png')}}"  class="d-block img-fluid"  width="200px" alt="">
                             </p>
                         </div>
                         <div class="form-group col-lg-9">
