@@ -228,122 +228,202 @@ class CronProjectController extends Controller
     }
 
     public function Huawei($status_upload = null){
-        $this->getTokenHuawei();
         $status_upload = isset($_GET['status_upload']) ? $_GET['status_upload'] : $status_upload;
         $time =  Setting::first();
         $timeCron = Carbon::now()
             ->setTimezone('Asia/Ho_Chi_Minh')
             ->subMinutes($time->time_cron)
             ->timestamp;
+        $this->getTokenHuawei();
+
+        if(isset(\request()->projectID)){
+            $appsHuawei = MarketProject::where('id',\request()->projectID)->get();
+        }else {
+            $appsHuawei = MarketProject::where('market_id', 7)
+//            ->where('appID','105596233')
+                ->where('status_upload', 'like', '%' . $status_upload . '%')
+                ->where(function ($query) {
+                    $query->where('dev_id', '<>', 0)
+                        ->Where('dev_id', '<>', null);
+                })
+                ->whereHas('dev', function ($query) {
+                    return $query
+                        ->whereNotNull('api_client_id')
+                        ->where('api_client_id', '<>', '');
+                })
+//                ->where(function ($q) use ($timeCron) {
+//                    $q->where('bot_time', '<=', $timeCron)
+//                        ->orWhere('bot_time', null);
+//                })
+                ->paginate($time->limit_cron);
+        }
 
 
-//        dd($time->time_cron,$timeCron);
-        $appsHuawei = MarketProject::where('market_id', 7)
-            ->where('status_upload','like','%'. $status_upload.'%')
-            ->where(function($query) {
-                $query->where('dev_id','<>',0)
-                    ->Where('dev_id','<>',null);
-            })
-            ->whereHas('dev', function ($query) {
-                return $query
-                    ->whereNotNull('api_client_id')
-                    ->where('api_client_id','<>','');
-            })
-            ->where(function ($q) use ($timeCron) {
-                $q->where('bot_time', '<=', $timeCron)
-                    ->orWhere('bot_time', null);
-            })
-            ->paginate($time->limit_cron);
-        echo '<br/><br/>';
-        echo '<br/>' .'=========== Huawei ==============' ;
-        echo '<br/><b>'.'Yêu cầu:';
-        echo '<br/>&emsp;'.'- Project có package Huawei.';
-        echo '<br/>&emsp;'.'- Dev Huawei có Client ID và Client Secret'.'</b><br/><br/>';
         if(count($appsHuawei)==0){
             echo 'Chưa đến time cron'.PHP_EOL .'<br>';
             return false;
         }
         if($appsHuawei){
             $ch = '';
-            foreach ($appsHuawei->load('dev') as $appHuawei){
-                $ch .=  '<br/>'.'Dang chay:  '.  '- '. $appHuawei->id .' - '. Carbon::now('Asia/Ho_Chi_Minh');
+            $sms =  '';
+            foreach ($appsHuawei as $appHuawei){
+                $ch .=  '<br/>'.'Dang chay:  '.  '- '.$appHuawei->project->projectname.' - '. Carbon::now('Asia/Ho_Chi_Minh');
                 $monthCron = isset($_GET['submonth']) ? Carbon::now()->subMonth($_GET['submonth'])->format('Ym') :  Carbon::now()->format('Ym');
                 $dataArr = [];
                 try {
-                    $appIDs = $this->AppInfoPackageHuawei($this->domainHuawei,$appHuawei->dev->api_token,$appHuawei->dev->api_client_id,$appHuawei->package);
+                    if(!$appHuawei->dev){
+                        return response()->json(['error'=>'Chưa có DEV']);
+                    }else{
+                        if(!$appHuawei->dev->api_token){
+                            return response()->json(['error'=>'DEV chưa có Token']);
+                        }else{
+                            $appIDs = $this->AppInfoPackageHuawei($this->domainHuawei,$appHuawei->dev->api_token,$appHuawei->dev->api_client_id,$appHuawei->package);
+                            if($appIDs){
+                                $appInfo    = $this->AppInfoHuawei($this->domainHuawei,$appHuawei->dev->api_token,$appHuawei->dev->api_client_id,$appIDs[0]->value);
+                                if($appInfo){
+                                    $reportApp  = $this->reportAppHuawei($this->domainHuawei,$appHuawei->dev->api_token,$appHuawei->dev->api_client_id,$appIDs[0]->value);
+                                    $scoreApp  = $this->getScoreHuawei($this->domainHuawei,$appHuawei->dev->api_token,$appHuawei->dev->api_client_id,$appIDs[0]->value);
+                                    if($reportApp){
+                                        $file = $this->readCSV($reportApp['fileURL'],array('delimiter' => ','));
+                                        if($file){
+                                            $dataArr[$monthCron] =[
+                                                'Impressions' => $file['Impressions'],
+                                                'Details_page_views' => $file['Details page views'],
+                                                'Total_downloads' => $file['Total downloads'] ,
+                                                'Uninstalls' => $file['Uninstalls (installed from AppGallery)'],
+                                            ];
+                                        }
+                                    }
+                                    if ($appHuawei->bot){
+                                        $dataBot = json_decode($appHuawei->bot,true);
+                                        $data = $dataBot + $dataArr ;
+                                    }else{
+                                        $data = $dataArr;
+                                    }
+                                    $status = $appInfo['appInfo']['releaseState'];
+                                    switch ($status){
+                                        case 0:
+                                            $status_app = 1;
+//                                    $sms .= "\n<b>Project name: </b>"
+//                                        . '<code>'.$appHuawei->project->projectname.'</code> - '
+//                                        . "<code> ok  </code>";
+                                            break;
+                                        case 1 :
+                                            $status_app = 4;
+                                            $sms .= "\n<b>Project name: </b>"
+                                                . '<code>'.$appHuawei->project->projectname.'</code> - '
+                                                . "<code> Release rejected  </code>";
+                                            break;
+                                        case  11:
+                                            $status_app = 4;
+                                            $sms .= "\n<b>Project name: </b>"
+                                                . '<code>'.$appHuawei->project->projectname.'</code> - '
+                                                . "<code> Release canceled  </code>";
+                                            break;
+                                        case 2 :
+                                            $status_app = 3;
+                                            $sms .= "\n<b>Project name: </b>"
+                                                . '<code>'.$appHuawei->project->projectname.'</code> - '
+                                                . "<code> Removed (including forcible removal)  </code>";
+                                            break;
+                                        case 6 :
+                                            $status_app = 3;
+                                            $sms .= "\n<b>Project name: </b>"
+                                                . '<code>'.$appHuawei->project->projectname.'</code> - '
+                                                . "<code> Removal requested  </code>";
+                                            break;
+                                        case 8 :
+                                            $status_app = 3;
+                                            $sms .= "\n<b>Project name: </b>"
+                                                . '<code>'.$appHuawei->project->projectname.'</code> - '
+                                                . "<code> Update rejected  </code>";
+                                            break;
+                                        case 9:
+                                            $status_app = 3;
+                                            $sms .= "\n<b>Project name: </b>"
+                                                . '<code>'.$appHuawei->project->projectname.'</code> - '
+                                                . "<code> Removal rejected  </code>";
+                                            break;
+                                        case 3:
+                                            $status_app = 6;
+                                            $sms .= "\n<b>Project name: </b>"
+                                                . '<code>'.$appHuawei->project->projectname.'</code> - '
+                                                . "<code> Releasing  </code>";
+                                            break;
+                                        case  4 :
+                                            $status_app = 6;
+                                            $sms .= "\n<b>Project name: </b>"
+                                                . '<code>'.$appHuawei->project->projectname.'</code> - '
+                                                . "<code> Reviewing  </code>";
+                                            break;
+                                        case  5:
+                                            $status_app = 6;
+                                            $sms .= "\n<b>Project name: </b>"
+                                                . '<code>'.$appHuawei->project->projectname.'</code> - '
+                                                . "<code> Updating  </code>";
+                                            break;
+                                        case 7:
+                                            $status_app = 0;
+                                            $sms .= "\n<b>Project name: </b>"
+                                                . '<code>'.$appHuawei->project->projectname.'</code> - '
+                                                . "<code> Draft  </code>";
+                                            break;
+                                        case 10:
+                                            $status_app = 2;
+                                            $sms .= "\n<b>Project name: </b>"
+                                                . '<code>'.$appHuawei->project->projectname.'</code> - '
+                                                . "<code> UnPublish  </code>";
+                                            break;
+                                    }
 
-                    if($appIDs){
-                        $appInfo    = $this->AppInfoHuawei($this->domainHuawei,$appHuawei->dev->api_token,$appHuawei->dev->api_client_id,$appIDs[0]->value);
-                        dd($this->getUploadUrl($this->domainHuawei,$appHuawei->dev->api_token,$appHuawei->dev->api_client_id,$appIDs[0]->value));
-
-                        if($appInfo){
-                            $reportApp  = $this->reportAppHuawei($this->domainHuawei,$appHuawei->dev->api_token,$appHuawei->dev->api_client_id,$appIDs[0]->value);
-                            $scoreApp  = $this->getScoreHuawei($this->domainHuawei,$appHuawei->dev->api_token,$appHuawei->dev->api_client_id,$appIDs[0]->value);
-                            if($reportApp){
-                                $file = $this->readCSV($reportApp['fileURL'],array('delimiter' => ','));
-                                if($file){
-                                    $dataArr[$monthCron] =[
-                                        'Impressions' => $file['Impressions'],
-                                        'Details_page_views' => $file['Details page views'],
-                                        'Total_downloads' => $file['Total downloads'] ,
-                                        'Uninstalls' => $file['Uninstalls (installed from AppGallery)'],
-                                    ];
+                                    $data['status'] = $status;
+                                    $data['message'] = $appInfo['auditInfo']['auditOpinion'];
+                                    $data['updateTime'] = $appInfo['appInfo']['updateTime'];
+                                    krsort($data);
+                                    $appHuawei->bot_appVersion =   array_key_exists('versionNumber',$appInfo['appInfo']) ? $appInfo['appInfo']['versionNumber'] : null;
+                                    $appHuawei->policy_link =  array_key_exists('privacyPolicy',$appInfo['appInfo']) ? $appInfo['appInfo']['privacyPolicy'] : null;
+                                    $appHuawei->appID = $appIDs[0]->value ;
+                                    $appHuawei->status_app = $status_app;
+                                    $appHuawei->bot = $data;
+                                    $appHuawei->bot_score = $scoreApp['ret']['rtnCode'] == 0 ? $scoreApp['data']['score']['averageScore'] : 0 ;
+                                    $appHuawei->bot_installs = array_sum(array_column($data, 'Total_downloads'));
                                 }
                             }
-                            if ($appHuawei->bot){
-                                $dataBot = json_decode($appHuawei->bot,true);
-                                $data = $dataBot + $dataArr ;
-                            }else{
-                                $data = $dataArr;
-                            }
-                            $status = $appInfo['appInfo']['releaseState'];
-                            switch ($status){
-                                case 0:
-                                    $status_app = 1;
-                                    break;
-                                case 1 || 11:
-                                    $status_app = 4;
-                                    break;
-                                case 2 || 6 || 8 || 9:
-                                    $status_app = 3;
-                                    break;
-                                case 3 || 4 || 5:
-                                    $status_app = 6;
-                                    break;
-                                case 7:
-                                    $status_app = 0;
-                                    break;
-                                case 10:
-                                    $status_app = 2;
-                                    break;
-                            }
-
-                            $data['status'] = $status;
-                            $data['message'] = $appInfo['auditInfo']['auditOpinion'];
-                            $data['updateTime'] = $appInfo['appInfo']['updateTime'];
-                            krsort($data);
-
-                            $appHuawei->bot_appVersion =   array_key_exists('versionNumber',$appInfo['appInfo']) ? $appInfo['appInfo']['versionNumber'] : null;
-                            $appHuawei->policy_link =  array_key_exists('privacyPolicy',$appInfo['appInfo']) ? $appInfo['appInfo']['privacyPolicy'] : null;
-                            $appHuawei->appID = $appIDs[0]->value ;
-                            $appHuawei->status_app = $status_app;
-                            $appHuawei->bot = $data;
-                            $appHuawei->bot_score = $scoreApp['ret']['rtnCode'] == 0 ? $scoreApp['data']['score']['averageScore'] : 0 ;
-                            $appHuawei->bot_installs = array_sum(array_column($data, 'Total_downloads'));;
-
-
+                            $appHuawei->bot_time = time();
+                            $appHuawei->save();
+                            $ch .= '--'. $status .'---';
                         }
+
                     }
+
+
                 }catch (\Exception $exception) {
                     Log::error('Message:' . $exception->getMessage() . '--- cronHuawei: '.$appHuawei->id.'---' . $exception->getLine());
+                    return response()->json(['error'=>$exception->getMessage()]);
                 }
-                $appHuawei->bot_time = time();
-                $appHuawei->save();
-                $ch .= '--'. $appHuawei->status_app;
             }
-            echo $ch;
-            return true;
+
+            $this->sendMessTelegram('Huawei',$sms);
+
+            if(\request()->return){
+                return response()->json(['success'=>'OK', 'project'=>$appHuawei]);
+            }else{
+                echo '<br/><br/>';
+                echo '<br/>' .'=========== Huawei ==============' ;
+                echo '<br/><b>'.'Yêu cầu:';
+                echo '<br/>&emsp;'.'- Project có package Huawei.';
+                echo '<br/>&emsp;'.'- Dev Huawei có Client ID và Client Secret'.'</b>';
+                echo '<br/><b>&emsp;'.'- Trạng thái:'.'</b><br/>';
+                echo '<br/>&emsp;'.'0: released &emsp; 1: release rejected &emsp; 2: removed (including forcible removal) &emsp; 3: releasing &emsp; 4: reviewing &emsp; 5: updating &emsp;';
+                echo '<br/>&emsp;'.'6: removal requested &emsp; 7: draft &emsp; 8: update rejected &emsp; 9: removal rejected &emsp; 10: removed by developer &emsp; 11: release canceled &emsp;'.'<br/>';
+                echo $ch;
+                return true;
+            }
+
+
         }
+
+
     }
 
     public function getTokenHuawei(){
@@ -506,7 +586,6 @@ class CronProjectController extends Controller
             $response = Http::withHeaders($dataArr)->get($domain . $endpoint);
             if ($response->successful()){
                 $data = $response->json();
-
             }
         }catch (\Exception $exception) {
             Log::error('Message: reportAppHuawei:---' . $exception->getMessage() . '---' . $exception->getLine());
@@ -534,7 +613,6 @@ class CronProjectController extends Controller
         }
         return $data;
     }
-
 
     public function readCSV($csvFile, $array){
         try {
@@ -710,7 +788,7 @@ class CronProjectController extends Controller
     }
 
     public function sendMessTelegram($market,$sms){
-        $activity = Telegram::getUpdates();
+//        $activity = Telegram::getUpdates();
         if($sms){
             Telegram::sendMessage([
                 'chat_id' => env('TELEGRAM_CHANNEL_ID', ''),
@@ -718,6 +796,7 @@ class CronProjectController extends Controller
                 'text' => $market.$sms,
             ]);
         }
+        return true;
 
     }
 
@@ -888,47 +967,118 @@ class CronProjectController extends Controller
 
     function checkStatus($projectID){
         $project = MarketProject::findorfail($projectID)->load('dev','project');
+        $market = $project->market_id;
         if ($project->dev){
-            if($project->appID){
+            $token = $project->dev->api_token;
+            $account_id = $project->dev->api_client_id;
 
-                $token = $project->dev->api_token;
-                $account_id = $project->dev->api_client_id;
-                $privateKey = $project->dev->api_client_secret;
-                $contentId = $project->appID;
-                if(!$this->check_token($token,$account_id)){
-                    $token = $this->get_token_samsung($account_id,$privateKey);
-                    $project->dev->api_token = $token;
-                    $project->dev->save();
-                }
-                $appInfo = $this->contentInfo($token,$account_id,$contentId);
-                $contentStatus = $appInfo[0]['contentStatus'];
-                switch ($contentStatus){
-                    case 'REGISTERING':
-                        $status_app = 2;
-                        break;
-                    case 'FOR_SALE':
-                        $status_app = 1;
-                        break;
-                    case 'SUSPENDED':
-                        $status_app = 5;
-                        break;
-                    case 'TERMINATED':
-                        $status_app = 4;
-                }
-                $project->status_app = $status_app;
-                $project->save();
-                $sms = "\n<b>AppID: </b>"
-                    . '<code>'.$appInfo[0]['contentId'].'</code> - '
-                    . '<code>'.$project->project->projectname.'</code> - '
-                    . '<code>'.$appInfo[0]['contentStatus'].' </code>';
-                $this->sendMessTelegram('Samsung',$sms);
-                return response()->json(['success'=>'OK', 'project'=>$project]);
-            }else{
-                return response()->json(['error'=>'Chưa có AppID Samsung']);
+            switch ($market){
+                case 3:
+                    if($project->appID){
+                        $privateKey = $project->dev->api_client_secret;
+                        $contentId = $project->appID;
+                        if(!$this->check_token($token,$account_id)){
+                            $token = $this->get_token_samsung($account_id,$privateKey);
+                            $project->dev->api_token = $token;
+                            $project->dev->save();
+                        }
+                        $token = $project->dev->api_token;
+                        $appInfo = $this->contentInfo($token,$account_id,$contentId);
+                        $contentStatus = $appInfo[0]['contentStatus'];
+                        switch ($contentStatus){
+                            case 'REGISTERING':
+                                $status_app = 2;
+                                break;
+                            case 'FOR_SALE':
+                                $status_app = 1;
+                                break;
+                            case 'SUSPENDED':
+                                $status_app = 5;
+                                break;
+                            case 'TERMINATED':
+                                $status_app = 4;
+                        }
+                        $project->status_app = $status_app;
+                        $project->save();
+                        $sms = "\n<b>AppID: </b>"
+                            . '<code>'.$appInfo[0]['contentId'].'</code> - '
+                            . '<code>'.$project->project->projectname.'</code> - '
+                            . '<code>'.$appInfo[0]['contentStatus'].' </code>';
+                        $this->sendMessTelegram('Samsung',$sms);
+                        $result = response()->json(['success'=>'OK', 'project'=>$project]);
+                    }else{
+                        $result = response()->json(['error'=>'Chưa có AppID Samsung']);
+                    }
+                    break;
+
             }
+
+
+
+
+
+
         }else{
-            return response()->json(['error'=>'Chưa có DEV']);
+            $result = response()->json(['error'=>'Chưa có DEV']);
         }
+
+
+
+
+
+
+//        switch ($market){
+//            case 3:
+//                if ($project->dev){
+//                    if($project->appID){
+//                        $token = $project->dev->api_token;
+//                        $account_id = $project->dev->api_client_id;
+//                        $privateKey = $project->dev->api_client_secret;
+//                        $contentId = $project->appID;
+//                        if(!$this->check_token($token,$account_id)){
+//                            $token = $this->get_token_samsung($account_id,$privateKey);
+//                            $project->dev->api_token = $token;
+//                            $project->dev->save();
+//                        }
+//                        $appInfo = $this->contentInfo($token,$account_id,$contentId);
+//                        $contentStatus = $appInfo[0]['contentStatus'];
+//                        switch ($contentStatus){
+//                            case 'REGISTERING':
+//                                $status_app = 2;
+//                                break;
+//                            case 'FOR_SALE':
+//                                $status_app = 1;
+//                                break;
+//                            case 'SUSPENDED':
+//                                $status_app = 5;
+//                                break;
+//                            case 'TERMINATED':
+//                                $status_app = 4;
+//                        }
+//                        $project->status_app = $status_app;
+//                        $project->save();
+//                        $sms = "\n<b>AppID: </b>"
+//                            . '<code>'.$appInfo[0]['contentId'].'</code> - '
+//                            . '<code>'.$project->project->projectname.'</code> - '
+//                            . '<code>'.$appInfo[0]['contentStatus'].' </code>';
+//                        $this->sendMessTelegram('Samsung',$sms);
+//                        $result = response()->json(['success'=>'OK', 'project'=>$project]);
+//                    }else{
+//                        $result = response()->json(['error'=>'Chưa có AppID Samsung']);
+//                    }
+//                }else{
+//                        $result = response()->json(['error'=>'Chưa có DEV']);
+//                }
+//                break;
+//            case 7:
+//
+//                dd($project);
+//                dd(12);
+//                break;
+//
+//        }
+
+        return $result;
     }
 
 
