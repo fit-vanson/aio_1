@@ -696,7 +696,6 @@ class CronProjectController extends Controller
             $status_cron =  'Mặc định';
             foreach ($appsVivo as $appVivo){
                 $ch .=  '<br/>'.'Dang chay: '. '-'. $appVivo->id .' - '.$appVivo->project->projectname.'---'. Carbon::now('Asia/Ho_Chi_Minh');
-
                 try{
                     if(!$appVivo->dev){
                         return response()->json(['error'=>'Chưa có DEV']);
@@ -791,8 +790,6 @@ class CronProjectController extends Controller
 
         $result = curl_exec($curl);
         $result = (json_decode($result));
-
-
         if($result->code == 0){
             return $result;
         }
