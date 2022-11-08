@@ -435,8 +435,6 @@ class CronProjectController extends Controller
 
 
         }
-
-
     }
 
     public function getTokenHuawei(){
@@ -666,28 +664,27 @@ class CronProjectController extends Controller
         $timeCron = Carbon::now()->subMinutes($time->time_cron)->setTimezone('Asia/Ho_Chi_Minh')->timestamp;
         $status_upload = isset($_GET['status_upload']) ? $_GET['status_upload'] : $status_upload;
 
-        $appsVivo = MarketProject::with('dev')
-            ->where('market_id', 6)
-            ->where('status_upload','like','%'. $status_upload.'%')
-            ->whereHas('dev', function ($query) {
-                return $query
-                    ->whereNotNull('api_access_key')
-                    ->where('api_access_key','<>','');
+
+        if(isset(\request()->projectID)){
+            $appsVivo = MarketProject::where('id',\request()->projectID)->get();
+        }else {
+            $appsVivo = MarketProject::with('dev')
+                ->where('market_id', 6)
+                ->where('status_upload','like','%'. $status_upload.'%')
+                ->whereHas('dev', function ($query) {
+                    return $query
+                        ->whereNotNull('api_access_key')
+                        ->where('api_access_key','<>','');
 //                    ->where('dev_name','DEV V1');
-            })
-            ->where(function ($q) use ($timeCron) {
-                $q->where('bot_time', '<=', $timeCron)
-                    ->orWhere('bot_time', null);
-            })
+                })
+                ->where(function ($q) use ($timeCron) {
+                    $q->where('bot_time', '<=', $timeCron)
+                        ->orWhere('bot_time', null);
+                })
 //            ->get();
-            ->paginate($time->limit_cron);
+                ->paginate($time->limit_cron);
 
-        echo '<br/><br/>';
-        echo '<br/>' .'=========== Vivo ==============' ;
-        echo '<br/><b>'.'Yêu cầu:';
-        echo '<br/>&emsp;'.'- Project có Package của Vivo.';
-        echo '<br/>&emsp;'.'- Dev Vivo có Client ID và Client Secret'.'</b><br/><br/>';
-
+        }
 
         if(count($appsVivo)==0){
             echo 'Chưa đến time cron'.PHP_EOL .'<br>';
@@ -695,41 +692,54 @@ class CronProjectController extends Controller
         }
 
         if($appsVivo){
-            $sms =  '';
+            $sms = $ch = '';
+            $status_cron =  'Mặc định';
             foreach ($appsVivo as $appVivo){
-                $ch =  '<br/>'.'Dang chay: '. '-'. $appVivo->id .' - '.$appVivo->project->projectname.'---'. Carbon::now('Asia/Ho_Chi_Minh');
+                $ch .=  '<br/>'.'Dang chay: '. '-'. $appVivo->id .' - '.$appVivo->project->projectname.'---'. Carbon::now('Asia/Ho_Chi_Minh');
 
                 try{
-                    $data = $this->get_Vivo($appVivo->dev->api_access_key,$appVivo->dev->api_client_secret,$appVivo->package);
+                    if(!$appVivo->dev){
+                        return response()->json(['error'=>'Chưa có DEV']);
+                    }else {
+                        if(!$appVivo->dev->api_access_key || !$appVivo->dev->api_client_secret ){
+                            return response()->json(['error'=>'DEV chưa có api_access_key ']);
+                        }else{
+                            $get_Vivo = $this->get_Vivo($appVivo->dev->api_access_key, $appVivo->dev->api_client_secret, $appVivo->package);
+                            if ($get_Vivo->data) {
+                                $status = $get_Vivo->data->onlineStatus;
+                                switch ($status) {
+                                    case 0:
+                                        $status_app = 2;
+                                        $status_cron = 'Unpublished';
+                                        $sms .= "\n<b>Project name: </b>"
+                                            . '<code>' . $appVivo->project->projectname . '</code> - '
+                                            . "<code>Unpublished </code>";
+                                        break;
+                                    case 1 || 3 :
+                                        $status_app = 1;
+                                        $status_cron = 'Published';
+                                        break;
+                                    case 2:
+                                        $status_app = 3;
+                                        $status_cron = 'Removed';
+                                        $sms .= "\n<b>Project name: </b>"
+                                            . '<code>' . $appVivo->project->projectname . '</code> - '
+                                            . "<code>Removed  </code>";
+                                        break;
+                                }
+                                $dataArr = [
+                                    'status' => $status
+                                ];
 
-                    if($data){
-                        $status = $data->onlineStatus;
-                        switch ($status){
-                            case 0:
-                                $status_app = 2;
-                                $sms .= "\n<b>Project name: </b>"
-                                    . '<code>'.$appVivo->project->projectname.'</code> - '
-                                    . "<code>Unpublished </code>";
-                                break;
-                            case 1 || 3 :
-                                $status_app = 1;
-                                break;
-                            case 2:
-                                $status_app = 3;
-                                $sms .= "\n<b>Project name: </b>"
-                                    . '<code>'.$appVivo->project->projectname.'</code> - '
-                                    . "<code>Removed  </code>";
-                                break;
+                                $appVivo->bot = $dataArr;
+                                $appVivo->bot_appVersion = $get_Vivo->data->versionName;
+                                $appVivo->policy_link = isset($get_Vivo->data->privacyStatement) ? $get_Vivo->data->privacyStatement : null;
+                                $appVivo->status_app = $status_app;
+                            }else{
+                                $appVivo->status_app = 6;
+                                $status_cron = $get_Vivo->subMsg;
+                            }
                         }
-                        $dataArr = [
-                            'status' =>$status
-                        ];
-
-                        $appVivo->bot = $dataArr;
-                        $appVivo->bot_appVersion = $data->versionName;
-                        $appVivo->policy_link = isset($data->privacyStatement) ? $data->privacyStatement : null ;
-                        $appVivo->status_app = $status_app;
-
                     }
 
                 }catch (\Exception $exception) {
@@ -737,11 +747,23 @@ class CronProjectController extends Controller
                 }
                 $appVivo->bot_time = time();
                 $appVivo->save();
-                $ch .= '-'.$appVivo->status_app;
-                echo $ch;
+                $ch .= '-'.$status_cron;
             }
             $this->sendMessTelegram('Vivo',$sms);
-            return  true;
+
+            if(\request()->return){
+                return  response()->json(['success'=>'OK', 'project'=>$appVivo,'status'=>$status_cron]);
+            }else{
+                echo '<br/><br/>';
+                echo '<br/>' .'=========== Vivo ==============' ;
+                echo '<br/><b>'.'Yêu cầu:';
+                echo '<br/>&emsp;'.'- Project có Package của Vivo.';
+                echo '<br/>&emsp;'.'- Dev Vivo có Client ID và Client Secret'.'</b><br/><br/>';
+                echo $ch;
+                return true;
+
+            }
+
         }
     }
 
@@ -770,8 +792,9 @@ class CronProjectController extends Controller
         $result = curl_exec($curl);
         $result = (json_decode($result));
 
+
         if($result->code == 0){
-            return $result->data;
+            return $result;
         }
         return false;
 
