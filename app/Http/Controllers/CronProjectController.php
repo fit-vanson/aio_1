@@ -251,10 +251,10 @@ class CronProjectController extends Controller
                         ->whereNotNull('api_client_id')
                         ->where('api_client_id', '<>', '');
                 })
-//                ->where(function ($q) use ($timeCron) {
-//                    $q->where('bot_time', '<=', $timeCron)
-//                        ->orWhere('bot_time', null);
-//                })
+                ->where(function ($q) use ($timeCron) {
+                    $q->where('bot_time', '<=', $timeCron)
+                        ->orWhere('bot_time', null);
+                })
                 ->paginate($time->limit_cron);
         }
 
@@ -430,7 +430,7 @@ class CronProjectController extends Controller
                 echo '<br/>&emsp;'.'0: released &emsp; 1: release rejected &emsp; 2: removed (including forcible removal) &emsp; 3: releasing &emsp; 4: reviewing &emsp; 5: updating &emsp;';
                 echo '<br/>&emsp;'.'6: removal requested &emsp; 7: draft &emsp; 8: update rejected &emsp; 9: removal rejected &emsp; 10: removed by developer &emsp; 11: release canceled &emsp;'.'<br/>';
                 echo $ch;
-                return true;
+                return ;
             }
 
 
@@ -760,7 +760,7 @@ class CronProjectController extends Controller
                 echo '<br/>&emsp;'.'- Project có Package của Vivo.';
                 echo '<br/>&emsp;'.'- Dev Vivo có Client ID và Client Secret'.'</b><br/><br/>';
                 echo $ch;
-                return true;
+                return ;
 
             }
 
