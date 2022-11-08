@@ -117,7 +117,7 @@ class Project_Controller extends Controller
             }
             if(isset($record->logo)){
 //                $logo = '<img class="rounded mx-auto d-block"  width="100px"  height="100px"  src="'.url('storage/projects/'.$mada.'/'.$record->projectname.'/lg114.png').'">';
-                $logo = '<a class=" image-popup-no-margins image" style="margin:5px" href="'.url('api/picture/'.$url_rand.'/'.$mada.'&'.$record->projectname.'&lg114.png').'" title="Logo">' .
+                $logo = '<a class=" image-popup-no-margins image" style="margin:5px" href="'.url('api/picture/'.$url_rand.'/'.$mada.'&'.$record->projectname.'&lg.png').'" title="Logo">' .
                     '<img class="rounded mx-auto d-block"  src="'.url('api/picture/'.$url_rand.'/'.$mada.'&'.$record->projectname.'&lg114.png').'" alt="logo" height="100">' .
                     '</a>';
             }else{
