@@ -13,16 +13,16 @@ $(document).ready(function() {
                         html +=  'success "> Publish';
                         break;
                     case 2:
-                        html +=  'warning "> Suppend';
+                        html +=  'warning "> UnPublish';
                         break;
                     case 3:
-                        html += 'info"> UnPublish';
+                        html += 'info"> Remove';
                         break;
                     case 4:
-                        html +=  'primary"> Remove';
+                        html +=  'primary"> Reject';
                         break;
                     case 5:
-                        html +=  'dark"> Reject';
+                        html +=  'dark"> Suspend';
                         break;
                     case 6:
                         html +=  'danger"> Check ';
@@ -64,16 +64,16 @@ $(document).ready(function() {
                             html +=  'success "> Publish';
                             break;
                         case 2:
-                            html +=  'warning "> Suppend';
+                            html +=  'warning "> UnPublish';
                             break;
                         case 3:
-                            html += 'info"> UnPublish';
+                            html += 'info"> Remove';
                             break;
                         case 4:
-                            html +=  'primary"> Remove';
+                            html +=  'primary"> Reject';
                             break;
                         case 5:
-                            html +=  'dark"> Reject';
+                            html +=  'dark"> Suspend';
                             break;
                         case 6:
                             html +=  'danger"> Check ';
@@ -88,7 +88,7 @@ $(document).ready(function() {
                     html += '</span>';
                     btn.replaceWith(html);
                     $('#app_link_'+_id).attr("href",data.app_link);
-                    $.notify(data.package, "success");
+                    $.notify(data.project.project.projectname, "success");
                 }
 
 

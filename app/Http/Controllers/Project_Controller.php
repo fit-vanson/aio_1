@@ -207,7 +207,7 @@ class Project_Controller extends Controller
                             $result .=  'primary"> Reject';
                             break;
                         case 5:
-                            $result .=  'dark"> Suppend';
+                            $result .=  'dark"> Suspend';
                             break;
                         case 6:
                             $result .=  'danger"> Check ';

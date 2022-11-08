@@ -904,14 +904,13 @@ class CronProjectController extends Controller
                 $contentStatus = $appInfo[0]['contentStatus'];
                 switch ($contentStatus){
                     case 'REGISTERING':
-                        $status_app = 3;
+                        $status_app = 2;
                         break;
                     case 'FOR_SALE':
                         $status_app = 1;
                         break;
                     case 'SUSPENDED':
-                        $status_app = 2;
-
+                        $status_app = 5;
                         break;
                     case 'TERMINATED':
                         $status_app = 4;
@@ -921,7 +920,7 @@ class CronProjectController extends Controller
                 $sms = "\n<b>AppID: </b>"
                     . '<code>'.$appInfo[0]['contentId'].'</code> - '
                     . '<code>'.$project->project->projectname.'</code> - '
-                    . '<code>'.$status_app.' </code>';
+                    . '<code>'.$appInfo[0]['contentStatus'].' </code>';
                 $this->sendMessTelegram('Samsung',$sms);
                 return response()->json(['success'=>'OK', 'project'=>$project]);
             }else{
