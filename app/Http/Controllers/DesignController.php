@@ -137,7 +137,7 @@ class DesignController extends Controller
 
             if(isset($record->logo)){
                 $logo =
-                    '<a class="image-popup-no-margins image" style="margin:5px" href="'.url('api/picture/'.$url_rand.'/'.$mada.'&'.$record->projectname.'&lg114.png').'" title="Logo">' .
+                    '<a class="image-popup-no-margins image" style="margin:5px" href="'.url('api/picture/'.$url_rand.'/'.$mada.'&'.$record->projectname.'&lg.png').'" title="Logo">' .
                         '<img  src="'.url('api/picture/'.$url_rand.'/'.$mada.'&'.$record->projectname.'&lg114.png').'" alt="logo" height="100">' .
                     '</a>';
             }else{
