@@ -99,7 +99,6 @@ $(document).ready(function() {
         });
     })
 
-
     $(document).on('click','.check_Status_HUAWEI', function () {
         var _id = $(this).data("package");
         var btn = $(this);
