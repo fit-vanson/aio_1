@@ -95,8 +95,9 @@ class Project_Controller extends Controller
             ->take($rowperpage)
             ->get();
         $data_arr = array();
-        $url_rand = uniqid();
+
         foreach ($records as $record) {
+            $url_rand = uniqid();
             $btn = '<div class="button-items">';
             $btn .= ' <a href="javascript:void(0)" data-id="'.$record->projectid.'" class="btn btn-warning editProject"><i class="ti-pencil-alt"></i></a>';
             $btn .= ' <a href="'.route('project.show',['id'=>$record->projectid]).'" target="_blank"  class="btn btn-secondary"><i class="ti-eye"></i></a>';

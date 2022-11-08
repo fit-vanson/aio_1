@@ -125,8 +125,9 @@
 
                     <?php
                     $tablist =  $tab_content = '';
-                    $url_rand = uniqid();
+
                     foreach($project->lang as $key=>$value){
+                        $url_rand = uniqid();
                         if($value->id == 2){
                             $active = 'active';
                         }else{
