@@ -178,6 +178,7 @@ return [
         Intervention\Image\ImageServiceProvider::class,
         Mavinoo\Batch\BatchServiceProvider::class,
         Telegram\Bot\Laravel\TelegramServiceProvider::class,
+        Bkwld\Cloner\ServiceProvider::class,
 //        App\Providers\BroadcastServiceProvider
     ],
 
