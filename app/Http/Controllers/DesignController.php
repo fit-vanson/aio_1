@@ -89,14 +89,14 @@ class DesignController extends Controller
             ->skip($start)
             ->take($rowperpage)
             ->get();
-        $token = uniqid();
+        $url_rand = uniqid();
         $data_arr = array();
         foreach ($records as $key=>$record) {
             $btn = ' <a href="javascript:void(0)"  data-name="'.$record->projectname.'" data-id="'.$record->projectid.'" class="btn btn-warning editProjectLang"><i class="ti-pencil-alt"></i></a>';
             $btn .= ' <a href="'.route('project.show',['id'=>$record->projectid]).'" target="_blank"  class="btn btn-secondary"><i class="ti-eye"></i></a>';
 
 
-//            dd($record);
+
             $project_name = $record->projectname;
             $langs = $record->lang;
             $design = '';
@@ -114,7 +114,7 @@ class DesignController extends Controller
                     $result = ' <span style="font-size: 100%" class="badge badge-danger">'.$lang->lang_name.' ('.($preview).') </span> ' ;
                 }
                 $design .=  $result;
-                $banner[$lang->id] =$lang->pivot->banner;
+                $banner[$lang->lang_code] =$lang->pivot->banner;
             }
 
 
@@ -122,10 +122,12 @@ class DesignController extends Controller
                 $mada = $record->da->ma_da;
             }
 
+
             if(!empty(array_filter($banner))){
                 $random_lang = array_rand(array_filter($banner),1);
-                $random_banner = '<a class="image-popup-no-margins image" style="margin:5px" href="'.url('api/picture/token='.$token.'?project_id='.$record->projectid.'&lang_id='.$random_lang.'&view=banner').'">' .
-                    '<img  src="'.url('api/picture/token='.$token.'?project_id='.$record->projectid.'&lang_id='.$random_lang.'&view=banner').'" alt="'.$random_lang.' Banner" height="100">' .
+                $random_banner =
+                    '<a class="image-popup-no-margins image" style="margin:5px" href="'.url('api/picture/'.$url_rand.'/'.$mada.'&'.$record->projectname.'&'.$random_lang.'&bn.jpg').'">' .
+                        '<img  src="'.url('api/picture/'.$url_rand.'/'.$mada.'&'.$record->projectname.'&'.$random_lang.'&bn.jpg').'" alt="'.$random_lang.' Banner" height="100">' .
                     '</a>';
             }else{
                 $random_banner = '<a class="image-popup-no-margins image" style="margin:5px" href="assets\images\logo-sm.png" title="Logo">' .
@@ -134,8 +136,9 @@ class DesignController extends Controller
             }
 
             if(isset($record->logo)){
-                $logo = '<a class="image-popup-no-margins image" style="margin:5px" href="'.url('api/picture/token='.$token.'?project_id='.$record->projectid.'&view=logo').'" title="Logo">' .
-                    '<img  src="'.url('api/picture/token='.$token.'?project_id='.$record->projectid.'&view=logo').'" alt="logo" height="100">' .
+                $logo =
+                    '<a class="image-popup-no-margins image" style="margin:5px" href="'.url('api/picture/'.$url_rand.'/'.$mada.'&'.$record->projectname.'&lg114.png').'" title="Logo">' .
+                        '<img  src="'.url('api/picture/'.$url_rand.'/'.$mada.'&'.$record->projectname.'&lg114.png').'" alt="logo" height="100">' .
                     '</a>';
             }else{
                 $logo = '<a class="image-popup-no-margins image " style="margin:5px" href="assets\images\logo-sm.png" title="Logo">' .
@@ -180,15 +183,6 @@ class DesignController extends Controller
             return response()->json(['errors'=> 'Chọn Project']);
         }
 
-//        $du_an = preg_split("/[-]+/",$request->projectname)[0];
-//
-//        if($request->lang_code != 'undefined'){
-//            $path = storage_path('app/public/projects/'.trim($du_an).'/'.trim($request->projectname).'/'.trim($request->lang_code).'/');
-//            if (!file_exists($path)) {
-//                mkdir($path, 777, true);
-//            }
-//        }
-//        $action = $request->action;
         $project = Project::find($request->project_id);
         $du_an = $project->da->ma_da;
         $langs = Language::all()->toArray();
@@ -252,7 +246,6 @@ class DesignController extends Controller
                     $num ++;
                 }
             }
-//            $market[$key]['token'] = sha1(uniqid(time(), true));
         }
         $project->user_design = auth()->id();
         if ($project->status_design == 2  ){
@@ -264,85 +257,6 @@ class DesignController extends Controller
         foreach ($market as $k=>$v){
             $project->lang()->syncWithPivotValues($k, $v,false);
         }
-
-
-
-//        dd($request->all());
-//
-//
-//        dd($du_an);
-//
-//        switch ($action){
-//            case 'logo':
-//                $path_logo = storage_path('app/public/projects/'.$du_an.'/'.$request->projectname.'/');
-//                if (!file_exists($path_logo)) {
-//                    mkdir($path_logo, 777, true);
-//                }
-//                $files = $request->file('logo');
-//                foreach ($files as $file) {
-//                    $img = Image::make($file->path());
-//                    $img->resize(512, 512)
-//                        ->save($path_logo.'lg.png',85);
-//                    $img->resize(114, 114)
-//                        ->save($path_logo.'lg114.png',85);
-//                }
-//                $project->logo = 'lg.png';
-//                break;
-//            case 'banner':
-//                $files = $request->file('banner');
-//                foreach ($files as $file) {
-//                    $img = Image::make($file->path());
-//                    $img
-//                        ->resize(1024, 500)
-//                        ->save($path.'bn.jpg',85);
-//                }
-//                $project->user_design = auth()->id();
-//                $project->lang()->syncWithPivotValues($request->lang, ['banner'=> 1],false);
-////                $project->lang()->updateExistingPivot((int)$request->lang, ['banner'=>1]);
-//                break;
-//            case 'preview':
-//                $files = $request->file();
-//
-//
-//
-//                foreach ($files as $key=>$file) {
-//
-//
-//                    $img = Image::make($file[0]->path());
-//
-//
-//                    if($img->height() > $img->width()){
-//                        $img
-//                            ->resize(1080, 1920)
-//                            ->save($path.$key.'.jpg',85);
-//                    }elseif ($img->height() < $img->width()){
-//                        $img
-//                            ->resize(1920, 1080)
-//                            ->save($path.$key.'.jpg',85);
-//                    }else{
-//                        $img
-//                            ->resize(1920, 1920)
-//                            ->save($path.$key.'.jpg',85);
-//                    }
-//                }
-//
-//                $project->user_design = auth()->id();
-//                $project->lang()->syncWithPivotValues($request->lang, [$key=> 1],false);
-////                $project->lang()->updateExistingPivot((int)$request->lang, ['preview'=> $key+1]);
-//                break;
-//            case 'video':
-//                $files = $request->file('video');
-//                foreach ($files as $file) {
-//                    $file->move($path, 'video.mp4');
-//                }
-//                $project->user_design = auth()->id();
-//                $project->lang()->syncWithPivotValues($request->lang, ['video'=> 1],false);
-////                $project->lang()->updateExistingPivot((int)$request->lang, ['video'=> 1]);
-//                break;
-//        }
-//        $project->save();
-
-
         return response()->json(['success'=>'Thành công']);
     }
 
@@ -370,29 +284,7 @@ class DesignController extends Controller
 
         return array_intersect_key($array,array_flip($keys));
     }
-    public function picture($param){
 
-        $view = \request()->view;
-        $project_id = \request()->project_id;
-        $lang_id = \request()->lang_id;
-        $project_lang = $lang_id ? ProjectHasLang::where('project_id',$project_id)->where('lang_id',$lang_id)->first() : Project::find($project_id);
-        switch ($view){
-            case 'banner':
-                $url =  response()->file(public_path('/storage/projects/').@$project_lang->project->da->ma_da.'/'.@$project_lang->project->projectname.'/'.@$project_lang->lang->lang_code.'/bn.jpg');
-                break;
-            case 'preview':
-                $preview = \request()->preview;
-                $url =  response()->file(public_path('/storage/projects/').$project_lang->project->da->ma_da.'/'.$project_lang->project->projectname.'/'.$project_lang->lang->lang_code.'/pr'.$preview.'.jpg');
-                break;
-            case 'logo':
-//                dd($project_lang->load('da'));
-//                <img  src="'.url('storage/projects/'.$mada.'/'.$record->projectname.'/lg.png').'" alt="logo" height="100">
-                $url =  response()->file(public_path('/storage/projects/').$project_lang->da->ma_da.'/'.$project_lang->projectname.'/lg114.png');
-                break;
-        }
-        return $url;
-//        dd($pram);
-    }
 
 
 

@@ -21,6 +21,7 @@ use App\Models\MarketProject;
 use App\Models\Markets;
 use App\Models\ProfileV2;
 use App\Models\Project;
+use App\Models\ProjectHasLang;
 use App\Models\Template;
 use CURLFile;
 use Firebase\JWT\JWT;
@@ -736,6 +737,13 @@ BKUyc6NW6/fEZsTTUK3dMDbOJLU42oZnnLnw3bZe37G09/EmR54iDkA=
 //        }catch (\Exception $exception) {
 //            Log::error('Message: contentSubmit -- ' . $exception->getMessage() . $exception->getLine());
 //        }
+    }
+
+    public function picture($rand,$url){
+        $url = str_replace('&','/',$url);
+        $result =  response()->file(public_path('/storage/projects/').$url);
+        return ($result);
+
     }
 
 }

@@ -95,6 +95,7 @@ class Project_Controller extends Controller
             ->take($rowperpage)
             ->get();
         $data_arr = array();
+        $url_rand = uniqid();
         foreach ($records as $record) {
             $btn = '<div class="button-items">';
             $btn .= ' <a href="javascript:void(0)" data-id="'.$record->projectid.'" class="btn btn-warning editProject"><i class="ti-pencil-alt"></i></a>';
@@ -115,7 +116,10 @@ class Project_Controller extends Controller
                 $template = $record->ma_template->template;
             }
             if(isset($record->logo)){
-                $logo = '<img class="rounded mx-auto d-block"  width="100px"  height="100px"  src="'.url('storage/projects/'.$mada.'/'.$record->projectname.'/lg114.png').'">';
+//                $logo = '<img class="rounded mx-auto d-block"  width="100px"  height="100px"  src="'.url('storage/projects/'.$mada.'/'.$record->projectname.'/lg114.png').'">';
+                $logo = '<a class=" image-popup-no-margins image" style="margin:5px" href="'.url('api/picture/'.$url_rand.'/'.$mada.'&'.$record->projectname.'&lg114.png').'" title="Logo">' .
+                    '<img class="rounded mx-auto d-block"  src="'.url('api/picture/'.$url_rand.'/'.$mada.'&'.$record->projectname.'&lg114.png').'" alt="logo" height="100">' .
+                    '</a>';
             }else{
                 $logo = '<img class="rounded mx-auto d-block" width="100px" height="100px" src="assets\images\logo-sm.png">';
             }
@@ -481,8 +485,8 @@ class Project_Controller extends Controller
 
     public function delete($id){
         $project = Project::find($id);
-//        $path =   public_path('uploads/project/').$project->projectname;
-//        $this->deleteDirectory($path_image);
+        $path =   storage_path('app/public/projects/').$project->da->ma_da.'/'.$project->projectname;
+        $this->deleteDirectory($path);
         $project->markets()->sync([]);
         $project->lang()->sync([]);
         $project->delete();

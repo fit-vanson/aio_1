@@ -344,7 +344,9 @@
 
             $.get('{{asset('design/edit')}}/'+_id,function (data) {
                 var langs = data.lang;
+
                 console.log(data)
+
                 // $.each(langs, function ($k,$v){
 
 
@@ -404,10 +406,6 @@
 
 
             })
-
-
-
-
         });
 
 
@@ -480,13 +478,6 @@
 
             }
         });
-
-
-
-
-
-
-
         $('#designFormEdit').on('submit',function (event){
             event.preventDefault();
             var formData = new FormData($("#designFormEdit")[0]);
@@ -570,17 +561,30 @@
         });
         $(document).on('click','.editProjectLang', function (data){
             var _id = $(this).data("id");
+            var _name= $(this).data("name");
 
-            $.get('{{asset('design/edit')}}/'+_id,function (data) {
-                $('#ajaxModel').modal('show');
-                $("#project_id").select2("trigger", "select", {
-                    data: {
-                        id: data.projectid,
-                        text: data.projectname,
-                    }
-                });
+            $('#ajaxModel').modal('show');
 
-            })
+            $("#project_id").select2("trigger", "select", {
+                data: {
+                    id: _id,
+                    text: _name,
+                }
+            });
+            {{--$.get('{{asset('design/edit')}}/'+_id,function (data) {--}}
+
+            {{--    console.log(_id)--}}
+            {{--    console.log(data)--}}
+            {{--    console.log(_name)--}}
+
+            {{--    $("#project_id").select2("trigger", "select", {--}}
+            {{--        data: {--}}
+            {{--            id: data.projectid,--}}
+            {{--            text: data.projectname,--}}
+            {{--        }--}}
+            {{--    });--}}
+
+            {{--})--}}
         });
 
 

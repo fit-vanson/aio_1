@@ -51,7 +51,7 @@ Route::get('/get-inappproducts',[ApiController::class,'get_inappproducts'])->nam
 Route::get('/samsung',[ApiController::class,'samsung'])->name('api.samsung');
 
 
-Route::get('/picture/{param}',[DesignController::class,'picture'])->name('api.picture');
+Route::get('/picture/{rand}/{url}',[ApiController::class,'picture'])->name('api.picture');
 
 
 

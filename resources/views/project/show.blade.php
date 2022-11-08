@@ -12,21 +12,6 @@
             float: none;
             text-align: center;
         }
-
-        /*.img-list {*/
-        /*     !*height: 500px; *!*/
-        /*    width: 100%;*/
-
-        /*    white-space: nowrap;*/
-        /*    overflow-x: auto;*/
-        /*    overflow-y: hidden;*/
-        /*}*/
-
-        /*.img_class {*/
-        /*    white-space: nowrap;*/
-        /*    width: auto;*/
-        /*    height: 200px;*/
-        /*}*/
     </style>
 
 @endsection
@@ -56,7 +41,7 @@
                             <p class="card-title-desc">
 
 {{--                                <img id="logo_project" src="../storage/projects/{{@$project->da->ma_da}}/{{$project->projectname}}/{{$project->logo}}"  class="d-block img-fluid" src="" width="200px" alt="">--}}
-                                <img id="logo_project" src="{{url('api/picture/token='.uniqid().'?project_id='.$project->projectid.'&view=logo')}}"  class="d-block img-fluid"  width="200px" alt="">
+                                <img id="logo_project" src="{{url('api/picture/'.uniqid().'/'.$project->da->ma_da.'&'.$project->projectname.'&lg114.png')}}"  class="d-block img-fluid"  width="200px" alt="">
                             </p>
                         </div>
                         <div class="form-group col-lg-9">
@@ -138,11 +123,9 @@
 
                     <!-- Nav tabs -->
 
-
                     <?php
                     $tablist =  $tab_content = '';
-                    $token = uniqid();
-
+                    $url_rand = uniqid();
                     foreach($project->lang as $key=>$value){
                         if($value->id == 2){
                             $active = 'active';
@@ -159,9 +142,10 @@
                         $preview= '';
                         for($i = 1 ; $i <= $value->pivot->preview; $i++){
                             $preview .=
-                                '<a class="image float-left" style="margin:5px" href="'.url('api/picture/token='.$token.'?project_id='.$project->projectid.'&lang_id='.$value->id.'&preview='.$i.'&view=preview').'" title="'.$value->lang_name.' - Preview '.$i.'">' .
+//                                '<a class="image float-left" style="margin:5px" href="'.url('api/picture/'.$url_rand.'?project_id='.$project->projectid.'&lang_id='.$value->id.'&preview='.$i.'&view=preview').'" title="'.$value->lang_name.' - Preview '.$i.'">' .
+                                '<a class="image float-left" style="margin:5px" href="'.url('api/picture/'.$url_rand.'/'.$project->da->ma_da.'&'.$project->projectname.'&'.$value->lang_code.'&pr'.$i.'.jpg').'" title="'.$value->lang_name.' - Preview '.$i.'">' .
                                     '<div class="img-responsive img-container">' .
-                                    '<img  src="'.url('api/picture/token='.$token.'?project_id='.$project->projectid.'&lang_id='.$value->id.'&preview='.$i.'&view=preview').'" alt="'.$value->lang_name.' - Preview '.$i.'" height="200">' .
+                                    '<img  src="'.url('api/picture/'.$url_rand.'/'.$project->da->ma_da.'&'.$project->projectname.'&'.$value->lang_code.'&pr'.$i.'.jpg').'" alt="'.$value->lang_name.' - Preview '.$i.'" height="200">' .
                                     '</div>'.
                                 '</a>';
                         }
@@ -178,9 +162,9 @@
 
                         if($value->pivot->banner){
                             $banner =
-                                '<a class="image float-left" style="margin:5px" href="'.url('api/picture/token='.$token.'?project_id='.$project->projectid.'&lang_id='.$value->id.'&view=banner').'" title="'.$value->lang_name.' Banner">' .
+                                '<a class="image float-left" style="margin:5px" href="'.url('api/picture/'.$url_rand.'/'.$project->da->ma_da.'&'.$project->projectname.'&'.$value->lang_code.'&bn.jpg').'" title="'.$value->lang_name.' Banner">' .
                                 '<div class="img-responsive img-container">' .
-                                '<img  src="'.url('api/picture/token='.$token.'?project_id='.$project->projectid.'&lang_id='.$value->id.'&view=banner').'" alt="'.$value->lang_name.' Banner" height="200">' .
+                                '<img  src="'.url('api/picture/'.$url_rand.'/'.$project->da->ma_da.'&'.$project->projectname.'&'.$value->lang_code.'&bn.jpg').'" alt="'.$value->lang_name.' Banner" height="200">' .
                                 '</div>'.
                                 '</a>';
                         }else{

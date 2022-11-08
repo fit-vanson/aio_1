@@ -12,6 +12,8 @@
 
 {{--    <link href="plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />--}}
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="{{ URL::asset('assets/libs/magnific-popup/magnific-popup.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ URL::asset('assets/libs/lightgallery/css/lightgallery.css') }}" rel="stylesheet" type="text/css" />
 @endsection
 
 @section('content')
@@ -61,6 +63,9 @@
     <script src="{{ URL::asset('/assets/libs/sweetalert2/sweetalert2.min.js') }}"></script>
     <script src="{{ URL::asset('/assets/js/table.init.js') }}"></script>
     <script src="{{ URL::asset('/assets/js/customs.js') }}"></script>
+
+    <script src="{{ URL::asset('/assets/libs/magnific-popup/magnific-popup.min.js') }}"></script>
+    <script src="{{ URL::asset('/assets/libs/lightgallery/js/lightgallery-all.js') }}"></script>
 
 
 {{--    <script src="plugins/select2/js/select2.min.js"></script>--}}
@@ -179,7 +184,24 @@
                     // {data: 'status', name: 'status',orderable: false},
                     {data: 'action', name: 'action',className: "text-center", orderable: false, searchable: false},
                 ],
-                order: [[ 0, 'desc' ]]
+                order: [[ 0, 'desc' ]],
+                drawCallback: function (settings) {
+
+                    $('.image-popup-no-margins').magnificPopup({
+                        type: 'image',
+                        closeOnContentClick: true,
+                        closeBtnInside: false,
+                        fixedContentPos: true,
+                        mainClass: 'mfp-no-margins mfp-with-zoom', // class to remove default margin from left and right side
+                        image: {
+                            verticalFit: true
+                        },
+                        zoom: {
+                            enabled: true,
+                            duration: 300 // don't foget to change the duration also in CSS
+                        }
+                    });
+                },
             });
 
 
@@ -244,6 +266,33 @@
                         // data: $('#projectForm2').serialize(),
                         data: formData,
                         url: "{{ route('project.update') }}",
+                        type: "post",
+                        dataType: 'json',
+                        processData: false,
+                        contentType: false,
+                        success: function (data) {
+                            if(data.errors){
+                                for( var count=0 ; count <data.errors.length; count++){
+                                    $("#projectForm2").notify(
+                                        data.errors[count],"error",
+                                        { position:"right" }
+                                    );
+                                }
+                            }
+                            if(data.success){
+                                $.notify(data.success, "success");
+                                $('#projectForm2').trigger("reset");
+                                $('#ajaxModel').modal('hide');
+                                table.draw();
+                            }
+                        },
+                    });
+                }
+                if($('#saveBtn').val() == 'copy-project'){
+                    $.ajax({
+                        // data: $('#projectForm2').serialize(),
+                        data: formData,
+                        url: "{{ route('project.copyProject') }}",
                         type: "post",
                         dataType: 'json',
                         processData: false,
@@ -368,7 +417,6 @@
                                     })
                                 };
                             },
-
                         },
                     });
                 }
@@ -414,11 +462,8 @@
                                 console.log('Error:', data);
                             }
                         });
-
                     }
                 });
-
-
             });
 
             $(document).on('click','.editProject', function (data){
@@ -469,10 +514,60 @@
                     }else if (data.data_onoff == 3){
                         $("#data_all").prop('checked', true);
                     }
-
-
                 });
             });
+
+            {{--$(document).on('click','.copyProject', function (data){--}}
+            {{--    var project_id = $(this).data("id");--}}
+            {{--    $.get('{{asset('project/edit')}}/'+project_id,function (data) {--}}
+
+            {{--        $('#modelHeading').html("Copy Project " + data.projectname);--}}
+            {{--        $('#saveBtn').val("copy-project");--}}
+            {{--        $('#saveBtn').html("Copy Project");--}}
+            {{--        $('#ajaxModel').modal('show');--}}
+            {{--        $('.modal').on('hidden.bs.modal', function (e) {--}}
+            {{--            $('body').addClass('modal-open');--}}
+            {{--        });--}}
+            {{--        $('#ajaxModel a:first').tab('show');--}}
+            {{--        $('#package_ads').show();--}}
+
+            {{--        $("#ma_da").select2("trigger", "select", {--}}
+            {{--            data: { id: data.ma_da,text: data.da.ma_da }--}}
+            {{--        });--}}
+            {{--        $("#ma_da").select2('enable', false);--}}
+
+            {{--        $("#template").select2("trigger", "select", {--}}
+            {{--            data: {--}}
+            {{--                id: data.template,--}}
+            {{--                text: data.ma_template.template + ': ' + data.ma_template.template_name,--}}
+            {{--                project: data.projectid,--}}
+            {{--            }--}}
+            {{--        });--}}
+
+
+            {{--        $('#project_id').val(data.projectid)--}}
+            {{--        $('#projectname').val(data.projectname)--}}
+            {{--        $('#title_app').val(data.title_app)--}}
+            {{--        $('#buildinfo_vernum').val(data.buildinfo_vernum)--}}
+            {{--        $('#buildinfo_verstr').val(data.buildinfo_verstr)--}}
+            {{--        $('#buildinfo_link_fanpage').val(data.buildinfo_link_fanpage)--}}
+            {{--        $('#buildinfo_api_key_x').val(data.buildinfo_api_key_x)--}}
+            {{--        $('#buildinfo_link_website').val(data.buildinfo_link_website)--}}
+
+            {{--        if(data.logo) {--}}
+            {{--            $("#avatar").attr("src","../storage/projects/"+data.da.ma_da+"/"+data.projectname+"/lg114.png");--}}
+            {{--        }else {--}}
+            {{--            $("#avatar").attr("src","img/logo.png");--}}
+            {{--        }--}}
+            {{--        if(data.data_onoff == 1){--}}
+            {{--            $("#data_online").prop('checked', true);--}}
+            {{--        }else if (data.data_onoff == 2){--}}
+            {{--            $("#data_offline").prop('checked', true);--}}
+            {{--        }else if (data.data_onoff == 3){--}}
+            {{--            $("#data_all").prop('checked', true);--}}
+            {{--        }--}}
+            {{--    });--}}
+            {{--});--}}
 
             $('.choose_template').on('select2:selecting', function(e) {
                 var project_id = '';
@@ -580,9 +675,6 @@
                     $('#nav_tabs_market').html(nav_market);
                     $('#package_ads').html(package_ads);
                 })
-
-
-
             });
 
             $(document).on('click','.fakeProject', function (data){
@@ -677,9 +769,7 @@
                             }
                         },
                     });
-
                 }
-
             });
 
             $('#changeMultipleForm button').click(function (event){
@@ -743,7 +833,6 @@
                         },
                     });
                 }
-
             });
 
             $('#dev_statusForm button').click(function (event){
@@ -765,9 +854,6 @@
                         }
                     },
                 });
-
-
-
             });
 
             $('#Check_all').change(function () {
@@ -780,6 +866,65 @@
                 }
                 else {
                     $('#checkall').prop('checked',false);
+                }
+            });
+
+            $(document).on('click','.copyProject', function (data){
+                var project_id = $(this).data("id");
+
+
+                $('#copyProjectModel').modal('show');
+                $('.modal').on('hidden.bs.modal', function (e) {
+                    $('body').addClass('modal-open');
+                });
+                $('#saveBtnCopy').val("copy-project");
+
+                $.ajax({
+                    type: "get",
+                    url: "{{ asset("project/edit") }}/" + project_id,
+                    success: function (data) {
+                        $("#project_id_origin").val(data.projectid);
+                        $("#project_name_copy").val(data.projectname);
+
+                        $('#modelCopyHeading').html("Copy Project - "+data.projectname);
+                        $('#saveBtn').val("copy-project");
+                    },
+                    error: function (data) {
+                        console.log('Error:', data);
+                    }
+                });
+
+            });
+
+            $('#copyProjectForm').on('submit',function (event){
+                event.preventDefault();
+                var formData = new FormData($("#copyProjectForm")[0]);
+                if($('#saveBtnCopy').val() == 'copy-project'){
+                    $.ajax({
+                        // data: $('#projectForm2').serialize(),
+                        data: formData,
+                        url: "{{ route('project.copyProject') }}",
+                        type: "POST",
+                        dataType: 'json',
+                        processData: false,
+                        contentType: false,
+                        success: function (data) {
+                            if(data.errors){
+                                for( var count=0 ; count <data.errors.length; count++){
+                                    $("#copyProjectForm").notify(
+                                        data.errors[count],"error",
+                                        { position:"right" }
+                                    );
+                                }
+                            }
+                            if(data.success){
+                                $.notify(data.success, "success");
+                                $('#projectForm').trigger("reset");
+                                $('#ajaxModel').modal('hide');
+                                table.draw();
+                            }
+                        },
+                    });
                 }
             });
         });
