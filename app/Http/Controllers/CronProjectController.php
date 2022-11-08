@@ -887,7 +887,7 @@ class CronProjectController extends Controller
     }
 
     function checkStatus($projectID){
-        $project = MarketProject::findorfail($projectID)->load('dev');
+        $project = MarketProject::findorfail($projectID)->load('dev','project');
         if ($project->dev){
             if($project->appID){
 
@@ -920,7 +920,7 @@ class CronProjectController extends Controller
                 $project->save();
                 $sms = "\n<b>AppID: </b>"
                     . '<code>'.$appInfo[0]['contentId'].'</code> - '
-                    . '<code>'.$project->projectname.'</code> - '
+                    . '<code>'.$project->project->projectname.'</code> - '
                     . '<code>'.$status_app.' </code>';
                 $this->sendMessTelegram('Samsung',$sms);
                 return response()->json(['success'=>'OK', 'project'=>$project]);
