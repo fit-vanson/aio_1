@@ -227,7 +227,7 @@ class CronProjectController extends Controller
         return null;
     }
 
-    //==========================================================
+    //==========================================================================
 
     public function Huawei($status_upload = null){
         if(isset(\request()->projectID)){
@@ -270,10 +270,19 @@ class CronProjectController extends Controller
                 $string .=  '<br/>'.'Dang chay:  '. '-'.$appHuawei->project->projectname.' - ';
                 try {
                     if(!$appHuawei->dev){
-                        return response()->json(['error'=>'Chưa có DEV']);
+                        $appHuawei->status_app = 6;
+                        $status_cron = 'check';
+                        $appHuawei->bot_time = time();
+                        $appHuawei->save();
+                        return  response()->json(['error'=>'Chưa có DEV', 'project'=>$appHuawei,'status'=>$status_cron]);
+
                     }else{
                         if(!$appHuawei->dev->api_token){
-                            return response()->json(['error'=>'DEV chưa có Token']);
+                            $appHuawei->status_app = 6;
+                            $status_cron = 'check';
+                            $appHuawei->bot_time = time();
+                            $appHuawei->save();
+                            return  response()->json(['error'=>'DEV chưa có Token', 'project'=>$appHuawei,'status'=>$status_cron]);
                         }else{
                             $appHuawei = $this->update_token_huawei($appHuawei);
                             $appID =  $appHuawei->appID ? $appHuawei->appID  :  $this->AppInfoPackageHuawei($appHuawei);
@@ -668,7 +677,7 @@ class CronProjectController extends Controller
         return $data;
     }
 
-    //=====================================================================
+    //==========================================================================
 
     public function Vivo($status_upload = null){
 
@@ -691,10 +700,7 @@ class CronProjectController extends Controller
                         ->orWhere('bot_time', null);
                 })
                 ->paginate($time->limit_cron);
-
         }
-
-
 
         if(count($appsVivo)==0){
             echo 'Chưa đến time cron'.PHP_EOL .'<br>';
@@ -708,10 +714,18 @@ class CronProjectController extends Controller
                 $string .=  '<br/>'.'Dang chay: '. '-'.$appVivo->project->projectname.'-';
                 try{
                     if(!$appVivo->dev){
-                        return response()->json(['error'=>'Chưa có DEV']);
+                        $appVivo->status_app = 6;
+                        $status_cron = 'check';
+                        $appVivo->bot_time = time();
+                        $appVivo->save();
+                        return  response()->json(['error'=>'Chưa có DEV', 'project'=>$appVivo,'status'=>$status_cron]);
                     }else {
                         if(!$appVivo->dev->api_access_key || !$appVivo->dev->api_client_secret ){
-                            return response()->json(['error'=>'DEV chưa có api_access_key ']);
+                            $appVivo->status_app = 6;
+                            $status_cron = 'check';
+                            $appVivo->bot_time = time();
+                            $appVivo->save();
+                            return  response()->json(['error'=>'DEV chưa có api_access_key', 'project'=>$appVivo,'status'=>$status_cron]);
                         }else{
                             $get_Vivo = $this->get_Vivo($appVivo->dev->api_access_key, $appVivo->dev->api_client_secret, $appVivo->package);
                             if ($get_Vivo->data) {
@@ -843,11 +857,9 @@ class CronProjectController extends Controller
         return;
     }
 
-    //======================================================================
+    //==========================================================================
 
     public function samsung($status_upload = null){
-
-
 
         if(isset(\request()->projectID)){
             $appsSamsung= MarketProject::where('id',\request()->projectID)->get();
@@ -869,7 +881,6 @@ class CronProjectController extends Controller
                         ->orWhere('bot_time', null);
                 })
                 ->paginate($time->limit_cron);
-
         }
 
         if(count($appsSamsung)==0){
@@ -1142,7 +1153,151 @@ class CronProjectController extends Controller
         return $result ;
     }
 
-    //=============================================
+    //==========================================================================
+
+    public function amazon($status_upload = null){
+
+        if(isset(\request()->projectID)){
+            $appsAmazon = MarketProject::where('id',\request()->projectID)->get();
+        }else {
+            $time =  Setting::first();
+            $timeCron = Carbon::now()->subMinutes($time->time_cron)->setTimezone('Asia/Ho_Chi_Minh')->timestamp;
+            $status_upload = isset($_GET['status_upload']) ? $_GET['status_upload'] : $status_upload;
+
+            $appsAmazon = MarketProject::where('market_id', 2)
+                ->where('status_upload','like','%'. $status_upload.'%')
+//                ->whereNotNull('appID')
+                ->whereHas('dev', function ($query) {
+                    return $query
+                        ->whereNotNull('api_client_id')
+                        ->where('api_client_id','<>','');
+                })
+                ->where(function ($q) use ($timeCron) {
+                    $q->where('bot_time', '<=', $timeCron)
+                        ->orWhere('bot_time', null);
+                })
+                ->paginate($time->limit_cron);
+
+        }
+
+//        dd($appsAmazon->load('dev'));
+
+        if(count($appsAmazon)==0){
+            echo 'Chưa đến time cron'.PHP_EOL .'<br>';
+            return false;
+        }
+
+        /**
+         *
+        $Client_ID = 'amzn1.application-oa2-client.0b087c09c17542c98c82e5dc9a86a5f7';
+        $Client_Secret = 'fd94434046e7531375dcdd1100570e7357c236636720f17c38cccd6d66021160';
+         */
+
+        if($appsAmazon){
+            $sms = $string = '';
+            $status_cron =  'Mặc định';
+            $status_app = 6;
+            foreach ($appsAmazon as $appAmazon){
+                $string .=  '<br/>'.'Dang chay: '. '-'.$appAmazon->project->projectname.'-';
+                try{
+//                    if($appSamsung->appID){
+                        if(!$appAmazon->dev){
+                            $appAmazon->status_app = 6;
+                            $status_cron = 'check';
+                            $appAmazon->bot_time = time();
+                            $appAmazon->save();
+                            return  response()->json(['error'=>'Chưa có DEV', 'project'=>$appAmazon,'status'=>$status_cron]);
+                        }else {
+                            if(!$appAmazon->dev->api_client_secret ){
+                                $appAmazon->status_app = 6;
+                                $status_cron = 'check';
+                                $appAmazon->bot_time = time();
+                                $appAmazon->save();
+                                return  response()->json(['error'=>'DEV chưa có api_access_key', 'project'=>$appAmazon,'status'=>$status_cron]);
+                            }else{
+
+                                dd($appAmazon,12312312);
+
+
+                                $appSamsung = $this->update_token_samsung($appSamsung);
+                                $contentInfo = $this->contentInfo($appSamsung);
+                                if ($contentInfo) {
+                                    $contentStatus = $contentInfo[0]['contentStatus'];
+                                    switch ($contentStatus){
+                                        case 'REGISTERING':
+                                            $status_app = 2;
+                                            $status_cron = 'REGISTERING';
+                                            break;
+                                        case 'FOR_SALE':
+                                            $status_app = 1;
+                                            $status_cron = 'FOR_SALE';
+                                            break;
+                                        case 'SUSPENDED':
+                                            $status_app = 5;
+                                            $status_cron = 'SUSPENDED';
+                                            break;
+                                        case 'TERMINATED':
+                                            $status_cron = 'TERMINATED';
+                                            $status_app = 2;
+                                            break;
+                                        default:
+                                            $status_app = 6;
+                                            $status_cron = 'default';
+                                            break;
+                                    }
+
+                                    $dataArr = [
+                                        'status' => $status_cron
+                                    ];
+
+                                    $appSamsung->bot = json_encode($dataArr);
+                                    $appSamsung->bot_appVersion =   $contentInfo[0]['binaryList'][0]['versionName'];
+                                    $appSamsung->app_link =   'https://galaxystore.samsung.com/detail/'.$contentInfo[0]['binaryList'][0]['packageName'];
+                                    $appSamsung->policy_link =  $contentInfo[0]['privatePolicyURL'];
+                                    $appSamsung->status_app = $status_app;
+                                }else{
+                                    $appSamsung->status_app = 6;
+                                    $status_cron = 'check';
+                                }
+                            }
+                        }
+//                    }else{
+//                        $appSamsung->status_app = 6;
+//                        $status_cron = 'check';
+//                        $appSamsung->bot_time = time();
+//                        $appSamsung->save();
+//                        return  response()->json(['error'=>'Chưa có AppID', 'project'=>$appSamsung,'status'=>$status_cron]);
+//                    }
+
+
+                }catch (\Exception $exception) {
+                    Log::error('Message:' . $exception->getMessage(). '--- appsVivo: '.$appSamsung->id.':--' . $exception->getLine());
+                }
+                $appSamsung->bot_time = time();
+                $appSamsung->save();
+                $string .= $status_cron;
+                if($status_app !=1){
+                    $sms .= "\n<b>Project name: </b>"
+                        . '<code>'.$appSamsung->project->projectname.'</code> - '
+                        . '<code>'.$status_cron.'</code>';
+                }
+            }
+
+
+            $this->sendMessTelegram('Samsung',$sms);
+            if(\request()->return){
+                return  response()->json(['success'=>'OK', 'project'=>$appSamsung,'status'=>$status_cron]);
+            }else{
+                echo '<br/><br/>';
+                echo '<br/>' .'=========== Samsung ==============' ;
+                echo '<br/><b>'.'Yêu cầu:';
+                echo '<br/>&emsp;'.'- Project có AppID của Samsung.';
+                echo '<br/>&emsp;'.'- Dev Samsung có Client ID và Client Secret'.'</b><br/><br/>';
+                echo $string;
+                return ;
+            }
+        }
+    }
 
 
 
