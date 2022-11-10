@@ -363,7 +363,6 @@ class CronProjectController extends Controller
                                     . '<code>'.$appHuawei->project->projectname.'</code> - '
                                     . '<code>'.$status_cron.'/<code>';
                             }
-
                         }
                     }
                 }catch (\Exception $exception) {
