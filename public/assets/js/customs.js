@@ -51,7 +51,7 @@ $(document).ready(function() {
         var btn = $(this);
         $.ajax({
             type: "get",
-            url: "cronProject/samsung?projectID=" + _id ,
+            url: "cronProject/samsung?projectID=" + _id + '&return=true',
             success: function (data) {
 
                 if(data.error){
@@ -89,7 +89,7 @@ $(document).ready(function() {
                     html += '</span>';
                     btn.replaceWith(html);
                     $('#app_link_'+_id).attr("href",data.app_link);
-                    $.notify(data.project.project.projectname, "success");
+                    $.notify(data.project.project.projectname + ' - ' +data.status , "success");
                 }
 
 

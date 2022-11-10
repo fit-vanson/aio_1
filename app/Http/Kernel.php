@@ -41,7 +41,7 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
-        'throttle' => ['throttle:99,1'],
+        'throttle' => ['throttle:999,1'],
 
         'api' => [
             'throttle:50000,1',
