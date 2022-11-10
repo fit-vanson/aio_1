@@ -279,6 +279,7 @@ class CronProjectController extends Controller
                             $appID =  $appHuawei->appID ? $appHuawei->appID  :  $this->AppInfoPackageHuawei($appHuawei);
                             if($appID){
                                 $appInfo    = $this->AppInfoHuawei($appHuawei);
+
                                 if($appInfo){
                                     $reportApp  = $this->reportAppHuawei($appHuawei);
                                     $scoreApp  = $this->getScoreHuawei($appHuawei);
@@ -347,6 +348,7 @@ class CronProjectController extends Controller
                                     $appHuawei->bot_appVersion =   array_key_exists('versionNumber',$appInfo['appInfo']) ? $appInfo['appInfo']['versionNumber'] : null;
                                     $appHuawei->policy_link =  array_key_exists('privacyPolicy',$appInfo['appInfo']) ? $appInfo['appInfo']['privacyPolicy'] : null;
                                     $appHuawei->appID = $appID ;
+                                    $appHuawei->app_link = 'https://appgallery.huawei.com/app/C'.$appID ;
                                     $appHuawei->bot = json_encode($data);
                                     $appHuawei->bot_score = $scoreApp ;
                                     $appHuawei->bot_installs = array_sum(array_column($data, 'Total_downloads'));
@@ -889,10 +891,18 @@ class CronProjectController extends Controller
                 try{
                     if($appSamsung->appID){
                         if(!$appSamsung->dev){
-                            return response()->json(['error'=>'Chưa có DEV']);
+                            $appSamsung->status_app = 6;
+                            $status_cron = 'check';
+                            $appSamsung->bot_time = time();
+                            $appSamsung->save();
+                            return  response()->json(['error'=>'Chưa có DEV', 'project'=>$appSamsung,'status'=>$status_cron]);
                         }else {
                             if(!$appSamsung->dev->api_client_id || !$appSamsung->dev->api_client_secret ){
-                                return response()->json(['error'=>'DEV chưa có api_access_key ']);
+                                $appSamsung->status_app = 6;
+                                $status_cron = 'check';
+                                $appSamsung->bot_time = time();
+                                $appSamsung->save();
+                                return  response()->json(['error'=>'DEV chưa có api_access_key', 'project'=>$appSamsung,'status'=>$status_cron]);
                             }else{
                                 $appSamsung = $this->update_token_samsung($appSamsung);
                                 $contentInfo = $this->contentInfo($appSamsung);
@@ -927,6 +937,7 @@ class CronProjectController extends Controller
 
                                     $appSamsung->bot = json_encode($dataArr);
                                     $appSamsung->bot_appVersion =   $contentInfo[0]['binaryList'][0]['versionName'];
+                                    $appSamsung->app_link =   'https://galaxystore.samsung.com/detail/'.$contentInfo[0]['binaryList'][0]['packageName'];
                                     $appSamsung->policy_link =  $contentInfo[0]['privatePolicyURL'];
                                     $appSamsung->status_app = $status_app;
                                 }else{
@@ -936,7 +947,11 @@ class CronProjectController extends Controller
                             }
                         }
                     }else{
-                        return response()->json(['error'=>'Chưa có AppID']);
+                        $appSamsung->status_app = 6;
+                        $status_cron = 'check';
+                        $appSamsung->bot_time = time();
+                        $appSamsung->save();
+                        return  response()->json(['error'=>'Chưa có AppID', 'project'=>$appSamsung,'status'=>$status_cron]);
                     }
 
 
@@ -1110,7 +1125,6 @@ class CronProjectController extends Controller
         }
     }
 
-//    function contentInfo($token,$account_id,$contentId){
     function contentInfo($appSamsung){
         $result = '';
         $token = $appSamsung->dev->api_token;
@@ -1133,121 +1147,7 @@ class CronProjectController extends Controller
         return $result ;
     }
 
-    function checkStatus($projectID){
-        $project = MarketProject::findorfail($projectID)->load('dev','project');
-        $market = $project->market_id;
-        if ($project->dev){
-            $token = $project->dev->api_token;
-            $account_id = $project->dev->api_client_id;
 
-            switch ($market){
-                case 3:
-                    if($project->appID){
-                        $privateKey = $project->dev->api_client_secret;
-                        $contentId = $project->appID;
-                        if(!$this->check_token($token,$account_id)){
-                            $token = $this->get_token_samsung($account_id,$privateKey);
-                            $project->dev->api_token = $token;
-                            $project->dev->save();
-                        }
-                        $token = $project->dev->api_token;
-                        $appInfo = $this->contentInfo($token,$account_id,$contentId);
-                        $contentStatus = $appInfo[0]['contentStatus'];
-                        switch ($contentStatus){
-                            case 'REGISTERING':
-                                $status_app = 2;
-                                break;
-                            case 'FOR_SALE':
-                                $status_app = 1;
-                                break;
-                            case 'SUSPENDED':
-                                $status_app = 5;
-                                break;
-                            case 'TERMINATED':
-                                $status_app = 4;
-                        }
-                        $project->status_app = $status_app;
-                        $project->save();
-                        $sms = "\n<b>AppID: </b>"
-                            . '<code>'.$appInfo[0]['contentId'].'</code> - '
-                            . '<code>'.$project->project->projectname.'</code> - '
-                            . '<code>'.$appInfo[0]['contentStatus'].' </code>';
-                        $this->sendMessTelegram('Samsung',$sms);
-                        $result = response()->json(['success'=>'OK', 'project'=>$project]);
-                    }else{
-                        $result = response()->json(['error'=>'Chưa có AppID Samsung']);
-                    }
-                    break;
-
-            }
-
-
-
-
-
-
-        }else{
-            $result = response()->json(['error'=>'Chưa có DEV']);
-        }
-
-
-
-
-
-
-//        switch ($market){
-//            case 3:
-//                if ($project->dev){
-//                    if($project->appID){
-//                        $token = $project->dev->api_token;
-//                        $account_id = $project->dev->api_client_id;
-//                        $privateKey = $project->dev->api_client_secret;
-//                        $contentId = $project->appID;
-//                        if(!$this->check_token($token,$account_id)){
-//                            $token = $this->get_token_samsung($account_id,$privateKey);
-//                            $project->dev->api_token = $token;
-//                            $project->dev->save();
-//                        }
-//                        $appInfo = $this->contentInfo($token,$account_id,$contentId);
-//                        $contentStatus = $appInfo[0]['contentStatus'];
-//                        switch ($contentStatus){
-//                            case 'REGISTERING':
-//                                $status_app = 2;
-//                                break;
-//                            case 'FOR_SALE':
-//                                $status_app = 1;
-//                                break;
-//                            case 'SUSPENDED':
-//                                $status_app = 5;
-//                                break;
-//                            case 'TERMINATED':
-//                                $status_app = 4;
-//                        }
-//                        $project->status_app = $status_app;
-//                        $project->save();
-//                        $sms = "\n<b>AppID: </b>"
-//                            . '<code>'.$appInfo[0]['contentId'].'</code> - '
-//                            . '<code>'.$project->project->projectname.'</code> - '
-//                            . '<code>'.$appInfo[0]['contentStatus'].' </code>';
-//                        $this->sendMessTelegram('Samsung',$sms);
-//                        $result = response()->json(['success'=>'OK', 'project'=>$project]);
-//                    }else{
-//                        $result = response()->json(['error'=>'Chưa có AppID Samsung']);
-//                    }
-//                }else{
-//                        $result = response()->json(['error'=>'Chưa có DEV']);
-//                }
-//                break;
-//            case 7:
-//
-//                dd($project);
-//                dd(12);
-//                break;
-//
-//        }
-
-        return $result;
-    }
 
 
 }
