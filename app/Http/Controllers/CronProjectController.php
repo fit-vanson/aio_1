@@ -71,6 +71,7 @@ class CronProjectController extends Controller
             echo '<META http-equiv="refresh" content="5;URL=' . url("cronProject") . '">';
         }
     }
+
     public function Chplay($status_upload = null){
         $gplay = new \Nelexa\GPlay\GPlayApps();
         if(isset(\request()->package)){
@@ -155,7 +156,6 @@ class CronProjectController extends Controller
         }
 
     }
-
 
     public function getPackage(Request $request)
     {
@@ -367,7 +367,6 @@ class CronProjectController extends Controller
                     }
                 }catch (\Exception $exception) {
                     Log::error('Message:' . $exception->getMessage() . '--- cronHuawei: '.$appHuawei->id.'---' . $exception->getLine());
-                    return response()->json(['error'=>$exception->getMessage()]);
                 }
             }
             $this->sendMessTelegram('Huawei',$sms);
@@ -761,10 +760,7 @@ class CronProjectController extends Controller
                         . '<code>'.$appVivo->project->projectname.'</code> - '
                         . '<code>'.$status_cron.'</code>';
                 }
-
             }
-
-
             $this->sendMessTelegram('Vivo',$sms);
             if(\request()->return){
                 return  response()->json(['success'=>'OK', 'project'=>$appVivo,'status'=>$status_cron]);
@@ -1145,6 +1141,10 @@ class CronProjectController extends Controller
         }
         return $result ;
     }
+
+    //=============================================
+
+
 
 
 
