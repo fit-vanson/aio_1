@@ -847,11 +847,13 @@ class CronProjectController extends Controller
     }
 
     public function sendMessTelegram($market,$sms){
+//    public function sendMessTelegram(){
+        $name = Auth()->user() ? Auth()->user()->name : "Auto";
         if($sms){
-            Telegram::sendMessage([
+            return Telegram::sendMessage([
                 'chat_id' => env('TELEGRAM_CHANNEL_ID', ''),
                 'parse_mode' => 'HTML',
-                'text' => $market.$sms,
+                'text' => $market.' - '.$name.$sms,
             ]);
         }
         return;

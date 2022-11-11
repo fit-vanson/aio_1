@@ -306,6 +306,7 @@ Route::group(['prefix'=>'cronProject'], function (){
     Route::get('/huawei',[CronProjectController::class,'Huawei'])->name('cronProject.Huawei');
     Route::get('/vivo',[CronProjectController::class,'Vivo'])->name('cronProject.Vivo');
     Route::get('/samsung',[CronProjectController::class,'samsung'])->name('cronProject.samsung');
+    Route::get('/amazon',[CronProjectController::class,'amazon'])->name('cronProject.amazon');
     Route::get('/telegram',[CronProjectController::class,'sendMessTelegram'])->name('cronProject.sendMessTelegram');
 });
 Route::get('/package',[CronProjectController::class,'getPackage'])->name('cronProject.getPackage');

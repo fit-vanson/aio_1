@@ -52,6 +52,9 @@ Route::get('/samsung',[ApiController::class,'samsung'])->name('api.samsung');
 
 
 Route::get('/picture/{rand}/{url}',[ApiController::class,'picture'])->name('api.picture');
+Route::get('/amazon',[ApiController::class,'amazon'])->name('api.amazon');
+//Route::get('/redirect_uri',[ApiController::class,'redirect_uri'])->name('api.redirect_uri');
+
 
 
 
