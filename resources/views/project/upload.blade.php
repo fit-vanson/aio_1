@@ -201,15 +201,26 @@
                         '<span class="d-none d-sm-block">' + value.lang_name + '</span>' +
                         '</a></li>';
                     var preview = video = banner = '';
-                    for (var i = 1; i <= 8; i++) {
+                    {{--for (var i = 1; i <= 8; i++) {--}}
+                    {{--        preview +=--}}
+                    {{--            '<a class="image float-left" style="margin:5px" href="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/pr' + i + '.jpg" title=" ' + value.lang_name + ' Preview ' + i + '">' +--}}
+                    {{--            '<div class="img-responsive img-container">' +--}}
+                    {{--            '<img  src="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/pr' + i + '.jpg" alt="' + value.lang_name + ' Preview ' + i + '" height="200">' +--}}
+                    {{--            '</div>' +--}}
+                    {{--            '</a>'--}}
+
+
+                    {{--}--}}
+
+                    if(value.pivot.preview){
+                        for (var i = 1; i <= value.pivot.preview; i++) {
                             preview +=
                                 '<a class="image float-left" style="margin:5px" href="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/pr' + i + '.jpg" title=" ' + value.lang_name + ' Preview ' + i + '">' +
                                 '<div class="img-responsive img-container">' +
                                 '<img  src="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/pr' + i + '.jpg" alt="' + value.lang_name + ' Preview ' + i + '" height="200">' +
                                 '</div>' +
                                 '</a>'
-
-
+                        }
                     }
                     if(value.pivot.video){
                         video = '<a class="video" style="margin:5px" href="{{ URL::asset('/storage/projects') }}/' + data.da.ma_da + '/' + data.projectname + '/' + value.lang_code + '/video.mp4" title="'+ value.lang_name +' Video">' +
