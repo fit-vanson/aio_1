@@ -38,37 +38,37 @@
                                     <div class="card">
                                         <div class="card-body">
                                             <div data-repeater-item="" class="row">
+
                                                 <div class="form-group col-lg-12">
                                                     <label for="name">Title App
                                                         <span class="font-13 text-muted" id="count_title_app_en"></span>
-                                                        <button type="button" onclick="copyTitleEN()" class="btn btn-link waves-effect copyboard"><i class="mdi mdi-content-copy"></i></button>
                                                     </label>
-                                                    <input type="text" id="content_title_{{$lag->id}}" name="content[{{$lag->id}}][title]" class="form-control">
-
+                                                    <input type="text" id="content_title_{{$lag->id}}" name="project_content[{{$lag->id}}][title]" class="form-control">
                                                 </div>
                                                 <div class="form-group col-lg-12">
                                                     <label for="name">Summary
                                                         <span class="font-13 text-muted" id="count_summary_en"></span>
-                                                        <button type="button" onclick="copySumEN()" class="btn btn-link waves-effect copyboard"><i class="mdi mdi-content-copy"></i></button>
                                                     </label>
-                                                    <input type="text" id="content_summary_{{$lag->id}}" name="content[{{$lag->id}}][summary]" class="form-control">
+                                                    <input type="text" id="content_summary_{{$lag->id}}" name="project_content[{{$lag->id}}][summary]" class="form-control">
                                                 </div>
                                                 <div class="form-group col-lg-12">
-                                                    <label for="name">Description</label><button type="button" onclick="copyDesEN()" class="btn btn-link waves-effect copyboard"><i class="mdi mdi-content-copy"></i></button> </label>
-                                                    <textarea class="tinymce" id="content_description_{{$lag->id}}" name="content[{{$lag->id}}][description]"></textarea>
+                                                    <label for="name">Keywords</label>
+                                                    <input type="text" id="content_keywords_{{$lag->id}}" name="project_content[{{$lag->id}}][project_keywords]" class="form-control">
+                                                </div>
+                                                <div class="form-group col-lg-12">
+                                                    <label for="name">Description</label>
+                                                    <textarea class="form-control"  rows="10" id="content_description_{{$lag->id}}" name="project_content[{{$lag->id}}][description]"></textarea>
+{{--                                                    <textarea class="tinymce" id="content_description_{{$lag->id}}" name="content[{{$lag->id}}][description]"></textarea>--}}
                                                 </div>
                                             </div>
                                         </div>
-
                                     </div>
-
                                 </div>
                                 @endforeach
                             </div>
                     </div>
                     <div class="col-sm-offset-2 col-sm-10">
-                        <button type="submit" class="btn btn-primary" id="saveBtn" value="create">Save
-                        </button>
+                        <button type="submit" class="btn btn-primary" id="saveBtn" >Update</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     </div>
                 </form>

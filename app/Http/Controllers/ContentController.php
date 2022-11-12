@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Language;
+use App\Models\Project;
 use App\Models\ProjectHasLang;
 use App\Models\ProjectModel;
 use Illuminate\Http\Request;
@@ -10,8 +11,17 @@ use Illuminate\Http\Request;
 class ContentController extends Controller
 {
     public function index(){
+
+        $header = [
+            'title' => 'Content',
+
+            'button' => [
+                'Create'            => ['id'=>'createNewContent','style'=>'primary'],
+            ]
+
+        ];
         $lags = Language::all();
-        return view('content.index')->with(compact('lags'));
+        return view('content.index')->with(compact('lags','header'));
     }
 
     public function getIndex(Request $request)
@@ -33,11 +43,11 @@ class ContentController extends Controller
 
 
         // Total records
-        $totalRecords = ProjectModel::has('lang')->select('count(*) as allcount')->count();
-        $totalRecordswithFilter = ProjectModel::has('lang')->select('count(*) as allcount')
+        $totalRecords = Project::has('lang')->select('count(*) as allcount')->count();
+        $totalRecordswithFilter = Project::has('lang')->select('count(*) as allcount')
             ->where('projectname', 'like', '%' . $searchValue . '%')
             ->count();
-        $records = ProjectModel::has('lang')
+        $records = Project::has('lang')
             ->where('projectname', 'like', '%' . $searchValue . '%')
             ->orderBy($columnName, $columnSortOrder)
             ->skip($start)
@@ -47,14 +57,34 @@ class ContentController extends Controller
 
         $data_arr = array();
         foreach ($records as $key=>$record) {
-            $btn = ' <a href="javascript:void(0)"  data-id="'.$record->projectid.'" class="btn btn-warning editContent"><i class="ti-pencil-alt"></i></a>';
+            $btn = ' <a href="javascript:void(0)" data-name="'.$record->projectname.'" data-id="'.$record->projectid.'" class="btn btn-warning editContent"><i class="ti-pencil-alt"></i></a>';
             $btn .= ' <a href="'.route('project.show',['id'=>$record->projectid]).'" target="_blank"  class="btn btn-secondary"><i class="ti-eye"></i></a>';
             $project_name = $record->projectname;
             $langs = $record->lang;
             $title = $description = $summary = '';
-            foreach ($langs as $lang){
+            $badges = [
+                'primary',
+                'success',
+                'info',
+                'warning',
+                'danger',
+                'dark',
+                'secondary',
+            ];
+            foreach ($langs as $key=>$lang){
+
+
+                $html = '<span>'.
+                    '<p><b>Title app: </b>'.$lang->pivot->title.'</p>'.
+                    '<p><b>Summary: </b>'.$lang->pivot->summary.'</p>'.
+                    '<p><b>Description: </b>'.strip_tags($lang->pivot->description).'</p>'.
+                    '</span>';
+
+
+
                 if ($lang->pivot->title != null) {
-                    $title .= $lang->lang_code.' : '.$lang->pivot->title.'<br><br>';
+                    $title .= ' <span style="font-size: 100%"  data-toggle="popover" data-placement="right"  data-content="'.$html.'" class="badge badge-'.$badges[$key].'">'.$lang->lang_name. '</span> ' ;
+//                    $title .= $lang->lang_code.' : '.$lang->pivot->title.'<br><br>';
                 }
                 if ($lang->pivot->description != null) {
                     $description .= $lang->lang_code.' : '.mb_substr(strip_tags($lang->pivot->description),0,10).'<br><br>';
@@ -88,13 +118,11 @@ class ContentController extends Controller
     public function create(Request $request){
 
 //        dd($request->all());
-
-        if($request->pro_id == null ){
-            return response()->json(['errors'=> 'Chọn Project']);
-        }
-        $project = ProjectModel::find($request->pro_id);
-        $content = $request->content;
-//        dd($content);
+//        if($request->pro_id == null ){
+//            return response()->json(['errors'=> 'Chọn Project']);
+//        }
+        $project = Project::find($request->project_id);
+        $content = $request->project_content;
         $project->lang()->sync($content,false);
         $project->save();
         return response()->json(['success'=>'Thành công']);
@@ -102,7 +130,7 @@ class ContentController extends Controller
 
     public function edit($id)
     {
-        $data= ProjectModel::find($id);
+        $data= Project::find($id);
         return response()->json($data->load('lang'));
     }
 }

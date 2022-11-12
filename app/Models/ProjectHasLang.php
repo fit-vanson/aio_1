@@ -8,19 +8,21 @@ use Illuminate\Database\Eloquent\Model;
 class ProjectHasLang extends Model
 {
     use HasFactory;
-    protected $fillable = [
-      'project_id',
-      'lang_id',
-      'content',
-      'logo',
-      'banner',
-      'preview',
-      'video',
-      'user_design',
-      'status',
-      'notes',
-    ];
+//    protected $fillable = [
+//      'project_id',
+//      'lang_id',
+//      'content',
+//      'logo',
+//      'banner',
+//      'preview',
+//      'video',
+//      'user_design',
+//      'status',
+//      'notes',
+//    ];
 
+
+    protected $guarded= [];
 
 
     public function project()
