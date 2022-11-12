@@ -316,11 +316,9 @@
                             <table id="contentTable" class="table table-striped table-bordered dt-responsive data-table" style="width: 100%;">
                                 <thead>
                                 <tr>
-                                    <th>Project Name</th>
-                                    <th>Title </th>
-{{--                                    <th>Summary</th>--}}
-{{--                                    <th style="width: 40%">Description </th>--}}
-                                    <th>Action</th>
+                                    <th style="width: 20%">Project Name</th>
+                                    <th style="width: 60%">Title </th>
+                                    <th style="width: 20%">Action</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -414,102 +412,16 @@
                     {data: 'action',className: "text-center", name: 'action', orderable: false, searchable: false},
                 ],
 
-                // columnDefs: [
-                    // {
-                    //     render: function (data, type, full, meta) {
-                    //         var status ='';
-                    //         switch (data){
-                    //             case 0:
-                    //                 status ='<span style="font-size: 100%" class="badge badge-secondary">Gửi chờ duyệt</span>' ;
-                    //                 break;
-                    //             case 1:
-                    //                 status = '<span style="font-size: 100%" class="badge badge-info">Đã chỉnh sửa, cần duyệt lại</span>';
-                    //                 break;
-                    //             case 2:
-                    //                 status = '<span style="font-size: 100%" class="badge badge-warning">Fail, cần chỉnh sửa</span>';
-                    //                 break;
-                    //             case 3:
-                    //                 status = '<span style="font-size: 100%" class="badge badge-danger">Fail, Project loại khỏi dự án</span>';
-                    //                 break;
-                    //             case 4:
-                    //                 status = '<span style="font-size: 100%" class="badge badge-success">Duyệt (Pass)</span>';
-                    //                 break;
-                    //         }
-                    //         return status
-                    //     },
-                    //     targets: [3]
-                    // }
-                // ],
-
-                // initComplete: function () {
-                //     this.api().columns([3]).every( function () {
-                //         var column = this;
-                //         var select = $('<select class="form-control"><option value="">Trạng thái</option></select>')
-                //             .appendTo( $(column.header()).empty() )
-                //             .on( 'change', function () {
-                //                 var val = $.fn.dataTable.util.escapeRegex(
-                //                     $(this).val()
-                //                 );
-                //                 column
-                //                     .search( val ? val : '', true, false )
-                //                     .draw();
-                //             } );
-                //
-                //         $.each([0,1,2,4], function ( d, j ) {
-                //             var status ='';
-                //             switch (j){
-                //                 case 0:
-                //                     status ='<span style="font-size: 100%" class="badge badge-secondary">Gửi chờ duyệt</span>' ;
-                //                     break;
-                //                 case 1:
-                //                     status = '<span style="font-size: 100%" class="badge badge-info">Đã chỉnh sửa, cần duyệt lại</span>';
-                //                     break;
-                //                 case 2:
-                //                     status = '<span style="font-size: 100%" class="badge badge-warning">Fail, cần chỉnh sửa</span>';
-                //                     break;
-                //                 // case 3:
-                //                 //     status = '<span style="font-size: 100%" class="badge badge-danger">Fail, Project loại khỏi dự án</span>';
-                //                 //     break;
-                //                 case 4:
-                //                     status = '<span style="font-size: 100%" class="badge badge-success">Done, Kết thúc Project</span>';
-                //                     break;
-                //             }
-                //             select.append( '<option value="'+j+'">'+status+'</option>' )
-                //         } );
-                //     } );
-                // },
 
 
 
                 drawCallback: function (settings) {
-                    // $('[data-toggle="popover"]').popover({
-                    //     html: true,
-                    //     trigger: "hover",
-                    //     container: 'body'
-                    // });
-
                     $('[data-toggle="popover"]').popover({
                         trigger: "hover",
                         container: "body",
                         html: true,
                         // placement: "top"
                     });
-                // });
-
-                    // $('.image-popup-no-margins').magnificPopup({
-                    //     type: 'image',
-                    //     closeOnContentClick: true,
-                    //     closeBtnInside: false,
-                    //     fixedContentPos: true,
-                    //     mainClass: 'mfp-no-margins mfp-with-zoom', // class to remove default margin from left and right side
-                    //     image: {
-                    //         verticalFit: true
-                    //     },
-                    //     zoom: {
-                    //         enabled: true,
-                    //         duration: 300 // don't foget to change the duration also in CSS
-                    //     }
-                    // });
                 },
 
             });
@@ -529,94 +441,40 @@
                 var _id = e.params.args.data.id;
                 $.get('{{asset('content/edit')}}/'+_id,function (data) {
                     var langs = data.lang;
-
                     $.each( langs, function( key, value ) {
-                        // var description = value.pivot.description;
-                        // // var des = description.replace(/<([^ >]+)[^>]*>.*?<\/\1>|<[^\/]+\/>/ig, "");
-                        // console.log(description.html());
-                        // console.log(1211);
                         $('#content_keywords_'+value.id).val(value.pivot.keywords);
                         $('#content_summary_'+value.id).val(value.pivot.summary);
                         $('#content_title_'+value.id).val(value.pivot.title);
                         $('#content_description_'+value.id).val(value.pivot.description);
-                        // if(value.pivot.description){
-                        //     tinymce.get('content_description_'+value.id).setContent(value.pivot.description);
-                        // }else {
-                        //     tinymce.get('content_description_'+value.id).setContent('');
-                        // }
+
                     })
                 })
             });
 
-
             $('#contentForm').on('submit', function (event) {
                 event.preventDefault();
                 var formData = new FormData($("#contentForm")[0]);
-                // formData.append('logo', $("#logo")[0].dropzone.getAcceptedFiles()[0]);
-{{--                <?php--}}
-{{--                foreach ($lags as $lang){--}}
-{{--                ?>--}}
-{{--                formData.append('markets[{{$lang->id}}][banner]', $("#banner_{{$lang->lang_code}}")[0].dropzone.getAcceptedFiles()[0]);--}}
-{{--                formData.append('markets[{{$lang->id}}][video]', $("#video_{{$lang->lang_code}}")[0].dropzone.getAcceptedFiles()[0]);--}}
+                $.ajax({
+                    data: formData,
+                    url: "{{ route('content.create') }}",
+                    type: "POST",
+                    dataType: 'json',
+                    processData: false,
+                    contentType: false,
+                    cache: false,
+                    success: function (data) {
+                        if (data.errors) {
+                            $("#contentForm").notify(data.errors, "error");
 
-{{--                $.each($("#preview_{{$lang->lang_code}}")[0].dropzone.getAcceptedFiles(),--}}
-{{--                    function(a,b){--}}
-{{--                        formData.append('markets[{{$lang->id}}][preview][]', $("#preview_{{$lang->lang_code}}")[0].dropzone.getAcceptedFiles()[a]);--}}
-{{--                    });--}}
-{{--                <?php--}}
-{{--                    }--}}
-{{--                    ?>--}}
-
-                // if ($('#saveBtn_design').val() == 'create-design') {
-                    $.ajax({
-                        data: formData,
-                        url: "{{ route('content.create') }}",
-                        type: "POST",
-                        dataType: 'json',
-                        processData: false,
-                        contentType: false,
-                        cache: false,
-                        success: function (data) {
-                            if (data.errors) {
-                                $("#contentForm").notify(data.errors, "error");
-
-                            }
-                            if (data.success) {
-                                $.notify(data.success, "success");
-                                $("#contentForm")[0].reset();
-                                $('#ajaxModelContent').modal('hide');
-                                table.draw();
-                            }
-                        },
-                    });
-                // }
-                {{--if ($('#saveBtn_template').val() == 'edit-template') {--}}
-                {{--    $.ajax({--}}
-                {{--        data: formData,--}}
-                {{--        url: "{{ route('template.update') }}",--}}
-                {{--        type: "post",--}}
-                {{--        dataType: 'json',--}}
-                {{--        processData: false,--}}
-                {{--        contentType: false,--}}
-                {{--        success: function (data) {--}}
-                {{--            if (data.errors) {--}}
-                {{--                for (var count = 0; count < data.errors.length; count++) {--}}
-                {{--                    $("#templateForm").notify(--}}
-                {{--                        data.errors[count], "error",--}}
-                {{--                        {position: "right"}--}}
-                {{--                    );--}}
-                {{--                }--}}
-                {{--            }--}}
-                {{--            if (data.success) {--}}
-                {{--                $.notify(data.success, "success");--}}
-                {{--                $('#templateForm').trigger("reset");--}}
-                {{--                $('#ajaxModel').modal('hide');--}}
-                {{--                table.draw();--}}
-                {{--            }--}}
-                {{--        },--}}
-                {{--    });--}}
-
-                {{--}--}}
+                        }
+                        if (data.success) {
+                            $.notify(data.success, "success");
+                            $("#contentForm")[0].reset();
+                            $('#ajaxModelContent').modal('hide');
+                            table.draw();
+                        }
+                    },
+                });
             });
 
             $('#designFormEdit').on('submit',function (event){
