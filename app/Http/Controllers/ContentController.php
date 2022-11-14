@@ -121,6 +121,7 @@ class ContentController extends Controller
 //        if($request->pro_id == null ){
 //            return response()->json(['errors'=> 'Chọn Project']);
 //        }
+
         $project = Project::find($request->project_id);
         $content = $request->project_content;
         $project->lang()->sync($content,false);

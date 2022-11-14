@@ -441,8 +441,9 @@
                 var _id = e.params.args.data.id;
                 $.get('{{asset('content/edit')}}/'+_id,function (data) {
                     var langs = data.lang;
+                    console.log(data)
                     $.each( langs, function( key, value ) {
-                        $('#content_keywords_'+value.id).val(value.pivot.keywords);
+                        $('#content_keywords_'+value.id).val(value.pivot.project_keywords);
                         $('#content_summary_'+value.id).val(value.pivot.summary);
                         $('#content_title_'+value.id).val(value.pivot.title);
                         $('#content_description_'+value.id).val(value.pivot.description);

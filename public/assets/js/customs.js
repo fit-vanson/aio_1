@@ -208,12 +208,12 @@ $(document).ready(function() {
             url: "project/update_upload_status/" + id ,
             // url: '{{asset('project/update_upload_status')}}/'+id,
             success: function (data) {
-            submit.removeClass('btn-primary submit_upload_status');
-            submit.addClass('btn-success disabled');
-            submit.val("Hoàn thành");
-            $.notify(' success ', "success");
-            // table.draw()
-        },
-    });
+                submit.removeClass('btn-primary submit_upload_status');
+                submit.addClass('btn-success disabled');
+                submit.val("Hoàn thành");
+                $.notify(' success ', "success");
+                // table.draw()
+            },
+        });
     })
 });
