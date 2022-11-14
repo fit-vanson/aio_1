@@ -660,7 +660,6 @@ class Project_Controller extends Controller
             Log::error('Message:updateMultiple---' . $exception->getMessage() . '--' . $exception->getLine());
         }
         return response()->json(['success'=>'Cập nhật thành công ']);
-
     }
 
     public function updateDevStatus(Request $request){
