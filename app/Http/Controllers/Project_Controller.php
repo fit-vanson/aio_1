@@ -615,9 +615,10 @@ class Project_Controller extends Controller
                                 case 0:
                                     $status = 1;
                                     break;
-                                case 2:
+                                case 2|3:
                                     $status = 2;
                                     break;
+
                             }
                             $valueInsert[] = [
                                 'id' =>$project_market->id,
@@ -632,17 +633,7 @@ class Project_Controller extends Controller
                         $projects_market =
                             MarketProject::whereIN('project_id',$project)->get();
                         foreach ($projects_market as $project_market){
-
-//                            $status = $project_market->status_upload;
                             $status = 3;
-//                            switch ($status){
-//                                case 0:
-//                                    $status = 1;
-//                                    break;
-//                                case 2:
-//                                    $status = 2;
-//                                    break;
-//                            }
                             $valueInsert[] = [
                                 'id' =>$project_market->id,
                                 'status_upload' => $status
