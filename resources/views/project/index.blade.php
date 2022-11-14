@@ -833,6 +833,26 @@
                         },
                     });
                 }
+                if($('#changeMultipleBtn').val() == 'upload_ok'){
+                    $.ajax({
+                        data: $('#changeMultipleForm').serialize(),
+                        url: "{{ route('project.updateMultiple')}}?action=upload_ok",
+                        type: "post",
+                        dataType: 'json',
+                        success: function (data) {
+
+                            if(data.errors){
+                                $.notify(data.errors, "error");
+                            }
+                            if(data.success){
+                                $.notify(data.success, "success");
+                                $('#changeMultipleForm').trigger("reset");
+                                $('#changeMultiple').modal('hide');
+                                table.draw();
+                            }
+                        },
+                    });
+                }
             });
 
             $('#dev_statusForm button').click(function (event){
@@ -939,6 +959,7 @@
         $('#change_keystore').on('click', function () {
             $('#changeMultiple').modal('show');
             $('#market_upload').hide();
+            $('#changeMultiple_code').show();
             $('.cb-element').prop('checked',true);
             $('#changeMultipleTitle').html('KeyStore');
             // $('#changeMultipleName').html('ID Project | Key C| Key A | Key S |  Key X |  Key O |  Key V |  Key H');
@@ -951,6 +972,7 @@
         $('#change_sdk').on('click', function () {
             $('#changeMultiple').modal('show');
             $('#market_upload').hide();
+            $('#changeMultiple_code').show();
             $('.cb-element').prop('checked',true);
 
             $('#changeMultipleTitle').html('SDK');
@@ -964,11 +986,24 @@
         $('#change_upload_status').on('click', function () {
             $('#changeMultiple').modal('show');
             $('#market_upload').show();
+            $('#changeMultiple_code').hide();
             $('#Check_all').prop('checked',true);
             $('.cb-element').prop('checked',true);
             $('#changeMultipleTitle').html('Upload Project');
-            // $('#changeMultipleName').html('ID Project');
             $('#changeMultipleBtn').val('change_upload_status');
+            $('.modal').on('hidden.bs.modal', function (e) {
+                $('body').addClass('modal-open');
+            });
+        });
+
+        $('#change_upload_status_ok').on('click', function () {
+            $('#changeMultiple').modal('show');
+            $('#market_upload').show();
+            $('#changeMultiple_code').hide();
+            $('#Check_all').prop('checked',true);
+            $('.cb-element').prop('checked',true);
+            $('#changeMultipleTitle').html('Upload Project');
+            $('#changeMultipleBtn').val('upload_ok');
             $('.modal').on('hidden.bs.modal', function (e) {
                 $('body').addClass('modal-open');
             });

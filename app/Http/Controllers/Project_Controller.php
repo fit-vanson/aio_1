@@ -30,6 +30,7 @@ class Project_Controller extends Controller
                 'KeyStore'          => ['id'=>'change_keystore','style'=>'success'],
                 'SDK'               => ['id'=>'change_sdk','style'=>'danger'],
                 'Upload Status'     => ['id'=>'change_upload_status','style'=>'secondary'],
+                'Đã Uploads'        => ['id'=>'change_upload_status_ok','style'=>'success'],
             ]
 
         ];
@@ -582,10 +583,9 @@ class Project_Controller extends Controller
                 }
             }
 
+
             $MarketProjectInstance = new MarketProject();
             $valueInsert = $valueKey = [];
-
-
 
             switch ($action){
                 case 'keystore':
@@ -626,6 +626,30 @@ class Project_Controller extends Controller
                         }
                     }
                     break;
+                case 'upload_ok':
+                    foreach ($array as $key=>$value){
+                        $project = Project::where('projectname',$key)->pluck('projectid');
+                        $projects_market =
+                            MarketProject::whereIN('project_id',$project)->get();
+                        foreach ($projects_market as $project_market){
+
+//                            $status = $project_market->status_upload;
+                            $status = 3;
+//                            switch ($status){
+//                                case 0:
+//                                    $status = 1;
+//                                    break;
+//                                case 2:
+//                                    $status = 2;
+//                                    break;
+//                            }
+                            $valueInsert[] = [
+                                'id' =>$project_market->id,
+                                'status_upload' => $status
+                            ];
+                        }
+                    }
+                    break;
                 case 'sdk':
                     foreach ($array as $key=>$value){
                         $project = Project::where('projectname',$key)->pluck('projectid');
@@ -640,14 +664,10 @@ class Project_Controller extends Controller
                     break;
             }
             $index = 'id';
-            $result = batch()->update($MarketProjectInstance, $valueInsert, $index);
-
-
-
+            batch()->update($MarketProjectInstance, $valueInsert, $index);
         }catch (\Exception $exception) {
             Log::error('Message:updateMultiple---' . $exception->getMessage() . '--' . $exception->getLine());
         }
-
         return response()->json(['success'=>'Cập nhật thành công ']);
 
     }
