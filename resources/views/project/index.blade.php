@@ -1002,7 +1002,7 @@
             $('#changeMultiple_code').hide();
             $('#Check_all').prop('checked',true);
             $('.cb-element').prop('checked',true);
-            $('#changeMultipleTitle').html('Upload Project');
+            $('#changeMultipleTitle').html('OK rồi :)');
             $('#changeMultipleBtn').val('upload_ok');
             $('.modal').on('hidden.bs.modal', function (e) {
                 $('body').addClass('modal-open');
