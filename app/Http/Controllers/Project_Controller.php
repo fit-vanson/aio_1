@@ -612,10 +612,10 @@ class Project_Controller extends Controller
                         foreach ($projects_market as $project_market){
                             $status = $project_market->status_upload;
                             switch ($status){
-                                case 0:
+                                case 0|3:
                                     $status = 1;
                                     break;
-                                case 2|3:
+                                case 2:
                                     $status = 2;
                                     break;
 
