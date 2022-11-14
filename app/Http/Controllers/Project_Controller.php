@@ -608,7 +608,7 @@ class Project_Controller extends Controller
                     foreach ($array as $key=>$value){
                         $project = Project::where('projectname',$key)->pluck('projectid');
                         $projects_market =
-                            MarketProject::whereIN('project_id',$project)->get();
+                            MarketProject::whereIN('project_id',$project)->whereIN('market_id',$value)->get();
                         foreach ($projects_market as $project_market){
                             $status = $project_market->status_upload;
                             switch ($status){
@@ -631,7 +631,7 @@ class Project_Controller extends Controller
                     foreach ($array as $key=>$value){
                         $project = Project::where('projectname',$key)->pluck('projectid');
                         $projects_market =
-                            MarketProject::whereIN('project_id',$project)->get();
+                            MarketProject::whereIN('project_id',$project)->whereIN('market_id',$value)->get();
                         foreach ($projects_market as $project_market){
                             $status = 3;
                             $valueInsert[] = [
