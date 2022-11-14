@@ -138,6 +138,8 @@
 <script src="{{ URL::asset('/assets/js/table.init.js') }}"></script>
 <script src="plugins/tinymce/tinymce.min.js"></script>
 
+<script src="{{ URL::asset('/assets/js/customs.js') }}"></script>
+
 
 <script type="text/javascript">
 
@@ -377,21 +379,21 @@
                 });
             });
         });
-        $(document).on("click", ".submit_upload_status", function(){
-            var id = $(this).data('value')
-            var submit = $(this)
-            $.ajax({
-                type: 'get',
-                url: '{{asset('project/update_upload_status')}}/'+id,
-                success: function (data) {
-                    submit.removeClass('btn-primary submit_upload_status');
-                    submit.addClass('btn-success disabled');
-                    submit.val("Hoàn thành");
-                    $.notify(' success ', "success");
-                    // table.draw()
-                },
-            });
-        })
+        {{--$(document).on("click", ".submit_upload_status", function(){--}}
+        {{--    var id = $(this).data('value')--}}
+        {{--    var submit = $(this)--}}
+        {{--    $.ajax({--}}
+        {{--        type: 'get',--}}
+        {{--        url: '{{asset('project/update_upload_status')}}/'+id,--}}
+        {{--        success: function (data) {--}}
+        {{--            submit.removeClass('btn-primary submit_upload_status');--}}
+        {{--            submit.addClass('btn-success disabled');--}}
+        {{--            submit.val("Hoàn thành");--}}
+        {{--            $.notify(' success ', "success");--}}
+        {{--            // table.draw()--}}
+        {{--        },--}}
+        {{--    });--}}
+        {{--})--}}
     })
 
 

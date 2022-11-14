@@ -227,6 +227,7 @@
     <script src="{{ URL::asset('/assets/libs/lightgallery/js/lightgallery-all.js') }}"></script>
 {{--    <script src="{{ URL::asset('/assets/js/table.init.js') }}"></script>--}}
     <script src="plugins/tinymce/tinymce.min.js"></script>
+    <script src="{{ URL::asset('/assets/js/customs.js') }}"></script>
 
 
     <script type="text/javascript">

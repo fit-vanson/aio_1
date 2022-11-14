@@ -275,22 +275,35 @@ $markets = \App\Models\Markets::all();
                     <div class="col-lg-12">
                         <div class="card">
                             <div class="card-body">
-                                <form class="repeater" id="changeMultipleForm">
-
+                                <form id="changeMultipleForm">
                                     <div class="col-lg-12" id="market_upload" style="display: none">
-                                        <div class="row">
+                                        <h3 class="mt-0 header-title">Market</h3>
+                                        <div class="row ">
                                             <div class="form-group col-lg-2">
-                                                <label for="name">All Market</label>
+                                                <span class="text-muted m-l-30 ">All Market</span>
                                                 <input type="checkbox" class="control-input" id="Check_all">
                                             </div>
                                             @foreach($markets as $market)
                                             <div class="form-group col-lg-2">
-                                                <label for="name">{{$market->market_name}}</label>
+                                                <span class="text-muted m-l-30 ">{{$market->market_name}}</span>
                                                 <input type="checkbox" class="control-input cb-element" name="market_upload[]" value="{{$market->id}}" required>
                                             </div>
                                             @endforeach
                                         </div>
+                                        <h3 class="mt-0 header-title">Trạng thái</h3>
+                                        <div class="row ">
+                                            <?php
+                                            $status_upload = ['Mặc đinh', 'Upload','Update','Hoàn thành']
+                                            ?>
+                                            @foreach($status_upload as $key=>$status)
+                                                <div class="form-group col-lg-2">
+                                                    <span class="text-muted m-l-30 ">{{$status}}</span>
+                                                    <input type="radio" class="control-input" name="status_upload" value="{{$key}}" required>
+                                                </div>
+                                            @endforeach
+                                        </div>
                                     </div>
+
                                     <div class="row">
                                         <div class="form-group col-lg-12">
                                             <p id="changeMultiple_code" for="name"><code> ID Project @foreach($markets as $market) |   {{$market->market_name}}   @endforeach </code></p>

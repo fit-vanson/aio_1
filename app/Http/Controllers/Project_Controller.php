@@ -30,7 +30,6 @@ class Project_Controller extends Controller
                 'KeyStore'          => ['id'=>'change_keystore','style'=>'success'],
                 'SDK'               => ['id'=>'change_sdk','style'=>'danger'],
                 'Upload Status'     => ['id'=>'change_upload_status','style'=>'secondary'],
-                'Đã Uploads'        => ['id'=>'change_upload_status_ok','style'=>'success'],
             ]
 
         ];
@@ -610,30 +609,17 @@ class Project_Controller extends Controller
                         $projects_market =
                             MarketProject::whereIN('project_id',$project)->whereIN('market_id',$value)->get();
                         foreach ($projects_market as $project_market){
-                            $status = $project_market->status_upload;
-                            switch ($status){
-                                case 0|3:
-                                    $status = 1;
-                                    break;
-                                case 2:
-                                    $status = 2;
-                                    break;
-
-                            }
-                            $valueInsert[] = [
-                                'id' =>$project_market->id,
-                                'status_upload' => $status
-                            ];
-                        }
-                    }
-                    break;
-                case 'upload_ok':
-                    foreach ($array as $key=>$value){
-                        $project = Project::where('projectname',$key)->pluck('projectid');
-                        $projects_market =
-                            MarketProject::whereIN('project_id',$project)->whereIN('market_id',$value)->get();
-                        foreach ($projects_market as $project_market){
-                            $status = 3;
+//                            $status = $project_market->status_upload;
+                            $status = $request->status_upload ?? 0;
+//                            switch ($status){
+//                                case 0|3:
+//                                    $status = 1;
+//                                    break;
+//                                case 2:
+//                                    $status = 2;
+//                                    break;
+//
+//                            }
                             $valueInsert[] = [
                                 'id' =>$project_market->id,
                                 'status_upload' => $status

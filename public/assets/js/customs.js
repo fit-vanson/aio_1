@@ -199,4 +199,21 @@ $(document).ready(function() {
             }
         });
     })
+
+    $(document).on("click", ".submit_upload_status", function(){
+        var id = $(this).data('value')
+        var submit = $(this)
+        $.ajax({
+            type: 'get',
+            url: "project/update_upload_status/" + id ,
+            // url: '{{asset('project/update_upload_status')}}/'+id,
+            success: function (data) {
+            submit.removeClass('btn-primary submit_upload_status');
+            submit.addClass('btn-success disabled');
+            submit.val("Hoàn thành");
+            $.notify(' success ', "success");
+            // table.draw()
+        },
+    });
+    })
 });
