@@ -501,7 +501,7 @@ class TemplateController extends Controller
                         $data['template_apk'] = $file_name_apk;
                         $file->move($path, $file_name_apk);
                         break;
-                    case 'jpg' || 'webp':
+                    case 'jpg' | 'webp':
                         $fileName = $num_image+1;
                         $img = Image::make($file->path());
                         $img
