@@ -326,8 +326,7 @@
 
 
         $('#createNewDesign').click(function () {
-            $('.project_select').show();
-            $('#saveBtn_design').val("create-design");
+            $('#saveBtn_design').val("update-design");
             $('#design_id').val('');
             $('#designForm').trigger("reset");
             $('#modelHeading').html("Thêm mới");
@@ -427,10 +426,10 @@
                 }
             ?>
 
-            if ($('#saveBtn_design').val() == 'create-design') {
+            if ($('#saveBtn_design').val() == 'update-design') {
                 $.ajax({
                     data: formData,
-                    url: "{{ route('design.create') }}",
+                    url: "{{ route('design.update') }}",
                     type: "POST",
                     dataType: 'json',
                     processData: false,
@@ -450,85 +449,8 @@
                     },
                 });
             }
-            if ($('#saveBtn_template').val() == 'edit-template') {
-                $.ajax({
-                    data: formData,
-                    url: "{{ route('template.update') }}",
-                    type: "post",
-                    dataType: 'json',
-                    processData: false,
-                    contentType: false,
-                    success: function (data) {
-                        if (data.errors) {
-                            for (var count = 0; count < data.errors.length; count++) {
-                                $("#templateForm").notify(
-                                    data.errors[count], "error",
-                                    {position: "right"}
-                                );
-                            }
-                        }
-                        if (data.success) {
-                            $.notify(data.success, "success");
-                            $('#templateForm').trigger("reset");
-                            $('#ajaxModel').modal('hide');
-                            table.draw();
-                        }
-                    },
-                });
-
-            }
         });
-        $('#designFormEdit').on('submit',function (event){
-            event.preventDefault();
-            var formData = new FormData($("#designFormEdit")[0]);
-            // var row_id = $('#saveBtnEditDesign').val();
-            $.ajax({
-                data: formData,
-                url: "{{ route('design.update') }}",
-                type: "POST",
-                dataType: 'json',
-                processData: false,
-                contentType: false,
-                success: function (data) {
-                    if(data.success){
-                        // var status = data.data.status
-                        // let html
-                        //
-                        // switch(status) {
-                        //     case '0':
-                        //         html ='<span style="font-size: 100%" class="badge badge-secondary">Gửi chờ duyệt</span>' ;
-                        //         break;
-                        //     case '1':
-                        //         html = '<span style="font-size: 100%" class="badge badge-info">Đã chỉnh sửa, cần duyệt lại</span>';
-                        //         break;
-                        //     case '2':
-                        //         html = '<span style="font-size: 100%" class="badge badge-warning">Fail, cần chỉnh sửa</span>';
-                        //         break;
-                        //     case '3':
-                        //         html = '<span style="font-size: 100%" class="badge badge-danger">Fail, Project loại khỏi dự án</span>';
-                        //         break;
-                        //     case '4':
-                        //         html = '<span style="font-size: 100%" class="badge badge-success">Done, Kết thúc Project</span>';
-                        //         break;
-                        // }
-                        // var row = table.row().data()
-                        // // var row_data = row.data();
-                        // //
-                        // // // row_data[1] = html;
-                        // row.data().draw(false);
 
-                        $.notify(data.success, "success");
-                        $('#designFormEdit').trigger("reset");
-                        $('#ajaxModelEdit').modal('hide');
-                        table.draw();
-
-                    }
-                },
-            });
-
-
-
-        });
         $(document).on('click','.deleteProjectLang', function (data){
             var _id = $(this).data("id");
             var remove = $(this).parent().parent();
@@ -559,9 +481,12 @@
                     swal("Đã xóa!", "Your imaginary file has been deleted.", "success");
                 });
         });
+
         $(document).on('click','.editProjectLang', function (data){
             var _id = $(this).data("id");
             var _name= $(this).data("name");
+            $('#saveBtn_design').val("update-design");
+            $('#modelHeading').html("Chỉnh sửa "+_name);
 
             $('#ajaxModel').modal('show');
 
@@ -571,20 +496,6 @@
                     text: _name,
                 }
             });
-            {{--$.get('{{asset('design/edit')}}/'+_id,function (data) {--}}
-
-            {{--    console.log(_id)--}}
-            {{--    console.log(data)--}}
-            {{--    console.log(_name)--}}
-
-            {{--    $("#project_id").select2("trigger", "select", {--}}
-            {{--        data: {--}}
-            {{--            id: data.projectid,--}}
-            {{--            text: data.projectname,--}}
-            {{--        }--}}
-            {{--    });--}}
-
-            {{--})--}}
         });
 
 

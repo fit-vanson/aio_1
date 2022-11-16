@@ -26,7 +26,7 @@ class DesignController extends Controller
         $header = [
             'title' => 'Design',
             'button' => [
-                'Create'            => ['id'=>'createNewDesign','style'=>'primary'],
+                'Update Or Create'            => ['id'=>'createNewDesign','style'=>'primary'],
             ],
             'badge' => [
 //                'Đang phát triển' => ['style'=>'primary'],
@@ -174,7 +174,7 @@ class DesignController extends Controller
         return response()->json($result);
     }
 
-    public function create(Request $request){
+    public function update(Request $request){
 
 
         if(empty($request->project_id)){
@@ -264,13 +264,13 @@ class DesignController extends Controller
         return response()->json($data->load('lang','da'));
     }
 
-    public function update(Request $request){
-        $data = Project::find($request->design_id_edit);
-        $data->notes_design     = $request->notes;
-        $data->status_design    = $request->status;
-        $data->save();
-        return response()->json(['success'=>'Cập nhật thành công','data'=>$data]);
-    }
+//    public function update(Request $request){
+//        $data = Project::find($request->design_id_edit);
+//        $data->notes_design     = $request->notes;
+//        $data->status_design    = $request->status;
+//        $data->save();
+//        return response()->json(['success'=>'Cập nhật thành công','data'=>$data]);
+//    }
 
     public function delete($id)
     {
