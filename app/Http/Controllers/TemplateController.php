@@ -302,21 +302,20 @@ class TemplateController extends Controller
                 ->save($path.$data['template_logo'],85);
 
         }
-
-
-
         if($request->template_files){
             $files= $request->template_files;
             $num_image = 0;
+
             foreach ($files as $file){
                 $extension = $file->getClientOriginalExtension();
+
                 switch ($extension){
                     case 'apk':
                         $file_name_apk = $data->ver_build.'.'.$extension;
                         $data['template_apk'] = $file_name_apk;
                         $file->move($path, $file_name_apk);
                         break;
-                    case 'jpg'|| 'webp':
+                    case 'jpg'|'webp':
                         $fileName = $num_image+1;
                         $img = Image::make($file->path());
                         $img
@@ -327,10 +326,10 @@ class TemplateController extends Controller
 //                        $file->move($path, $file_name_data);
                         $num_image ++;
                         break;
-
                     case 'zip':
                         $file_name_data = $data->ver_build.'.'.$extension;
                         $data['template_data'] = $file_name_data;
+//                        dd(123123);
                         $file->move($path, $file_name_data);
                         break;
                 }
