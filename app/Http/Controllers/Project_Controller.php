@@ -219,9 +219,9 @@ class Project_Controller extends Controller
                     }
                     $result .=  '</span>';
                     if($market->pivot->dev_id){
-                        $result .= ' <span class="badge badge-'.$badges[$key].'">'.$market->pivot->dev->dev_name.'</span> ';
+                        $result .= ' <span class="badge badge-'.$badges[$key].'">'.@$market->pivot->dev->dev_name.'</span> ';
                         if ($market->pivot->dev->ga_id){
-                            $result .= ' <span class="badge badge-'.$badges[$key].'">'.$market->pivot->dev->ga->ga_name.'</span> ';
+                            $result .= ' <span class="badge badge-'.$badges[$key].'">'.@$market->pivot->dev->ga->ga_name.'</span> ';
                         }
                     }
                     $result .= '</div>';
