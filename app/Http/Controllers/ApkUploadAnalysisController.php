@@ -77,7 +77,6 @@ class ApkUploadAnalysisController extends Controller
     }
 
     public function create(Request $request){
-//        dd($request->file);
 
         if($request->file){
             $folder = uniqid();
@@ -93,7 +92,7 @@ class ApkUploadAnalysisController extends Controller
             $data->name = $file_name;
             $data->filename = $folder;
             $data->save();
-            return response()->json(['success'=>'Thành công']);
         }
+        return response()->json(['success'=>'Thành công']);
     }
 }

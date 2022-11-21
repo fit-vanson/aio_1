@@ -546,9 +546,6 @@ class TemplateController extends Controller
             return response()->json(['success'=>'Xóa thành công.']);
         }
 
-
-//        ->delete();
-
     }
 
     public function callAction($method, $parameters)

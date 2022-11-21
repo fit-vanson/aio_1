@@ -3,6 +3,7 @@
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\Apk_ProcessController;
 use App\Http\Controllers\ApkUploadAnalysisController;
+use App\Http\Controllers\ApkUploadConvertController;
 use App\Http\Controllers\BotController;
 use App\Http\Controllers\BuildPreviewController;
 use App\Http\Controllers\CategoryTemplateController;
@@ -666,14 +667,16 @@ Route::group(['prefix'=>'apk_process'], function (){
 
 Route::group(['prefix'=>'apk_upload_analysis'], function (){
     Route::get('/',[ApkUploadAnalysisController::class,'index'])->name('apk_upload_analysis.index');
-    Route::get('success',[ApkUploadAnalysisController::class,'success'])->name('apk_upload_analysis.success');
     Route::post('getIndex',[ApkUploadAnalysisController::class,'getIndex'])->name('apk_upload_analysis.getIndex');
     Route::post('/create',[ApkUploadAnalysisController::class,'create'])->name('apk_upload_analysis.create');
-
-    Route::get('/delete/{id}',[ApkUploadAnalysisController::class,'delete'])->name('apk_upload_analysis.delete');
-//    Route::get('/update_pss/{id}',[ApkUploadAnalysisController::class,'update_pss'])->name('apk_process.update_pss');
-//    Route::get('/delete/{id}',[Apk_analysisController::class,'delete']);
 });
+
+Route::group(['prefix'=>'apk_upload_convert'], function (){
+    Route::get('/',[ApkUploadConvertController::class,'index'])->name('apk_upload_convert.index');
+    Route::post('getIndex',[ApkUploadConvertController::class,'getIndex'])->name('apk_upload_convert.getIndex');
+    Route::post('/create',[ApkUploadConvertController::class,'create'])->name('apk_upload_convert.create');
+});
+
 
 
 
