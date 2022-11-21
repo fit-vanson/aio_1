@@ -148,27 +148,6 @@
                                     @can('dev-index')
                                         <li><a href="{{route('dev.index')}}">Quản lý DEV</a></li>
                                     @endcan
-
-{{--                                    @can('dev_amazon-index')--}}
-{{--                                        <li><a href="{{route('dev_amazon.index')}}">Quản lý DEV (Amazon)</a></li>--}}
-{{--                                    @endcan--}}
-{{--                                    @can('dev_samsung-index')--}}
-{{--                                        <li><a href="{{route('dev_samsung.index')}}">Quản lý DEV (Samsung)</a></li>--}}
-{{--                                    @endcan--}}
-{{--                                    @can('dev_xiaomi-index')--}}
-{{--                                        <li><a href="{{route('dev_xiaomi.index')}}">Quản lý DEV (Xiaomi)</a></li>--}}
-{{--                                    @endcan--}}
-{{--                                    @can('dev_oppo-index')--}}
-{{--                                        <li><a href="{{route('dev_oppo.index')}}">Quản lý DEV (Oppo)</a></li>--}}
-{{--                                    @endcan--}}
-{{--                                    @can('dev_vivo-index')--}}
-{{--                                        <li><a href="{{route('dev_vivo.index')}}">Quản lý DEV (Vivo)</a></li>--}}
-{{--                                    @endcan--}}
-
-{{--                                    @can('dev_huawei-index')--}}
-{{--                                        <li><a href="{{route('dev_huawei.index')}}">Quản lý DEV (Huawei)</a></li>--}}
-{{--                                    @endcan--}}
-
                                     @can('ga-index')
                                         <li><a href="{{route('ga.index')}}">Quản lý GA</a></li>
                                     @endcan
@@ -249,9 +228,11 @@
 
                             <li>
                                 <a href="{{route('checkapi.index')}}" class="waves-effect"><i class="ti-check-box"></i> <span> Check API <span class="float-right menu-arrow"></span> </span> </a>
-
                             </li>
 
+                            <li>
+                                <a href="{{route('apk_upload_convert.index')}}" class="waves-effect"><i class="ti-reload"></i> <span> Convert AAB <span class="float-right menu-arrow"></span> </span> </a>
+                            </li>
 
                             <li>
                                 <a href="javascript:void(0);" class="waves-effect"><i class="ti-archive"></i> <span> Quản trị phân quyền <span class="float-right menu-arrow"><i class="mdi mdi-chevron-right"></i></span> </span> </a>
