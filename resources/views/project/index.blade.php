@@ -1049,7 +1049,6 @@
                 type: 'get',
                 url: '{{asset('api/getProject')}}?projectID='+projectID+'&marketID='+marketID,
                 success: function (data) {
-                    console.log(data)
                     if(Object.keys(data).length){
                         if(data.sdk){
                             $('#market_'+marketID+'_sdk').val(data.sdk)
