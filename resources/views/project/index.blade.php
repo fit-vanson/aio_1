@@ -1076,11 +1076,27 @@
                         $('#'+marketID+'_keystore').select2("trigger", "select", {
                             data: {
                                 id: data.keystore,
-                                text: data.keystore
+                                text: data.keystore ? data.keystore : ''
                             }
                         });
 
+                    }else {
+                        console.log(data)
+                        // $('#market_'+marketID+'_sdk').val();
+                        $('#market_'+marketID+'_package').val()
+                        $('#market_'+marketID+'_app_link').val()
+                        $('#market_'+marketID+'_policy_link').val()
+                        $('#market_'+marketID+'_app_id').val()
+                        $('#market_'+marketID+'_app_name_x').val()
+                        $('#market_'+marketID+'_video_link').val()
+
+                        $('#'+marketID+'_dev_id').val('');
+                        $('#'+marketID+'_dev_id').trigger('change.select2');
+                        $('#'+marketID+'_keystore').val('');
+                        $('#'+marketID+'_keystore').trigger('change.select2');
+
                     }
+
 
                     $.each(ads_template, function (k_temp,v_temp){
 
