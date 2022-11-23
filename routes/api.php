@@ -6,6 +6,7 @@ use App\Http\Controllers\DesignController;
 use App\Http\Controllers\KeystoreController;
 use App\Http\Controllers\MarketDevController;
 use App\Http\Controllers\MarketsController;
+use App\Http\Controllers\Project_Controller;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TemplateController;
 use Illuminate\Http\Request;
@@ -27,7 +28,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 
-Route::get('/project-aio/{id}', [ProjectController::class, 'getProject']);
+Route::get('/project-aio/{id}', [Project_Controller::class, 'getProject']);
 
 Route::get('/getProject', [ApiController::class, 'getProject'])->name('api.getProject');
 Route::get('/getDa', [ApiController::class, 'getDa'])->name('api.getDa');

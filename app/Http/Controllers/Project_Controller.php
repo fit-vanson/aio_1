@@ -1218,4 +1218,14 @@ class Project_Controller extends Controller
         dd($request->all());
     }
 
+    public function getProject($id){
+        $project = Project::where('projectname',$id)->first();
+        if (isset($project)){
+            return response()->json(['msg'=>'success','data'=>$project->load('da','markets')]);
+        }else{
+            return response()->json(['msg'=>'error']);
+        }
+
+    }
+
 }
