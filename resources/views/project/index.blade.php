@@ -1068,18 +1068,27 @@
                             $('#market_'+marketID+'_'+k).val(v)
 
                         })
-                        $('#'+marketID+'_dev_id').select2("trigger", "select", {
-                            data: {
-                                id: data.dev_id,
-                                text: data.dev_id ? data.dev.dev_name + ': ' + data.dev.store_name : ''
-                            }
-                        });
-                        $('#'+marketID+'_keystore').select2("trigger", "select", {
-                            data: {
-                                id: data.keystore,
-                                text: data.keystore ? data.keystore : ''
-                            }
-                        });
+                        try {
+                            $('#'+marketID+'_dev_id').select2("trigger", "select", {
+                                data: {
+                                    id: data.dev_id,
+                                    text: data.dev_id ? data.dev.dev_name + ': ' + data.dev.store_name : ''
+                                }
+                            });
+                        }catch (ex) {
+                                console.log(ex)
+                        }
+
+                        try {
+                            $('#'+marketID+'_keystore').select2("trigger", "select", {
+                                data: {
+                                    id: data.keystore,
+                                    text: data.keystore ? data.keystore : ''
+                                }
+                            });
+                        }catch (ex) {
+                            console.log(ex)
+                        }
 
                     }else {
                         // $('#market_'+marketID+'_sdk').val();
