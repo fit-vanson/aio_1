@@ -280,6 +280,8 @@
                     var template_ver =  $('#template_ver').text(data.template+'_');
                     var a = data.ver_build ? data.ver_build.substring(template_ver.text().length) : '1';
 
+
+                    console.log(data)
                     $('#ver_build').val(a);
                     $('#script_copy').val(data.script_copy);
                     $('#script_img').val(data.script_img);
@@ -294,6 +296,19 @@
                     $('#package').val(data.package);
                     $('#convert_aab').val(data.convert_aab);
                     $('#status').val(data.status);
+                    $('#template_type').val(data.template_type);
+                    switch (data.template_data_status) {
+                        case 2:
+                            $("#data_offline").prop("checked", true);
+                            break;
+                        case 3:
+                            $("#data_all").prop("checked", true);
+                            break;
+                        default:
+                            $("#data_online").prop("checked", true);
+                            break;
+                    }
+
                     $.each(data.category, function (k,v){
                         $('#category_'+v.market_id).val(v.value);
                     });

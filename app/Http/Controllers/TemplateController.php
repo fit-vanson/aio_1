@@ -285,6 +285,9 @@ class TemplateController extends Controller
         $data['convert_aab'] = $request->convert_aab;
         $data['status'] = $request->status;
 
+        $data['template_type'] = $request->template_type;
+        $data['template_data_status'] = $request->data_status;
+
         $data['category'] =  $categories;
 
         $path = storage_path('app/public/template/'.$request->template.'/');
@@ -315,7 +318,8 @@ class TemplateController extends Controller
                         $data['template_apk'] = $file_name_apk;
                         $file->move($path, $file_name_apk);
                         break;
-                    case 'jpg'|'webp':
+                    case 'jpg':
+                    case 'webp':
                         $fileName = $num_image+1;
                         $img = Image::make($file->path());
                         $img
@@ -476,6 +480,8 @@ class TemplateController extends Controller
         $data->convert_aab = $request->convert_aab;
         $data->status = $request->status;
         $data->category = $categories ;
+        $data->template_type = $request->template_type;
+        $data->template_data_status = $request->data_status;
 
         $path = storage_path('app/public/template/'.$data->template.'/');
         if (!file_exists($path)) {
@@ -489,7 +495,6 @@ class TemplateController extends Controller
                 ->save($path.$data['template_logo'],85);
         }
 
-
         if($request->template_files){
             $files= $request->template_files;
             $num_image = 0;
@@ -501,7 +506,8 @@ class TemplateController extends Controller
                         $data['template_apk'] = $file_name_apk;
                         $file->move($path, $file_name_apk);
                         break;
-                    case 'jpg' | 'webp':
+                    case 'jpg':
+                    case 'webp':
                         $fileName = $num_image+1;
                         $img = Image::make($file->path());
                         $img
@@ -511,7 +517,6 @@ class TemplateController extends Controller
 //                            ->save($path.$fileName,60,'jpg');
 //                        $file_name_data = $fileName.'.'.$extension;
                         $data['template_preview'] = $fileName;
-
                         $num_image ++;
                         break;
                     case 'zip':
