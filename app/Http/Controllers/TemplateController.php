@@ -324,7 +324,7 @@ class TemplateController extends Controller
                         $img = Image::make($file->path());
                         $img
                             ->resize(720, 1280)
-                            ->save($path.$fileName.'.jpg',60,'jpg');
+                            ->save($path.$fileName.'.jpg',75,'jpg');
 //                        $file_name_data = $fileName.'.'.$extension;
                         $data['template_preview'] = $fileName;
 //                        $file->move($path, $file_name_data);
@@ -513,7 +513,7 @@ class TemplateController extends Controller
                         $img
                             ->resize(720, 1280)
 //                            ->encode('jpg', 60)
-                            ->save($path.$fileName.'.jpg',60,'jpg');
+                            ->save($path.$fileName.'.jpg',75,'jpg');
 //                            ->save($path.$fileName,60,'jpg');
 //                        $file_name_data = $fileName.'.'.$extension;
                         $data['template_preview'] = $fileName;
