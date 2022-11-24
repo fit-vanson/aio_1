@@ -587,7 +587,7 @@
                     var ads_template = JSON.parse(data.ads);
                     $.each(data.markets, function (k,v){
 
-                        getProjectMarket(project_id,v.id,ads_template)
+                        getProjectMarket(project_id,v.id,data)
                         nav_market +=
                             '<li class="nav-item" role="presentation">'+
                             '<a class="nav-link " data-toggle="tab" data-market_id="'+v.id+'" data-market_name="'+v.market_name+'" href="#tab_'+v.market_name+'" role="tab" id="nav_'+v.market_name+'">'+
@@ -1044,17 +1044,19 @@
             });
         }
 
-        function getProjectMarket(projectID,marketID,ads_template){
+        function getProjectMarket(projectID,marketID,template){
             $.ajax({
                 type: 'get',
                 url: '{{asset('api/getProject')}}?projectID='+projectID+'&marketID='+marketID,
                 success: function (data) {
+
                     if(Object.keys(data).length){
                         if(data.sdk){
                             $('#market_'+marketID+'_sdk').val(data.sdk)
                         }else {
                             $('#market_'+marketID+'_sdk').attr("placeholder", data.project.ma_template.sdk);
                         }
+
                         $('#market_'+marketID+'_package').val(data.package)
                         $('#market_'+marketID+'_app_link').val(data.app_link)
                         $('#market_'+marketID+'_policy_link').val(data.policy_link)
@@ -1091,7 +1093,7 @@
 
                     }else {
                         // $('#market_'+marketID+'_sdk').val();
-                        $('#market_'+marketID+'_package').val()
+                        $('#market_'+marketID+'_package').attr("placeholder", template.package);
                         $('#market_'+marketID+'_app_link').val()
                         $('#market_'+marketID+'_policy_link').val()
                         $('#market_'+marketID+'_app_id').val()
@@ -1105,6 +1107,10 @@
 
                     }
 
+
+
+
+                    var ads_template = JSON.parse(template.ads);
 
                     $.each(ads_template, function (k_temp,v_temp){
 
