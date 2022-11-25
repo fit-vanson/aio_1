@@ -493,13 +493,13 @@ class Project_Controller extends Controller
         try {
             $path =   storage_path('app/public/projects/').$project->da->ma_da.'/'.$project->projectname;
             $this->deleteDirectory($path);
-            $project->markets()->sync([]);
-            $project->lang()->sync([]);
-            $project->delete();
+
         }catch (\Exception $exception) {
             Log::error('Message:' . $exception->getMessage() . '--- Delete Project : ' . $exception->getLine());
         }
-
+        $project->markets()->sync([]);
+        $project->lang()->sync([]);
+        $project->delete();
         return response()->json(['success'=>'Xóa thành công.']);
 
     }
