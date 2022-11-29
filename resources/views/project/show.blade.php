@@ -93,7 +93,7 @@
                                             if($value->pivot->apk_link){
                                                 $download_apk = '<a href="'.$value->pivot->aab_link.'"  target="_blank"><img src="img/icon/apk.png" height="50px"  alt=""></a>';
                                             }
-                                            if($value->pivot->dev_id){
+                                            if(isset($value->pivot->dev_id)){
                                                 $dev_name = $value->pivot->dev->dev_name;
                                             }
                                             if($value->pivot->keystores){
