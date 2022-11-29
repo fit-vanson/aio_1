@@ -94,7 +94,7 @@
                                                 $download_apk = '<a href="'.$value->pivot->aab_link.'"  target="_blank"><img src="img/icon/apk.png" height="50px"  alt=""></a>';
                                             }
                                             if(isset($value->pivot->dev_id)){
-                                                $dev_name = $value->pivot->dev->dev_name;
+                                                $dev_name =$value->pivot->dev? $value->pivot->dev->dev_name : null;
                                             }
                                             if($value->pivot->keystores){
                                                 $sha1 = $value->pivot->keystores->SHA_1_keystore;
