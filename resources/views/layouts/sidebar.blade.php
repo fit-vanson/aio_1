@@ -226,13 +226,22 @@
                                 </ul>
                             </li>
 
-                            <li>
-                                <a href="{{route('checkapi.index')}}" class="waves-effect"><i class="ti-check-box"></i> <span> Check API <span class="float-right menu-arrow"></span> </span> </a>
-                            </li>
 
                             <li>
-                                <a href="{{route('apk_upload_convert.index')}}" class="waves-effect"><i class="ti-reload"></i> <span> Convert AAB <span class="float-right menu-arrow"></span> </span> </a>
+                                <a href="javascript:void(0);" class="waves-effect"><i class="fas fa-tools"></i> <span>Tools<span class="float-right menu-arrow"><i class="mdi mdi-chevron-right"></i></span> </span> </a>
+                                <ul class="submenu">
+                                    <li>
+                                        <a href="{{route('checkapi.index')}}" class="waves-effect"> <span> Check API <span class="float-right menu-arrow"></span> </span> </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="{{route('apk_upload_convert.index')}}" class="waves-effect"> <span> Convert AAB <span class="float-right menu-arrow"></span> </span> </a>
+                                    </li>
+
+                                </ul>
                             </li>
+
+
 
                             <li>
                                 <a href="javascript:void(0);" class="waves-effect"><i class="ti-archive"></i> <span> Quản trị phân quyền <span class="float-right menu-arrow"><i class="mdi mdi-chevron-right"></i></span> </span> </a>
