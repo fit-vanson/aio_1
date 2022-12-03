@@ -25,6 +25,7 @@ use App\Http\Controllers\DevOppoController;
 use App\Http\Controllers\DevSamsungController;
 use App\Http\Controllers\DevVivoController;
 use App\Http\Controllers\DevXiaomiController;
+use App\Http\Controllers\ExiftoolController;
 use App\Http\Controllers\Ga_devController;
 use App\Http\Controllers\GaController;
 use App\Http\Controllers\GoogleReviewController;
@@ -675,6 +676,12 @@ Route::group(['prefix'=>'apk_upload_convert'], function (){
     Route::get('/',[ApkUploadConvertController::class,'index'])->name('apk_upload_convert.index');
     Route::post('getIndex',[ApkUploadConvertController::class,'getIndex'])->name('apk_upload_convert.getIndex');
     Route::post('/create',[ApkUploadConvertController::class,'create'])->name('apk_upload_convert.create');
+});
+
+Route::group(['prefix'=>'exiftool'], function (){
+    Route::get('/',[ExiftoolController::class,'index'])->name('exiftool.index');
+//    Route::post('getIndex',[ExiftoolController::class,'getIndex'])->name('exiftool.getIndex');
+    Route::post('/create',[ExiftoolController::class,'create'])->name('exiftool.create');
 });
 
 

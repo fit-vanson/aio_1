@@ -55,6 +55,13 @@ return [
             'visibility' => 'public',
         ],
 
+        'exiftool' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/exiftool'),
+            'url' => env('APP_URL').'/storage/exiftool',
+            'visibility' => 'public',
+        ],
+
         'File Manager' => [
             'driver' => 'local',
             'root' => public_path('file-manager'),

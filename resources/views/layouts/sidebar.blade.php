@@ -237,6 +237,9 @@
                                     <li>
                                         <a href="{{route('apk_upload_convert.index')}}" class="waves-effect"> <span> Convert AAB <span class="float-right menu-arrow"></span> </span> </a>
                                     </li>
+                                    <li>
+                                        <a href="{{route('exiftool.index')}}" class="waves-effect"> <span> Exif Tools <span class="float-right menu-arrow"></span> </span> </a>
+                                    </li>
 
                                 </ul>
                             </li>
