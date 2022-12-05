@@ -67,7 +67,6 @@ class ExiftoolController extends Controller
             $data->filename = $folder;
             $data->save();
         }
-//        return response()->download($folder.'.zip', $folder.'.zip', array('Content-Type: application/octet-stream','Content-Length: '. filesize($folder.'.zip')))->deleteFileAfterSend(true);
 
         return response()->json(['success'=>'Thành công','download'=>$folder]);
     }
@@ -102,20 +101,16 @@ class ExiftoolController extends Controller
         $zip_file = $folder.'.zip';
         $zip->open($zip_file,ZIPARCHIVE::OVERWRITE | ZIPARCHIVE::CREATE);
         $files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path));
+
         foreach ($files as $name => $file)
         {
-            // We're skipping all subfolders
             if (!$file->isDir()) {
                 $filePath     = $file->getRealPath();
-                // extracting filename with substr/strlen
-                $relativePath = $folder.'/' . substr($filePath, strlen($path) + 1);
+                $relativePath = $folder.'/' . substr($filePath, strlen($path));
                 $zip->addFile($filePath, $relativePath);
             }
         }
         $zip->close();
-//        return true;
-//        return response()->download($zip_file, $zip_file)->deleteFileAfterSend(true);
-
     }
 
     function deleteDirectory($dir) {
