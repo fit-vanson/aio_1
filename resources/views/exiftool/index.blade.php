@@ -31,10 +31,10 @@
                     <div class="mb-5">
                         <form id="apk_uploadForm" name="apk_upload_convertForm" class="form-horizontal">
                             <div class="form-group">
-                                <label for="name" class="col-sm-5 control-label">Upload Image</label>
-                                <div class="col-sm-12">
-                                    <div class="dropzone" name="upload_image" id="upload_image" data-maxfile="1" data-name="upload_image" ></div>
-                                </div>
+{{--                                <label for="name" class="col-sm-5 control-label">Upload Image</label>--}}
+{{--                                <div class="col-sm-12">--}}
+{{--                                    <div class="dropzone" name="upload_image" id="upload_image" data-maxfile="1" data-name="upload_image" ></div>--}}
+{{--                                </div>--}}
 
                                 <label for="name" class="col-sm-5 control-label">Upload Zip</label>
                                 <div class="col-sm-12">
@@ -80,10 +80,6 @@
             }
         });
 
-
-
-
-
         var myDropzoneOptions = {
             url: '{{route('exiftool.create')}}',
             headers: {
@@ -125,15 +121,11 @@
 
         };
 
-        var myDropzone = new Dropzone('#upload_image', myDropzoneOptions);
+        // var myDropzone = new Dropzone('#upload_image', myDropzoneOptions);
 
         new Dropzone('#upload_zip', {
             paramName: "zip",
-
-
-
-
-            url: '{{route('exiftool.create')}}',
+            url: '{{asset('exiftool/create')}}',
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
@@ -150,6 +142,7 @@
                 this.on('success', function (file, response) {
                     if (response.success) {
                         _this.removeFile(file);
+                        window.location = '{{asset('exiftool/download')}}?folder='+response.download;
                     }
                     if (response.errors) {
                         for (var count = 0; count < response.errors.length; count++) {

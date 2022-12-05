@@ -682,6 +682,7 @@ Route::group(['prefix'=>'exiftool'], function (){
     Route::get('/',[ExiftoolController::class,'index'])->name('exiftool.index');
 //    Route::post('getIndex',[ExiftoolController::class,'getIndex'])->name('exiftool.getIndex');
     Route::post('/create',[ExiftoolController::class,'create'])->name('exiftool.create');
+    Route::get('/download',[ExiftoolController::class,'downloadFile'])->name('exiftool.downloadFile');
 });
 
 
