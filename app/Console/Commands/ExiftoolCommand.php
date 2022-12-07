@@ -39,9 +39,7 @@ class ExiftoolCommand extends Command
      */
     public function handle()
     {
-
-//        Exiftool::where('updated_at','<', Carbon::now()->subMinutes(10))->delete();
-        $files = Exiftool::where('updated_at','<', Carbon::now()->subMinutes(10))->get();
+        $files = Exiftool::where('updated_at','<', Carbon::now())->get();
         foreach ($files as $file){
             $file->delete();
         }

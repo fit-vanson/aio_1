@@ -188,16 +188,20 @@ class ExiftoolController extends Controller
     public function downloadFile(){
         try {
             $folder = $_GET['folder'];
-            $file = Exiftool::where('name',$folder)->firstorFail();
-            if(Auth()->user()->id == $file->user_id){
-                $path = storage_path('app/public/exiftool/'.$folder.'/');
-                $zip_file = $folder.'.zip';
-                $headers = [ 'Content-Type' => 'application/octet-stream' ];
-//                return response()->download($path.$zip_file, $zip_file,array('Content-Type: application/octet-stream','Content-Length: '. filesize($path.$zip_file)));
-                return response()->download($path.$zip_file, $zip_file,$headers);
+            $file = Exiftool::where('name',$folder)->first();
+            if($file){
+                if(Auth()->user()->id == $file->user_id){
+                    $path = storage_path('app/public/exiftool/'.$folder.'/');
+                    $zip_file = $folder.'.zip';
+                    $headers = [ 'Content-Type' => 'application/octet-stream' ];
+                    return response()->download($path.$zip_file, $zip_file,$headers);
+                }else{
+                    return response()->json(['error'=>'Không thể tải.']);
+                }
             }else{
-                return response()->json(['error'=>'Không thể tải.']);
+                return response()->json(['error'=>'File k tồn tại.']);
             }
+
 
 
         }catch (\Exception $exception) {

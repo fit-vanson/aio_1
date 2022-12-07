@@ -15,14 +15,13 @@ class Exiftool extends Model
 
     public static function boot() {
         parent::boot();
-
-        static::deleting(function($file) { // before delete() method call this
+        static::deleted(function($file) {
             $path = storage_path('app/public/exiftool/'.$file->name.'/');
-            Exiftool::deleteDirectory($path);
+            $file->deleteDirectory($path);
         });
     }
 
-    public static function deleteDirectory($dir)
+    public function deleteDirectory($dir)
     {
         if (!file_exists($dir)) {
             return true;
@@ -34,7 +33,7 @@ class Exiftool extends Model
             if ($item == '.' || $item == '..') {
                 continue;
             }
-            if (!Exiftool::deleteDirectory($dir . DIRECTORY_SEPARATOR . $item)) {
+            if (!$this->deleteDirectory($dir . DIRECTORY_SEPARATOR . $item)) {
                 return false;
             }
         }
