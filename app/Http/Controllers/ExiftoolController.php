@@ -42,6 +42,7 @@ class ExiftoolController extends Controller
         $totalRecordswithFilter = Exiftool::select('count(*) as allcount')
 
             ->Where('name', 'like', '%' . $searchValue . '%')
+            ->orwhere('name_ori', 'like', '%' . $searchValue . '%')
             ->orwhereHas('user', function ($query) use ($searchValue) {
                 $query
                     ->where('name', 'like', '%' . $searchValue . '%');
@@ -51,6 +52,7 @@ class ExiftoolController extends Controller
         // Get records, also we have included search filter as well
         $records = Exiftool::orderBy($columnName, $columnSortOrder)
             ->Where('name', 'like', '%' . $searchValue . '%')
+            ->orwhere('name_ori', 'like', '%' . $searchValue . '%')
             ->orwhereHas('user', function ($query) use ($searchValue) {
                 $query
                     ->where('name', 'like', '%' . $searchValue . '%');
@@ -62,6 +64,7 @@ class ExiftoolController extends Controller
         foreach ($records as $record) {
             $data_arr[] = array(
 //                "name" => '<a id="download" href="'.route('exiftool.downloadFile',"folder=$record->name").'" target="_blank">'.$record->name.'</a>',
+                "name_ori" => '<span id="download" data-folder="'.$record->name.'"  >'.$record->name_ori.'</span>',
                 "name" => '<span id="download" data-folder="'.$record->name.'"  >'.$record->name.'</span>',
                 "user_id" => $record->user->name ?? "",
                 "created_at" => $record->created_at->format('H:i:s d/m/Y'),
@@ -82,7 +85,6 @@ class ExiftoolController extends Controller
         $folder = uniqid();
         $path = storage_path('app/public/exiftool/'.$folder.'/');
         if($request->zip){
-
             $this->extractUploadedZip( $request,$path);
             $files = Storage::disk('exiftool')->allFiles($folder);
             foreach ($files as $file){
@@ -94,6 +96,7 @@ class ExiftoolController extends Controller
             }
             $this->zipFile($folder, $path);
             $data = new Exiftool();
+            $data->name_ori = $request->zip->getClientOriginalName();
             $data->name = $folder;
             $data->user_id = Auth()->user()->id;
             $data->save();

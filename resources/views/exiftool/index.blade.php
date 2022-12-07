@@ -54,7 +54,8 @@
                             <table id="ExiftoolTable" class="table table-striped table-bordered dt-responsive data-table" style="width: 100%;">
                                 <thead>
                                 <tr>
-                                    <th style="width: 60%">File</th>
+                                    <th style="width: 30%">Name</th>
+                                    <th style="width: 30%">File</th>
                                     <th style="width: 20%">User </th>
                                     <th style="width: 20%">Time Create </th>
 {{--                                    <th style="width: 20%">Action </th>--}}
@@ -112,6 +113,7 @@
                 type: 'post',
             },
             columns: [
+                {data: 'name_ori', name: 'name_ori'},
                 {data: 'name', name: 'name'},
                 {data: 'user_id', name: 'user_id'},
                 {data: 'created_at', name: 'created_at'},
