@@ -115,6 +115,7 @@
             ],
             order: [ 1, 'desc' ]
         });
+
         $('#createNewApkUpload').click(function () {
             $('.project_select').show();
             $('#saveBtn_design').val("create-design");

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Exiftool;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -15,23 +16,69 @@ class ExiftoolController extends Controller
     {
         $header = [
             'title' => 'Exif Tools',
-
-            'button' => [
-//                'Create'            => ['id'=>'createNewApkUpload','style'=>'primary'],
-//                'Build And Check'   => ['id'=>'build_check','style'=>'warning'],
-//                'Status'            => ['id'=>'dev_status','style'=>'info'],
-//                'KeyStore'          => ['id'=>'change_keystore','style'=>'success'],
-//                'SDK'               => ['id'=>'change_sdk','style'=>'danger'],
-//                'Upload Status'     => ['id'=>'change_upload_status','style'=>'secondary'],
-            ]
-
+            'button' => []
         ];
         return view('exiftool.index')->with(compact('header'));
     }
 
+    public function getIndex(Request $request)
+    {
+        $draw = $request->get('draw');
+        $start = $request->get("start");
+        $rowperpage = $request->get("length"); // total number of rows per page
+
+        $columnIndex_arr = $request->get('order');
+        $columnName_arr = $request->get('columns');
+        $order_arr = $request->get('order');
+        $search_arr = $request->get('search');
+
+        $columnIndex = $columnIndex_arr[0]['column']; // Column index
+        $columnName = $columnName_arr[$columnIndex]['data']; // Column name
+        $columnSortOrder = $order_arr[0]['dir']; // asc or desc
+        $searchValue = $search_arr['value']; // Search value
+
+        // Total records
+        $totalRecords = Exiftool::select('count(*) as allcount') ->count();
+        $totalRecordswithFilter = Exiftool::select('count(*) as allcount')
+
+            ->Where('name', 'like', '%' . $searchValue . '%')
+            ->orwhereHas('user', function ($query) use ($searchValue) {
+                $query
+                    ->where('name', 'like', '%' . $searchValue . '%');
+            })
+
+            ->count();
+        // Get records, also we have included search filter as well
+        $records = Exiftool::orderBy($columnName, $columnSortOrder)
+            ->Where('name', 'like', '%' . $searchValue . '%')
+            ->orwhereHas('user', function ($query) use ($searchValue) {
+                $query
+                    ->where('name', 'like', '%' . $searchValue . '%');
+            })
+            ->skip($start)
+            ->take($rowperpage)
+            ->get();
+        $data_arr = array();
+        foreach ($records as $record) {
+            $data_arr[] = array(
+//                "name" => '<a id="download" href="'.route('exiftool.downloadFile',"folder=$record->name").'" target="_blank">'.$record->name.'</a>',
+                "name" => '<span id="download" data-folder="'.$record->name.'"  >'.$record->name.'</span>',
+                "user_id" => $record->user->name ?? "",
+                "created_at" => $record->created_at->format('H:i:s d/m/Y'),
+            );
+        }
+        $response = array(
+            "draw" => intval($draw),
+            "iTotalRecords" => $totalRecords,
+            "iTotalDisplayRecords" => $totalRecordswithFilter,
+            "aaData" => $data_arr,
+        );
+
+        echo json_encode($response);
+    }
+
     public function create(Request $request)
     {
-//        $folder = $request->folder;
         $folder = uniqid();
         $path = storage_path('app/public/exiftool/'.$folder.'/');
         if($request->zip){
@@ -46,8 +93,10 @@ class ExiftoolController extends Controller
                 }
             }
             $this->zipFile($folder, $path);
-            $this->deleteDirectory($path);
-
+            $data = new Exiftool();
+            $data->name = $folder;
+            $data->user_id = Auth()->user()->id;
+            $data->save();
 
         }
 
@@ -99,7 +148,7 @@ class ExiftoolController extends Controller
 
         $zip = new ZipArchive();
         $zip_file = $folder.'.zip';
-        $zip->open($zip_file,ZIPARCHIVE::OVERWRITE | ZIPARCHIVE::CREATE);
+        $zip->open($path.$zip_file,ZIPARCHIVE::OVERWRITE | ZIPARCHIVE::CREATE);
         $files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path));
 
         foreach ($files as $name => $file)
@@ -139,13 +188,29 @@ class ExiftoolController extends Controller
     public function downloadFile(){
         try {
             $folder = $_GET['folder'];
-            $zip_file = $folder.'.zip';
-            return \Response::download($zip_file, $zip_file,array('Content-Type: application/octet-stream','Content-Length: '. filesize($zip_file)))->deleteFileAfterSend(true);
+            $file = Exiftool::where('name',$folder)->firstorFail();
+            if(Auth()->user()->id == $file->user_id){
+                $path = storage_path('app/public/exiftool/'.$folder.'/');
+                $zip_file = $folder.'.zip';
+                $headers = [ 'Content-Type' => 'application/octet-stream' ];
+//                return response()->download($path.$zip_file, $zip_file,array('Content-Type: application/octet-stream','Content-Length: '. filesize($path.$zip_file)));
+                return response()->download($path.$zip_file, $zip_file,$headers);
+            }else{
+                return response()->json(['error'=>'Không thể tải.']);
+            }
+
+
         }catch (\Exception $exception) {
             Log::error('Message: Download' . $exception->getMessage() . '--' . $exception->getLine());
         }
 
 
+    }
+
+    public function delete($id){
+        $Exiftool = Exiftool::findorFail($id);
+        $Exiftool->delete();
+        return response()->json(['success'=>'Xóa thành công.']);
     }
 
 

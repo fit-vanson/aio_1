@@ -46,7 +46,30 @@
                 </div>
             </div>
         </div>
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-rep-plugin" >
+                        <div class="table-responsive mb-0" data-pattern="priority-columns">
+                            <table id="ExiftoolTable" class="table table-striped table-bordered dt-responsive data-table" style="width: 100%;">
+                                <thead>
+                                <tr>
+                                    <th style="width: 60%">File</th>
+                                    <th style="width: 20%">User </th>
+                                    <th style="width: 20%">Time Create </th>
+{{--                                    <th style="width: 20%">Action </th>--}}
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> <!-- end col -->
     </div>
+ <!-- end row -->
 
 @endsection
 @section('script')
@@ -78,6 +101,24 @@
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
+        });
+
+        var table = $('#ExiftoolTable').DataTable({
+
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: "{{ route('exiftool.getIndex') }}",
+                type: 'post',
+            },
+            columns: [
+                {data: 'name', name: 'name'},
+                {data: 'user_id', name: 'user_id'},
+                {data: 'created_at', name: 'created_at'},
+                // {data: 'action', name: 'action'},
+
+            ],
+            order: [ 1, 'desc' ]
         });
 
         var myDropzoneOptions = {
@@ -142,7 +183,8 @@
                 this.on('success', function (file, response) {
                     if (response.success) {
                         _this.removeFile(file);
-                        window.location = '{{asset('exiftool/download')}}?folder='+response.download;
+                        table.draw();
+                        {{--window.location = '{{asset('exiftool/download')}}?folder='+response.download;--}}
                     }
                     if (response.errors) {
                         for (var count = 0; count < response.errors.length; count++) {
@@ -167,6 +209,30 @@
 
 
         });
+
+        $(document).on('click','#download', function (data){
+            var folder = $(this).data('folder');
+
+            $.ajax({
+                type: "get",
+                url: "{{ asset("exiftool/download?folder=") }}" + folder,
+                success: function (data) {
+                    if(data.error){
+                        toastr['error'](data.error, 'Error', {
+                            showMethod: 'slideDown',
+                            hideMethod: 'slideUp',
+                            timeOut: 1000,
+                        });
+                    }else {
+                        var downloadUrl ='{{asset('exiftool/download')}}?folder='+folder;
+                        window.open(downloadUrl,'_blank');
+                    }
+
+                }
+            });
+
+        });
+
 
     });
 

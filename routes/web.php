@@ -678,11 +678,13 @@ Route::group(['prefix'=>'apk_upload_convert'], function (){
     Route::post('/create',[ApkUploadConvertController::class,'create'])->name('apk_upload_convert.create');
 });
 
-Route::group(['prefix'=>'exiftool'], function (){
+Route::group(['prefix'=>'exiftool','middleware'=>['CheckLogout','2fa']], function (){
     Route::get('/',[ExiftoolController::class,'index'])->name('exiftool.index');
-//    Route::post('getIndex',[ExiftoolController::class,'getIndex'])->name('exiftool.getIndex');
+    Route::post('getIndex',[ExiftoolController::class,'getIndex'])->name('exiftool.getIndex');
     Route::post('/create',[ExiftoolController::class,'create'])->name('exiftool.create');
     Route::get('/download',[ExiftoolController::class,'downloadFile'])->name('exiftool.downloadFile');
+    Route::get('/delete/{id}',[ExiftoolController::class,'delete'])->name('exiftool.delete');
+
 });
 
 
