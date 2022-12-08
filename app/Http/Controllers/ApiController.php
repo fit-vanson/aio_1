@@ -33,6 +33,13 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 
 
+use SellingPartnerApi\Api\AuthorizationV1Api;
+use SellingPartnerApi\Api\TokensV20210301Api;
+use SellingPartnerApi\Authentication;
+use SellingPartnerApi\Configuration;
+use SellingPartnerApi\Endpoint;
+
+
 class ApiController extends Controller
 {
 
@@ -49,7 +56,6 @@ class ApiController extends Controller
             return response()->json('msg:error');
         }
     }
-
 
     public function getDa(){
         $searchValue = \request()->q;
@@ -83,7 +89,6 @@ class ApiController extends Controller
         return response()->json($result);
     }
 
-
     public function getKeystore(){
         $searchValue = \request()->q;
 
@@ -93,7 +98,6 @@ class ApiController extends Controller
         $result = KeystoresResource::collection($dev);
         return response()->json($result);
     }
-
 
     public function getGa(){
         $searchValue = \request()->q;
@@ -165,7 +169,6 @@ class ApiController extends Controller
 
     }
 
-
     public function AppInfoHuawei($domain,$token,$clientID,$appID){
         $data = '';
         $dataArr = [
@@ -184,7 +187,6 @@ class ApiController extends Controller
         }
         return $data;
     }
-
 
     function get_get_token_callback(Request $request)
     {
@@ -206,7 +208,6 @@ class ApiController extends Controller
         echo '<META http-equiv="refresh" content="0;URL=' . $authUrl . '">';
         return;
         }
-
 
     function get_token(Request $request)
     {
@@ -234,6 +235,7 @@ class ApiController extends Controller
         }
 
     }
+
     function get_user($service)
     {
         try {
@@ -356,7 +358,6 @@ class ApiController extends Controller
         return Response::json($dataArr);
     }
 
-
     public function postReview(Request $request,$id){
         $dev = Dev::findorfail($id);
         $client = $this->get_gclient($request,$dev);
@@ -401,8 +402,6 @@ class ApiController extends Controller
         dd($response);
     }
 
-
-
     public function get_postReview(Request $request){
 
 
@@ -446,6 +445,92 @@ class ApiController extends Controller
             $review->save();
             return response()->json($response->json());
         }
+    }
+
+    public function ReviewForDevCHplay(Request $request){
+        $devs = Dev::where('market_id',1)
+            ->where('api_client_id','<>',null)
+            ->where('api_client_secret','<>',null)
+            ->where('api_token','<>',null)
+            ->get();
+        foreach ($devs as $dev){
+            $client = $this->get_gclient($request,$dev);
+            $service = new Google_Service_AndroidPublisher($client);
+            $refresh_token = $dev->api_refresh_token;
+            if(isset($refresh_token) && $dev->api_expires_in_token < time()){
+                $client->fetchAccessTokenWithRefreshToken($refresh_token);
+                $accessToken = $client->getAccessToken();
+                $dev->api_token = $accessToken['access_token'];
+                $dev->api_expires_in_token = time()+ $accessToken['expires_in'] ;
+                $dev->save();
+            }
+
+
+            $token = $dev->api_token;
+            $optParams = array(
+                "maxResults"=>50,
+                "startIndex"=>0,
+                "token"=> $client->setAccessToken($token),
+//                "translationLanguage"=>"en"
+            );
+
+            $dataArr = [];
+            foreach ($dev->projects_market as $project){
+                $package_name = $project->package;
+                try {
+                    $response = $service->reviews->listReviews($package_name,$optParams);
+                    $reviews =  $response->getReviews();
+
+                    if ($reviews){
+
+                        $data = [];
+                        foreach ($reviews as $review){
+                            $comments   = $review->getComments();
+                            $dataArr[] = [
+                                'project_id' =>  $project->project_id,
+                                'project_market_id' =>  $project->id,
+                                'package' =>  $project->package,
+                                'reviewId' =>  $review->reviewId,
+                                'authorName' =>  $review->authorName,
+                                'userComment' =>  $comments[0]->getUserComment()->getText(),
+                                'reviewerLanguage' =>  $comments[0]->getUserComment()->reviewerLanguage,
+                                'thumbsDownCount' =>  $comments[0]->getUserComment()->getThumbsDownCount(),
+                                'thumbsUpCount' =>  $comments[0]->getUserComment()->getThumbsUpCount(),
+                                'starRating' =>  $comments[0]->getUserComment()->getStarRating(),
+                                'deviceMetadata' =>  json_encode($comments[0]->getUserComment()->getDeviceMetadata()),
+                                'lastModifiedUser' =>  $comments[0]->getUserComment()->getLastModified()->getSeconds(),
+                                'developerComment' => isset($comments[1]) ?  $comments[1]->getDeveloperComment()->getText() : null,
+                                'lastModifiedDeveloper' => isset($comments[1]) ?  $comments[1]->getDeveloperComment()->getLastModified()->getSeconds() : null,
+                            ];
+                            GoogleReview::updateorCreate(
+                                [
+                                    'reviewId' =>  $review->reviewId,
+                                ],
+                                [
+                                    'project_id' =>  $project->project_id,
+                                    'project_market_id' =>  $project->id,
+                                    'package' =>  $project->package,
+                                    'authorName' =>  $review->authorName,
+                                    'userComment' =>  $comments[0]->getUserComment()->getText(),
+                                    'reviewerLanguage' =>  $comments[0]->getUserComment()->reviewerLanguage,
+                                    'thumbsDownCount' =>  $comments[0]->getUserComment()->getThumbsDownCount(),
+                                    'thumbsUpCount' =>  $comments[0]->getUserComment()->getThumbsUpCount(),
+                                    'starRating' =>  $comments[0]->getUserComment()->getStarRating(),
+                                    'deviceMetadata' =>  json_encode($comments[0]->getUserComment()->getDeviceMetadata()),
+                                    'lastModifiedUser' =>  $comments[0]->getUserComment()->getLastModified()->getSeconds(),
+                                    'developerComment' => isset($comments[1]) ?  $comments[1]->getDeveloperComment()->getText() : null,
+                                    'lastModifiedDeveloper' => isset($comments[1]) ?  $comments[1]->getDeveloperComment()->getLastModified()->getSeconds() : null,
+                                ]
+                            );
+                        }
+                    }
+                }catch (\Exception $exception) {
+                    Log::debug('Message -  getReview: ' . $exception->getMessage() . '---' . $exception->getLine());
+                }
+            }
+        }
+        return Response::json($dataArr);
+
     }
 
 
@@ -513,9 +598,6 @@ BKUyc6NW6/fEZsTTUK3dMDbOJLU42oZnnLnw3bZe37G09/EmR54iDkA=
 
 
     }
-
-
-
 
     function gen_jwt($account_id,$privateKey)
     {
@@ -743,6 +825,160 @@ BKUyc6NW6/fEZsTTUK3dMDbOJLU42oZnnLnw3bZe37G09/EmR54iDkA=
         $url = str_replace('&','/',$url);
         $result =  response()->file(public_path('/storage/projects/').$url);
         return ($result);
+
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function amazon(){
+        $this->getToken_amazon();
+
+
+
+
+        $Client_ID = 'amzn1.application-oa2-client.0b087c09c17542c98c82e5dc9a86a5f7';
+        $Client_Secret = 'fd94434046e7531375dcdd1100570e7357c236636720f17c38cccd6d66021160';
+        $awsAccessKeyId = 'AKIAR5KHVWR24J24JW3G';
+        $awsSecretAccessKey = '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';
+        $lwaRefreshToken = 'Atzr|IwEBIF5mgp8HU-aN8u4hNUSorORLIP8KwO25aReFqYkBkZj7qJEOD61itKVHWsRAAJ9XPvYgU5-Sn_4_gunFMj9_QGoUkBIp4M0xpPrastN_BqC4vO9UZtggietx9mkupLVP11oYO1O0JfLPwhcXGehXf5jxnILAhGq_iJ5ovxtypSXbNlfwm1mFpTiBbhCcm2nIh1uG5ja33INMUF8BWjRtj2Oe13JrJ7h0TRPhuUJ492O06uO3xtvmvf1lddWfgqxDjZmD46FeE8ZYs7IWTFVO_Wnde86qDJuWKXpnBXh_8bp1ROfVyvltZzBjKgxkdt-Ba5872DXHfjqgqPiAZ2fmeDefALWUAQ3qjK7Z7PnyXk8xtWFr1jsa_L1eq1h2uH-ORZpisepGB7SmV13U1T0qLcSEONxQkof5eGDsH80aTPpW1w';
+
+
+//        $this->getToken_amazon($Client_ID,$Client_Secret);
+
+//        $config = new Configuration([
+//            "lwaClientId" => $Client_ID,
+//            "lwaClientSecret" => $Client_Secret,
+//            "lwaRefreshToken" => "",
+//            "awsAccessKeyId" => $awsAccessKeyId,
+//            "awsSecretAccessKey" => $awsSecretAccessKey,
+////            // If you're not working in the North American marketplace, change
+////            // this to another endpoint from lib/Endpoint.php
+//            "endpoint" => Endpoint::NA,
+//            "accessToken" => null,
+//        ]);
+//        $apiInstance = new AuthorizationV1Api($config);
+//        $apiInstance = new \Authorization($config);
+//
+//        dd($apiInstance->getAwsCredentials());
+//        $selling_partner_id = 'selling_partner_id_example'; // string | The seller ID of the seller for whom you are requesting Selling Partner API authorization. This must be the seller ID of the seller who authorized your application on the Marketplace Appstore.
+//        $developer_id = 'developer_id_example'; // string | Your developer ID. This must be one of the developer ID values that you provided when you registered your application in Developer Central.
+//        $mws_auth_token = 'mws_auth_token_example'; // string | The MWS Auth Token that was generated when the seller authorized your application on the Marketplace Appstore.
+
+//        dd($config);
+//        dd($config);
+//        $api = new SellersApi($config);
+//        $apiInstance = new AuthorizationV1Api($config);
+//        dd(1);
+
+        $config = ([
+            "lwaClientId" => $Client_ID,
+            "lwaClientSecret" => $Client_Secret,
+            "lwaRefreshToken" => "",
+            "awsAccessKeyId" => $awsAccessKeyId,
+            "awsSecretAccessKey" => $awsSecretAccessKey,
+//            // If you're not working in the North American marketplace, change
+//            // this to another endpoint from lib/Endpoint.php
+            "endpoint" => Endpoint::NA,
+            "accessToken" => null,
+        ]);
+        $apiInstance = new Authentication ($config);
+
+//        dd($apiInstance);
+        $body = new \SellingPartnerApi\Model\TokensV20210301\CreateRestrictedDataTokenRequest(); // \SellingPartnerApi\Model\TokensV20210301\CreateRestrictedDataTokenRequest | The restricted data token request details.
+//        dd($body);
+        $result = $apiInstance->getGrantlessAwsCredentials();
+
+        dd($result);
+        try {
+//            $result = $api->getMarketplaceParticipations();
+//            dd($result);
+        } catch (ApiException $e) {
+            echo 'Exception when calling SellersApi->getMarketplaceParticipations: ', $e->getMessage(), PHP_EOL;
+        }
+    }
+
+//    function getToken_amazon($Client_ID,$Client_Secret){
+//        $client = new \GuzzleHttp\Client();
+//        $res = $client->post("https://api.amazon.com/auth/o2/token", [
+//            \GuzzleHttp\RequestOptions::JSON => [
+//                "grant_type" => "authorization_code",
+//                "code" => 'profile',
+//                "client_id" => $Client_ID,
+//                "client_secret" => $Client_Secret
+//            ]
+//        ]);
+//
+//        dd($res);
+//    }
+
+    function getToken_amazon(){
+
+        $Client_ID = 'amzn1.application-oa2-client.0b087c09c17542c98c82e5dc9a86a5f7';
+        $Client_Secret = '9431068a70c8ae6f99b1faa3ebfe6af80466d1b484296558b1c71af36c663bd4';
+//        $redirect_uri = 'https://aio.vietmmo.net/api/redirect_uri';
+        $redirect_uri = $_SERVER['APP_URL'];
+        $redirect_uri .= "/api/redirect_uri";
+        $Headers = [
+//            'Authorization'=> 'Bearer ' . $JWT,
+            'Content-Type'=>'application/x-www-form-urlencoded;charset=UTF-8',
+//            'content-type'=>'application/json',
+        ];
+
+        $dataArr = array(
+            'grant_type' => 'authorization_code',
+            'client_id' => $Client_ID,
+            'client_secret' => $Client_Secret,
+            'scope' => 'appstore::apps:readwrite',
+//            'scope' => 'profile',
+            'redirect_uri' => $redirect_uri,
+            'response_type' => 'code',
+        );
+        $url = 'https://www.amazon.com/ap/oa';
+        $endpoint = "https://www.amazon.com/ap/oa?client_id=$Client_ID&scope=profile&response_type=code&redirect_uri=$redirect_uri";
+        echo '<META http-equiv="refresh" content="0;URL=' . $endpoint . '">';
+        dd($endpoint);
+
+
+
+
+
+
+        try {
+            $response = Http::withHeaders($Headers)->get( $endpoint);
+            dd($response,$response->json());
+            if ($response->successful()){
+                $result = $response->json();
+                $accessToken = $result['createdItem']['accessToken'];
+                return $accessToken;
+            }
+        }catch (\Exception $exception) {
+            Log::error('Message:' . $exception->getMessage() . '--- Token: ' . $exception->getLine());
+        }
+    }
+
+    public function redirect_uri(Request $request){
+//        dd($request->all());
+        $Client_ID = 'amzn1.application-oa2-client.0b087c09c17542c98c82e5dc9a86a5f7';
+        $Client_Secret = '9431068a70c8ae6f99b1faa3ebfe6af80466d1b484296558b1c71af36c663bd4';
+        $code = $request->code;
+        $url = 'https://api.amazon.com/auth/o2/token';
+        $redirect_uri = $_SERVER['APP_URL'];
+        $redirect_uri .= "/api/redirect_uri";
+        $dataArr = array(
+            'grant_type' => 'authorization_code',
+            'code' => $code,
+            'client_id' => $Client_ID,
+            'client_secret' => $Client_Secret,
+            'redirect_uri' => $redirect_uri,
+        );
+
+        $Headers = [
+            'Content-Type'=>'application/json',
+        ];
+        $response = Http::withHeaders($Headers)->post( $url,$dataArr);
+
+        dd($response, $response->json());
 
     }
 

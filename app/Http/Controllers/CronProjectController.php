@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\URL;
 use Mavinoo\Batch\Batch;
 use Nelexa\GPlay\GPlayApps;
 use Telegram\Bot\Laravel\Facades\Telegram;
+use ZipArchive;
 
 class CronProjectController extends Controller
 
@@ -227,6 +228,12 @@ class CronProjectController extends Controller
         return null;
     }
 
+
+
+
+
+
+
     //==========================================================================
 
     public function Huawei($status_upload = null){
@@ -270,7 +277,7 @@ class CronProjectController extends Controller
                 $string .=  '<br/>'.'Dang chay:  '. '-'.$appHuawei->project->projectname.' - ';
                 try {
                     if(!$appHuawei->dev){
-                        $appHuawei->status_app = 6;
+                        $appHuawei->status_app = $status_app;
                         $status_cron = 'check';
                         $appHuawei->bot_time = time();
                         $appHuawei->save();
@@ -278,7 +285,7 @@ class CronProjectController extends Controller
 
                     }else{
                         if(!$appHuawei->dev->api_token){
-                            $appHuawei->status_app = 6;
+                            $appHuawei->status_app = $status_app;
                             $status_cron = 'check';
                             $appHuawei->bot_time = time();
                             $appHuawei->save();
@@ -710,18 +717,19 @@ class CronProjectController extends Controller
         if($appsVivo){
             $sms = $string = '';
             $status_cron =  'Mặc định';
+            $status_app =  6;
             foreach ($appsVivo as $appVivo){
                 $string .=  '<br/>'.'Dang chay: '. '-'.$appVivo->project->projectname.'-';
                 try{
                     if(!$appVivo->dev){
-                        $appVivo->status_app = 6;
+                        $appVivo->status_app = $status_app;
                         $status_cron = 'check';
                         $appVivo->bot_time = time();
                         $appVivo->save();
                         return  response()->json(['error'=>'Chưa có DEV', 'project'=>$appVivo,'status'=>$status_cron]);
                     }else {
                         if(!$appVivo->dev->api_access_key || !$appVivo->dev->api_client_secret ){
-                            $appVivo->status_app = 6;
+                            $appVivo->status_app = $status_app;
                             $status_cron = 'check';
                             $appVivo->bot_time = time();
                             $appVivo->save();
@@ -757,7 +765,7 @@ class CronProjectController extends Controller
                                 $appVivo->policy_link = isset($get_Vivo->data->privacyStatement) ? $get_Vivo->data->privacyStatement : null;
                                 $appVivo->status_app = $status_app;
                             }else{
-                                $appVivo->status_app = 6;
+                                $appVivo->status_app = $status_app;
                                 $status_cron = $get_Vivo->subMsg;
                             }
                         }
@@ -899,14 +907,14 @@ class CronProjectController extends Controller
                 try{
                     if($appSamsung->appID){
                         if(!$appSamsung->dev){
-                            $appSamsung->status_app = 6;
+                            $appSamsung->status_app = $status_app;
                             $status_cron = 'check';
                             $appSamsung->bot_time = time();
                             $appSamsung->save();
                             return  response()->json(['error'=>'Chưa có DEV', 'project'=>$appSamsung,'status'=>$status_cron]);
                         }else {
                             if(!$appSamsung->dev->api_client_id || !$appSamsung->dev->api_client_secret ){
-                                $appSamsung->status_app = 6;
+                                $appSamsung->status_app = $status_app;
                                 $status_cron = 'check';
                                 $appSamsung->bot_time = time();
                                 $appSamsung->save();
@@ -949,13 +957,13 @@ class CronProjectController extends Controller
                                     $appSamsung->policy_link =  $contentInfo[0]['privatePolicyURL'];
                                     $appSamsung->status_app = $status_app;
                                 }else{
-                                    $appSamsung->status_app = 6;
+                                    $appSamsung->status_app = $status_app;
                                     $status_cron = 'check';
                                 }
                             }
                         }
                     }else{
-                        $appSamsung->status_app = 6;
+                        $appSamsung->status_app = $status_app;
                         $status_cron = 'check';
                         $appSamsung->bot_time = time();
                         $appSamsung->save();
@@ -1164,7 +1172,7 @@ class CronProjectController extends Controller
         }else {
             $time =  Setting::first();
             $timeCron = Carbon::now()->subMinutes($time->time_cron)->setTimezone('Asia/Ho_Chi_Minh')->timestamp;
-            $status_upload = isset($_GET['status_upload']) ? $_GET['status_upload'] : $status_upload;
+            $status_upload = $_GET['status_upload'] ?? $status_upload;
 
             $appsAmazon = MarketProject::where('market_id', 2)
                 ->where('status_upload','like','%'. $status_upload.'%')
@@ -1181,8 +1189,6 @@ class CronProjectController extends Controller
                 ->paginate($time->limit_cron);
 
         }
-
-//        dd($appsAmazon->load('dev'));
 
         if(count($appsAmazon)==0){
             echo 'Chưa đến time cron'.PHP_EOL .'<br>';
@@ -1201,28 +1207,35 @@ class CronProjectController extends Controller
             $status_app = 6;
             foreach ($appsAmazon as $appAmazon){
                 $string .=  '<br/>'.'Dang chay: '. '-'.$appAmazon->project->projectname.'-';
-                try{
-//                    if($appSamsung->appID){
+//                try{
+//                    dd($appAmazon);
+                    if($appAmazon->appID){
                         if(!$appAmazon->dev){
-                            $appAmazon->status_app = 6;
+                            $appAmazon->status_app = $status_app;
                             $status_cron = 'check';
                             $appAmazon->bot_time = time();
                             $appAmazon->save();
                             return  response()->json(['error'=>'Chưa có DEV', 'project'=>$appAmazon,'status'=>$status_cron]);
                         }else {
                             if(!$appAmazon->dev->api_client_secret ){
-                                $appAmazon->status_app = 6;
+                                $appAmazon->status_app = $status_app;
                                 $status_cron = 'check';
                                 $appAmazon->bot_time = time();
                                 $appAmazon->save();
                                 return  response()->json(['error'=>'DEV chưa có api_access_key', 'project'=>$appAmazon,'status'=>$status_cron]);
                             }else{
+//                                $appAmazon = $this->get_token_amazon($appAmazon,'adx_reporting::appstore:marketer');
+                                $appAmazon = $this->get_token_amazon($appAmazon,'appstore::apps:readwrite');
+                                $report = $this->report_amazon($appAmazon);
+                                dd($report);
 
-                                dd($appAmazon,12312312);
+//                                $createEdit = $this->createEdit_amazon($appAmazon);
+//                                $getActiveEdit = $this->getActiveEdit_amazon($appAmazon);
+                                $getPreviousEdit_amazon = $this->getPreviousEdit_amazon($appAmazon);
+                                dd($getActiveEdit,123);
 
 
-                                $appSamsung = $this->update_token_samsung($appSamsung);
-                                $contentInfo = $this->contentInfo($appSamsung);
+                                $contentInfo = $this->contentInfo($appAmazon);
                                 if ($contentInfo) {
                                     $contentStatus = $contentInfo[0]['contentStatus'];
                                     switch ($contentStatus){
@@ -1258,23 +1271,23 @@ class CronProjectController extends Controller
                                     $appSamsung->policy_link =  $contentInfo[0]['privatePolicyURL'];
                                     $appSamsung->status_app = $status_app;
                                 }else{
-                                    $appSamsung->status_app = 6;
+                                    $appSamsung->status_app = $status_app;
                                     $status_cron = 'check';
                                 }
                             }
                         }
-//                    }else{
-//                        $appSamsung->status_app = 6;
-//                        $status_cron = 'check';
-//                        $appSamsung->bot_time = time();
-//                        $appSamsung->save();
-//                        return  response()->json(['error'=>'Chưa có AppID', 'project'=>$appSamsung,'status'=>$status_cron]);
-//                    }
+                    }else{
+                        $appSamsung->status_app = $status_app;
+                        $status_cron = 'check';
+                        $appSamsung->bot_time = time();
+                        $appSamsung->save();
+                        return  response()->json(['error'=>'Chưa có AppID', 'project'=>$appSamsung,'status'=>$status_cron]);
+                    }
 
 
-                }catch (\Exception $exception) {
-                    Log::error('Message:' . $exception->getMessage(). '--- appsVivo: '.$appSamsung->id.':--' . $exception->getLine());
-                }
+//                }catch (\Exception $exception) {
+//                    Log::error('Message:' . $exception->getMessage(). '--- appsAmazon: '.$appAmazon->id.':--' . $exception->getLine());
+//                }
                 $appSamsung->bot_time = time();
                 $appSamsung->save();
                 $string .= $status_cron;
@@ -1301,9 +1314,196 @@ class CronProjectController extends Controller
         }
     }
 
+    function get_token_amazon($appAmazon,$scope){
+        $dev = $appAmazon->dev;
+//        if($dev->api_expires_in_token < time()){
+            $client_id  = $dev->api_client_id;
+            $client_secret = $dev->api_client_secret;
+            $Headers = [
+                'Content-Type'=>'application/json',
+            ];
+            $dataArr = [
+                'grant_type'=> 'client_credentials',
+                'client_id'=> $client_id,
+                'client_secret'=> $client_secret,
+                'scope'=> $scope,
+
+            ];
+            $endpoint = "https://api.amazon.com/auth/o2/token";
+            try {
+                $response = Http::withHeaders($Headers)->post($endpoint,$dataArr);
+
+                if ($response->successful()){
+                    $result = $response->json();
+                    $dev->api_token = $result['access_token'];
+                    $dev->api_expires_in_token = time() + $result['expires_in'];
+                    $dev->save();
+                }
+            }catch (\Exception $exception) {
+                Log::error('Message:' . $exception->getMessage() . '--- Token: ' . $exception->getLine());
+            }
+//        }
+        return $appAmazon;
+    }
+
+    function getActiveEdit_amazon($appAmazon){
+        $dev = $appAmazon->dev;
+        $client_id  = $dev->api_client_id;
+        $client_secret = $dev->api_client_secret;
+        $token = $dev->api_token;
+        $appID = $appAmazon->appID;
+        $appID = 'amzn1.devportal.mobileapp.dddc43e94c21498fb8eb1410cc1dbec6';
+//        dd(123);
+
+
+        $Headers = [
+            'Content-Type'=>'application/json',
+            'Authorization'=>'Bearer  '.$token,
+        ];
+        $dataArr = [
+            'grant_type'=> 'client_credentials',
+            'client_id'=> $client_id,
+            'client_secret'=> $client_secret,
+            'scope'=> 'appstore::apps:readwrite',
+        ];
+        $endpoint = "https://developer.amazon.com/api/appstore/v1/applications/$appID/edits";
+
+        try {
+            $response = Http::withHeaders($Headers)->get($endpoint,$dataArr);
+            if ($response->successful()){
+                $result = $response->json();
+                dd($result,11111111);
+                $dev->api_token = $result['access_token'];
+                $dev->api_expires_in_token = time() + $result['expires_in'];
+                $dev->save();
+            }
+        }catch (\Exception $exception) {
+            Log::error('Message:' . $exception->getMessage() . '--- Token: ' . $exception->getLine());
+        }
+        return $appAmazon;
+    }
+
+    function createEdit_amazon($appAmazon){
+        $result = false;
+        $dev = $appAmazon->dev;
+        $client_id  = $dev->api_client_id;
+        $client_secret = $dev->api_client_secret;
+        $token = $dev->api_token;
+        $appID = $appAmazon->appID;
+//        $appID = 'amzn1.devportal.mobileapp.e17be2a9358b4339821a6555b2ed22fd';
+        $appID = 'amzn1.devportal.mobileapp.dddc43e94c21498fb8eb1410cc1dbec6';
+
+//        dd($appID);
+
+
+
+        $Headers = [
+            'Content-Type'=>'application/json',
+            'Authorization'=>'Bearer  '.$token,
+        ];
+        $dataArr = [
+            'grant_type'=> 'client_credentials',
+            'client_id'=> $client_id,
+            'client_secret'=> $client_secret,
+            'scope'=> 'appstore::apps:readwrite',
+        ];
+        $endpoint = "https://developer.amazon.com/api/appstore/v1/applications/$appID/edits";
+
+        try {
+            $response = Http::withHeaders($Headers)->post($endpoint,$dataArr);
+            dd($response,$response->json(),111);
+
+            if ($response->successful()){
+                $result = $response->json();
+            }
+        }catch (\Exception $exception) {
+            Log::error('Message:' . $exception->getMessage() . '--- Token: ' . $exception->getLine());
+        }
+        return $result;
+    }
+
+    function getPreviousEdit_amazon($appAmazon){
+        $result = false;
+        $dev = $appAmazon->dev;
+        $client_id  = $dev->api_client_id;
+        $client_secret = $dev->api_client_secret;
+        $token = $dev->api_token;
+        $appID = $appAmazon->appID;
+//        $appID = 'amzn1.devportal.mobileapp.e17be2a9358b4339821a6555b2ed22fd';
+        $appID = 'amzn1.devportal.mobileapp.dddc43e94c21498fb8eb1410cc1dbec6';
 
 
 
 
+
+        $Headers = [
+            'Content-Type'=>'application/json',
+            'Authorization'=>'Bearer  '.$token,
+        ];
+        $dataArr = [
+            'grant_type'=> 'client_credentials',
+            'client_id'=> $client_id,
+            'client_secret'=> $client_secret,
+            'scope'=> 'appstore::apps:readwrite',
+        ];
+        $endpoint = "https://developer.amazon.com/api/appstore/v1/applications/$appID/edits/previous";
+
+        try {
+            $response = Http::withHeaders($Headers)->get($endpoint,$dataArr);
+            dd($response,$response->json(),'getPreviousEdit_amazon');
+
+            if ($response->successful()){
+                $result = $response->json();
+            }
+        }catch (\Exception $exception) {
+            Log::error('Message:' . $exception->getMessage() . '--- Token: ' . $exception->getLine());
+        }
+        return $result;
+    }
+
+    function report_amazon($appAmazon){
+        dd(12);
+        $result = false;
+        $dev = $appAmazon->dev;
+        $token = $dev->api_token;
+
+        if(isset($_GET['submonth'])){
+            $month  =  Carbon::now()->subMonth($_GET['submonth'])->format('m');
+            $year  =  Carbon::now()->subMonth($_GET['submonth'])->format('Y');
+
+        }else{
+            $month  =  Carbon::now()->format('m');
+            $year    =  Carbon::now()->format('Y');
+
+        }
+        $endpoint = "https://developer.amazon.com/api/appstore/download/report/sales/$year/$month";
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, $endpoint);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+        $headers = array();
+        $headers[] = 'Authorization: Bearer '.$token;
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+//        try {
+            $result = curl_exec($ch);
+
+//        $file_handle = fopen($result, 'r');
+        $zip = new ZipArchive;
+        $zip->open($result);
+        dd($zip,12322);
+
+        echo $zip->getFromName('filename.txt');
+        $zip->close();
+
+
+            dd($file_handle,111111);
+
+//        }catch (\Exception $exception) {
+//            Log::error('Message:' . $exception->getMessage() . '--- report_amazon: ' . $exception->getLine());
+//        }
+        curl_close($ch);
+        return $result;
+    }
 
 }
