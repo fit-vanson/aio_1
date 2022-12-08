@@ -525,7 +525,7 @@ class ApiController extends Controller
                         }
                     }
                 }catch (\Exception $exception) {
-                    Log::debug('Message -  getReview: ' . $exception->getMessage() . '---' . $exception->getLine());
+                    Log::debug('Message -  getReview: '.$dev->dev_name.'---' . $exception->getMessage() . '---' . $exception->getLine());
                 }
             }
         }
