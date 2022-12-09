@@ -53,43 +53,53 @@
         </div>
     </div>
     <?php }else{ ?>
-{{--    <div class="row">--}}
-{{--        <div class="col-xl-3 col-md-6">--}}
-{{--            <div class="card mini-stat bg-primary text-white">--}}
-{{--                <div class="card-body">--}}
-{{--                    <div class="mb-4">--}}
-{{--                        <div class="float-left mini-stat-img mr-4">--}}
-{{--                            <img src="{{ URL::asset('/assets/images/services-icon/01.png') }}" alt="">--}}
-{{--                        </div>--}}
-{{--                        <h5 class="font-size-16 text-uppercase mt-0 text-white-50">Project</h5>--}}
-{{--                        <h4 class="font-weight-medium font-size-24">{{$project}}</h4>--}}
-{{--                        <?php--}}
-{{--                        if($projectLastMonth != 0){--}}
-{{--                            $diff = number_format(($projectInMonth - $projectLastMonth)/ $projectLastMonth *100,2);--}}
-{{--                            if($diff > 0 ){--}}
-{{--                        ?>--}}
-{{--                        <div class="mini-stat-label bg-success">--}}
-{{--                            <p class="mb-0">+ {{$diff}}%</p>--}}
-{{--                        </div>--}}
-{{--                        <?php }else{ ?>--}}
-{{--                        <div class="mini-stat-label bg-danger">--}}
-{{--                            <p class="mb-0">{{$diff}}%</p>--}}
-{{--                        </div>--}}
-{{--                        <?php }--}}
-{{--                            }--}}
-{{--                            ?>--}}
-{{--                    </div>--}}
-{{--                    <div class="pt-2">--}}
-{{--                        <div class="float-right">--}}
-{{--                            <p class="text-white-50">{{$projectInMonth}}</i></p>--}}
-{{--                            <p class="text-white-50">{{$projectLastMonth}}</i></p>--}}
-{{--                        </div>--}}
-{{--                        <p class="text-white-50 mb-0 mt-1">In month</p>--}}
-{{--                        <p class="text-white-50 mb-0 mt-1">Last month</p>--}}
-{{--                    </div>--}}
-{{--                </div>--}}
-{{--            </div>--}}
-{{--        </div>--}}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mini-stat bg-primary text-white">
+                <div class="card-body">
+                    <div class="mb-4">
+                        <div class="float-left mini-stat-img mr-4">
+                            <img src="{{ URL::asset('/assets/images/services-icon/01.png') }}" alt="">
+                        </div>
+                        <h5 class="font-size-16 text-uppercase mt-0 text-white-50">{{$sysinfoArr['OsType']}}</h5>
+                        <h4 class="font-weight-medium font-size-24">{{$sysinfoArr['OsRelease']}}</h4>
+
+                    </div>
+                    <div class="pt-2">
+                        <div class="float-right">
+                            <p class="text-white-50">{{$sysinfoArr['CpuModel']}}</i></p>
+                            <p class="text-white-50">{{$sysinfoArr['CpuCores']}}</i></p>
+                        </div>
+                        <p class="text-white-50 mb-0 mt-1">CpuModel</p>
+                        <p class="text-white-50 mb-0 mt-1">CpuCores</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-6">
+            <div class="card mini-stat bg-primary text-white">
+                <div class="card-body">
+                    <div class="mb-4">
+                        <div class="float-left mini-stat-img mr-4">
+                            <img src="{{ URL::asset('/assets/images/services-icon/01.png') }}" alt="">
+                        </div>
+                        <h5 class="font-size-16 text-uppercase mt-0 text-white-50">PHP version: {{$sysinfoArr['PhpVersion']}}</h5>
+                        <h4 class="font-weight-medium font-size-24">RAM : {{$sysinfoArr['TotalMem']}}</h4>
+
+                    </div>
+                    <div class="pt-2">
+                        <div class="float-right">
+                            <p class="text-white-50">{{$sysinfoArr['DiskTotal']}}</i></p>
+                            <p class="text-white-50">{{$sysinfoArr['DiskUsage']}} / {{$sysinfoArr['DiskFree']}} </i></p>
+                        </div>
+                        <p class="text-white-50 mb-0 mt-1">DiskTotal</p>
+                        <p class="text-white-50 mb-0 mt-1">DiskUsage / DiskFree </p>
+                    </div>
+                </div>
+            </div>
+        </div>
 {{--        <div class="col-xl-3 col-md-6">--}}
 {{--            <div class="card mini-stat text-white" style="background: #7baba3 !important;">--}}
 {{--                <div class="card-body">--}}
@@ -237,7 +247,7 @@
 {{--                </div>--}}
 {{--            </div>--}}
 {{--        </div>--}}
-{{--    </div>--}}
+    </div>
     <?php } ?>
 
 @endsection

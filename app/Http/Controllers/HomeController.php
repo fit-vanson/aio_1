@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\LoginRequest;
+use Typomedia\Sysinfo\SysinfoFactory;
 
 
 class HomeController extends Controller
@@ -21,6 +22,7 @@ class HomeController extends Controller
         return view('home');
     }
     public function getHome(){
+
 
         $googleAuthenticator = new \PHPGangsta_GoogleAuthenticator();
         // Tạo secret code
@@ -47,6 +49,20 @@ class HomeController extends Controller
             )
             ->count();
 
+
+        $sysinfo = SysinfoFactory::create();
+        $sysinfoArr['OsType'] = $sysinfo->getOsType();
+        $sysinfoArr['OsRelease'] = $sysinfo->getOsRelease();
+        $sysinfoArr['OsKernelVersion'] = $sysinfo->getOsKernelVersion();
+        $sysinfoArr['Architecture'] = $sysinfo->getArchitecture();
+        $sysinfoArr['Hostname'] = $sysinfo->getHostname();
+        $sysinfoArr['CpuModel'] = $sysinfo->getCpuModel();
+        $sysinfoArr['CpuCores'] = $sysinfo->getCpuCores();
+        $sysinfoArr['PhpVersion'] = $sysinfo->getPhpVersion();
+        $sysinfoArr['TotalMem'] = $this->formatBytes($sysinfo->getTotalMem());
+        $sysinfoArr['DiskTotal'] = $this->formatBytes($sysinfo->getDiskTotal());
+        $sysinfoArr['DiskUsage'] = $this->formatBytes($sysinfo->getDiskUsage());
+        $sysinfoArr['DiskFree'] = $this->formatBytes($sysinfo->getDiskFree());
 //        $data = ProjectModel::select(
 //            'Chplay_status','Amazon_status','Samsung_status','Xiaomi_status','Oppo_status','Vivo_status','Huawei_status',
 //            'Chplay_package','Amazon_package','Samsung_package','Xiaomi_package','Oppo_package','Vivo_package','Huawei_package'
@@ -66,7 +82,8 @@ class HomeController extends Controller
             "qrCodeUrl",
             "project",
             "projectLastMonth",
-            "projectInMonth"
+            "projectInMonth",
+            "sysinfoArr"
 //            "Chplay_status",
 //            "Amazon_status",
 //            "Samsung_status",
@@ -223,5 +240,15 @@ class HomeController extends Controller
 //        ));
 ////        return array_count_values(array_column($data_arr, 'status'));
 //    }
+
+    function formatBytes($bytes) {
+        if ($bytes > 0) {
+            $i = floor(log($bytes) / log(1024));
+            $sizes = array('B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
+            return sprintf('%.02F', round($bytes / pow(1024, $i),1)) * 1 . ' ' . @$sizes[$i];
+        } else {
+            return 0;
+        }
+    }
 
 }
