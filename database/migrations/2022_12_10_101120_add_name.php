@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddNameOri extends Migration
+class AddName extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddNameOri extends Migration
      */
     public function up()
     {
-        Schema::table('exiftools', function (Blueprint $table) {
-            $table->string('name_ori')->nullable();
+        Schema::table('ftp_accounts', function (Blueprint $table) {
+            $table->string('ftp_name')->after('id');
         });
     }
 
@@ -25,7 +25,7 @@ class AddNameOri extends Migration
      */
     public function down()
     {
-        Schema::table('exiftools', function (Blueprint $table) {
+        Schema::table('ftp_accounts', function (Blueprint $table) {
             //
         });
     }

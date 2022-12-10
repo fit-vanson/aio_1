@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateExiftoolsTable extends Migration
+class CreateFtpAccountsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateExiftoolsTable extends Migration
      */
     public function up()
     {
-        Schema::create('exiftools', function (Blueprint $table) {
-
+        Schema::create('ftp_accounts', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->integer('user_id')->index();
+            $table->string('ftp_server')->index();
+            $table->string('ftp_account');
+            $table->string('ftp_password');
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ class CreateExiftoolsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('exiftools');
+        Schema::dropIfExists('ftp_accounts');
     }
 }

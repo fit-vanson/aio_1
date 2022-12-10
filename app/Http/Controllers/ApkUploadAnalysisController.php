@@ -56,14 +56,16 @@ class ApkUploadAnalysisController extends Controller
             ->skip($start)
             ->take($rowperpage)
             ->get();
+
         $data_arr = array();
         foreach ($records as $record) {
-            $logo =  '<img width="60px" height="60px" src="'.url('/storage/apkupload/'.$record->filename.'/lg.png').'">';
+            $logo =  '<img width="60px" height="60px" src="data:image/jpeg;base64,'.$record->logo_base64.'">';
+
             $data_arr[] = array(
                 "logo" => $logo,
                 "name" => $record->name,
                 "filename" => $record->filename,
-
+                "manifest_base64" => $record->manifest_base64 ? '<span style="font-size: 100%" id="show_manifest_base64" data-id="'.$record->id.'" class="badge badge-success"><i class="ion ion-md-checkmark"></i></span>': '<span style="font-size: 100%" class="badge badge-danger"><i class="ion ion-md-close"></span>',
             );
         }
         $response = array(
@@ -94,5 +96,11 @@ class ApkUploadAnalysisController extends Controller
             $data->save();
         }
         return response()->json(['success'=>'Thành công']);
+    }
+
+    public function show_manifest_base64($id){
+        $manifest = ApkUploadAnalysis::find($id);
+        $manifest_base64 = base64_decode($manifest->manifest_base64);
+        return response()->json($manifest_base64);
     }
 }

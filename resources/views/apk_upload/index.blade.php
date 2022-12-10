@@ -22,7 +22,7 @@
 @endsection
 
 @section('content')
-{{--    @include('modals.apk_upload')--}}
+    @include('modals.apk_upload_analysis')
 
     <div class="row">
         <div class="col-12">
@@ -52,8 +52,9 @@
                                 <thead>
                                 <tr>
                                     <th style="width: 5%">Logo</th>
-                                    <th style="width: 45%">File APK</th>
-                                    <th style="width: 50%">File name </th>
+                                    <th style="width: 20%">File APK</th>
+                                    <th style="width: 20%">File name </th>
+                                    <th style="width: 10%">Manifest </th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -111,7 +112,8 @@
             columns: [
                 {data: 'logo', name: 'logo',orderable: false},
                 {data: 'name', name: 'name'},
-                {data: 'filename', name: 'filename'}
+                {data: 'filename', name: 'filename'},
+                {data: 'manifest_base64', name: 'manifest_base64'}
             ],
             order: [ 1, 'desc' ]
         });
@@ -123,6 +125,22 @@
             $('#designForm').trigger("reset");
             $('#modelHeading').html("Thêm mới");
             $('#ajaxModel').modal('show');
+        });
+
+        $(document).on('click','#show_manifest_base64', function (data){
+            var _id = $(this).data('id');
+            $('#apk_upload_analysisModel').modal('show');
+            $.ajax({
+                data: $('#daForm').serialize(),
+                url: "{{ asset("apk_upload_analysis/show_manifest_base64") }}/" + _id,
+                type: "get",
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data);
+                    $('#manifest_base64').text(data);
+                }
+            });
+
         });
 
         var myDropzoneOptions = {

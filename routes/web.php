@@ -26,6 +26,8 @@ use App\Http\Controllers\DevSamsungController;
 use App\Http\Controllers\DevVivoController;
 use App\Http\Controllers\DevXiaomiController;
 use App\Http\Controllers\ExiftoolController;
+use App\Http\Controllers\FtpAcountController;
+use App\Http\Controllers\FtpDriverController;
 use App\Http\Controllers\Ga_devController;
 use App\Http\Controllers\GaController;
 use App\Http\Controllers\GoogleReviewController;
@@ -80,6 +82,7 @@ Route::get('/job',function (){
 });
 
 Route::get('/phpinfo',function (){
+
     echo phpinfo();
 });
 
@@ -670,6 +673,7 @@ Route::group(['prefix'=>'apk_upload_analysis'], function (){
     Route::get('/',[ApkUploadAnalysisController::class,'index'])->name('apk_upload_analysis.index');
     Route::post('getIndex',[ApkUploadAnalysisController::class,'getIndex'])->name('apk_upload_analysis.getIndex');
     Route::post('/create',[ApkUploadAnalysisController::class,'create'])->name('apk_upload_analysis.create');
+    Route::get('/show_manifest_base64/{id}',[ApkUploadAnalysisController::class,'show_manifest_base64'])->name('apk_upload_analysis.show_manifest_base64');
 });
 
 Route::group(['prefix'=>'apk_upload_convert'], function (){
@@ -758,6 +762,28 @@ Route::group(['prefix'=>'review','middleware'=>['CheckLogout','2fa']], function 
     Route::get('/get_postReview',[ApiController::class,'get_postReview'])->name('review.get_postReview')->middleware('can:project-edit');
     Route::post('/update',[GoogleReviewController::class,'update'])->name('review.update')->middleware('can:project-update');
 });
+
+Route::group(['prefix'=>'ftp-driver','middleware'=>['CheckLogout','2fa']], function (){
+    Route::get('/',[FtpDriverController::class,'index'])->name('ftp_driver.index');
+    Route::post('/getIndex', [FtpDriverController::class, "getIndex"])->name('ftp_driver.getIndex');
+    Route::post('/create',[FtpDriverController::class,'create'])->name('ftp_driver.create');
+    Route::get('/edit/{id}',[FtpDriverController::class,'edit'])->name('ftp_driver.edit');
+    Route::get('/get_postReview',[FtpDriverController::class,'get_postReview'])->name('ftp_driver.get_postReview');
+    Route::post('/update',[FtpDriverController::class,'update'])->name('ftp_driver.update');
+});
+
+Route::group(['prefix'=>'ftp-account','middleware'=>['CheckLogout','2fa']], function (){
+    Route::get('/',[FtpAcountController::class,'index'])->name('ftp_account.index');
+    Route::post('/getIndex', [FtpAcountController::class, "getIndex"])->name('ftp_account.getIndex');
+    Route::post('/check',[FtpAcountController::class,'checkConnect'])->name('ftp_account.check');
+    Route::post('/create',[FtpAcountController::class,'create'])->name('ftp_account.create');
+    Route::get('/edit/{id}',[FtpAcountController::class,'edit'])->name('ftp_account.edit');
+    Route::post('/update',[FtpAcountController::class,'update'])->name('ftp_account.update');
+    Route::get('/delete/{id}',[FtpAcountController::class,'delete'])->name('ftp_account.delete');
+    Route::get('/show/{id}',[FtpAcountController::class,'show'])->name('ftp_account.show');
+    Route::get('/download',[FtpAcountController::class,'download'])->name('ftp_account.download');
+});
+
 
 
 
