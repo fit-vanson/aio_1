@@ -240,6 +240,9 @@
                                     <li>
                                         <a href="{{route('exiftool.index')}}" class="waves-effect"> <span> Exif Tools <span class="float-right menu-arrow"></span> </span> </a>
                                     </li>
+                                    <li>
+                                        <a href="{{route('ftp_account.index')}}" class="waves-effect"> <span> FTP Account <span class="float-right menu-arrow"></span> </span> </a>
+                                    </li>
 
                                 </ul>
                             </li>
