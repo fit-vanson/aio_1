@@ -9,7 +9,7 @@
             <div class="modal-body">
                     <div class="row">
                         <div class="form-group col-lg-12 ">
-                            <p id="manifest_base64"></p>
+                            <pre id="manifest_base64"></pre>
                         </div>
 
                     </div>
