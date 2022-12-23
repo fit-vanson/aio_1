@@ -34,6 +34,7 @@ use App\Http\Controllers\GoogleReviewController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\HubController;
 use App\Http\Controllers\ImeiController;
+use App\Http\Controllers\MACGeneratorController;
 use App\Http\Controllers\ipInfoController;
 use App\Http\Controllers\KeystoreController;
 use App\Http\Controllers\KhosimController;
@@ -616,6 +617,11 @@ Route::group(["middleware" => ["auth"], "prefix" => "two_face"], function() {
 Route::group([ "prefix" => "infoIP"], function() {
     Route::get('/',[ipInfoController::class,'index'])->name('inInfo.index');
     Route::post('/getIP',[ipInfoController::class,'getIndex'])->name('inInfo.getIndex');
+
+});
+
+Route::group(['prefix'=>'mac'], function (){
+    Route::get('/',[MACGeneratorController::class,'index'])->name('mac.index');
 
 });
 
