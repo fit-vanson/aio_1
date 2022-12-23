@@ -206,6 +206,7 @@
                                         <li><a href="{{route('imei.index')}}">Gen Imei</a></li>
                                         <li><a href="{{route('iccid.index')}}">Gen ICCID</a></li>
                                         <li><a href="{{route('mac.index')}}">Gen MAC</a></li>
+                                        <li><a href="{{route('inInfo.index')}}">IP</a></li>
                                 </ul>
                             </li>
                             <li>
