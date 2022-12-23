@@ -239,6 +239,8 @@ Route::get('/fakeimage',[ProjectController::class,'getInfofake'])->name('project
 ////    Route::post('/select-vivo_buildinfo_keystore',[ProjectController::class,'select_vivo_buildinfo_keystore']);
 ////    Route::post('/select-huawei_buildinfo_keystore',[ProjectController::class,'select_huawei_buildinfo_keystore']);
 //
+
+
 //
 //
 //    Route::get('/showlog/{id}',[ProjectController::class,'showlog'])->name('project.showlog')->middleware('can:project-index');
