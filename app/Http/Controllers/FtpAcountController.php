@@ -40,6 +40,7 @@ class FtpAcountController extends Controller
         $totalRecords = FtpAccount::select('count(*) as allcount') ->count();
         $totalRecordswithFilter = FtpAccount::select('count(*) as allcount')
             ->Where('ftp_server', 'like', '%' . $searchValue . '%')
+            ->orwhere('ftp_server_internal', 'like', '%' . $searchValue . '%')
             ->orwhere('ftp_name', 'like', '%' . $searchValue . '%')
             ->orwhere('ftp_account', 'like', '%' . $searchValue . '%')
 
@@ -47,6 +48,7 @@ class FtpAcountController extends Controller
         // Get records, also we have included search filter as well
         $records = FtpAccount::orderBy($columnName, $columnSortOrder)
             ->Where('ftp_server', 'like', '%' . $searchValue . '%')
+            ->orwhere('ftp_server_internal', 'like', '%' . $searchValue . '%')
             ->orwhere('ftp_name', 'like', '%' . $searchValue . '%')
             ->orwhere('ftp_account', 'like', '%' . $searchValue . '%')
             ->skip($start)
@@ -61,10 +63,16 @@ class FtpAcountController extends Controller
             $btn = $btn.' <a taget="_blank" href="'.route('ftp_account.show',['id'=>$record->id]).'"  class="btn btn-info btn-sm viewFtpAccount"><i class="ti-eye"></i></a>';
             $data_arr[] = array(
 //                "name" => '<a id="download" href="'.route('exiftool.downloadFile',"folder=$record->name").'" target="_blank">'.$record->name.'</a>',
-                "ftp_server" => $record->ftp_server.':'.$record->port ,
+                "ftp_server" => $record->ftp_server,
+                "ftp_port" => $record->port ,
+                "ftp_server_internal" => $record->ftp_server_internal ,
+                "ftp_port_internal" => $record->ftp_port_internal ,
+                "id" => $record->id,
                 "ftp_name" => $record->ftp_name,
                 "ftp_account" => $record->ftp_account,
                 "ftp_password" => $record->ftp_password,
+                "status" => $record->status,
+                "status_internal" => $record->status_internal,
                 "action" => $btn,
 
             );
@@ -79,7 +87,7 @@ class FtpAcountController extends Controller
         echo json_encode($response);
     }
 
-    public function create(Request  $request)
+    public function create(Request  $request,$status =0,$status_internal=0)
     {
         $data = new FtpAccount();
         $data->ftp_name = $request->ftp_name;
@@ -88,6 +96,10 @@ class FtpAcountController extends Controller
         $data->ftp_account = $request->ftp_account;
         $data->ftp_password = $request->ftp_password;
         $data->ftp_note = $request->ftp_note;
+        $data->ftp_server_internal = $request->ftp_server_internal;
+        $data->ftp_port_internal = $request->ftp_port_internal;
+        $data->status = $status;
+        $data->status_internal = $status_internal;
         $data->save();
         return response()->json([
             'success'=>'Thêm mới thành công',
@@ -95,24 +107,43 @@ class FtpAcountController extends Controller
     }
 
     public function checkConnect(Request $request){
-        $host    = $request->ftp_server;
+
         $username = $request->ftp_account;
         $password = $request->ftp_password;
+
+        $host    = $request->ftp_server;
         $port = $request->ftp_port;
+
+        $host_internal    = $request->ftp_server_internal;
+        $port_internal = $request->ftp_port_internal;
+
         try {
             $ftp = new \FtpClient\FtpClient();
             $ftp->connect($host, false, $port);
             $ftp->login($username, $password);
+            $status = 1;
 
-            if($request->ftp_id){
-                $this->update($request);
-            }else{
-                $this->create($request);
-            }
-            return response()->json(['success'=>'Kết nối thành công']);
+
         }catch (\Exception $exception) {
-            return response()->json(['error'=>'Kết nối thất bại. Vui lòng kiểm tra lại']);
+            $status = 0;
         }
+
+        try {
+            $ftp = new \FtpClient\FtpClient();
+            $ftp->connect($host_internal, false, $port_internal);
+            $ftp->login($username, $password);
+            $status_internal = 1;
+
+        }catch (\Exception $exception) {
+            $status_internal = 0;
+        }
+
+        if($request->ftp_id){
+            $this->update($request,$status,$status_internal);
+        }else{
+            $this->create($request,$status,$status_internal);
+        }
+        return response()->json(['success'=>'Thành công']);
     }
 
     public function edit($id){
@@ -121,68 +152,68 @@ class FtpAcountController extends Controller
     }
 
     public function show($id){
-        $local_file = 'local.zip';
-        $server_file = '151.zip';
         $account = FtpAccount::find($id);
-
-
-        $ftp_server = $account->ftp_server;
-        $ftp_conn = ftp_connect($ftp_server,$account->port) or die("Could not connect to $ftp_server");
-        $login = ftp_login($ftp_conn, $account->ftp_account, $account->ftp_password);
-        $target_dir = ".";
-        $files = ftp_nlist($ftp_conn, $target_dir);
-
-        $files = ftp_nlist($ftp_conn, $target_dir);
-        $ftp_account = base64_encode($account->ftp_account);
-        $ftp_password = base64_encode($account->ftp_password);
-//        dd($account->ftp_password,$ftp_password);
-        $a = '';
-        foreach($files as $file) {
-            if(!is_dir($file)){
-                $a .= "<a href=\"../download?server=$account->ftp_server&port=$account->port&account=$ftp_account&password=$ftp_password&file=".urlencode($file)."\">".htmlspecialchars($file)."</a>";
-                $a .="<br>";
-
-            }else{
-                dd(1);
-
-            }
-
-
-        }
-        echo ($a);
-        ftp_close($ftp_conn);
+        $server = \request()->server_ftp;
+        $port = \request()->port;
+        $acc = $account->ftp_account;
+        $pass = $account->ftp_password;
+        $dir = $_GET['folder']?? '/' ;
+        $this->showFoder($server,$port,$acc,$pass, $dir);
         return ;
-
-
-//        '<a href="ftp://download.example.com/file.pdf">Download</a>'
-//        'ftp://username:password@download.example.com/file.pdf'
-
-        $a = '<a href="ftp://'.$account->ftp_account.':'.$account->ftp_password.'@'.$account->ftp_server.':'.$account->port.'/151.zip">Download</a>';
-        echo $a;
-        dd($a);
-
-
-        $conn_id = ftp_connect($account->ftp_server,$account->ftp_server);
-        $login_result = ftp_login($conn_id, $account->ftp_account, $account->ftp_password);
-        if (ftp_get($conn_id, $local_file, $server_file, FTP_BINARY)) {
-            echo "Successfully written to $local_file\n";
-        } else {
-            echo "There was a problem\n";
-        }
-        ftp_close($conn_id);
-        dd($login_result);
-
-
-        try {
-            $ftp = new \FtpClient\FtpClient();
-            $ftp->connect($account->ftp_server, false, $account->port);
-            $ftp->login($account->ftp_account, $account->ftp_password);
-            $list = $ftp->nlist();
-            dd($list);
-        }catch (\Exception $exception) {
-            return response()->json(['error'=>'Kết nối thất bại. Vui lòng kiểm tra lại']);
-        }
     }
+
+    function showFoder($server,$port,$acc,$pass, $dir){
+        echo '<br>The system type is: '.($dir).'<br>';
+
+
+
+        $ftpConn = ftp_connect($server,$port) or die("Could not connect to");
+        ftp_login($ftpConn, $acc, $pass);
+        ftp_set_option($ftpConn, FTP_USEPASVADDRESS, false);
+        ftp_pasv($ftpConn, true);
+
+        $lists = ftp_nlist($ftpConn, $dir);
+        foreach($lists as $list) {
+            $is_dir = $this->ftp_directory_exists($ftpConn,  $list);
+            if($is_dir){
+                echo "<a href=\"?server_ftp=$server&port=$port&folder=".urlencode($list)."\">".htmlspecialchars($list)."</a>";
+                echo "<br>";
+            }else{
+                echo "<a href=\"?server_ftp=$server&port=$port&action=download&file=".urlencode($list)."\">".htmlspecialchars($list)."</a>";
+                echo "<br>";
+            }
+        }
+        $action = $_GET['action'] ?? null;
+        switch ($action){
+            case 'download':
+                $file_path = $_GET["file"];
+                $file_url = "ftp://$acc:$pass@$server/$file_path";
+                header('Content-Type: application/octet-stream');
+                header("Content-Transfer-Encoding: Binary");
+                header("Content-disposition: attachment; filename=\"" . basename($file_url) . "\"");
+                readfile($file_url);
+                break;
+        }
+        ftp_close($ftpConn);
+        return true ;
+
+    }
+
+    function byteconvert($bytes) {
+
+        $symbol = array('B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
+        $exp = floor( log($bytes) / log(1024) );
+
+        return sprintf( '%.2f ' . $symbol[ $exp ], ($bytes / pow(1024, floor($exp))) );
+    }
+
+    function chmodnum($chmod) {
+        $trans = array('-' => '0', 'r' => '4', 'w' => '2', 'x' => '1');
+        $chmod = substr(strtr($chmod, $trans), 1);
+        $array = str_split($chmod, 3);
+        return array_sum(str_split($array[0])) . array_sum(str_split($array[1])) . array_sum(str_split($array[2]));
+    }
+
 
     public function download(){
         $conn_id = ftp_connect($_GET['server'],$_GET['port']);
@@ -203,7 +234,7 @@ class FtpAcountController extends Controller
         return;
     }
 
-    public function update(Request $request){
+    public function update(Request $request,$status =0,$status_internal=0){
         $data = FtpAccount::find($request->ftp_id);
         $data->ftp_name = $request->ftp_name;
         $data->ftp_server = $request->ftp_server;
@@ -211,6 +242,10 @@ class FtpAcountController extends Controller
         $data->ftp_account = $request->ftp_account;
         $data->ftp_password = $request->ftp_password;
         $data->ftp_note = $request->ftp_note;
+        $data->ftp_server_internal = $request->ftp_server_internal;
+        $data->ftp_port_internal = $request->ftp_port_internal;
+        $data->status = $status;
+        $data->status_internal = $status_internal;
         $data->save();
         return response()->json(['success'=>'Cập nhật thành công']);
     }
@@ -218,5 +253,22 @@ class FtpAcountController extends Controller
     {
         FtpAccount::find($id)->delete();
         return response()->json(['success'=>'Xóa thành công.']);
+    }
+
+    function ftp_directory_exists($ftp, $dir)
+    {
+        // Get the current working directory
+        $origin = ftp_pwd($ftp);
+
+        // Attempt to change directory, suppress errors
+        if (@ftp_chdir($ftp, $dir))
+        {
+            // If the directory exists, set back to origin
+            ftp_chdir($ftp, $origin);
+            return true;
+        }
+
+        // Directory does not exist
+        return false;
     }
 }

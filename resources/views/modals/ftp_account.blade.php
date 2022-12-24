@@ -15,13 +15,23 @@
                             <input type="text" class="form-control" id="ftp_name" name="ftp_name" required>
                         </div>
                         <div class="form-group col-lg-9 ">
-                            <label for="name"> IP </label>
+                            <label for="name"> IP External </label>
                             <input type="text" class="form-control" id="ftp_server" name="ftp_server" required>
                         </div>
                         <div class="form-group col-lg-3 ">
-                            <label for="name"> Port </label>
+                            <label for="name"> Port External </label>
                             <input type="number" class="form-control" id="ftp_port" name="ftp_port" value="21">
                         </div>
+
+                        <div class="form-group col-lg-9 ">
+                            <label for="name"> IP Internal </label>
+                            <input type="text" class="form-control" id="ftp_server_internal" name="ftp_server_internal" placeholder="10.0.0.x" required>
+                        </div>
+                        <div class="form-group col-lg-3 ">
+                            <label for="name"> Port Internal </label>
+                            <input type="number" class="form-control" id="ftp_port_internal" name="ftp_port_internal" value="xx">
+                        </div>
+
                         <div class="form-group col-lg-12">
                             <label for="name">Account</label>
                             <input type="text" class="form-control" id="ftp_account" name="ftp_account" required>

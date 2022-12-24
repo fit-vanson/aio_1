@@ -31,10 +31,11 @@
                                 <thead>
                                 <tr>
                                     <th style="width: 20%">Name</th>
-                                    <th style="width: 20%">Server</th>
-                                    <th style="width: 20%">Account</th>
-                                    <th style="width: 20%">Password </th>
-                                    <th style="width: 20%">Action </th>
+                                    <th style="width: 20%">Server External</th>
+                                    <th style="width: 20%">Server Internal</th>
+                                    <th style="width: 15%">Account</th>
+                                    <th style="width: 15%">Password </th>
+                                    <th style="width: 10%">Action </th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -84,10 +85,37 @@
             columns: [
                 {data: 'ftp_name', name: 'ftp_name'},
                 {data: 'ftp_server', name: 'ftp_server'},
+                {data: 'ftp_server_internal', name: 'ftp_server_internal'},
                 {data: 'ftp_account', name: 'ftp_account'},
                 {data: 'ftp_password', name: 'ftp_password'},
                 {data: 'action', name: 'action'},
 
+            ],
+            columnDefs: [
+                {
+                    targets:1 ,
+                    responsivePriority: 1,
+                    render: function (data,display,full) {
+                        if(full.status === 1){
+                            // return data;
+                            return '<a href="{{asset('ftp-account/show')}}/'+full.id+'?server_ftp='+full.ftp_server+'&port='+full.ftp_port+'"><span style="color: #00bb00" >'+full.ftp_server +':'+full.ftp_port+'</span></a>'
+
+                        }else {
+                            return '<span style="color: #e6183a" >'+full.ftp_server +':'+full.ftp_port+'</span>'
+                        }
+                    }
+                },
+                {
+                    targets:2 ,
+                    responsivePriority: 1,
+                    render: function (data,display,full) {
+                        if(full.status_internal === 1){
+                            return '<a href="{{asset('ftp-account/show')}}/'+full.id+'?server_ftp='+full.ftp_server_internal+'&port='+full.ftp_port_internal+'"><span style="color: #00bb00" >'+full.ftp_server_internal +':'+full.ftp_port_internal+'</span></a>'
+                        }else {
+                            return '<span style="color: #e6183a" >'+full.ftp_server_internal +':'+full.ftp_port_internal+'</span>'
+                        }
+                    }
+                },
             ],
             order: [ 1, 'desc' ]
         });
@@ -182,7 +210,6 @@
             });
 
         });
-
         $(document).on('click','.editFtpAccount', function (data){
             var _id = $(this).data('id');
 
@@ -200,6 +227,8 @@
                     $('#ftp_name').val(data.ftp_name);
                     $('#ftp_server').val(data.ftp_server);
                     $('#ftp_port').val(data.port);
+                    $('#ftp_server_internal').val(data.ftp_server_internal);
+                    $('#ftp_port_internal').val(data.ftp_port_internal);
                     $('#ftp_account').val(data.ftp_account);
                     $('#ftp_password').val(data.ftp_password);
                     $('#ftp_note').val(data.ftp_note);
