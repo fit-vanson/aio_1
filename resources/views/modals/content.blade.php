@@ -40,16 +40,16 @@
                                             <div data-repeater-item="" class="row">
 
                                                 <div class="form-group col-lg-12">
-                                                    <label for="name">Title App
-                                                        <span class="font-13 text-muted" id="count_title_app_en"></span>
+                                                    <label for="name">Title App -
+                                                        <span class="font-13 text-muted" id="count_title_app_{{$lag->lang_code}}"></span>
                                                     </label>
-                                                    <input type="text" id="content_title_{{$lag->id}}" name="project_content[{{$lag->id}}][title]" class="form-control">
+                                                    <input type="text" id="content_title_{{$lag->id}}" name="project_content[{{$lag->id}}][title]" maxlength="30" class="form-control">
                                                 </div>
                                                 <div class="form-group col-lg-12">
-                                                    <label for="name">Summary
-                                                        <span class="font-13 text-muted" id="count_summary_en"></span>
+                                                    <label for="name">Summary -
+                                                         <span class="font-13 text-muted" id="count_summary_{{$lag->lang_code}}"></span>
                                                     </label>
-                                                    <input type="text" id="content_summary_{{$lag->id}}" name="project_content[{{$lag->id}}][summary]" class="form-control">
+                                                    <input type="text" id="content_summary_{{$lag->id}}" name="project_content[{{$lag->id}}][summary]" maxlength="80" class="form-control">
                                                 </div>
                                                 <div class="form-group col-lg-12">
                                                     <label for="name">Keywords</label>
