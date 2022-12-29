@@ -190,7 +190,7 @@
                                                 '</tr>'.
                                                 '<tr>'.
                                                 '<th>Description</td>'.
-                                                '<td class="copyButton1111" id="copyButton1111">'.$value->pivot->description.'</td>'.
+                                                '<td  ><pre class="copyButton">'.$value->pivot->description.'</pre></td>'.
                                                 '</tr>'.
                                                 '</tbody>'.
                                             '</table>' .
