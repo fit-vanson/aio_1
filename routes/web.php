@@ -738,6 +738,7 @@ Route::group(['prefix'=>'content','middleware'=>['CheckLogout','2fa']], function
     Route::get('/edit/{id}',[ContentController::class,'edit'])->name('content.edit')->middleware('can:project-edit');
 
     Route::post('/update',[ContentController::class,'update'])->name('content.update')->middleware('can:project-update');
+    Route::get('/convert',[ContentController::class,'convert'])->name('content.convert')->middleware('can:project-update');
 
 });
 

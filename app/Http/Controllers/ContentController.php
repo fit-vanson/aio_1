@@ -74,10 +74,17 @@ class ContentController extends Controller
             foreach ($langs as $key=>$lang){
 
 
+//                $a = str_replace('<br />','\\n',$lang->pivot->description);
+                $a = preg_replace("/<br\W*?\/>/", "\n", $lang->pivot->description);;
+//                echo (strip_tags($a));
+
+
+//                dd(strip_tags($lang->pivot->description));
+
                 $html = '<span>'.
                     '<p><b>Title app: </b>'.$lang->pivot->title.'</p>'.
                     '<p><b>Summary: </b>'.$lang->pivot->summary.'</p>'.
-                    '<p><b>Description: </b>'.strip_tags($lang->pivot->description).'</p>'.
+                    '<p><b>Description: </b>'.strip_tags($a).'</p>'.
                     '</span>';
 
 
@@ -98,7 +105,7 @@ class ContentController extends Controller
                 'id' => $record->id,
                 'projectid' => $project_name,
                 'title' => $title,
-                'description' => $description,
+                'description' => strip_tags($a),
                 'summary' => $summary,
                 "action"=> $btn,
             );
@@ -133,5 +140,24 @@ class ContentController extends Controller
     {
         $data= Project::find($id);
         return response()->json($data->load('lang'));
+    }
+
+    public function convert(){
+        $des = ProjectHasLang::paginate(2000);
+
+        $arr=[];
+        foreach ($des as $item){
+            $a= preg_replace("/<br\W*?\/>/", "\n", $item->description);;
+            $arr[] =
+                [
+                    'id' =>$item->id,
+                    'description' => html_entity_decode(strip_tags($a)),
+                ];
+        }
+        $Instance = new ProjectHasLang();
+        $index = 'id';
+        batch()->update($Instance, $arr, $index);
+        $time = $_GET['time'] ?? 2;
+        echo '<META http-equiv="refresh" content="'.$time.';URL=' . $des->nextPageUrl() . '">';
     }
 }
