@@ -443,14 +443,28 @@
                     var langs = data.lang;
                     console.log(data)
                     $.each( langs, function( key, value ) {
+                        $('#count_title_app_'+value.lang_code).html(value.pivot.title.length);
+                        $('#count_summary_'+value.lang_code).html(value.pivot.summary.length);
                         $('#content_keywords_'+value.id).val(value.pivot.project_keywords);
                         $('#content_summary_'+value.id).val(value.pivot.summary);
                         $('#content_title_'+value.id).val(value.pivot.title);
                         $('#content_description_'+value.id).val(value.pivot.description);
 
+
+
+                        $('#content_title_'+value.id).on('change keyup', function () {
+
+                            $('#count_title_app_'+value.lang_code).html(this.value.length)
+                        });
+                        $('#content_summary_'+value.id).on('change keyup', function () {
+                            $('#count_summary_'+value.lang_code).html(this.value.length)
+                        });
+
                     })
                 })
             });
+
+
 
             $('#contentForm').on('submit', function (event) {
                 event.preventDefault();
@@ -478,57 +492,57 @@
                 });
             });
 
-            $('#designFormEdit').on('submit',function (event){
-                event.preventDefault();
-                var formData = new FormData($("#designFormEdit")[0]);
-                // var row_id = $('#saveBtnEditDesign').val();
-                $.ajax({
-                    data: formData,
-                    url: "{{ route('design.update') }}",
-                    type: "POST",
-                    dataType: 'json',
-                    processData: false,
-                    contentType: false,
-                    success: function (data) {
-                        if(data.success){
-                            // var status = data.data.status
-                            // let html
-                            //
-                            // switch(status) {
-                            //     case '0':
-                            //         html ='<span style="font-size: 100%" class="badge badge-secondary">Gửi chờ duyệt</span>' ;
-                            //         break;
-                            //     case '1':
-                            //         html = '<span style="font-size: 100%" class="badge badge-info">Đã chỉnh sửa, cần duyệt lại</span>';
-                            //         break;
-                            //     case '2':
-                            //         html = '<span style="font-size: 100%" class="badge badge-warning">Fail, cần chỉnh sửa</span>';
-                            //         break;
-                            //     case '3':
-                            //         html = '<span style="font-size: 100%" class="badge badge-danger">Fail, Project loại khỏi dự án</span>';
-                            //         break;
-                            //     case '4':
-                            //         html = '<span style="font-size: 100%" class="badge badge-success">Done, Kết thúc Project</span>';
-                            //         break;
-                            // }
-                            // var row = table.row().data()
-                            // // var row_data = row.data();
-                            // //
-                            // // // row_data[1] = html;
-                            // row.data().draw(false);
+            {{--$('#designFormEdit').on('submit',function (event){--}}
+            {{--    event.preventDefault();--}}
+            {{--    var formData = new FormData($("#designFormEdit")[0]);--}}
+            {{--    // var row_id = $('#saveBtnEditDesign').val();--}}
+            {{--    $.ajax({--}}
+            {{--        data: formData,--}}
+            {{--        url: "{{ route('design.update') }}",--}}
+            {{--        type: "POST",--}}
+            {{--        dataType: 'json',--}}
+            {{--        processData: false,--}}
+            {{--        contentType: false,--}}
+            {{--        success: function (data) {--}}
+            {{--            if(data.success){--}}
+            {{--                // var status = data.data.status--}}
+            {{--                // let html--}}
+            {{--                //--}}
+            {{--                // switch(status) {--}}
+            {{--                //     case '0':--}}
+            {{--                //         html ='<span style="font-size: 100%" class="badge badge-secondary">Gửi chờ duyệt</span>' ;--}}
+            {{--                //         break;--}}
+            {{--                //     case '1':--}}
+            {{--                //         html = '<span style="font-size: 100%" class="badge badge-info">Đã chỉnh sửa, cần duyệt lại</span>';--}}
+            {{--                //         break;--}}
+            {{--                //     case '2':--}}
+            {{--                //         html = '<span style="font-size: 100%" class="badge badge-warning">Fail, cần chỉnh sửa</span>';--}}
+            {{--                //         break;--}}
+            {{--                //     case '3':--}}
+            {{--                //         html = '<span style="font-size: 100%" class="badge badge-danger">Fail, Project loại khỏi dự án</span>';--}}
+            {{--                //         break;--}}
+            {{--                //     case '4':--}}
+            {{--                //         html = '<span style="font-size: 100%" class="badge badge-success">Done, Kết thúc Project</span>';--}}
+            {{--                //         break;--}}
+            {{--                // }--}}
+            {{--                // var row = table.row().data()--}}
+            {{--                // // var row_data = row.data();--}}
+            {{--                // //--}}
+            {{--                // // // row_data[1] = html;--}}
+            {{--                // row.data().draw(false);--}}
 
-                            $.notify(data.success, "success");
-                            $('#designFormEdit').trigger("reset");
-                            $('#ajaxModelEdit').modal('hide');
-                            table.draw();
+            {{--                $.notify(data.success, "success");--}}
+            {{--                $('#designFormEdit').trigger("reset");--}}
+            {{--                $('#ajaxModelEdit').modal('hide');--}}
+            {{--                table.draw();--}}
 
-                        }
-                    },
-                });
+            {{--            }--}}
+            {{--        },--}}
+            {{--    });--}}
 
 
 
-            });
+            {{--});--}}
             $(document).on('click','.deleteProjectLang', function (data){
                 var _id = $(this).data("id");
                 var remove = $(this).parent().parent();
