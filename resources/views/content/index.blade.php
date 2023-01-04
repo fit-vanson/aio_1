@@ -444,6 +444,7 @@
                     $('#contentForm').trigger("reset");
                     var langs = data.lang;
 
+
                     $.each( langs, function( key, value ) {
 
 
@@ -453,7 +454,7 @@
                             $('#content_description_'+value.id).val(value.pivot.description);
 
 
-                        $.each(JSON.parse(value.pivot.adss), function(i, item) {
+                        $.each(JSON.parse(atob(value.pivot.adss)), function(i, item) {
                             $.each(item, function(k, v) {
                                 $('#content_'+i+'_adss_'+value.id+'_'+k).val(v);
                                 $('#content_'+i+'_adss_'+value.id+'_'+k).on('change keyup', function () {
@@ -474,15 +475,21 @@
             });
 
 
+            const serialize_form = form => JSON.stringify(
+                Array.from(new FormData(form).entries())
+                    .reduce((m, [ key, value ]) => Object.assign(m, { [key]: value }), {})
+            );
 
             $('#contentForm').on('submit', function (event) {
                 event.preventDefault();
-                var formData = new FormData($("#contentForm")[0]);
+                const formData = new FormData($("#contentForm")[0]);
+                // var formData = ($("#contentForm").serializeArray());
+
                 $.ajax({
                     data: formData,
                     url: "{{ route('content.create') }}",
                     type: "POST",
-                    dataType: 'json',
+                    // dataType: 'json',
                     processData: false,
                     contentType: false,
                     cache: false,

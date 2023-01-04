@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use AjCastro\EagerLoadPivotRelations\EagerLoadPivotTrait;
@@ -50,9 +51,11 @@ class Project extends Model
 
     public function lang(){
         return $this->belongsToMany(Language::class,ProjectHasLang::class,'project_id','lang_id')
-            ->withPivot('title','description','summary','project_keywords','banner','preview','video','adss')
+            ->withPivot('title','description','summary','project_keywords','banner','preview','video','adss','adss_title','adss_summary')
             ->withTimestamps();
     }
+
+
 
     public function da(){
         return $this->belongsTo(Da::class,'ma_da');

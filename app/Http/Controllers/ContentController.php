@@ -129,11 +129,33 @@ class ContentController extends Controller
 //            return response()->json(['errors'=> 'Chọn Project']);
 //        }
 //        dd($request->all());
-
         $project = Project::find($request->pro_id);
-        $content = $request->project_content;
-        $project->lang()->sync($content,false);
+        $contents = $request->project_content;
+
+
+//        $inserData = [];
+////
+        foreach ($contents as $key=>$value){
+////            dd($value);
+//            var_dump($value['adss_title']);
+//            dd(base64_encode(json_encode($value['adss_title'])));
+//            dd(((($value['adss_title']))));
+//////            $inserData[$key] = json_encode($value);
+//////            $inserData[$key] =$value;
+
+            $inserData[$key] = $value;
+            $inserData[$key]['adss'] =base64_encode(json_encode($value['adss']));
+
+////
+////
+        }
+
+
+
+
         $project->save();
+        $project->lang()->sync($inserData,false);
+
         return response()->json(['success'=>'Thành công']);
     }
 
