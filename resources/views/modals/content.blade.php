@@ -60,6 +60,28 @@
                                                     <textarea class="form-control"  rows="10" id="content_description_{{$lag->id}}" name="project_content[{{$lag->id}}][description]"></textarea>
 {{--                                                    <textarea class="tinymce" id="content_description_{{$lag->id}}" name="content[{{$lag->id}}][description]"></textarea>--}}
                                                 </div>
+                                                <div class="form-group col-lg-12">
+                                                    <label class="h3">ADSSSSSSSSSSSSSSS</label>
+                                                </div>
+
+                                                <?php
+                                                    for($i=0;$i<=4;$i++){
+                                                ?>
+                                                <div class="form-group col-lg-4">
+                                                    <label for="name">Title App {{$i+1}}
+                                                        <span class="font-13 text-muted" id="count_title_adss_{{$lag->id}}_{{$i}}"></span>
+                                                    </label>
+                                                    <input type="text" id="content_title_adss_{{$lag->id}}_{{$i}}" name="project_content[{{$lag->id}}][adss][title][]" maxlength="30" class="form-control">
+                                                </div>
+                                                <div class="form-group col-lg-8">
+                                                    <label for="name">Summary {{$i+1}}
+                                                        <span class="font-13 text-muted" id="count_summary_adss_{{$lag->id}}_{{$i}}"></span>
+                                                    </label>
+                                                    <input type="text" id="content_summary_adss_{{$lag->id}}_{{$i}}" name="project_content[{{$lag->id}}][adss][summary][]" maxlength="80" class="form-control">
+                                                </div>
+                                                <?php
+                                                    }
+                                                ?>
                                             </div>
                                         </div>
                                     </div>
