@@ -454,14 +454,17 @@
                             $('#content_description_'+value.id).val(value.pivot.description);
 
 
-                        $.each(JSON.parse(atob(value.pivot.adss)), function(i, item) {
-                            $.each(item, function(k, v) {
-                                $('#content_'+i+'_adss_'+value.id+'_'+k).val(v);
-                                $('#content_'+i+'_adss_'+value.id+'_'+k).on('change keyup', function () {
-                                    $('#count_'+i+'_adss_'+value.id+'_'+k).html(this.value.length)
+                            if(value.pivot.adss){
+                                $.each(JSON.parse(atob(value.pivot.adss)), function(i, item) {
+                                    $.each(item, function(k, v) {
+                                        $('#content_'+i+'_adss_'+value.id+'_'+k).val(v);
+                                        $('#content_'+i+'_adss_'+value.id+'_'+k).on('change keyup', function () {
+                                            $('#count_'+i+'_adss_'+value.id+'_'+k).html(this.value.length)
+                                        });
+                                    })
                                 });
-                            })
-                        });
+                            }
+
 
                         $('#content_title_'+value.id).on('change keyup', function () {
                             $('#count_title_app_'+value.lang_code).html(this.value.length)
