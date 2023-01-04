@@ -439,17 +439,19 @@
 
             $('#project_id').on('select2:selecting', function(e) {
                 var _id = e.params.args.data.id;
+                $('#pro_id').val(_id);
                 $.get('{{asset('content/edit')}}/'+_id,function (data) {
                     $('#contentForm').trigger("reset");
                     var langs = data.lang;
 
                     $.each( langs, function( key, value ) {
-                        $('#count_title_app_'+value.lang_code).html(value.pivot.title.length);
-                        $('#count_summary_'+value.lang_code).html(value.pivot.summary.length);
-                        $('#content_keywords_'+value.id).val(value.pivot.project_keywords);
-                        $('#content_summary_'+value.id).val(value.pivot.summary);
-                        $('#content_title_'+value.id).val(value.pivot.title);
-                        $('#content_description_'+value.id).val(value.pivot.description);
+
+
+                            $('#content_keywords_'+value.id).val(value.pivot.project_keywords);
+                            $('#content_summary_'+value.id).val(value.pivot.summary);
+                            $('#content_title_'+value.id).val(value.pivot.title);
+                            $('#content_description_'+value.id).val(value.pivot.description);
+
 
                         $.each(JSON.parse(value.pivot.adss), function(i, item) {
                             $.each(item, function(k, v) {

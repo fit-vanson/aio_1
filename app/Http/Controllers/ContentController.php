@@ -130,7 +130,7 @@ class ContentController extends Controller
 //        }
 //        dd($request->all());
 
-        $project = Project::find($request->project_id);
+        $project = Project::find($request->pro_id);
         $content = $request->project_content;
         $project->lang()->sync($content,false);
         $project->save();
