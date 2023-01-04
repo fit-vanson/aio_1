@@ -77,7 +77,7 @@
                                                     <label for="name">Summary {{$i+1}}
                                                         <span class="font-13 text-muted" id="count_summary_adss_{{$lag->id}}_{{$i}}"></span>
                                                     </label>
-                                                    <input type="text" id="content_summary_adss_{{$lag->id}}_{{$i}}" name="project_content[{{$lag->id}}][adss][summary][]" maxlength="80" class="form-control">
+                                                    <input type="text" id="content_summary_adss_{{$lag->id}}_{{$i}}" name="project_content[{{$lag->id}}][adss][summary][]" maxlength="90" class="form-control">
                                                 </div>
                                                 <?php
                                                     }
