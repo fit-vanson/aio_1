@@ -158,12 +158,20 @@ class FtpAcountController extends Controller
         $acc = $account->ftp_account;
         $pass = $account->ftp_password;
         $dir = $_GET['folder']?? '/' ;
+
         $this->showFoder($server,$port,$acc,$pass, $dir);
         return ;
     }
 
     function showFoder($server,$port,$acc,$pass, $dir){
         echo '<br>The system type is: '.($dir).'<br>';
+
+//        $ftp = new \FtpClient\FtpClient();
+//        $ftp->connect($server, false, $port);
+//        $ftp->login($acc, $pass);
+//        dd($ftp->nlist());
+
+
 
 
 
@@ -173,25 +181,40 @@ class FtpAcountController extends Controller
         ftp_pasv($ftpConn, true);
 
         $lists = ftp_nlist($ftpConn, $dir);
+//        $lists = $ftp->nlist($dir);
+//        dd($lists);
+
         foreach($lists as $list) {
-            $is_dir = $this->ftp_directory_exists($ftpConn,  $list);
-            if($is_dir){
-                echo "<a href=\"?server_ftp=$server&port=$port&folder=".urlencode($list)."\">".htmlspecialchars($list)."</a>";
-                echo "<br>";
-            }else{
+//        dd($ftp->rawlist($list));
+//            $is_dir = $this->ftp_directory_exists($ftp->connect($server, false, $port),  $list);
+//            dd($is_dir);
+//            if($is_dir){
+//                echo "<a href=\"?server_ftp=$server&port=$port&folder=".urlencode($list)."\">".htmlspecialchars($list)."</a>";
+//                echo "<br>";
+//            }else{
                 echo "<a href=\"?server_ftp=$server&port=$port&action=download&file=".urlencode($list)."\">".htmlspecialchars($list)."</a>";
                 echo "<br>";
-            }
+//            }
         }
         $action = $_GET['action'] ?? null;
         switch ($action){
             case 'download':
                 $file_path = $_GET["file"];
-                $file_url = "ftp://$acc:$pass@$server/$file_path";
-                header('Content-Type: application/octet-stream');
-                header("Content-Transfer-Encoding: Binary");
-                header("Content-disposition: attachment; filename=\"" . basename($file_url) . "\"");
-                readfile($file_url);
+
+                $size = ftp_size($ftpConn, $file_path);
+                header("Content-Type: application/octet-stream");
+                header("Content-Disposition: attachment; filename=" . basename($file_path));
+                header("Content-Length: $size");
+                ftp_get($ftpConn, "php://output", $file_path, FTP_BINARY);
+
+
+
+//                dd($file_path);
+//                $file_url = "ftp://$acc:$pass@$server/$file_path";
+//                header('Content-Type: application/octet-stream');
+//                header("Content-Transfer-Encoding: Binary");
+//                header("Content-disposition: attachment; filename=\"" . basename($file_url) . "\"");
+//                readfile($file_url);
                 break;
         }
         ftp_close($ftpConn);
@@ -258,6 +281,7 @@ class FtpAcountController extends Controller
     function ftp_directory_exists($ftp, $dir)
     {
         // Get the current working directory
+//        dd($ftp,$dir);
         $origin = ftp_pwd($ftp);
 
         // Attempt to change directory, suppress errors
