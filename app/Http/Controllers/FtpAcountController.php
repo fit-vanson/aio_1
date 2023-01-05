@@ -60,7 +60,7 @@ class FtpAcountController extends Controller
             $btn = ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-warning btn-sm editFtpAccount"><i class="ti-pencil-alt"></i></a>';
             $btn = $btn.' <a href="javascript:void(0)"  data-id="'.$record->id.'" class="btn btn-danger btn-sm deleteFtpAccount"><i class="ti-trash"></i></a>';
 //            $btn = $btn.' <a href="javascript:void(0)"  data-id="'.$record->id.'" class="btn btn-info btn-sm viewFtpAccount"><i class="ti-eye"></i></a>';
-            $btn = $btn.' <a taget="_blank" href="'.route('ftp_account.show',['id'=>$record->id]).'"  class="btn btn-info btn-sm viewFtpAccount"><i class="ti-eye"></i></a>';
+//            $btn = $btn.' <a taget="_blank" href="'.route('ftp_account.show',['id'=>$record->id]).'"  class="btn btn-info btn-sm viewFtpAccount"><i class="ti-eye"></i></a>';
             $data_arr[] = array(
 //                "name" => '<a id="download" href="'.route('exiftool.downloadFile',"folder=$record->name").'" target="_blank">'.$record->name.'</a>',
                 "ftp_server" => $record->ftp_server,
