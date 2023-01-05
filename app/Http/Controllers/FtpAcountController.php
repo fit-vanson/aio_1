@@ -165,56 +165,34 @@ class FtpAcountController extends Controller
 
     function showFoder($server,$port,$acc,$pass, $dir){
         echo '<br>The system type is: '.($dir).'<br>';
-
-//        $ftp = new \FtpClient\FtpClient();
-//        $ftp->connect($server, false, $port);
-//        $ftp->login($acc, $pass);
-//        dd($ftp->nlist());
-
-
-
-
-
         $ftpConn = ftp_connect($server,$port) or die("Could not connect to");
         ftp_login($ftpConn, $acc, $pass);
         ftp_set_option($ftpConn, FTP_USEPASVADDRESS, false);
         ftp_pasv($ftpConn, true);
 
         $lists = ftp_nlist($ftpConn, $dir);
-//        $lists = $ftp->nlist($dir);
-//        dd($lists);
-
-        foreach($lists as $list) {
-//        dd($ftp->rawlist($list));
-//            $is_dir = $this->ftp_directory_exists($ftp->connect($server, false, $port),  $list);
-//            dd($is_dir);
-//            if($is_dir){
-//                echo "<a href=\"?server_ftp=$server&port=$port&folder=".urlencode($list)."\">".htmlspecialchars($list)."</a>";
-//                echo "<br>";
-//            }else{
-                echo "<a href=\"?server_ftp=$server&port=$port&action=download&file=".urlencode($list)."\">".htmlspecialchars($list)."</a>";
-                echo "<br>";
-//            }
+        if ($lists){
+            foreach($lists as $list) {
+                if (ftp_nlist($ftpConn, $list) == false) {
+                    echo "<a href=\"?server_ftp=$server&port=$port&folder=".urlencode($list)."\">".htmlspecialchars($list)."</a>";
+                    echo "<br>";
+                }else{
+                    echo "<a href=\"?server_ftp=$server&port=$port&action=download&file=".urlencode($list)."\">".htmlspecialchars($list)."</a>";
+                    echo "<br>";
+                }
+            }
         }
+
         $action = $_GET['action'] ?? null;
         switch ($action){
             case 'download':
                 $file_path = $_GET["file"];
-
                 $size = ftp_size($ftpConn, $file_path);
                 header("Content-Type: application/octet-stream");
                 header("Content-Disposition: attachment; filename=" . basename($file_path));
                 header("Content-Length: $size");
                 ftp_get($ftpConn, "php://output", $file_path, FTP_BINARY);
 
-
-
-//                dd($file_path);
-//                $file_url = "ftp://$acc:$pass@$server/$file_path";
-//                header('Content-Type: application/octet-stream');
-//                header("Content-Transfer-Encoding: Binary");
-//                header("Content-disposition: attachment; filename=\"" . basename($file_url) . "\"");
-//                readfile($file_url);
                 break;
         }
         ftp_close($ftpConn);
