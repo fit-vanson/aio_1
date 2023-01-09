@@ -84,8 +84,6 @@
                 }
             });
             var browser_profilesTable = $('#browser_profilesTable').dataTable({
-                displayLength: 50,
-                lengthMenu: [25, 50, 100, 200, 500, 1000],
                 processing: true,
                 serverSide: true,
                 ajax: {
@@ -104,7 +102,9 @@
                     {data: 'note'},
                     {data: 'action'},
                 ],
+
                 drawCallback: function (settings) {
+                    $.fn.editable.defaults.mode = 'inline';
 
                     $('.editable').editable({
                         success:function(data,newValue){
