@@ -83,7 +83,9 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-            var reviewTable = $('#browser_profilesTable').dataTable({
+            var browser_profilesTable = $('#browser_profilesTable').dataTable({
+                displayLength: 50,
+                lengthMenu: [25, 50, 100, 200, 500, 1000],
                 processing: true,
                 serverSide: true,
                 ajax: {
@@ -102,20 +104,8 @@
                     {data: 'note'},
                     {data: 'action'},
                 ],
-
-                fnRowCallback: function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-
-                    if (aData.status == 1) {
-                        $('td', nRow).css('background-color', 'rgb(240 184 190)');
-                    }
-                },
                 drawCallback: function (settings) {
-                    $.fn.editable.defaults.mode = 'inline';
-                    $('[data-toggle="popover"]').popover({
-                        html: true,
-                        trigger: "hover",
-                        container: 'body'
-                    });
+
                     $('.editable').editable({
                         success:function(data,newValue){
                             var _id = $(this).data('pk')
