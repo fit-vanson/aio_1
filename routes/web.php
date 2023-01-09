@@ -5,6 +5,7 @@ use App\Http\Controllers\Apk_ProcessController;
 use App\Http\Controllers\ApkUploadAnalysisController;
 use App\Http\Controllers\ApkUploadConvertController;
 use App\Http\Controllers\BotController;
+use App\Http\Controllers\BrowserProfilesController;
 use App\Http\Controllers\BuildPreviewController;
 use App\Http\Controllers\CategoryTemplateController;
 use App\Http\Controllers\CategoryTemplateFrameController;
@@ -791,6 +792,18 @@ Route::group(['prefix'=>'ftp-account','middleware'=>['CheckLogout','2fa']], func
     Route::get('/delete/{id}',[FtpAcountController::class,'delete'])->name('ftp_account.delete');
     Route::get('/show/{id}',[FtpAcountController::class,'show'])->name('ftp_account.show');
     Route::get('/download',[FtpAcountController::class,'download'])->name('ftp_account.download');
+});
+
+Route::group(['prefix'=>'browser_profiles','middleware'=>['CheckLogout','2fa']], function (){
+    Route::get('/',[BrowserProfilesController::class,'index'])->name('browser_profiles.index');
+    Route::post('/getIndex', [BrowserProfilesController::class, "getIndex"])->name('browser_profiles.getIndex');
+
+    Route::get('/edit/{id}',[BrowserProfilesController::class,'edit'])->name('browser_profiles.edit');
+    Route::get('/update/{id}',[BrowserProfilesController::class,'update'])->name('browser_profiles.update');
+//    Route::post('/update',[BrowserProfilesController::class,'update'])->name('browser_profiles.update');
+    Route::get('/delete/{id}',[BrowserProfilesController::class,'delete'])->name('browser_profiles.delete');
+
+    Route::get('/download',[BrowserProfilesController::class,'download'])->name('browser_profiles.download');
 });
 
 

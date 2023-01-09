@@ -246,6 +246,10 @@
                                         <a href="{{route('ftp_account.index')}}" class="waves-effect"> <span> FTP Account <span class="float-right menu-arrow"></span> </span> </a>
                                     </li>
 
+                                    <li>
+                                        <a href="{{route('browser_profiles.index')}}" class="waves-effect"> <span> Browser Profiles <span class="float-right menu-arrow"></span> </span> </a>
+                                    </li>
+
                                 </ul>
                             </li>
 
