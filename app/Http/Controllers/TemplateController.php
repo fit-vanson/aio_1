@@ -195,6 +195,8 @@ class TemplateController extends Controller
 
             $template_preview .='</div>';
 
+            $apktool = 'APK Tool: '. $record->apktools->name;
+
             $data_arr[] = array(
                 "id" => $record->id,
                 "template_logo" => '<p class="h3 font-16"> '.$record->ver_build.' </p>'.$logo.$link .$template_apk.$template_data.'<p class="h3 font-16 mt-2"> '.$record->sdk.' </p>',
@@ -202,7 +204,7 @@ class TemplateController extends Controller
                 "category"=>$categories,
 //                "category"=>$Chplay_category.'<br>'.$Amazon_category.'<br>'.$Samsung_category.'<br>'.$Xiaomi_category.'<br>'.$Oppo_category.'<br>'.$Vivo_category.'<br>'.$Huawei_category,
 //                "script" => '<div class="text-wrap width-400">'.$script.$value_ads.$convert_aab.$status.'</div>',
-                "script" => '<div class="text-wrap width-400">'.$script.'<br>'.$ads_admod_status.'<br>'.$ads_start_status.'<br>'.$ads_huawei_status.'<br>'.$convert_aab.'<br>'.$status.'</div>',
+                "script" => '<div class="text-wrap width-400">'.$script.'<br>'.$ads_admod_status.'<br>'.$ads_start_status.'<br>'.$ads_huawei_status.'<br>'.$convert_aab.'<br>'.$status.'<br>'.$apktool.'</div>',
 //                "time_create"=> $time_create,
 //                "time_update"=> $time_update,
 //                "time_get"=> $time_get,
@@ -408,7 +410,7 @@ class TemplateController extends Controller
                 ->find($id);
 
         }else{
-            $temp = Template::with('apktool')->find($id);
+            $temp = Template::with('apktools')->find($id);
         }
         return response()->json($temp->load('markets'));
 

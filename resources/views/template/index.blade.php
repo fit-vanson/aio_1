@@ -322,8 +322,6 @@
                     var template_ver =  $('#template_ver').text(data.template+'_');
                     var a = data.ver_build ? data.ver_build.substring(template_ver.text().length) : '1';
 
-
-                    console.log(data)
                     $('#ver_build').val(a);
                     $('#script_copy').val(data.script_copy);
                     $('#script_img').val(data.script_img);
@@ -341,7 +339,7 @@
                     $('#template_type').val(data.template_type);
 
                     $("#apktool").select2("trigger", "select", {
-                        data: { id: data.apktool.id,text: data.apktool.name }
+                        data: { id: data.apktools.id,text: data.apktools.name }
                     });
 
 
