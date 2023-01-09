@@ -13,4 +13,9 @@ class Browser_Profiles extends Model
     public $timestamps = false;
 
     protected $guarded = [];
+
+    public function ftp_account()
+    {
+        return $this->belongsTo(FtpAccount::class, 'ftp_id');
+    }
 }

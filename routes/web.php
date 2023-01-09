@@ -803,7 +803,7 @@ Route::group(['prefix'=>'browser_profiles','middleware'=>['CheckLogout','2fa']],
 //    Route::post('/update',[BrowserProfilesController::class,'update'])->name('browser_profiles.update');
     Route::get('/delete/{id}',[BrowserProfilesController::class,'delete'])->name('browser_profiles.delete');
 
-    Route::get('/download',[BrowserProfilesController::class,'download'])->name('browser_profiles.download');
+    Route::get('/download/{id}',[BrowserProfilesController::class,'download'])->name('browser_profiles.download');
 });
 
 
