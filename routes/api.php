@@ -39,6 +39,7 @@ Route::get('/getGa', [ApiController::class, 'getGa'])->name('api.getGa');
 Route::get('/getMarket', [ApiController::class, 'getMarket'])->name('api.getMarket');
 Route::get('/getGmailDev', [ApiController::class, 'getGmailDev'])->name('api.getGmailDev');
 Route::get('/getProfile', [ApiController::class, 'getProfile'])->name('api.getProfile');
+Route::get('/getApktool', [ApiController::class, 'getApktool'])->name('api.getApktool');
 
 
 Route::get('/get_admod_list', [ApiController::class, 'get_admod_list'])->name('api.get_admod_list');

@@ -30,7 +30,7 @@
                                 </div>
 
                                 <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" id="data_all" name="data_status" class="custom-control-input" value="3">
+                                    <input type="radio" id="data_all" name="data_status" checked class="custom-control-input" value="3">
                                     <label class="custom-control-label" for="data_all">All</label>
                                 </div>
                             </div>
@@ -92,17 +92,24 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="form-group col-lg-4">
+                            <div class="form-group col-lg-3">
                                 <label for="name">Package</label>
                                 <input type="text" id="package" name="package" class="form-control" >
                             </div>
-                            <div class="form-group col-lg-4">
+                            <div class="form-group col-lg-3">
                                 <label for="name">Link của ứng dụng</label>
                                 <input type="text" id="link" name="link" class="form-control" >
                             </div>
-                            <div class="form-group col-lg-4">
+                            <div class="form-group col-lg-3">
                                 <label for="name">SDK</label>
                                 <input type="text" id="sdk" name="sdk" class="form-control" >
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label for="name">Apk Tools</label>
+                                <div>
+                                    <select class="form-control " id="apktool" name="apktool"></select>
+                                </div>
                             </div>
 
                             <div class="form-group col-lg-12">

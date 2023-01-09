@@ -25,6 +25,11 @@ class Template extends Model
 //        return $this->belongsToJson(Markets::class, 'category[]');
     }
 
+    public function apktool()
+    {
+        return $this->belongsTo(ApkTools::class, 'apktool');
+    }
+
     public function project(){
         return $this->hasMany(Project::class,'template');
     }

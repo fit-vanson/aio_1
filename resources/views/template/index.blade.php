@@ -14,7 +14,7 @@
 
     <link href="{{ URL::asset('assets/libs/lightgallery/css/lightgallery.css') }}" rel="stylesheet" type="text/css" />
 
-
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
     <link href="{{ URL::asset('/assets/libs/dropzone/dropzone.min.css') }}" rel="stylesheet" type="text/css" />
 
@@ -80,6 +80,7 @@
 
 <!-- Dropzone js -->
 <script src="{{ URL::asset('/assets/libs/dropzone/dropzone.min.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 
 
@@ -97,6 +98,44 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
+
+        $('#apktool').select2({
+            // initialValue:true,
+            placeholder: "Select a customer",
+            minimumInputLength: 2,
+            ajax: {
+                url: '{{route('api.getApktool')}}',
+                dataType: 'json',
+                type: "GET",
+                // quietMillis: 50,
+                data: function(params) {
+
+                    return {
+                        q: params.term, // search term
+                        page: params.page
+                    };
+                },
+                processResults: function(data) {
+                    return {
+                        results: $.map(data, function (item) {
+                            return {
+                                text: item.name,
+                                id: item.id
+                            }
+                        })
+                    };
+                },
+                // cache: false
+            },
+            initSelection : function (element, callback) {
+                var data = [];
+                $(element.val()).each(function () {
+                    data.push({id: this, text: this});
+                });
+                callback(data);
+            }
+        });
+
         var table = $('#TemplateTable').DataTable({
             processing: true,
             serverSide: true,
@@ -167,6 +206,9 @@
             $('#modelHeading').html("Thêm mới Template");
             $('#ajaxModel').modal('show');
 
+
+            $('#apktool').val('');
+            $('#apktool').trigger('change.select2');
 
             $('#template').prop("disabled", false);
             $('#ver_build').val(1);
@@ -297,6 +339,12 @@
                     $('#convert_aab').val(data.convert_aab);
                     $('#status').val(data.status);
                     $('#template_type').val(data.template_type);
+
+                    $("#apktool").select2("trigger", "select", {
+                        data: { id: data.apktool.id,text: data.apktool.name }
+                    });
+
+
                     switch (data.template_data_status) {
                         case 2:
                             $("#data_offline").prop("checked", true);

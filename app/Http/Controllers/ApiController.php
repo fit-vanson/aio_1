@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ApktoolResource;
 use App\Http\Resources\DaResource;
 use App\Http\Resources\GaResource;
 use App\Http\Resources\GmailDevResource;
@@ -10,6 +11,7 @@ use App\Http\Resources\MarketDevResource;
 use App\Http\Resources\MarketsResource;
 use App\Http\Resources\ProfileResource;
 use App\Http\Resources\TemplateResource;
+use App\Models\ApkTools;
 use App\Models\Da;
 use App\Models\Dev;
 use App\Models\Ga;
@@ -144,9 +146,14 @@ class ApiController extends Controller
 
 
 
-
-
-
+    public function getApktool(){
+        $searchValue = \request()->q;
+        $project = ApkTools::latest('id')
+            ->where('name', 'like', '%' . $searchValue . '%')
+            ->get();
+        $result = ApktoolResource::collection($project);
+        return response()->json($result);
+    }
 
     public function get_admod_list(Request $request)
     {

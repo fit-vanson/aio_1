@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\TemplateResource;
+use App\Models\ApkTools;
 use App\Models\Dev;
 use App\Models\Markets;
 use App\Models\ProjectModel;
@@ -26,7 +27,9 @@ class TemplateController extends Controller
             ]
 
         ];
-        return view('template.index')->with(compact('header'));
+
+        $apktools = ApkTools::all();
+        return view('template.index')->with(compact('header','apktools'));
 
     }
 
@@ -262,6 +265,8 @@ class TemplateController extends Controller
             ];
         }
 
+
+
         $ads =  json_encode($ads);
         $data = new Template();
         $data['template'] = $request->template;
@@ -282,6 +287,7 @@ class TemplateController extends Controller
         $data['package'] = $request->package;
         $data['link'] = $request->link;
         $data['sdk'] = $request->sdk;
+        $data['apktool'] = $request->apktool;
         $data['convert_aab'] = $request->convert_aab;
         $data['status'] = $request->status;
 
@@ -400,8 +406,9 @@ class TemplateController extends Controller
                 $q->with('markets')->where('projectid',\request()->project_id)->first();
             }])
                 ->find($id);
+
         }else{
-            $temp = Template::find($id);
+            $temp = Template::with('apktool')->find($id);
         }
         return response()->json($temp->load('markets'));
 
@@ -477,6 +484,7 @@ class TemplateController extends Controller
         $data->package = $request->package;
         $data->link = $request->link;
         $data->sdk = $request->sdk;
+        $data->apktool = $request->apktool;
         $data->convert_aab = $request->convert_aab;
         $data->status = $request->status;
         $data->category = $categories ;
