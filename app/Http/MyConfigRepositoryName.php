@@ -26,7 +26,7 @@ class MyConfigRepositoryName  implements ConfigRepository
         $name  = str_replace('.', '_', $user->name);
 
         $diskData = [
-            "$name" => [
+            "FTP-$name" => [
                 'driver'     => 'ftp',
 //                'host'       => '123.25.85.247',
                 'host'       => '10.0.0.6',

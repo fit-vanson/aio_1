@@ -31,7 +31,7 @@ class UsersACLRepository implements ACLRepository
                 ['disk' => 'File Manager', 'path' => '*', 'access' => 2],                                  // main folder - read
                 ['disk' => 'KeyStore', 'path' => '*', 'access' => 2],                                // main folder - read
                 ['disk' => 'Profile', 'path' => '*', 'access' => 2],                                // main folder - read
-                ['disk' => Auth::user()->name, 'path' => '*', 'access' => 2],                                // main folder - read
+                ['disk' => 'FTP-'.Auth::user()->name, 'path' => '*', 'access' => 2],                                // main folder - read
             ];
         }
         return [
