@@ -28,10 +28,11 @@ class MyConfigRepositoryName  implements ConfigRepository
         $diskData = [
             "$name" => [
                 'driver'     => 'ftp',
-                'host'       => '123.25.85.247',
+//                'host'       => '123.25.85.247',
+                'host'       => '10.0.0.6',
                 'passive'  => true,
                 'timeout'  => 30,
-                'port'     => 75,
+//                'port'     => 75,
                 'username'   => $name,
                 'password' => 'zxcv@1234',
             ],
