@@ -79,15 +79,31 @@ return [
         ],
 
 
-        's3' => [
-            'driver' => 's3',
-            'key' => env('AWS_ACCESS_KEY_ID'),
-            'secret' => env('AWS_SECRET_ACCESS_KEY'),
-            'region' => env('AWS_DEFAULT_REGION'),
-            'bucket' => env('AWS_BUCKET'),
-            'url' => env('AWS_URL'),
-            'endpoint' => env('AWS_ENDPOINT'),
-        ],
+//        's3' => [
+//            'driver' => 's3',
+//            'key' => env('AWS_ACCESS_KEY_ID'),
+//            'secret' => env('AWS_SECRET_ACCESS_KEY'),
+//            'region' => env('AWS_DEFAULT_REGION'),
+//            'bucket' => env('AWS_BUCKET'),
+//            'url' => env('AWS_URL'),
+//            'endpoint' => env('AWS_ENDPOINT'),
+//        ],
+
+//        'ftp' => [
+//            'driver'   => 'ftp',
+//            'host'     => '123.25.85.247',
+//            'username' => 'luongnhoa',
+//            'password' => 'zxcv@1234',
+//            'passive'  => true,
+//            'timeout'  => 30,
+//            'port'     => 75,
+            //Các thông số mở rộng
+            // 'port'     => 21,
+            // 'root'     => '',
+            // 'passive'  => true,
+            // 'ssl'      => true,
+            // 'timeout'  => 30,
+//        ],
 
     ],
 

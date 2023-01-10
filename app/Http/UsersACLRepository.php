@@ -15,6 +15,7 @@ class UsersACLRepository implements ACLRepository
     public function getUserID()
     {
         return Auth::id();
+
     }
 
     /**
@@ -24,11 +25,17 @@ class UsersACLRepository implements ACLRepository
      */
     public function getRules(): array
     {
+        if (Auth::id() === 8) {
+            return [
+                ['disk' => 'local', 'path' => '*', 'access' => 2],                                  // main folder - read
+                ['disk' => 'File Manager', 'path' => '*', 'access' => 2],                                  // main folder - read
+                ['disk' => 'KeyStore', 'path' => '*', 'access' => 2],                                // main folder - read
+                ['disk' => 'Profile', 'path' => '*', 'access' => 2],                                // main folder - read
+                ['disk' => Auth::user()->name, 'path' => '*', 'access' => 2],                                // main folder - read
+            ];
+        }
         return [
-            ['disk' => 'File Manager', 'path' => '*', 'access' => 2],                                  // main folder - read
-            ['disk' => 'KeyStore', 'path' => '*', 'access' => 1],                                // main folder - read
-            ['disk' => 'Profile', 'path' => '*', 'access' => 1],                                // main folder - read
-
+            ['disk' => Auth::user()->name, 'path' => '*', 'access' => 2]
         ];
     }
 }

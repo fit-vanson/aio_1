@@ -218,15 +218,15 @@
 
                                 </ul>
                             </li>
-                            <li>
-                                <a href="javascript:void(0);" class="waves-effect"><i class="dripicons-browser-upload"></i> <span>File Manager<span class="float-right menu-arrow"><i class="mdi mdi-chevron-right"></i></span> </span> </a>
-                                <ul class="submenu">
-                                    @can('template-index')
-                                        <li><a href="{{route('template.upload')}}">File Manager</a></li>
-                                    @endcan
+{{--                            <li>--}}
+{{--                                <a href="javascript:void(0);" class="waves-effect"><i class="dripicons-browser-upload"></i> <span>File Manager<span class="float-right menu-arrow"><i class="mdi mdi-chevron-right"></i></span> </span> </a>--}}
+{{--                                <ul class="submenu">--}}
+{{--                                    @can('template-index')--}}
+{{--                                        <li><a href="{{route('template.upload')}}">File Manager</a></li>--}}
+{{--                                    @endcan--}}
 
-                                </ul>
-                            </li>
+{{--                                </ul>--}}
+{{--                            </li>--}}
 
 
                             <li>
@@ -244,6 +244,9 @@
                                     </li>
                                     <li>
                                         <a href="{{route('ftp_account.index')}}" class="waves-effect"> <span> FTP Account <span class="float-right menu-arrow"></span> </span> </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{route('ftp_account.upload')}}" class="waves-effect"> <span> FTP Upload <span class="float-right menu-arrow"></span> </span> </a>
                                     </li>
 
                                     <li>

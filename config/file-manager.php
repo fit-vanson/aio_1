@@ -2,6 +2,7 @@
 
 use Alexusmai\LaravelFileManager\Services\ConfigService\DefaultConfigRepository;
 use Alexusmai\LaravelFileManager\Services\ACLService\ConfigACLRepository;
+use App\Http\MyConfigRepositoryName;
 
 return [
 
@@ -10,7 +11,8 @@ return [
      *
      * Default - DefaultConfigRepository get config from this file
      */
-    'configRepository' => DefaultConfigRepository::class,
+//    'configRepository' => DefaultConfigRepository::class,
+    'configRepository' => MyConfigRepositoryName::class,
 
     /**
      * ACL rules repository
@@ -32,7 +34,8 @@ return [
      * List of disk names that you want to use
      * (from config/filesystems)
      */
-    'diskList' => ['File Manager','KeyStore','Profile'],
+    'diskList' => ['File Manager','KeyStore','Profile','ftp'],
+//    'diskList' => \App\Http\SetConfigRepository::class,
 
     /**
      * Default disk for left manager
@@ -91,7 +94,8 @@ return [
      *
      * [] - no restrictions
      */
-    'allowFileTypes' => ['apk','zip'],
+    'allowFileTypes' => [],
+//    'allowFileTypes' => ['apk','zip'],
 
     /**
      * Show / Hide system files and folders
@@ -137,7 +141,6 @@ return [
     'aclRulesCache' => null,
 
     //********* Default configuration for DefaultConfigRepository END **********
-
 
     /***************************************************************************
      * ACL rules list - used for default ACL repository (ConfigACLRepository)

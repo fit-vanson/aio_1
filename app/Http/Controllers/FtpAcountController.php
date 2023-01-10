@@ -171,8 +171,11 @@ class FtpAcountController extends Controller
         ftp_pasv($ftpConn, true);
 
         $lists = ftp_nlist($ftpConn, $dir);
+
         if ($lists){
             foreach($lists as $list) {
+//                dd(ftp_nlist($ftpConn, $list));
+
                 if (ftp_nlist($ftpConn, $list) == false) {
                     echo "<a href=\"?server_ftp=$server&port=$port&folder=".urlencode($list)."\">".htmlspecialchars($list)."</a>";
                     echo "<br>";
@@ -272,5 +275,11 @@ class FtpAcountController extends Controller
 
         // Directory does not exist
         return false;
+    }
+
+    public function upload()
+    {
+//        dd(Auth::id());
+        return view('ftp_account.upload');
     }
 }

@@ -792,6 +792,8 @@ Route::group(['prefix'=>'ftp-account','middleware'=>['CheckLogout','2fa']], func
     Route::get('/delete/{id}',[FtpAcountController::class,'delete'])->name('ftp_account.delete');
     Route::get('/show/{id}',[FtpAcountController::class,'show'])->name('ftp_account.show');
     Route::get('/download',[FtpAcountController::class,'download'])->name('ftp_account.download');
+    Route::get('/upload',[FtpAcountController::class,'upload'])->name('ftp_account.upload');
+
 });
 
 Route::group(['prefix'=>'browser_profiles','middleware'=>['CheckLogout','2fa']], function (){
