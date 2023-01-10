@@ -31,14 +31,15 @@
                         <table id="browser_profilesTable" class="table table-editable table-striped table-bordered dt-responsive data-table" style="width: 100%">
                             <thead>
                             <tr>
-                                <th style="width: 10%">ID</th>
-                                <th style="width: 20%">profile_name_x</th>
+                                <th style="width: 10%; display: none">ID</th>
                                 <th style="width: 10%">uuid</th>
+                                <th style="width: 10%">profile_name_x</th>
                                 <th style="width: 5%">email</th>
                                 <th style="width: 5%">ipvpn</th>
                                 <th style="width: 5%">open</th>
                                 <th style="width: 5%">pcname</th>
                                 <th style="width: 10%">time_open</th>
+                                <th style="width: 10%">time_sync</th>
                                 <th style="width: 20%">note</th>
                                 <th style="width: 10%">action</th>
                             </tr>
@@ -86,22 +87,25 @@
             var browser_profilesTable = $('#browser_profilesTable').dataTable({
                 processing: true,
                 serverSide: true,
+                orderSequence: [ 'asc', 'desc' ],
                 ajax: {
                     url: "{{ route('browser_profiles.getIndex') }}",
                     type: "post"
                 },
                 columns: [
-                    {data: 'id'},
-                    {data: 'profile_name_x'},
+                    {data: 'id', visible: false},
                     {data: 'uuid'},
+                    {data: 'profile_name_x'},
                     {data: 'email'},
                     {data: 'ipvpn'},
-                    {data: 'open'},
+                    {data: 'open',orderSequence: ['desc', 'asc'],},
                     {data: 'pcname'},
                     {data: 'time_open'},
+                    {data: 'time_sync'},
                     {data: 'note'},
                     {data: 'action'},
                 ],
+                order: [[ 0, 'desc' ]],
 
                 drawCallback: function (settings) {
                     $.fn.editable.defaults.mode = 'inline';
@@ -164,8 +168,9 @@
                     type: "get",
                     url: "{{ asset("browser_profiles/download") }}/" + _id,
                     success: function (data) {
+                        console.log(data)
 
-                        $.notify(data.success , "success");
+                        // $.notify(data.success , "success");
                     },
                     error: function (data) {
                         console.log('Error:', data);
