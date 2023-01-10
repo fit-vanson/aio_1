@@ -49,7 +49,9 @@ class GaController extends Controller
                     if($gmail2 != null){
                         $gmail2 = '<p style="margin: auto"class="text-muted ">'.$gmail2->gmail.' - <span style="font-style: italic"> '.$gmail2->vpn_iplogin.'</span></p>';
                     }
-                    return $gmail.$gmail1.$gmail2;
+
+                    $app_ads = '<p style="margin: auto"class="text-muted ">'.$data->app_ads.' </p>';
+                    return $gmail.$gmail1.$gmail2.$app_ads;
                 })
                 ->editColumn('info_phone', function($data){
                     if($data->info_andress == null ){
